@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, User } from 'lucide-react';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -14,15 +14,32 @@ import {
 } from '@/components/ui/sidebar';
 import type { NavItem } from '@/types';
 import AppLogo from './app-logo';
-import { dashboard } from '@/routes';
+import { dashboard, customerIndex } from '@/routes';
 
 const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
+    // {
+    //     title: 'Dashboard',
+    //     href: dashboard(),
+    //     icon: LayoutGrid,
+    // },
+    // {
+    //     title: 'Coustomers',
+    //     href: customerIndex(),
+    //     icon: User,
+    // },
+    { title: 'Dashboard', href: '/dashboard', icon: HomeIcon },
+    { title: 'Customers', href: '/customers', icon: UsersIcon },
+    { title: 'Products', href: '/products', icon: CubeIcon },
+    { title: 'Follow-ups', href: '/follow-ups', icon: ClockIcon },
+    { title: 'Meetings', href: '/meetings', icon: CalendarIcon },
+    { title: 'Quotations', href: '/quotations', icon: DocumentTextIcon },
+    { title: 'Reports', href: '/reports', icon: ChartBarIcon },
+        ...(user.role === 'super_admin' ? [
+            { title: 'Users', href: '/users', icon: UserGroupIcon }
+        ] : [])
 ];
+
+
 
 const footerNavItems: NavItem[] = [
     {
