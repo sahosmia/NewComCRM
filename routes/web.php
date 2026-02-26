@@ -30,7 +30,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Route::post('customers/import/excel', [CustomerController::class, 'import'])->name('customers.import');
 
     // // Products
-    // Route::resource('products', ProductController::class);
+    Route::resource('products', ProductController::class);
 
     // // Follow Ups
     // Route::resource('follow-ups', FollowUpController::class)->except(['create', 'edit']);
