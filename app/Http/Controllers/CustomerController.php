@@ -1,131 +1,82 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\User;
-use App\Http\Requests\StoreCustomerRequest;
-use App\Http\Requests\UpdateCustomerRequest;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class CustomerController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $user = Auth::user();
-
         $customers = Customer::with('assignedUser')
-            ->when(!$user->isSuperAdmin(), function ($query) use ($user) {
-                return $query->where('assigned_to', $user->id);
-            })
-            ->when($request->search, function ($query, $search) {
-                return $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                      ->orWhere('company_name', 'like', "%{$search}%")
-                      ->orWhere('phone', 'like', "%{$search}%")
-                      ->orWhere('email', 'like', "%{$search}%");
-                });
-            })
-            ->when($request->status, function ($query, $status) {
-                return $query->where('status', $status);
-            })
-            ->when($request->assigned_to, function ($query, $assignedTo) {
-                return $query->where('assigned_to', $assignedTo);
-            })
-            ->orderBy($request->sort_field ?? 'created_at', $request->sort_direction ?? 'desc')
-            ->paginate($request->per_page ?? 10)
-            ->withQueryString();
+            ->latest()
+            ->paginate(10);
 
-        $users = User::where('role', 'user')->get();
-
-        return Inertia::render('Customers/Index', [
-            'customers' => $customers,
-            'users' => $users,
-            'filters' => $request->only(['search', 'status', 'assigned_to', 'sort_field', 'sort_direction']),
+        return Inertia::render('customers/index', [
+            'customers' => $customers
         ]);
     }
 
     public function create()
     {
-        $users = User::where('role', 'user')->get();
-
-        return Inertia::render('Customers/Create', [
-            'users' => $users
+        return Inertia::render('customers/create', [
+            'users' => User::select('id', 'name')->get()
         ]);
     }
 
-    public function store(StoreCustomerRequest $request)
+    public function store(Request $request)
     {
-        $customer = Customer::create($request->validated());
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'designation' => 'nullable|string',
+            'company_name' => 'required|string',
+            'phone' => 'required|string',
+            'email' => 'nullable|email',
+            'address' => 'nullable|string',
+            'assigned_to' => 'required|exists:users,id',
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        Customer::create($validated);
 
         return redirect()->route('customers.index')
-            ->with('success', 'Customer created successfully.');
-    }
-
-    public function show(Customer $customer)
-    {
-        $this->authorize('view', $customer);
-
-        $customer->load(['assignedUser', 'requirements.product', 'followUps.user', 'meetings']);
-
-        return Inertia::render('Customers/Show', [
-            'customer' => $customer
-        ]);
+            ->with('success', 'Customer created successfully');
     }
 
     public function edit(Customer $customer)
     {
-        $this->authorize('update', $customer);
-
-        $users = User::where('role', 'user')->get();
-
-        return Inertia::render('Customers/Edit', [
+        return Inertia::render('customers/edit', [
             'customer' => $customer,
-            'users' => $users
+            'users' => User::select('id', 'name')->get()
         ]);
     }
 
-    public function update(UpdateCustomerRequest $request, Customer $customer)
+    public function update(Request $request, Customer $customer)
     {
-        $this->authorize('update', $customer);
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'designation' => 'nullable|string',
+            'company_name' => 'required|string',
+            'phone' => 'required|string',
+            'email' => 'nullable|email',
+            'address' => 'nullable|string',
+            'assigned_to' => 'required|exists:users,id',
+            'status' => 'required|in:active,inactive',
+        ]);
 
-        $customer->update($request->validated());
+        $customer->update($validated);
 
         return redirect()->route('customers.index')
-            ->with('success', 'Customer updated successfully.');
+            ->with('success', 'Customer updated successfully');
     }
 
     public function destroy(Customer $customer)
     {
-        $this->authorize('delete', $customer);
-
         $customer->delete();
 
-        return redirect()->route('customers.index')
-            ->with('success', 'Customer deleted successfully.');
-    }
-
-    public function bulkDestroy(Request $request)
-    {
-        $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'exists:customers,id'
-        ]);
-
-        Customer::whereIn('id', $request->ids)->delete();
-
-        return redirect()->route('customers.index')
-            ->with('success', 'Customers deleted successfully.');
-    }
-
-    public function export(Request $request)
-    {
-        // Implement Excel export
-    }
-
-    public function import(Request $request)
-    {
-        // Implement Excel import
+        return back();
     }
 }

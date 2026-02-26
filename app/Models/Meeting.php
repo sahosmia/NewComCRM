@@ -61,6 +61,11 @@ class Meeting extends Model
                      ->where('status', 'scheduled');
     }
 
+     public function scopeByUser($query, $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
+
     // Accessors
     public function getDurationAttribute()
     {

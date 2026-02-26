@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\FollowUp;
 use App\Models\Meeting;
 use App\Models\Quotation;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -21,11 +22,11 @@ class DashboardController extends Controller
             $stats = $this->getUserStats($user->id);
         }
 
-        return Inertia::render('Dashboard', [
+        return Inertia::render('dashboard', [
             'stats' => $stats,
             'todayFollowups' => $this->getTodayFollowups($user),
             'upcomingMeetings' => $this->getUpcomingMeetings($user),
-            'recentActivities' => $this->getRecentActivities($user),
+            // 'recentActivities' => $this->getRecentActivities($user),
             'chartData' => $this->getChartData($user)
         ]);
     }
