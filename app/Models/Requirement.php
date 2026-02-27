@@ -27,6 +27,10 @@ class Requirement extends Model
         static::creating(function ($requirement) {
             $requirement->total_price = $requirement->quantity * $requirement->unit_price;
         });
+
+        static::updating(function ($requirement) {
+            $requirement->total_price = $requirement->quantity * $requirement->unit_price;
+        });
     }
 
     // Relationships

@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RequirementController;
 use App\Http\Controllers\FollowUpController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\QuotationController;
@@ -31,6 +32,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // // Products
     Route::resource('products', ProductController::class);
+
+    // // Requirements
+    Route::resource('requirements', RequirementController::class);
 
     // // Follow Ups
     // Route::resource('follow-ups', FollowUpController::class)->except(['create', 'edit']);
