@@ -1,0 +1,15 @@
+export interface Customer {
+    id: number;
+    name: string;
+    designation: string | null;
+    company_name: string;
+    phone: string;
+    email: string | null;
+    address: string | null;
+    assigned_to: number;
+    status: 'active' | 'inactive';
+    created_at: string;
+    updated_at: string;
+    deleted_at?: string | null;
+    assigned_user?: any;
+}

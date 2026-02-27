@@ -1,4 +1,4 @@
-import { Customer } from "@/types/customer"; // I should check if Customer type exists
+import { Customer } from "@/types/customer";
 import { Product } from "@/types/product";
 
 export interface Requirement {

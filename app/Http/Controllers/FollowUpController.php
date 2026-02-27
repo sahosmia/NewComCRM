@@ -64,6 +64,21 @@ class FollowUpController extends Controller
             ->with('success', 'Follow up scheduled successfully.');
     }
 
+    public function edit(FollowUp $followUp)
+    {
+        return Inertia::render('FollowUps/Edit', [
+            'followUp' => $followUp,
+            'customers' => Customer::select('id', 'name')->get()
+        ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('FollowUps/Create', [
+            'customers' => Customer::select('id', 'name')->get()
+        ]);
+    }
+
     public function update(Request $request, FollowUp $followUp)
     {
         $this->authorize('update', $followUp);

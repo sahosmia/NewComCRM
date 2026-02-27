@@ -1,8 +1,14 @@
 import { Link, router } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/layouts/app-layout";
+import { Customer } from "@/types/customer";
+import { PaginationType } from "@/types";
 
-export default function Index({ customers }: any) {
+interface Props {
+    customers: PaginationType<Customer>;
+}
+
+export default function Index({ customers }: Props) {
   const deleteCustomer = (id: number) => {
     if (confirm("Are you sure?")) {
       router.delete(route("customers.destroy", id));
@@ -31,7 +37,7 @@ export default function Index({ customers }: any) {
         </thead>
 
         <tbody>
-          {customers.data.map((customer: any) => (
+          {customers.data.map((customer) => (
             <tr key={customer.id} className="border-t">
               <td>{customer.name}</td>
               <td>{customer.company_name}</td>

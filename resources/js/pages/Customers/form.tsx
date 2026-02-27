@@ -27,13 +27,15 @@ import {
 import { useState } from "react";
 
 
+import { Customer } from "@/types/customer";
+
 interface User {
     id: number;
     name: string;
 }
 
 interface Props {
-    customer?: any;
+    customer?: Customer;
     users: User[];
 }
 
