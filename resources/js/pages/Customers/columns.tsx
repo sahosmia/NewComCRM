@@ -1,9 +1,9 @@
-import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { CategoryType, Column } from '@/types';
-import { handleDelete } from '@/utils/table';
 import { Link } from '@inertiajs/react';
 import { FileText, MoreHorizontal, SquarePen, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import type { CategoryType, Column } from '@/types';
+import { handleDelete } from '@/utils/table';
 
 const columns: Column<CategoryType>[] = [
     {

@@ -1,8 +1,9 @@
 import { Link, router } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/layouts/app-layout";
+import type { Product } from "@/types/product";
 
-export default function Index({ products }: any) {
+export default function Index({ products }: { products: Product[] }) {
   const deleteProduct = (id: number) => {
     if (confirm("Are you sure?")) {
       router.delete(route("products.destroy", id));
@@ -10,7 +11,7 @@ export default function Index({ products }: any) {
   };
 
   return (
-    <AppLayout breadcrumbs={[{ label: "Products" }]}>
+    <AppLayout breadcrumbs={[{ title: "Products", href: route('products.index') }]}>
       <div className="p-6">
         <div className="flex justify-between mb-4">
           <h1 className="text-xl font-bold">Products</h1>
@@ -33,7 +34,7 @@ export default function Index({ products }: any) {
             </thead>
 
             <tbody>
-              {products.data.map((product: any) => (
+              {products.data.map((product: Product) => (
                 <tr key={product.id} className="hover:bg-muted/50 transition-colors">
                   <td className="p-3 border-b">{product.name}</td>
                   <td className="p-3 border-b">{product.brand}</td>

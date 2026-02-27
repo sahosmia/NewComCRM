@@ -33,28 +33,28 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('products', ProductController::class);
 
     // // Follow Ups
-    // Route::resource('follow-ups', FollowUpController::class)->except(['create', 'edit']);
-    // Route::post('follow-ups/{follow_up}/complete', [FollowUpController::class, 'complete'])->name('follow-ups.complete');
+    Route::resource('follow-ups', FollowUpController::class)->except(['create', 'edit']);
+    Route::post('follow-ups/{follow_up}/complete', [FollowUpController::class, 'complete'])->name('follow-ups.complete');
 
-    // // Meetings
-    // Route::resource('meetings', MeetingController::class);
-    // Route::get('calendar/meetings', [MeetingController::class, 'calendar'])->name('meetings.calendar');
+    // Meetings
+    Route::resource('meetings', MeetingController::class);
+    Route::get('calendar/meetings', [MeetingController::class, 'calendar'])->name('meetings.calendar');
 
-    // // Quotations
-    // Route::resource('quotations', QuotationController::class);
-    // Route::post('quotations/{quotation}/send', [QuotationController::class, 'send'])->name('quotations.send');
-    // Route::get('quotations/{quotation}/download', [QuotationController::class, 'download'])->name('quotations.download');
-    // Route::post('quotations/{quotation}/duplicate', [QuotationController::class, 'duplicate'])->name('quotations.duplicate');
+    // Quotations
+    Route::resource('quotations', QuotationController::class);
+    Route::post('quotations/{quotation}/send', [QuotationController::class, 'send'])->name('quotations.send');
+    Route::get('quotations/{quotation}/download', [QuotationController::class, 'download'])->name('quotations.download');
+    Route::post('quotations/{quotation}/duplicate', [QuotationController::class, 'duplicate'])->name('quotations.duplicate');
 
-    // // Users (Super Admin only)
-    // Route::middleware(['role:super_admin'])->group(function () {
-    //     Route::resource('users', UserController::class);
-    // });
+    // Users (Super Admin only)
+    Route::middleware(['role:super_admin'])->group(function () {
+        Route::resource('users', UserController::class);
+    });
 
-    // // Reports
-    // Route::get('reports/follow-ups', [ReportController::class, 'followUps'])->name('reports.follow-ups');
-    // Route::get('reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
-    // Route::get('reports/customers', [ReportController::class, 'customers'])->name('reports.customers');
+    // Reports
+    Route::get('reports/follow-ups', [ReportController::class, 'followUps'])->name('reports.follow-ups');
+    Route::get('reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
+    Route::get('reports/customers', [ReportController::class, 'customers'])->name('reports.customers');
 });
 
 require __DIR__.'/settings.php';

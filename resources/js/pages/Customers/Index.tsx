@@ -10,7 +10,7 @@ export default function Index({ customers }: any) {
   };
 
   return (
-    <AppLayout breadcrumbs={[{ label: "Customers" }]}>
+    <AppLayout breadcrumbs={[{ title: "Customers", href: route("customers.index") }]}>
     <div className="p-6">
       <div className="flex justify-between mb-4">
         <h1 className="text-xl font-bold">Customers</h1>

@@ -1,3 +1,4 @@
+import type { route as routeFn } from 'ziggy-js';
 import type { Auth } from '@/types/auth';
 
 declare module '@inertiajs/core' {
@@ -9,4 +10,9 @@ declare module '@inertiajs/core' {
             [key: string]: unknown;
         };
     }
+}
+
+
+declare global {
+    var route: typeof routeFn;
 }

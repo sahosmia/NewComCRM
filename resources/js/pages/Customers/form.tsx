@@ -1,7 +1,20 @@
 import { useForm } from "@inertiajs/react";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+} from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
 import {
     Select,
     SelectContent,
@@ -9,22 +22,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { useState } from "react";
 
 
 interface User {
@@ -33,13 +32,14 @@ interface User {
 }
 
 interface Props {
-    customer?: any;
+    customer?: Customer;
     users: User[];
 }
+import type { Customer } from "@/types/customer";
 
 export default function CustomerForm({ customer, users }: Props) {
     const [open, setOpen] = useState(false);
-    const { data, setData, post, put, processing, errors } = useForm({
+    const { data, setData, post, put, processing, } = useForm({
         name: customer?.name || "",
         designation: customer?.designation || "",
         company_name: customer?.company_name || "",
@@ -89,54 +89,54 @@ export default function CustomerForm({ customer, users }: Props) {
             />
 
             <Popover open={open} onOpenChange={setOpen}>
-  <PopoverTrigger asChild>
-    <Button
-      variant="outline"
-      role="combobox"
-      className="w-full justify-between"
-    >
-      {data.assigned_to
-        ? users.find((user) => user.id === data.assigned_to)?.name
-        : "Select User"}
-      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-    </Button>
-  </PopoverTrigger>
+                <PopoverTrigger asChild>
+                    <Button
+                        variant="outline"
+                        role="combobox"
+                        className="w-full justify-between"
+                    >
+                        {data.assigned_to
+                            ? users.find((user) => user.id === data.assigned_to)?.name
+                            : "Select User"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                </PopoverTrigger>
 
-  <PopoverContent className="w-[--radix-popover-trigger-width] p-0"
-    align="start">
-    <Command>
-      <CommandInput placeholder="Search user..." />
-      <CommandEmpty>No user found.</CommandEmpty>
+                <PopoverContent className="w-[--radix-popover-trigger-width] p-0"
+                    align="start">
+                    <Command>
+                        <CommandInput placeholder="Search user..." />
+                        <CommandEmpty>No user found.</CommandEmpty>
 
-      <CommandGroup>
-        {users.map((user) => (
-          <CommandItem
-            key={user.id}
-            value={user.name}
-            onSelect={() => {
-              setData("assigned_to", user.id);
-              setOpen(false);
-            }}
-          >
-            <Check
-              className={cn(
-                "mr-2 h-4 w-4",
-                data.assigned_to === user.id
-                  ? "opacity-100"
-                  : "opacity-0"
-              )}
-            />
-            {user.name}
-          </CommandItem>
-        ))}
-      </CommandGroup>
-    </Command>
-  </PopoverContent>
-</Popover>
+                        <CommandGroup>
+                            {users.map((user) => (
+                                <CommandItem
+                                    key={user.id}
+                                    value={user.name}
+                                    onSelect={() => {
+                                        setData("assigned_to", user.id);
+                                        setOpen(false);
+                                    }}
+                                >
+                                    <Check
+                                        className={cn(
+                                            "mr-2 h-4 w-4",
+                                            data.assigned_to === user.id
+                                                ? "opacity-100"
+                                                : "opacity-0"
+                                        )}
+                                    />
+                                    {user.name}
+                                </CommandItem>
+                            ))}
+                        </CommandGroup>
+                    </Command>
+                </PopoverContent>
+            </Popover>
 
             <Select
                 value={data.status}
-                onValueChange={(value) => setData("status", value)}
+                onValueChange={(value) => setData("status", value as "active" | "inactive")}
             >
                 <SelectTrigger>
                     <SelectValue placeholder="Select Status" />

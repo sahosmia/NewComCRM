@@ -1,10 +1,10 @@
-import AppLayout from "@/layouts/app-layout";
 import { Link } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
+import AppLayout from "@/layouts/app-layout";
 
 export default function Show({ product }: any) {
     return (
-        <AppLayout breadcrumbs={[{ label: "Products", href: route('products.index') }, { label: product.name }]}>
+        <AppLayout breadcrumbs={[{ title: "Products", href: route('products.index') }, { title: product.name, href: route('products.show', product.id) }]}>
             <div className="p-6 max-w-2xl mx-auto">
                 <div className="flex justify-between items-center mb-4">
                     <h1 className="text-xl font-bold">{product.name}</h1>

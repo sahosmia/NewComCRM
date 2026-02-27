@@ -15,6 +15,7 @@ class CustomerController extends Controller
             ->latest()
             ->paginate(10);
 
+            // return $customers;
         return Inertia::render('customers/index', [
             'customers' => $customers
         ]);

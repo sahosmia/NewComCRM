@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, CalendarIcon, ChartBarIcon, ClockIcon, CurlyBraces, DockIcon, Folder, HomeIcon, LayoutGrid, User, Users, UsersIcon } from 'lucide-react';
+import { CalendarIcon, ChartBarIcon, ClockIcon, CurlyBraces, DockIcon, HomeIcon, UsersIcon } from 'lucide-react';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -14,19 +14,18 @@ import {
 } from '@/components/ui/sidebar';
 import type { NavItem } from '@/types';
 import AppLogo from './app-logo';
-import { dashboard } from '@/routes';
 
-// {
-//     title: 'Dashboard',
-//     href: dashboard(),
-//     icon: LayoutGrid,
-// },
-// {
-//     title: 'Coustomers',
-//     href: customerIndex(),
-//     icon: User,
-// },
 
+const mainNavItems: NavItem[] = [
+    { title: 'Dashboard', href: route('dashboard'), icon: HomeIcon },
+    { title: 'Customers', href: route('customers.index'), icon: UsersIcon },
+    { title: 'Products', href: route('products.index'), icon: CurlyBraces },
+    { title: 'Follow-ups', href: route('follow-ups.index'), icon: ClockIcon },
+    { title: 'Meetings', href: route('meetings.index'), icon: CalendarIcon },
+    { title: 'Quotations', href: route('quotations.index'), icon: DockIcon },
+    { title: 'Reports', href: '/reports', icon: ChartBarIcon },
+
+];
 
 
 
@@ -43,35 +42,18 @@ const footerNavItems: NavItem[] = [
     // },
 ];
 
-interface AppSidebarProps {
-  user: {
-    role: 'super_admin' | 'user';
-    name: string;
-    email: string;
-  };
-}
 
-export function AppSidebar({ user }: AppSidebarProps) {
 
-    const mainNavItems: NavItem[] = [
-    { title: 'Dashboard', href: '/dashboard', icon: HomeIcon },
-    { title: 'Customers', href: '/customers', icon: UsersIcon },
-    { title: 'Products', href: '/products', icon: CurlyBraces },
-    { title: 'Follow-ups', href: '/follow-ups', icon: ClockIcon },
-    { title: 'Meetings', href: '/meetings', icon: CalendarIcon },
-    { title: 'Quotations', href: '/quotations', icon: DockIcon },
-    { title: 'Reports', href: '/reports', icon: ChartBarIcon },
-        ...(user?.role === 'super_admin' ? [
-            { title: 'Users', href: '/users', icon: Users }
-        ] : [])
-];
+export function AppSidebar() {
+
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href={route('dashboard')} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>
