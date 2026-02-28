@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import type { Customer } from "@/types/customer";
 
 
 interface User {
@@ -35,7 +36,6 @@ interface Props {
     customer?: Customer;
     users: User[];
 }
-import type { Customer } from "@/types/customer";
 
 export default function CustomerForm({ customer, users }: Props) {
     const [open, setOpen] = useState(false);
@@ -72,11 +72,13 @@ export default function CustomerForm({ customer, users }: Props) {
                 value={data.company_name}
                 onChange={(e) => setData("company_name", e.target.value)}
             />
+            {/* error message */}
             <Input
                 placeholder="Phone"
                 value={data.phone}
                 onChange={(e) => setData("phone", e.target.value)}
             />
+
             <Input
                 placeholder="Email"
                 value={data.email}

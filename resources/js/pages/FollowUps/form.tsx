@@ -1,0 +1,141 @@
+    import { useForm } from "@inertiajs/react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import type { FollowUp } from "@/types/follow-up";
+
+interface Props {
+    followUp?: FollowUp;
+    customers: { id: number; name: string }[];
+}
+
+export default function FollowUpForm({ followUp, customers }: Props) {
+    const { data, setData, post, put, processing, errors } = useForm<{
+        customer_id: number | string;
+        follow_up_date: string;
+        notes: string;
+        status: string;
+        priority: string;
+        next_follow_up: string;
+    }>({
+        customer_id: followUp?.customer_id || 0,
+        follow_up_date: followUp?.follow_up_date ? new Date(followUp.follow_up_date).toISOString().slice(0, 16) : "",
+        notes: followUp?.notes || "",
+        status: followUp?.status || "pending",
+        priority: followUp?.priority || "medium",
+        next_follow_up: followUp?.next_follow_up ? new Date(followUp.next_follow_up).toISOString().slice(0, 16) : "",
+    });
+
+    const submit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (followUp) {
+            put(route("follow-ups.update", followUp.id));
+        } else {
+            post(route("follow-ups.store"));
+        }
+    };
+
+    return (
+        <form onSubmit={submit} className="space-y-4">
+            <div>
+                <label className="text-sm font-medium">Customer</label>
+                <Select
+                    value={data.customer_id.toString()}
+                    onValueChange={(value) => setData("customer_id", parseInt(value))}
+                >
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select Customer" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {customers.map((customer) => (
+                            <SelectItem key={customer.id} value={customer.id.toString()}>
+                                {customer.name}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+                {errors.customer_id && <div className="text-red-500 text-sm">{errors.customer_id}</div>}
+            </div>
+
+            <div>
+                <label className="text-sm font-medium">Follow Up Date</label>
+                <Input
+                    type="datetime-local"
+                    value={data.follow_up_date}
+                    onChange={(e) => setData("follow_up_date", e.target.value)}
+                />
+                {errors.follow_up_date && <div className="text-red-500 text-sm">{errors.follow_up_date}</div>}
+            </div>
+
+            <div>
+                <label className="text-sm font-medium">Status</label>
+                <Select
+                    value={data.status}
+                    onValueChange={(value) => setData("status", value)}
+                >
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="pending">Pending</SelectItem>
+                        <SelectItem value="price_shared">Price Shared</SelectItem>
+                        <SelectItem value="negotiation">Negotiation</SelectItem>
+                        <SelectItem value="purchase">Purchase</SelectItem>
+                        <SelectItem value="lost">Lost</SelectItem>
+                        <SelectItem value="follow_up">Follow Up</SelectItem>
+                    </SelectContent>
+                </Select>
+                {errors.status && <div className="text-red-500 text-sm">{errors.status}</div>}
+            </div>
+
+            <div>
+                <label className="text-sm font-medium">Priority</label>
+                <Select
+                    value={data.priority}
+                    onValueChange={(value) => setData("priority", value)}
+                >
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select Priority" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="low">Low</SelectItem>
+                        <SelectItem value="medium">Medium</SelectItem>
+                        <SelectItem value="high">High</SelectItem>
+                    </SelectContent>
+                </Select>
+                {errors.priority && <div className="text-red-500 text-sm">{errors.priority}</div>}
+            </div>
+
+            <div>
+                <label className="text-sm font-medium">Next Follow Up (Optional)</label>
+                <Input
+                    type="datetime-local"
+                    value={data.next_follow_up}
+                    onChange={(e) => setData("next_follow_up", e.target.value)}
+                />
+                {errors.next_follow_up && <div className="text-red-500 text-sm">{errors.next_follow_up}</div>}
+            </div>
+
+            <div>
+                <label className="text-sm font-medium">Notes</label>
+                <Textarea
+                    value={data.notes}
+                    onChange={(e) => setData("notes", e.target.value)}
+                />
+                {errors.notes && <div className="text-red-500 text-sm">{errors.notes}</div>}
+            </div>
+
+            <Button type="submit" disabled={processing}>
+                {followUp ? "Update" : "Schedule"}
+            </Button>
+        </form>
+    );
+}

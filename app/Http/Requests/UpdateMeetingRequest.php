@@ -11,7 +11,7 @@ class UpdateMeetingRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,15 @@ class UpdateMeetingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'customer_id' => 'required|exists:customers,id',
+            'title' => 'required|string|max:255',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after:start_time',
+            'meeting_type' => 'required|in:physical,virtual,phone',
+            'location' => 'required_if:meeting_type,physical|nullable|string',
+            'agenda' => 'nullable|string',
+            'notes' => 'nullable|string',
+            'status' => 'required|in:scheduled,completed,cancelled'
         ];
     }
 }

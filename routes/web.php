@@ -6,6 +6,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\FollowUpController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\QuotationController;
+use App\Http\Controllers\RequirementController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
@@ -32,8 +33,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // // Products
     Route::resource('products', ProductController::class);
 
+    // // Requirements
+    Route::resource('requirements', RequirementController::class);
+
+
     // // Follow Ups
-    Route::resource('follow-ups', FollowUpController::class)->except(['create', 'edit']);
+    Route::resource('follow-ups', FollowUpController::class);
     Route::post('follow-ups/{follow_up}/complete', [FollowUpController::class, 'complete'])->name('follow-ups.complete');
 
     // Meetings
