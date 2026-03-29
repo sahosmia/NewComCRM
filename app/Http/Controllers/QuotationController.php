@@ -1,117 +1,48 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Models\Quotation;
-use App\Models\Customer;
-use App\Models\Product;
 use App\Http\Requests\StoreQuotationRequest;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\UpdateQuotationRequest;
+use App\Models\Quotation;
+use App\Models\User;
+use App\Services\QuotationService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\QuotationMail;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class QuotationController extends Controller
 {
+    public function __construct(
+        private QuotationService $quotationService,
+    ) {}
+
     public function index(Request $request)
     {
         $user = Auth::user();
+        if (! $user instanceof User) {
+            abort(401);
+        }
 
-        $quotations = Quotation::with(['customer', 'user'])
-            ->when(!$user->isSuperAdmin(), function ($query) use ($user) {
-                return $query->where('user_id', $user->id);
-            })
-            ->when($request->status, function ($query, $status) {
-                return $query->where('status', $status);
-            })
-            ->when($request->customer_id, function ($query, $customerId) {
-                return $query->where('customer_id', $customerId);
-            })
-            ->when($request->date_from, function ($query, $dateFrom) {
-                return $query->whereDate('quotation_date', '>=', $dateFrom);
-            })
-            ->when($request->date_to, function ($query, $dateTo) {
-                return $query->whereDate('quotation_date', '<=', $dateTo);
-            })
-            ->orderBy($request->sort_field ?? 'created_at', $request->sort_direction ?? 'desc')
-            ->paginate($request->per_page ?? 10)
-            ->withQueryString();
-
-        return Inertia::render('Quotations/Index', [
-            'quotations' => $quotations,
-            'filters' => $request->only(['status', 'customer_id', 'date_from', 'date_to']),
-            'stats' => [
-                'draft' => Quotation::draft()->count(),
-                'sent' => Quotation::sent()->count(),
-                'accepted' => Quotation::accepted()->count(),
-                'total' => Quotation::accepted()->sum('total')
-            ]
-        ]);
+        return Inertia::render('Quotations/Index', $this->quotationService->indexData($user, $request));
     }
 
     public function create(Request $request)
     {
-        $customers = Customer::active()
-            ->when(!Auth::user()->isSuperAdmin(), function ($query) {
-                return $query->where('assigned_to', Auth::id());
-            })
-            ->get();
-
-        $products = Product::all();
-
-        $selectedCustomer = null;
-        if ($request->customer_id) {
-            $selectedCustomer = Customer::with('requirements.product')
-                ->find($request->customer_id);
+        $user = Auth::user();
+        if (! $user instanceof User) {
+            abort(401);
         }
 
-        return Inertia::render('Quotations/Create', [
-            'customers' => $customers,
-            'products' => $products,
-            'selectedCustomer' => $selectedCustomer
-        ]);
+        return Inertia::render('Quotations/Create', $this->quotationService->createPageData($user, $request));
     }
 
     public function store(StoreQuotationRequest $request)
     {
-        $validated = $request->validated();
-
-        // Calculate totals
-        $subtotal = collect($validated['items'])->sum(function ($item) {
-            return $item['quantity'] * $item['unit_price'];
-        });
-
-        $tax = $validated['tax'] ?? 0;
-        $discount = $validated['discount'] ?? 0;
-        $total = $subtotal + $tax - $discount;
-
-        $quotation = Quotation::create([
-            'customer_id' => $validated['customer_id'],
-            'user_id' => Auth::id(),
-            'quotation_date' => now(),
-            'valid_until' => $validated['valid_until'],
-            'subtotal' => $subtotal,
-            'tax' => $tax,
-            'discount' => $discount,
-            'total' => $total,
-            'terms_conditions' => $validated['terms_conditions'] ?? null,
-            'notes' => $validated['notes'] ?? null,
-            'status' => $validated['status']
-        ]);
-
-        foreach ($validated['items'] as $item) {
-            $quotation->items()->create([
-                'product_id' => $item['product_id'],
-                'description' => $item['description'] ?? Product::find($item['product_id'])->name,
-                'quantity' => $item['quantity'],
-                'unit_price' => $item['unit_price'],
-                'total' => $item['quantity'] * $item['unit_price']
-            ]);
-        }
-
-        if ($validated['status'] === 'sent') {
-            $quotation->generatePDF();
-        }
+        $quotation = $this->quotationService->store(
+            $request->validated(),
+            (int) Auth::id()
+        );
 
         return redirect()->route('quotations.show', $quotation)
             ->with('success', 'Quotation created successfully.');
@@ -124,7 +55,7 @@ class QuotationController extends Controller
         $quotation->load(['customer', 'user', 'items.product']);
 
         return Inertia::render('Quotations/Show', [
-            'quotation' => $quotation
+            'quotation' => $quotation,
         ]);
     }
 
@@ -137,22 +68,20 @@ class QuotationController extends Controller
                 ->with('error', 'Only draft quotations can be edited.');
         }
 
-        $customers = Customer::active()
-            ->when(!Auth::user()->isSuperAdmin(), function ($query) {
-                return $query->where('assigned_to', Auth::id());
-            })
-            ->get();
+        $user = Auth::user();
+        if (! $user instanceof User) {
+            abort(401);
+        }
 
-        $products = Product::all();
-
-        return Inertia::render('Quotations/Edit', [
-            'quotation' => $quotation->load('items'),
-            'customers' => $customers,
-            'products' => $products
-        ]);
+        return Inertia::render('Quotations/Edit', array_merge(
+            [
+                'quotation' => $quotation->load('items'),
+            ],
+            $this->quotationService->editPageData($user, $quotation)
+        ));
     }
 
-    public function update(Request $request, Quotation $quotation)
+    public function update(UpdateQuotationRequest $request, Quotation $quotation)
     {
         $this->authorize('update', $quotation);
 
@@ -161,56 +90,7 @@ class QuotationController extends Controller
                 ->with('error', 'Only draft quotations can be updated.');
         }
 
-        $validated = $request->validate([
-            'valid_until' => 'required|date|after:today',
-            'items' => 'required|array|min:1',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:1',
-            'items.*.unit_price' => 'required|numeric|min:0',
-            'items.*.description' => 'nullable|string',
-            'tax' => 'nullable|numeric|min:0',
-            'discount' => 'nullable|numeric|min:0',
-            'terms_conditions' => 'nullable|string',
-            'notes' => 'nullable|string',
-            'status' => 'required|in:draft,sent'
-        ]);
-
-        // Calculate totals
-        $subtotal = collect($validated['items'])->sum(function ($item) {
-            return $item['quantity'] * $item['unit_price'];
-        });
-
-        $tax = $validated['tax'] ?? 0;
-        $discount = $validated['discount'] ?? 0;
-        $total = $subtotal + $tax - $discount;
-
-        $quotation->update([
-            'valid_until' => $validated['valid_until'],
-            'subtotal' => $subtotal,
-            'tax' => $tax,
-            'discount' => $discount,
-            'total' => $total,
-            'terms_conditions' => $validated['terms_conditions'] ?? null,
-            'notes' => $validated['notes'] ?? null,
-            'status' => $validated['status']
-        ]);
-
-        // Delete old items and create new ones
-        $quotation->items()->delete();
-
-        foreach ($validated['items'] as $item) {
-            $quotation->items()->create([
-                'product_id' => $item['product_id'],
-                'description' => $item['description'] ?? Product::find($item['product_id'])->name,
-                'quantity' => $item['quantity'],
-                'unit_price' => $item['unit_price'],
-                'total' => $item['quantity'] * $item['unit_price']
-            ]);
-        }
-
-        if ($validated['status'] === 'sent') {
-            $quotation->generatePDF();
-        }
+        $this->quotationService->update($quotation, $request->validated());
 
         return redirect()->route('quotations.show', $quotation)
             ->with('success', 'Quotation updated successfully.');
@@ -220,7 +100,7 @@ class QuotationController extends Controller
     {
         $this->authorize('delete', $quotation);
 
-        $quotation->delete();
+        $this->quotationService->delete($quotation);
 
         return redirect()->route('quotations.index')
             ->with('success', 'Quotation deleted successfully.');
@@ -230,15 +110,7 @@ class QuotationController extends Controller
     {
         $this->authorize('update', $quotation);
 
-        if ($quotation->status === 'draft') {
-            $quotation->generatePDF();
-        }
-
-        // Send email
-        Mail::to($quotation->customer->email)
-            ->send(new QuotationMail($quotation));
-
-        $quotation->update(['status' => 'sent']);
+        $this->quotationService->send($quotation);
 
         return redirect()->back()
             ->with('success', 'Quotation sent successfully.');
@@ -248,25 +120,14 @@ class QuotationController extends Controller
     {
         $this->authorize('view', $quotation);
 
-        if (!$quotation->pdf_path || !\Storage::exists('public/' . $quotation->pdf_path)) {
-            $quotation->generatePDF();
-        }
-
-        return \Storage::download('public/' . $quotation->pdf_path);
+        return $this->quotationService->downloadPdf($quotation);
     }
 
     public function duplicate(Quotation $quotation)
     {
         $this->authorize('create', Quotation::class);
 
-        $newQuotation = $quotation->replicate();
-        $newQuotation->status = 'draft';
-        $newQuotation->quotation_number = Quotation::generateQuotationNumber();
-        $newQuotation->save();
-
-        foreach ($quotation->items as $item) {
-            $newQuotation->items()->create($item->toArray());
-        }
+        $newQuotation = $this->quotationService->duplicate($quotation);
 
         return redirect()->route('quotations.edit', $newQuotation)
             ->with('success', 'Quotation duplicated successfully.');

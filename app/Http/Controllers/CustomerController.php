@@ -2,46 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCustomerRequest;
+use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Services\CustomerService;
 use Inertia\Inertia;
 
 class CustomerController extends Controller
 {
+    public function __construct(
+        private CustomerService $customerService,
+    ) {}
+
     public function index()
     {
-        $customers = Customer::with('assignedUser')
-            ->latest()
-            ->paginate(10);
-
-            // return $customers;
         return Inertia::render('customers/index', [
-            'customers' => $customers
+            'customers' => $this->customerService->paginateIndex(),
         ]);
     }
 
     public function create()
     {
         return Inertia::render('customers/create', [
-            'users' => User::select('id', 'name')->get()
+            'users' => $this->customerService->usersForForm(),
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreCustomerRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'designation' => 'nullable|string',
-            'company_name' => 'required|string',
-            'phone' => 'required|string',
-            'email' => 'nullable|email',
-            'address' => 'nullable|string',
-            'assigned_to' => 'required|exists:users,id',
-            'status' => 'required|in:active,inactive',
-        ]);
-
-        Customer::create($validated);
+        $this->customerService->create($request->validated());
 
         return redirect()->route('customers.index')
             ->with('success', 'Customer created successfully');
@@ -51,24 +40,13 @@ class CustomerController extends Controller
     {
         return Inertia::render('customers/edit', [
             'customer' => $customer,
-            'users' => User::select('id', 'name')->get()
+            'users' => $this->customerService->usersForForm(),
         ]);
     }
 
-    public function update(Request $request, Customer $customer)
+    public function update(UpdateCustomerRequest $request, Customer $customer)
     {
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'designation' => 'nullable|string',
-            'company_name' => 'required|string',
-            'phone' => 'required|string',
-            'email' => 'nullable|email',
-            'address' => 'nullable|string',
-            'assigned_to' => 'required|exists:users,id',
-            'status' => 'required|in:active,inactive',
-        ]);
-
-        $customer->update($validated);
+        $this->customerService->update($customer, $request->validated());
 
         return redirect()->route('customers.index')
             ->with('success', 'Customer updated successfully');
@@ -76,7 +54,7 @@ class CustomerController extends Controller
 
     public function destroy(Customer $customer)
     {
-        $customer->delete();
+        $this->customerService->delete($customer);
 
         return back();
     }

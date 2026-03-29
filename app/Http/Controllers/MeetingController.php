@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Meeting;
-use App\Models\Customer;
 use App\Http\Requests\StoreMeetingRequest;
 use App\Http\Requests\UpdateMeetingRequest;
-use Inertia\Inertia;
+use App\Models\Meeting;
+use App\Services\MeetingService;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class MeetingController extends Controller
 {
+    public function __construct(
+        private MeetingService $meetingService,
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $meetings = Meeting::with(['customer', 'user'])
-            ->latest()
-            ->paginate(10);
-
         return Inertia::render('Meetings/Index', [
-            'meetings' => $meetings
+            'meetings' => $this->meetingService->paginateIndex(),
         ]);
     }
 
@@ -31,7 +31,7 @@ class MeetingController extends Controller
     public function create()
     {
         return Inertia::render('Meetings/Create', [
-            'customers' => Customer::select('id', 'name')->get()
+            'customers' => $this->meetingService->customersForForm(),
         ]);
     }
 
@@ -40,10 +40,10 @@ class MeetingController extends Controller
      */
     public function store(StoreMeetingRequest $request)
     {
-        Meeting::create(array_merge(
+        $this->meetingService->create(
             $request->validated(),
-            ['user_id' => Auth::id()]
-        ));
+            (int) Auth::id()
+        );
 
         return redirect()->route('meetings.index')
             ->with('success', 'Meeting scheduled successfully');
@@ -55,7 +55,7 @@ class MeetingController extends Controller
     public function show(Meeting $meeting)
     {
         return Inertia::render('Meetings/Show', [
-            'meeting' => $meeting->load(['customer', 'user'])
+            'meeting' => $meeting->load(['customer', 'user']),
         ]);
     }
 
@@ -66,7 +66,7 @@ class MeetingController extends Controller
     {
         return Inertia::render('Meetings/Edit', [
             'meeting' => $meeting,
-            'customers' => Customer::select('id', 'name')->get()
+            'customers' => $this->meetingService->customersForForm(),
         ]);
     }
 
@@ -75,7 +75,7 @@ class MeetingController extends Controller
      */
     public function update(UpdateMeetingRequest $request, Meeting $meeting)
     {
-        $meeting->update($request->validated());
+        $this->meetingService->update($meeting, $request->validated());
 
         return redirect()->route('meetings.index')
             ->with('success', 'Meeting updated successfully');
@@ -86,7 +86,7 @@ class MeetingController extends Controller
      */
     public function destroy(Meeting $meeting)
     {
-        $meeting->delete();
+        $this->meetingService->delete($meeting);
 
         return redirect()->route('meetings.index')
             ->with('success', 'Meeting deleted successfully');

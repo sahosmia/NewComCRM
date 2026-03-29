@@ -4,24 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRequirementRequest;
 use App\Http\Requests\UpdateRequirementRequest;
-use App\Models\Customer;
-use App\Models\Product;
 use App\Models\Requirement;
+use App\Services\RequirementService;
 use Inertia\Inertia;
 
 class RequirementController extends Controller
 {
+    public function __construct(
+        private RequirementService $requirementService,
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $requirements = Requirement::with(['customer', 'product'])
-            ->latest()
-            ->paginate(10);
-
         return Inertia::render('Requirements/Index', [
-            'requirements' => $requirements
+            'requirements' => $this->requirementService->paginateIndex(),
         ]);
     }
 
@@ -30,10 +29,7 @@ class RequirementController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Requirements/Create', [
-            'customers' => Customer::select('id', 'name', 'company_name')->get(),
-            'products' => Product::select('id', 'name', 'unit_price')->get(),
-        ]);
+        return Inertia::render('Requirements/Create', $this->requirementService->formOptions());
     }
 
     /**
@@ -41,7 +37,7 @@ class RequirementController extends Controller
      */
     public function store(StoreRequirementRequest $request)
     {
-        Requirement::create($request->validated());
+        $this->requirementService->create($request->validated());
 
         return redirect()->route('requirements.index')
             ->with('success', 'Requirement created successfully');
@@ -53,7 +49,7 @@ class RequirementController extends Controller
     public function show(Requirement $requirement)
     {
         return Inertia::render('Requirements/Show', [
-            'requirement' => $requirement->load(['customer', 'product'])
+            'requirement' => $requirement->load(['customer', 'product']),
         ]);
     }
 
@@ -62,11 +58,10 @@ class RequirementController extends Controller
      */
     public function edit(Requirement $requirement)
     {
-        return Inertia::render('Requirements/Edit', [
-            'requirement' => $requirement,
-            'customers' => Customer::select('id', 'name', 'company_name')->get(),
-            'products' => Product::select('id', 'name', 'unit_price')->get(),
-        ]);
+        return Inertia::render('Requirements/Edit', array_merge(
+            ['requirement' => $requirement],
+            $this->requirementService->formOptions()
+        ));
     }
 
     /**
@@ -74,7 +69,7 @@ class RequirementController extends Controller
      */
     public function update(UpdateRequirementRequest $request, Requirement $requirement)
     {
-        $requirement->update($request->validated());
+        $this->requirementService->update($requirement, $request->validated());
 
         return redirect()->route('requirements.index')
             ->with('success', 'Requirement updated successfully');
@@ -85,7 +80,7 @@ class RequirementController extends Controller
      */
     public function destroy(Requirement $requirement)
     {
-        $requirement->delete();
+        $this->requirementService->delete($requirement);
 
         return redirect()->route('requirements.index')
             ->with('success', 'Requirement deleted successfully');

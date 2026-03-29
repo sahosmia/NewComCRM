@@ -5,19 +5,22 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
+use App\Services\ProductService;
 use Inertia\Inertia;
 
 class ProductController extends Controller
 {
+    public function __construct(
+        private ProductService $productService,
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $products = Product::latest()->paginate(10);
-
         return Inertia::render('Products/Index', [
-            'products' => $products
+            'products' => $this->productService->paginateIndex(),
         ]);
     }
 
@@ -34,7 +37,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        Product::create($request->validated());
+        $this->productService->create($request->validated());
 
         return redirect()->route('products.index')
             ->with('success', 'Product created successfully');
@@ -46,7 +49,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         return Inertia::render('Products/Show', [
-            'product' => $product
+            'product' => $product,
         ]);
     }
 
@@ -56,7 +59,7 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         return Inertia::render('Products/Edit', [
-            'product' => $product
+            'product' => $product,
         ]);
     }
 
@@ -65,7 +68,7 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        $product->update($request->validated());
+        $this->productService->update($product, $request->validated());
 
         return redirect()->route('products.index')
             ->with('success', 'Product updated successfully');
@@ -76,7 +79,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $product->delete();
+        $this->productService->delete($product);
 
         return redirect()->route('products.index')
             ->with('success', 'Product deleted successfully');

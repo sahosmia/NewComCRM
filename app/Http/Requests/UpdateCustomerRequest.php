@@ -2,27 +2,31 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Concerns\ValidatesCustomerAttributes;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateCustomerRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+    use ValidatesCustomerAttributes;
+
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        return $this->customerAttributeRules();
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return $this->customerAttributeMessages();
     }
 }
