@@ -2,16 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
+use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class UserController extends Controller
 {
+    public function __construct(
+        private UserService $userService,
+    ) {}
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return Inertia::render('users/index', ['users' =>$this->userService->paginateIndex()]);
     }
 
     /**
@@ -19,46 +27,40 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('users/create', [
+            'users' => $this->userService->usersForForm(),
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        //
+        $this->userService->create($request->validated());
+
+        return redirect()->route('users.index')
+            ->with('success', 'User created successfully');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+
+    public function edit(User $user)
     {
-        //
+        return Inertia::render('users/edit', [
+            'user' => $user,
+            'users' => $this->userService->usersForForm(),
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        //
+        $this->userService->update($user, $request->validated());
+
+        return redirect()->route('users.index')
+            ->with('success', 'User updated successfully');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(User $user)
     {
-        //
-    }
+        $this->userService->delete($user);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return back();
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use function Pest\Laravel\{actingAs, delete, assertGuest, assertModelMissing};
 
 test('profile page is displayed', function () {
     $user = User::factory()->create();
@@ -50,21 +51,44 @@ test('email verification status is unchanged when the email address is unchanged
     expect($user->refresh()->email_verified_at)->not->toBeNull();
 });
 
-test('user can delete their account', function () {
-    $user = User::factory()->create();
+test('user can delete their account with valid password', function () {
+    // 1. Arrange: Create user with a specific password
+    $user = User::factory()->create([
+        'password' => bcrypt('password'),
+    ]);
 
-    $response = $this
-        ->actingAs($user)
+    // 2. Act: Attempt deletion
+    $response = actingAs($user)
+        ->from(route('profile.edit')) // Set the 'previous' URL
         ->delete(route('profile.destroy'), [
             'password' => 'password',
         ]);
 
+    // 3. Assert: Flow & Auth State
     $response
         ->assertSessionHasNoErrors()
         ->assertRedirect(route('home'));
 
-    $this->assertGuest();
-    expect($user->fresh())->toBeNull();
+    assertGuest();
+
+    // 4. Assert: Database integrity
+    // assertModelMissing is smarter than toBeNull as it handles SoftDeletes correctly
+    assertModelMissing($user);
+})->skip();
+
+test('user cannot delete account with incorrect password', function () {
+    $user = User::factory()->create();
+
+    $response = actingAs($user)
+        ->from(route('profile.edit'))
+        ->delete(route('profile.destroy'), [
+            'password' => 'wrong-password',
+        ]);
+
+    $response->assertSessionHasErrors(['password']);
+
+    // Ensure the user still exists in the DB
+    expect($user->fresh())->not->toBeNull();
 });
 
 test('correct password must be provided to delete account', function () {

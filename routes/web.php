@@ -1,65 +1,77 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\FollowUpController;
-use App\Http\Controllers\MeetingController;
-use App\Http\Controllers\QuotationController;
-use App\Http\Controllers\RequirementController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use Laravel\Fortify\Features;
+use App\Http\Controllers\{
+    DashboardController,
+    CustomerController,
+    ProductController,
+    FollowUpController,
+    MeetingController,
+    QuotationController,
+    RequirementController,
+    UserController,
+    ReportController
+};
 
-Route::get('/', function () {
-    return Inertia::render('welcome', [
-        'canRegister' => Features::enabled(Features::registration()),
-    ]);
-})->name('home');
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
+
+// Redirect root to login using named route for better maintenance
+Route::get('/', fn() => redirect()->route('login'))->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // // Dashboard
+    // --- Dashboard ---
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // // Customers
+    // --- Customers ---
+    // Custom actions grouped by controller/prefix for readability
+    Route::prefix('customers')->name('customers.')->controller(CustomerController::class)->group(function () {
+        Route::post('bulk-destroy', 'bulkDestroy')->name('bulk-destroy');
+        Route::get('export/excel', 'export')->name('export');
+        Route::post('import/excel', 'import')->name('import');
+    });
     Route::resource('customers', CustomerController::class);
-    // Route::post('customers/bulk-destroy', [CustomerController::class, 'bulkDestroy'])->name('customers.bulk-destroy');
-    // Route::get('customers/export/excel', [CustomerController::class, 'export'])->name('customers.export');
-    // Route::post('customers/import/excel', [CustomerController::class, 'import'])->name('customers.import');
 
-    // // Products
-    Route::resource('products', ProductController::class);
-
-    // // Requirements
-    Route::resource('requirements', RequirementController::class);
-
-
-    // // Follow Ups
-    Route::resource('follow-ups', FollowUpController::class);
+    // --- Follow Ups ---
+    // Define custom member routes BEFORE the resource
     Route::post('follow-ups/{follow_up}/complete', [FollowUpController::class, 'complete'])->name('follow-ups.complete');
+    Route::resource('follow-ups', FollowUpController::class);
 
-    // Meetings
+    // --- Meetings ---
+    // Specifically defined before resource to avoid 'calendar' being treated as an {id}
+    Route::get('meetings/calendar', [MeetingController::class, 'calendar'])->name('meetings.calendar');
     Route::resource('meetings', MeetingController::class);
-    Route::get('calendar/meetings', [MeetingController::class, 'calendar'])->name('meetings.calendar');
 
-    // Quotations
+    // --- Quotations ---
+    Route::prefix('quotations')->name('quotations.')->controller(QuotationController::class)->group(function () {
+        Route::post('{quotation}/send', 'send')->name('send');
+        Route::get('{quotation}/download', 'download')->name('download');
+        Route::post('{quotation}/duplicate', 'duplicate')->name('duplicate');
+    });
     Route::resource('quotations', QuotationController::class);
-    Route::post('quotations/{quotation}/send', [QuotationController::class, 'send'])->name('quotations.send');
-    Route::get('quotations/{quotation}/download', [QuotationController::class, 'download'])->name('quotations.download');
-    Route::post('quotations/{quotation}/duplicate', [QuotationController::class, 'duplicate'])->name('quotations.duplicate');
 
-    // Users (Super Admin only)
+    // --- Reports ---
+    Route::prefix('reports')->name('reports.')->controller(ReportController::class)->group(function () {
+        Route::get('follow-ups', 'followUps')->name('follow-ups');
+        Route::get('sales', 'sales')->name('sales');
+        Route::get('customers', 'customers')->name('customers');
+    });
+
+    // --- Simple Resources ---
+    // Grouping simple CRUD resources saves vertical space
+    Route::resources([
+        'products'     => ProductController::class,
+        'requirements' => RequirementController::class,
+    ]);
+
+    // --- Administration ---
     Route::middleware(['role:super_admin'])->group(function () {
         Route::resource('users', UserController::class);
     });
-
-    // Reports
-    Route::get('reports/follow-ups', [ReportController::class, 'followUps'])->name('reports.follow-ups');
-    Route::get('reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
-    Route::get('reports/customers', [ReportController::class, 'customers'])->name('reports.customers');
 });
 
 require __DIR__.'/settings.php';

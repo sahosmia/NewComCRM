@@ -23,7 +23,8 @@ const mainNavItems: NavItem[] = [
     { title: 'Follow-ups', href: route('follow-ups.index'), icon: ClockIcon },
     { title: 'Meetings', href: route('meetings.index'), icon: CalendarIcon },
     { title: 'Quotations', href: route('quotations.index'), icon: DockIcon },
-    { title: 'Reports', href: '/reports', icon: ChartBarIcon },
+    // { title: 'Reports', href: '/reports', icon: ChartBarIcon },
+    { title: 'Users', href: '/users', icon: UsersIcon },
 
 ];
 
