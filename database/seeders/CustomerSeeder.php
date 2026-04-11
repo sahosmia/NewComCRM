@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use App\Models\Customer;
@@ -10,43 +11,54 @@ class CustomerSeeder extends Seeder
 {
     public function run()
     {
-        $users = User::where('role', 'user')->get();
+        // 'user' রোলের ইউজারদের খুঁজে বের করা, যদি না থাকে তবে প্রথম ইউজারকে নেওয়া
+        $users = User::all();
+
+        if ($users->isEmpty()) {
+            $this->command->warn("No users found. Please seed users first.");
+            return;
+        }
 
         $customers = [
             [
                 'name' => 'Musabbir',
                 'designation' => 'Manager',
                 'company_name' => 'Samuda Chemical Com',
-                'phone' => '01799-992813',
+                'phones' => ['01799-992813', '01800-000000'], // Array format
                 'email' => 'contact@samuda.com',
-                'address' => 'T.K Bhaban (8th & 9th F), Dhaka',
-                'status' => 'active'
+                'addresses' => ['T.K Bhaban (8th & 9th F), Dhaka'], // Array format
+                'type' => 'corporate',
+                'status' => 'active',
+                'remarks' => 'Key account for chemical supplies.',
             ],
             [
                 'name' => 'Rahman Ahmed',
                 'designation' => 'Director',
                 'company_name' => 'Tech Solutions Ltd',
-                'phone' => '01811-223344',
+                'phones' => ['01811-223344'],
                 'email' => 'rahman@techsolutions.com',
-                'address' => 'Gulshan, Dhaka',
+                'addresses' => ['Gulshan-2, Dhaka', 'Banani, Dhaka'],
+                'type' => 'corporate',
                 'status' => 'active'
             ],
             [
                 'name' => 'Fatema Begum',
                 'designation' => 'Procurement Officer',
                 'company_name' => 'Global Electronics',
-                'phone' => '01922-334455',
+                'phones' => ['01922-334455'],
                 'email' => 'fatema@globalelec.com',
-                'address' => 'Uttara, Dhaka',
+                'addresses' => ['Sector 4, Uttara, Dhaka'],
+                'type' => 'reseller',
                 'status' => 'active'
             ],
             [
                 'name' => 'Kamal Hossain',
                 'designation' => 'Owner',
                 'company_name' => 'Kamal Enterprise',
-                'phone' => '01533-445566',
+                'phones' => ['01533-445566'],
                 'email' => 'kamal@enterprise.com',
-                'address' => 'Motijheel, Dhaka',
+                'addresses' => ['Motijheel C/A, Dhaka'],
+                'type' => 'personal',
                 'status' => 'active'
             ],
         ];
@@ -56,11 +68,10 @@ class CustomerSeeder extends Seeder
                 'assigned_to' => $users->random()->id
             ]));
 
-            // Create requirements for each customer
             $this->createRequirements($customer);
         }
 
-       
+        Customer::factory()->count(10)->create();
     }
 
     private function createRequirements($customer)
@@ -68,13 +79,13 @@ class CustomerSeeder extends Seeder
         $products = Product::inRandomOrder()->take(rand(1, 3))->get();
 
         foreach ($products as $product) {
-            $quantity = rand(1, 10);
+            $quantity = rand(5, 50);
             $customer->requirements()->create([
                 'product_id' => $product->id,
                 'quantity' => $quantity,
                 'unit_price' => $product->unit_price,
                 'total_price' => $quantity * $product->unit_price,
-                'notes' => 'Sample requirement'
+                'notes' => 'Generated via Seeder'
             ]);
         }
     }

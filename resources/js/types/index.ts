@@ -30,12 +30,11 @@ export interface NavGroup {
 
 export interface NavItem {
     title: string;
-    href: string;
+    href?: string;
     icon?: LucideIcon | null;
     isActive?: boolean;
 }
 export interface NavItemWithSubmenu extends NavItem {
-    href?: string;
     submenu?: NavItem[] | null;
 }
 
@@ -59,15 +58,22 @@ export interface User {
     [key: string]: unknown;
 }
 
-
-
-export interface CategoryType {
+export interface CustomerType {
     id: number;
-    title: string;
-    slug: string;
-    description?: string;
-    image: string;
-    image_url: string;
+    name: string;
+    designation: string;
+    company_name: string;
+    phones: string[];
+    addresses: string[];
+    email: string;
+    type: 'corporate' | 'reseller' | 'personal';
+    assigned_to?: number | string;
+    status: 'active' | 'inactive';
+    remarks?: string;
+    assigned_user?: {
+        id: number;
+        name: string;
+    };
     created_at: string;
     updated_at: string;
 }

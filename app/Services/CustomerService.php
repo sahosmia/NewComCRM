@@ -15,9 +15,9 @@ class CustomerService
         private UserRepository $users,
     ) {}
 
-    public function paginateIndex(int $perPage = 10): LengthAwarePaginator
+    public function paginateIndex(array $filters): LengthAwarePaginator
     {
-        return $this->customers->paginateForIndex($perPage);
+        return $this->customers->paginateForIndex($filters);
     }
 
     public function usersForForm(): Collection
@@ -27,16 +27,13 @@ class CustomerService
 
     public function create(array $data): Customer
     {
+        $data['phones'] = array_filter($data['phones'] ?? []);
+        $data['addresses'] = array_filter($data['addresses'] ?? []);
         return $this->customers->create($data);
     }
 
     public function update(Customer $customer, array $data): void
     {
         $this->customers->update($customer, $data);
-    }
-
-    public function delete(Customer $customer): void
-    {
-        $this->customers->delete($customer);
     }
 }

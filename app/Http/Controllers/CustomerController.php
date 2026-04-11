@@ -6,6 +6,7 @@ use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
 use App\Services\CustomerService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CustomerController extends Controller
@@ -14,10 +15,13 @@ class CustomerController extends Controller
         private CustomerService $customerService,
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('customers/index', [
-            'customers' => $this->customerService->paginateIndex(),
+            'customers' => $this->customerService->paginateIndex(
+                $request->only(['search', 'per_page', 'sort_by', 'sort_direction'])
+            ),
+            'filters' => $request->only(['search', 'per_page'])
         ]);
     }
 
@@ -34,6 +38,13 @@ class CustomerController extends Controller
 
         return redirect()->route('customers.index')
             ->with('success', 'Customer created successfully');
+    }
+
+    public function show(Customer $customer)
+    {
+        return Inertia::render('customers/show', [
+            'customer' => $customer->load(['assignedUser', 'requirements', 'followUps', 'meetings']),
+        ]);
     }
 
     public function edit(Customer $customer)
@@ -54,8 +65,7 @@ class CustomerController extends Controller
 
     public function destroy(Customer $customer)
     {
-        $this->customerService->delete($customer);
-
-        return back();
+        $customer->delete();
+        return back()->with('success', 'Customer deleted successfully!');
     }
 }

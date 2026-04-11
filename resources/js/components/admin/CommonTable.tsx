@@ -5,7 +5,7 @@ import { useTableFilters } from '@/hooks/useTableFilters';
 import { PaginationType } from '@/types';
 import { Link } from '@inertiajs/react';
 import React, { ReactNode, useEffect } from 'react';
-import { Input } from '@/components/ui/input'
+import { Input } from '@/components/ui/input';
 
 interface Column<T> {
     header: string;
@@ -24,7 +24,7 @@ const CommonTable = <T extends { id: number }>({
     data,
     columns,
     create_route,
-    routeName
+    routeName,
 }: CommonTableProps<T>) => {
 
     const {
@@ -37,6 +37,7 @@ const CommonTable = <T extends { id: number }>({
         handlePageChange,
         handlePerPageChange,
         handleSelectAllItems,
+        handleSelectItem,
     } = useTableFilters({
         data: data,
         routeName: routeName,
@@ -46,44 +47,49 @@ const CommonTable = <T extends { id: number }>({
         setSelectedItems([]);
     }, [data.data, setSelectedItems]);
 
-
     return (
-        <div>
-            <div className="flex items-center justify-between mb-4">
+        <div className="space-y-4">
+            {/* Toolbar */}
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center space-x-2">
-                    <Button variant="default" size="sm" asChild>
-                        <Link href={route(create_route)}>Add New Data</Link>
-                    </Button>
+
                     <Input
                         type="text"
-                        placeholder="Search items..."
+                        placeholder="Search..."
                         value={search}
                         onChange={handleSearchChange}
-                        className="w-64 h-8 px-2 text-sm border rounded-md"
+                        className="w-64 h-9 px-3 text-sm"
                     />
-                    <span className="text-sm text-muted-foreground">Total Items: {data.total}</span>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className='flex gap-2 justify-center items-center'>
+
+                    <div className="text-sm font-medium">
+                        {selectedItems.length > 0 && (
+                            <span className="text-primary">{selectedItems.length} items selected</span>
+                        )}
+                    </div>
+                    <Button variant="default" size="sm" asChild>
+                        <Link href={route(create_route)}>Add New</Link>
+                    </Button>
                 </div>
-
-
             </div>
 
-            <div className="border rounded-md">
+            {/* Table Container */}
+            <div className="border rounded-lg overflow-hidden bg-card text-card-foreground shadow-sm">
                 <Table>
-                    <TableHeader>
+                    <TableHeader className="bg-muted/50">
                         <TableRow>
-                            <TableHead className="w-[10px]">
+                            <TableHead className="w-[40px]">
                                 <input
                                     type="checkbox"
-                                    checked={selectedItems.length === data.data.length && data.data.length > 0}
+                                    checked={data.data.length > 0 && selectedItems.length === data.data.length}
                                     onChange={handleSelectAllItems}
-                                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
                                 />
                             </TableHead>
-                            <TableHead className="w-[10px]">No</TableHead>
+                            <TableHead className="w-[50px] font-bold">#</TableHead>
                             {columns.map((column, index) => (
-                                <TableHead key={index} className={column.className}>
+                                <TableHead key={index} className={`${column.className} font-bold`}>
                                     {column.header}
                                 </TableHead>
                             ))}
@@ -92,25 +98,31 @@ const CommonTable = <T extends { id: number }>({
                     <TableBody>
                         {data.data.length === 0 ? (
                             <TableRow>
-                                <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
-                                    No data found.
+                                <TableCell
+                                    colSpan={columns.length + 2}
+                                    className="h-32 text-center text-muted-foreground"
+                                >
+                                    No data found matching your criteria.
                                 </TableCell>
                             </TableRow>
                         ) : (
                             data.data.map((item, i) => (
-                                <TableRow key={item.id}>
-                                    <TableCell className="w-[10px]">
+                                <TableRow key={item.id} className="hover:bg-muted/30 transition-colors">
+                                    <TableCell>
                                         <input
                                             type="checkbox"
-                                            checked={selectedItems.length === data.data.length && data.data.length > 0}
-                                            onChange={handleSelectAllItems}
-                                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                            // FIX: Check if THIS specific ID is in the selected list
+                                            checked={selectedItems.includes(item.id)}
+                                            onChange={() => handleSelectItem(item.id)}
+                                            className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
                                         />
                                     </TableCell>
-                                    <TableCell className='w-[10px]'>{data.from + i}</TableCell>
+                                    <TableCell className="text-muted-foreground font-mono text-xs">
+                                        {data.from + i}
+                                    </TableCell>
 
                                     {columns.map((column, colIndex) => (
-                                        <TableCell key={colIndex}>
+                                        <TableCell key={colIndex} className="py-3">
                                             {typeof column.accessor === 'function'
                                                 ? column.accessor(item)
                                                 : (item[column.accessor as keyof T] as ReactNode)
@@ -124,75 +136,62 @@ const CommonTable = <T extends { id: number }>({
                 </Table>
             </div>
 
-            <div className="flex items-center justify-between pt-4 mt-4 border-t">
-                <div>
-                    <div className="mx-4 mb-4 text-sm text-muted-foreground">Selected Items: {selectedItems.length}</div>
+            {/* Pagination & Footer */}
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between px-2">
+
+
+                <div className="text-xs text-muted-foreground">
+                    Showing {data.from ?? 0} to {data.to ?? 0} of {data.total} records
                 </div>
-                <div className="flex items-center justify-end py-4 mx-4 space-x-10">
+
+                <div className="flex items-center space-x-6 lg:space-x-8">
                     <div className="flex items-center space-x-2">
-                        <span className="text-sm text-muted-foreground">Show:</span>
+                        <p className="text-sm font-medium">Rows per page</p>
                         <Select value={perPage} onValueChange={handlePerPageChange}>
-                            <SelectTrigger className="w-16">
-                                <SelectValue placeholder="Select a item" />
+                            <SelectTrigger className="h-8 w-[70px]">
+                                <SelectValue placeholder={perPage} />
                             </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    {perPageOptions.map((option) => (
-                                        <SelectItem key={option} value={option}>
-                                            {option}
-                                        </SelectItem>
-                                    ))}
-                                </SelectGroup>
+                            <SelectContent side="top">
+                                {perPageOptions.map((option) => (
+                                    <SelectItem key={option} value={option}>
+                                        {option}
+                                    </SelectItem>
+                                ))}
                             </SelectContent>
                         </Select>
                     </div>
 
-                    {/* Pagination */}
-                    <div className="flex items-center space-x-1">
+                    <div className="flex items-center space-x-2">
                         <Button
                             variant="outline"
-                            size="sm"
+                            className="h-8 w-8 p-0"
                             onClick={() => handlePageChange(data.first_page_url)}
-                            disabled={data.current_page === 1 || !data.first_page_url}
+                            disabled={data.current_page === 1}
                         >
-                            First
+                            «
                         </Button>
-                        {data.links.map((link, index) =>
-                            link.url ? (
-                                <Button
-                                    key={index}
-                                    size="sm"
-                                    onClick={() => handlePageChange(link.url)}
-                                    className={link.active
-                                        ? 'text-white bg-main px-3 py-1 text-sm rounded-md cursor-default'
-                                        : 'text-secondary-foreground border border-input bg-background hover:bg-accent hover:text-accent-foreground px-3 py-1 text-sm rounded-md' // Inactive state
-                                    }
-                                >
-                                    {link.label.replace(/&laquo; | &raquo;/g, '').trim()}
-                                </Button>
-                            ) : (
-                                <span key={index} className="px-2 py-1 text-sm text-gray-500">
-                                    {link.label.replace(/&laquo; | &raquo;/g, '').trim()}
-                                </span>
-                            ),
-                        )}
+
+                        {data.links.slice(1, -1).map((link, index) => (
+                            <Button
+                                key={index}
+                                variant={link.active ? "default" : "outline"}
+                                size="sm"
+                                className="h-8 w-8 p-0"
+                                onClick={() => link.url && handlePageChange(link.url)}
+                                disabled={!link.url}
+                            >
+                                {link.label}
+                            </Button>
+                        ))}
+
                         <Button
-                            variant='outline'
-                            size="sm"
+                            variant="outline"
+                            className="h-8 w-8 p-0"
                             onClick={() => handlePageChange(data.last_page_url)}
-                            disabled={!data.last_page_url || data.current_page === data.last_page}
+                            disabled={data.current_page === data.last_page}
                         >
-                            Last
+                            »
                         </Button>
-
-
-                    </div>
-
-                    {/* Page info */}
-                    <div>
-                        <span className="ml-4 text-sm text-muted-foreground">
-                            Page {data.current_page} of {data.last_page}
-                        </span>
                     </div>
                 </div>
             </div>

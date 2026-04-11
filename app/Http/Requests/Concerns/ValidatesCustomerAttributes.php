@@ -9,13 +9,19 @@ trait ValidatesCustomerAttributes
      */
     protected function customerAttributeRules(): array
     {
+        $customerId = $this->route('customer') ? $this->route('customer')->id : null;
         return [
             'name' => 'required|string|max:255',
             'designation' => 'nullable|string|max:255',
             'company_name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'email' => 'nullable|email|max:255',
-            'address' => 'nullable|string',
+            'email' => "nullable|email|max:255|unique:customers,email,{$customerId}",
+            'type'        => 'required|in:corporate,reseller,personal',
+            'phones'      => 'nullable|array',
+            'phones.*'    => 'nullable|string|max:20',
+            'addresses'   => 'nullable|array',
+            'addresses.*' => 'nullable|string',
+            'remarks'     => 'nullable|string',
+            'designation' => 'nullable|string|max:255',
             'assigned_to' => 'required|exists:users,id',
             'status' => 'required|in:active,inactive',
         ];

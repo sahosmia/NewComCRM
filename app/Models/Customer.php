@@ -12,21 +12,35 @@ class Customer extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name', 'designation', 'company_name', 'phone',
-        'email', 'address', 'assigned_to', 'status'
+        'name',
+        'designation',
+        'company_name',
+        'type',
+        'phones',
+        'email',
+        'addresses',
+        'assigned_to',
+        'status',
+        'remarks'
     ];
 
     protected $casts = [
-        'status' => 'string'
+        'status' => 'string',
+        'phones' => 'array',
+        'addresses' => 'array',
+        'type' => 'string',
     ];
 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['name', 'company_name', 'phone', 'email', 'status'])
+            ->logOnly(['name', 'company_name', 'type', 'email', 'status'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
     }
+
+
+
 
     // Relationships
     public function assignedUser()
@@ -54,10 +68,15 @@ class Customer extends Model
         return $this->hasMany(Quotation::class);
     }
 
+
+
     // Accessors
     public function getWhatsAppLinkAttribute()
     {
-        $phone = preg_replace('/[^0-9]/', '', $this->phone);
+        $primaryPhone = $this->phones[0] ?? null;
+        if (!$primaryPhone) return null;
+
+        $phone = preg_replace('/[^0-9]/', '', $primaryPhone);
         return "https://wa.me/{$phone}";
     }
 
@@ -70,5 +89,9 @@ class Customer extends Model
     public function scopeAssignedTo($query, $userId)
     {
         return $query->where('assigned_to', $userId);
+    }
+    public function scopeByType($query, $type)
+    {
+        return $query->where('type', $type);
     }
 }

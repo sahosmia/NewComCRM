@@ -1,60 +1,133 @@
 import { Link } from '@inertiajs/react';
-import { FileText, MoreHorizontal, SquarePen, Trash2 } from 'lucide-react';
+import { Building2, FileText, MoreHorizontal, Phone, SquarePen, Trash2, User2, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import type { CategoryType, Column } from '@/types';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import type { CustomerType, Column } from '@/types';
 import { handleDelete } from '@/utils/table';
+import { Badge } from '@/components/ui/badge';
+import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
+import { cn } from '@/lib/utils';
 
-const columns: Column<CategoryType>[] = [
+const columns: Column<CustomerType>[] = [
     {
-        header: 'Image',
-        accessor: (item) => (
-            item.image_url ? (
-                <img
-                    src={item.image_url}
-                    alt={item.title}
-                    className="object-cover w-12 h-12 rounded-md"
-                />
-            ) : (
-                <span className="text-gray-500">No Image</span>
-            )
+        header: 'Customer Info',
+        accessor: (item: any) => (
+            <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                    <span className="font-medium text-foreground">{item.name}</span>
+                    {/* Customer Type Badge */}
+                    <Badge variant="outline" className="text-[10px] px-1 py-0 h-4 capitalize font-normal">
+                        {item.type}
+                    </Badge>
+                </div>
+                <span className="text-xs text-muted-foreground">{item.designation || 'No Designation'}</span>
+            </div>
+        ),
+        className: 'w-3/12',
+    },
+    {
+        header: 'Company',
+        accessor: (item: any) => (
+            <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-2">
+                    <Building2 className="w-3.5 h-3.5 text-muted-foreground" />
+                    <span className="text-sm font-medium">{item.company_name}</span>
+                </div>
+                {/* একাধিক অ্যাড্রেস থাকলে শুধু প্রথমটি ছোট করে দেখানো */}
+                {item.addresses && item.addresses[0] && (
+                    <div className="flex items-center gap-1 text-[11px] text-muted-foreground line-clamp-1">
+                        <MapPin className="w-3 h-3" /> {item.addresses[0]}
+                    </div>
+                )}
+            </div>
+        ),
+        className: 'w-3/12',
+    },
+    {
+        header: 'Contact',
+        accessor: (item: any) => (
+            <div className="flex flex-col text-sm">
+                <div className="flex items-center gap-1 font-medium">
+                    <Phone className="w-3 h-3" />
+                    {/* Multiple phones থাকলে প্রথমটি দেখানো এবং কয়টি আছে তা জানানো */}
+                    {item.phones && item.phones[0] ? item.phones[0] : 'N/A'}
+                    {item.phones && item.phones.length > 1 && (
+                        <span className="text-[10px] bg-muted px-1 rounded text-muted-foreground">
+                            +{item.phones.length - 1}
+                        </span>
+                    )}
+                </div>
+                <span className="text-xs text-muted-foreground">{item.email}</span>
+            </div>
+        ),
+        className: 'w-2/12',
+    },
+    {
+        header: 'Assigned To',
+        accessor: (item: any) => (
+            <div className="flex items-center gap-2">
+                {item.assigned_user ? (
+                    <div className="flex items-center gap-2">
+                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-[10px] font-medium text-primary border border-primary/20">
+                            {item.assigned_user.name.charAt(0)}
+                        </div>
+                        <span className="text-sm font-medium">{item.assigned_user.name}</span>
+                    </div>
+                ) : (
+                    <span className="text-xs text-muted-foreground italic">Unassigned</span>
+                )}
+            </div>
+        ),
+        className: 'w-[15%]',
+    },
+    {
+        header: 'Status',
+        accessor: (item: any) => (
+            <Badge
+                variant={item.status === 'active' ? 'default' : 'secondary'}
+                className={cn(
+                    "capitalize",
+                    item.status === 'active' ? "bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 border-emerald-500/20" : ""
+                )}
+            >
+                {item.status}
+            </Badge>
         ),
         className: 'w-1/12',
     },
-    { header: 'Title', accessor: 'title', className: 'w-3/12' },
-    { header: 'Description', accessor: 'description', className: 'w-1/12' },
-    { header: 'Created At', accessor: (item) => new Date(item.created_at).toLocaleDateString(), className: 'w-2/12' },
-
     {
         header: 'Actions',
         accessor: (item) => (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="w-8 h-8 p-0">
-                        <span className="sr-only">Open menu</span>
                         <MoreHorizontal className="w-4 h-4" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    <DropdownMenuItem>
-                        <Link href={route('admin.product_m.categories.show', item.slug)} className="flex items-center w-full gap-2">
-                            <FileText className="w-4 h-4 mr-2" /> View
+                <DropdownMenuContent align="end" className="w-[160px]">
+                    <DropdownMenuItem asChild>
+                        <Link href={route('customers.show', item.id)}>
+                            <FileText className="w-4 h-4 mr-2" /> View Details
                         </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        <Link href={route('admin.product_m.categories.edit', item.slug)} className="flex items-center w-full gap-2">
-                            <SquarePen className="w-4 h-4 mr-2" /> Edit
+                    <DropdownMenuItem asChild>
+                        <Link href={route('customers.edit', item.id)}>
+                            <SquarePen className="w-4 h-4 mr-2" /> Edit Info
                         </Link>
                     </DropdownMenuItem>
-
-                    <DropdownMenuItem onClick={() => handleDelete(item.slug, 'admin.product_m.categories.destroy')}>
-                        <Trash2 className="w-4 h-4 mr-2 text-red-700" />
-                        <span className="text-red-700">Delete </span>
-                    </DropdownMenuItem>
+                    <DropdownMenuSeparator/>
+                    <AlertDialogDestructive
+                        title="Delete Customer?"
+                        description={`This action cannot be undone. All data for ${item.name} will be permanently removed.`}
+                        onConfirm={() => handleDelete(item.id, 'customers.destroy')}
+                    >
+                   
+                    </AlertDialogDestructive>
                 </DropdownMenuContent>
             </DropdownMenu>
         ),
         className: 'w-1/12',
     },
 ];
+
 export { columns };

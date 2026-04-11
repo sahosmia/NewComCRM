@@ -10,6 +10,7 @@ interface UseTableFiltersProps<T> {
 export const useTableFilters = <T extends { id: number }>({ data, routeName }: UseTableFiltersProps<T>) => {
     const [perPage, setPerPage] = useState(data.per_page ? String(data.per_page) : '10');
     const [search, setSearch] = useState("");
+
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
     const perPageOptions = ['5', '10', '20', '50'];

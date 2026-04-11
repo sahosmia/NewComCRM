@@ -16,16 +16,32 @@ class CustomerRepository
             ->get();
     }
 
-    public function paginateForIndex(int $perPage = 10): LengthAwarePaginator
+    public function paginateForIndex(array $params): LengthAwarePaginator
     {
+        $perPage = $params['per_page'] ?? 10;
+
         return Customer::query()
             ->with('assignedUser')
-            ->latest()
-            ->paginate($perPage);
+            ->when($params['search'] ?? null, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('company_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+                });
+            })
+            ->when($params['sort_by'] ?? 'created_at', function ($query, $sortBy) use ($params) {
+                $direction = $params['sort_direction'] ?? 'desc';
+                $query->orderBy($sortBy, $direction);
+            }, function ($query) {
+                $query->latest();
+            })
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function create(array $data): Customer
     {
+        
         return Customer::query()->create($data);
     }
 

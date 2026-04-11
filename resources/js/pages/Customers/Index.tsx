@@ -1,64 +1,35 @@
-import { Link, router } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import AppLayout from "@/layouts/app-layout";
-import { Customer } from "@/types/customer";
-import { PaginationType } from "@/types";
+import AppLayout from '@/layouts/app-layout';
+import { CustomerType, PaginationType } from '@/types';
+import { Head } from '@inertiajs/react';
+import CommonTable from '@/components/admin/CommonTable';
+import Heading from '@/components/admin/heading';
+import { columns } from './columns';
 
-interface Props {
-    customers: PaginationType<Customer>;
-}
 
-export default function Index({ customers }: Props) {
-  const deleteCustomer = (id: number) => {
-    if (confirm("Are you sure?")) {
-      router.delete(route("customers.destroy", id));
-    }
-  };
 
-  return (
-    <AppLayout breadcrumbs={[{ title: "Customers", href: route("customers.index") }]}>
-    <div className="p-6">
-      <div className="flex justify-between mb-4">
-        <h1 className="text-xl font-bold">Customers</h1>
-        <Link href={route("customers.create")}>
-          <Button>Create</Button>
-        </Link>
-      </div>
+export default function CustomerIndex({ customers }: { customers: PaginationType<CustomerType> }) {
+    const breadcrumbs = [
+        { title: 'Dashboard', href: route('dashboard') },
+        { title: 'Customers', href: route('customers.index') },
+    ];
 
-      <table className="w-full border">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Company</th>
-            <th>Phone</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Customers" />
 
-        <tbody>
-          {customers.data.map((customer: any) => (
-            <tr key={customer.id} className="border-t">
-              <td>{customer.name}</td>
-              <td>{customer.company_name}</td>
-              <td>{customer.phone}</td>
-              <td>{customer.status}</td>
-              <td className="space-x-2">
-                <Link href={route("customers.edit", customer.id)}>
-                  <Button variant="outline">Edit</Button>
-                </Link>
-                <Button
-                  variant="destructive"
-                  onClick={() => deleteCustomer(customer.id)}
-                >
-                  Delete
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-    </AppLayout>
-  );
+            <div className="flex flex-col flex-1 h-full gap-4 p-4 overflow-x-auto rounded-xl">
+                <Heading
+                    title={`Customers (${customers.total})`}
+                    description="Manage your client base, contact information, and account status."
+                />
+
+                <CommonTable
+                    data={customers}
+                    columns={columns}
+                    create_route="customers.create"
+                    routeName="customers.index"
+                />
+            </div>
+        </AppLayout>
+    );
 }

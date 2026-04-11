@@ -16,10 +16,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('designation')->nullable();
             $table->string('company_name');
-            $table->string('phone');
             $table->string('email')->nullable();
-            $table->text('address')->nullable();
             $table->foreignId('assigned_to')->constrained('users')->onDelete('cascade');
+            $table->enum('type', ['corporate', 'reseller', 'personal'])->default('corporate');
+            $table->json('phones')->nullable();
+            $table->json('addresses')->nullable();
+            $table->text('remarks')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
             $table->softDeletes();
