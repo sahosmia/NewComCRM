@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type { CustomerType } from "@/types";
+import ErrorMessage from "@/components/admin/ErrorMessage";
 
 interface User { id: number; name: string; }
 interface Props { customer?: CustomerType; users: User[]; }
@@ -24,8 +25,8 @@ export default function CustomerForm({ customer, users }: Props) {
         assigned_to: customer?.assigned_to || "",
         status: customer?.status || "active",
         type: customer?.type || "corporate",
-        phones: customer?.phones || [""],
-        addresses: customer?.addresses || [""],
+        phones: (customer?.phones && customer.phones.length > 0) ? customer.phones : [""],
+        addresses: (customer?.addresses && customer.addresses.length > 0) ? customer.addresses : [""],
         remarks: customer?.remarks || "",
     });
 
@@ -58,13 +59,98 @@ export default function CustomerForm({ customer, users }: Props) {
                     <div className="space-y-1">
                         <label className="text-sm font-medium">Full Name</label>
                         <Input value={data.name} onChange={e => setData("name", e.target.value)} placeholder="John Doe" />
-                        {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
+                        <ErrorMessage message={errors.name} />
                     </div>
 
                     <div className="space-y-1">
                         <label className="text-sm font-medium">Email Address</label>
                         <Input type="email" value={data.email} onChange={e => setData("email", e.target.value)} placeholder="john@example.com" />
                         {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
+                        <ErrorMessage message={errors.email} />
+
+                    </div>
+
+                    <div className="space-y-1">
+                        <label className="text-sm font-medium">Company Name</label>
+                        <Input value={data.company_name} onChange={e => setData("company_name", e.target.value)} placeholder="Acme Corp" />
+                        <ErrorMessage message={errors.company_name} />
+
+                    </div>
+                    <div className="space-y-1">
+                        <label className="text-sm font-medium">Designation</label>
+                        <Input value={data.designation} onChange={e => setData("designation", e.target.value)} placeholder="Purchasing Manager" />
+                    </div>
+
+                    <div className="space-y-3">
+                        <label className="text-sm font-medium">Phone Number</label>
+                        <div className="grid grid-cols-1 gap-4">
+                            {data.phones.map((phone, i) => (
+                                <div key={i} className="flex flex-col gap-1">
+                                    <div className="flex gap-2 relative group">
+                                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-muted-foreground border-r pr-2 h-5 flex items-center pointer-events-none">
+                                            +88
+                                        </div>
+
+                                        <Input
+                                            value={phone}
+                                            onChange={e => {
+                                                const val = e.target.value.replace(/\D/g, '').slice(0, 11);
+                                                handleListUpdate("phones", i, val);
+                                            }}
+                                            placeholder="017XXXXXXXX"
+                                            className={cn(
+                                                "pl-14 pr-10",
+                                                errors[`phones.${i}` as keyof typeof errors] && "border-destructive"
+                                            )}
+                                        />
+
+                                        {data.phones.length > 1 && (
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() => removeListItem("phones", i)}
+                                                className="text-destructive absolute right-1 top-1/2 -translate-y-1/2 hover:bg-transparent"
+                                            >
+                                                <X className="w-4 h-4" />
+                                            </Button>
+                                        )}
+                                    </div>
+
+                                    {/* Individual Phone Error (Array validation handled by Laravel) */}
+                                    <ErrorMessage message={errors[`phones.${i}` as keyof typeof errors] as string} />
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="flex justify-between items-center pt-1">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => addListItem("phones")}
+                                className="text-xs"
+                            >
+                                <Plus className="w-4 h-4 mr-1" /> Add Another Phone
+                            </Button>
+                        </div>
+                    </div>
+
+                    {/* Section 4: Address List */}
+                    <div className="space-y-3 ">
+
+                        <label className="text-sm font-medium">Address</label>
+                        <div className="grid grid-cols-1 gap-4">
+                            {data.addresses.map((addr, i) => (
+                                <div key={i} className="flex gap-2">
+                                    <Textarea value={addr} onChange={e => handleListUpdate("addresses", i, e.target.value)} placeholder={`Location details #${i + 1}`} className="min-h-[80px] pr-10" />
+                                    {data.addresses.length > 1 && (
+                                        <Button type="button" variant="ghost" size="icon" onClick={() => removeListItem("addresses", i)} className="text-destructive"><X className="w-4 h-4" /></Button>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                        <Button type="button" variant="outline" size="sm" onClick={() => addListItem("addresses")}><Plus className="w-4 h-4 mr-1" /> Add Another Address</Button>
                     </div>
                 </div>
 
@@ -119,69 +205,22 @@ export default function CustomerForm({ customer, users }: Props) {
                                 </Command>
                             </PopoverContent>
                         </Popover>
+                        <ErrorMessage message={errors.assigned_to} />
+
+                    </div>
+
+                    <div className="space-y-1">
+                        <label className="text-sm font-medium text-primary">Internal Remarks</label>
+                        <Textarea value={data.remarks} onChange={e => setData("remarks", e.target.value)} placeholder="Notes about this customer..." className="min-h-[100px]" />
                     </div>
                 </div>
-            </div>
-
-            {/* Section 2: Company Details */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-                <div className="space-y-1">
-                    <label className="text-sm font-medium">Company Name</label>
-                    <Input value={data.company_name} onChange={e => setData("company_name", e.target.value)} placeholder="Acme Corp" />
-                </div>
-                <div className="space-y-1">
-                    <label className="text-sm font-medium">Designation</label>
-                    <Input value={data.designation} onChange={e => setData("designation", e.target.value)} placeholder="Purchasing Manager" />
-                </div>
-            </div>
-
-            {/* Section 3: Contact List (Phones) */}
-            <div className="space-y-3 pt-4">
-                <div className="flex justify-between items-center border-b pb-2">
-                    <h3 className="text-lg font-semibold text-primary">Contact Numbers</h3>
-                    <Button type="button" variant="outline" size="sm" onClick={() => addListItem("phones")}><Plus className="w-4 h-4 mr-1"/> Add Phone</Button>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {data.phones.map((phone, i) => (
-                        <div key={i} className="flex gap-2">
-                            <Input value={phone} onChange={e => handleListUpdate("phones", i, e.target.value)} placeholder={`Phone #${i+1}`} />
-                            {data.phones.length > 1 && (
-                                <Button type="button" variant="ghost" size="icon" onClick={() => removeListItem("phones", i)} className="text-destructive"><X className="w-4 h-4"/></Button>
-                            )}
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {/* Section 4: Address List */}
-            <div className="space-y-3 pt-4">
-                <div className="flex justify-between items-center border-b pb-2">
-                    <h3 className="text-lg font-semibold text-primary">Addresses</h3>
-                    <Button type="button" variant="outline" size="sm" onClick={() => addListItem("addresses")}><Plus className="w-4 h-4 mr-1"/> Add Address</Button>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {data.addresses.map((addr, i) => (
-                        <div key={i} className="relative group">
-                            <Textarea value={addr} onChange={e => handleListUpdate("addresses", i, e.target.value)} placeholder={`Location details #${i+1}`} className="min-h-[80px] pr-10" />
-                            {data.addresses.length > 1 && (
-                                <button type="button" onClick={() => removeListItem("addresses", i)} className="absolute top-2 right-2 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"><X className="w-4 h-4"/></button>
-                            )}
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {/* Section 5: Remarks */}
-            <div className="space-y-1 pt-4">
-                <label className="text-sm font-medium text-primary">Internal Remarks</label>
-                <Textarea value={data.remarks} onChange={e => setData("remarks", e.target.value)} placeholder="Notes about this customer..." className="min-h-[100px]" />
             </div>
 
             {/* Submit */}
             <div className="flex justify-end gap-3 pt-6 border-t">
                 <Button variant="ghost" type="button" onClick={() => window.history.back()}>Cancel</Button>
                 <Button type="submit" disabled={processing} className="px-8">
-                    {processing ? <Loader2 className="w-4 h-4 animate-spin mr-2"/> : null}
+                    {processing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
                     {customer ? "Save Changes" : "Create Customer"}
                 </Button>
             </div>

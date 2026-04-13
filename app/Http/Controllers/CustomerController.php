@@ -18,10 +18,7 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         return Inertia::render('customers/index', [
-            'customers' => $this->customerService->paginateIndex(
-                $request->only(['search', 'per_page', 'sort_by', 'sort_direction'])
-            ),
-            'filters' => $request->only(['search', 'per_page'])
+            'customers' => $this->customerService->paginateIndex($request->all()),
         ]);
     }
 

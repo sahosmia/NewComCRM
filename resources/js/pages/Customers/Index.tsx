@@ -1,18 +1,55 @@
 import AppLayout from '@/layouts/app-layout';
 import { CustomerType, PaginationType } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import { columns } from './columns';
 
+interface Props {
+    customers : PaginationType<CustomerType>;
+}
 
 
-export default function CustomerIndex({ customers }: { customers: PaginationType<CustomerType> }) {
+
+export default function CustomerIndex({ customers }: Props) {
     const breadcrumbs = [
         { title: 'Dashboard', href: route('dashboard') },
         { title: 'Customers', href: route('customers.index') },
     ];
 
+const filters = [
+    {
+        name: 'status',
+        label: 'Status',
+        type: 'select',
+        options: [
+            { label: 'Active', value: 'active' },
+            { label: 'Inactive', value: 'inactive' },
+        ]
+    },
+    {
+        name: 'type',
+        label: 'Customer Type',
+        type: 'select',
+        options: [
+            { label: 'Corporate', value: 'corporate' },
+            { label: 'Reseller', value: 'reseller' },
+            { label: 'Personal', value: 'personal' },
+        ]
+    },
+
+    {
+        name: 'date',
+        label: 'Created Date',
+        type: 'date',
+    },
+
+    {
+        name: 'date_range',
+        label: 'Created Date',
+        type: 'date_range',
+    }
+];
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Customers" />
@@ -28,6 +65,7 @@ export default function CustomerIndex({ customers }: { customers: PaginationType
                     columns={columns}
                     create_route="customers.create"
                     routeName="customers.index"
+                    filters={filters}
                 />
             </div>
         </AppLayout>

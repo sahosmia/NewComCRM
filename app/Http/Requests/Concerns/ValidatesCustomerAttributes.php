@@ -11,19 +11,19 @@ trait ValidatesCustomerAttributes
     {
         $customerId = $this->route('customer') ? $this->route('customer')->id : null;
         return [
-            'name' => 'required|string|max:255',
-            'designation' => 'nullable|string|max:255',
-            'company_name' => 'required|string|max:255',
-            'email' => "nullable|email|max:255|unique:customers,email,{$customerId}",
-            'type'        => 'required|in:corporate,reseller,personal',
-            'phones'      => 'nullable|array',
-            'phones.*'    => 'nullable|string|max:20',
-            'addresses'   => 'nullable|array',
-            'addresses.*' => 'nullable|string',
-            'remarks'     => 'nullable|string',
-            'designation' => 'nullable|string|max:255',
-            'assigned_to' => 'required|exists:users,id',
-            'status' => 'required|in:active,inactive',
+            'name'          => 'required|string|max:255',
+            'designation'   => 'nullable|string|max:255',
+            'company_name'  => 'required|string|max:255',
+            'email'         => "nullable|email|max:255|unique:customers,email,{$customerId}",
+            'type'          => 'required|in:corporate,reseller,personal',
+            'phones'        => 'required|array|min:1',
+            'phones.*'      => ['required', 'string', 'regex:/^01[3-9]\d{8}$/',],
+            'addresses'     => 'nullable|array',
+            'addresses.*'   => 'nullable|string',
+            'remarks'       => 'nullable|string',
+            'designation'   => 'nullable|string|max:255',
+            'assigned_to'   => 'required|exists:users,id',
+            'status'        => 'required|in:active,inactive',
         ];
     }
 
@@ -35,7 +35,7 @@ trait ValidatesCustomerAttributes
         return [
             'name.required' => 'Customer name is required',
             'company_name.required' => 'Company name is required',
-            'phone.required' => 'Phone number is required',
+            'phones.*.regex' => 'Each phone number must be a valid 11-digit BD number (e.g., 01712345678).',
             'assigned_to.required' => 'Please assign this customer to a user',
         ];
     }

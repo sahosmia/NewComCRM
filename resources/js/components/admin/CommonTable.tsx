@@ -6,6 +6,10 @@ import { PaginationType } from '@/types';
 import { Link } from '@inertiajs/react';
 import React, { ReactNode, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
+import { TableFilters } from './TableFilters';
+import { RotateCcw } from 'lucide-react';
+import { router } from "@inertiajs/react";
+
 
 interface Column<T> {
     header: string;
@@ -13,11 +17,19 @@ interface Column<T> {
     className?: string;
 }
 
+interface FilterOption {
+    name: string;
+    label: string;
+    type: string;
+    options?: { label: string; value: string }[];
+}
+
 interface CommonTableProps<T> {
     data: PaginationType<T>;
     columns: Column<T>[];
     create_route: string;
     routeName: string;
+    filters: FilterOption[];
 }
 
 const CommonTable = <T extends { id: number }>({
@@ -25,9 +37,11 @@ const CommonTable = <T extends { id: number }>({
     columns,
     create_route,
     routeName,
+    filters,
 }: CommonTableProps<T>) => {
 
     const {
+        queryParams,
         perPage,
         search,
         perPageOptions,
@@ -47,12 +61,19 @@ const CommonTable = <T extends { id: number }>({
         setSelectedItems([]);
     }, [data.data, setSelectedItems]);
 
+    const resetFilters = () => {
+        router.get(route(route().current() as string), {}, {
+            replace: true,
+            preserveState: false, // State clear korbe
+        });
+    };
+
     return (
         <div className="space-y-4">
             {/* Toolbar */}
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-center space-x-2">
 
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-1 items-center space-x-2">
                     <Input
                         type="text"
                         placeholder="Search..."
@@ -60,8 +81,13 @@ const CommonTable = <T extends { id: number }>({
                         onChange={handleSearchChange}
                         className="w-64 h-9 px-3 text-sm"
                     />
+                    {filters && <TableFilters filters={filters} queryParams={queryParams || {}} />}
+                    <Button variant="ghost" size="sm" onClick={resetFilters} className="h-8 px-2 text-xs text-destructive">
+                        <RotateCcw className="mr-1 h-3 w-3" />
+                        Reset
+                    </Button>
                 </div>
-                <div className='flex gap-2 justify-center items-center'>
+                <div className='flex gap-2 items-center'>
 
                     <div className="text-sm font-medium">
                         {selectedItems.length > 0 && (

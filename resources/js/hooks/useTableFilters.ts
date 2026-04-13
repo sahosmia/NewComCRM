@@ -8,36 +8,40 @@ interface UseTableFiltersProps<T> {
 }
 
 export const useTableFilters = <T extends { id: number }>({ data, routeName }: UseTableFiltersProps<T>) => {
-    const [perPage, setPerPage] = useState(data.per_page ? String(data.per_page) : '10');
-    const [search, setSearch] = useState("");
-
+    const queryParams = new URLSearchParams(window.location.search);
+    const [perPage, setPerPage] = useState(queryParams.get('per_page') || String(data.per_page || '10'));
+    const [search, setSearch] = useState(queryParams.get('search') || "");
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
     const perPageOptions = ['5', '10', '20', '50'];
 
     const applyFilters = useCallback((newFilters: { search?: string; per_page?: string; page?: number }) => {
-        router.get(
-            route(routeName),
-            {
-                search: newFilters.search !== undefined ? newFilters.search : search,
-                per_page: newFilters.per_page !== undefined ? newFilters.per_page : perPage,
-                page: newFilters.page,
-            },
-            {
-                preserveState: true,
-                preserveScroll: true,
-            },
-        );
+        const params: any = {
+            search: newFilters.search !== undefined ? newFilters.search : search,
+            per_page: newFilters.per_page !== undefined ? newFilters.per_page : perPage,
+            page: newFilters.page,
+        };
+
+        if (!params.search) delete params.search;
+        if (params.per_page === '10') delete params.per_page;
+
+        router.get(route(routeName), params, {
+            preserveState: true,
+            preserveScroll: true,
+            replace: true
+        });
     }, [perPage, search, routeName]);
 
 
     useEffect(() => {
 
+        if (search === "" && !queryParams.has('search')) return;
+
         const timeout = setTimeout(() => {
             applyFilters({ search });
         }, 300);
         return () => clearTimeout(timeout);
-    }, [search, applyFilters]);
+    }, [search]);
 
 
 
@@ -53,7 +57,7 @@ export const useTableFilters = <T extends { id: number }>({ data, routeName }: U
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);
-        applyFilters({ search: e.target.value });
+        // applyFilters({ search: e.target.value });
     };
 
     const handlePerPageChange = (value: string) => {
@@ -76,6 +80,7 @@ export const useTableFilters = <T extends { id: number }>({ data, routeName }: U
 
 
     return {
+        queryParams,
         perPage,
         setPerPage,
         perPageOptions,

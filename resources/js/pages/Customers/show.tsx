@@ -65,7 +65,7 @@ export default function Show({ customer }: { customer: any }) {
                                             {customer.phones?.map((p: string, i: number) => (
                                                 <p key={i} className="text-sm text-muted-foreground flex items-center gap-2">
                                                     {p}
-                                                    <a href={`https://wa.me/${p.replace(/\D/g,'')}`} target="_blank" className="text-emerald-500 hover:underline text-[10px] font-bold">WhatsApp</a>
+                                                    <a href={`https://wa.me/88${p.replace(/\D/g,'')}`} target="_blank" className="text-emerald-500 hover:underline text-[10px] font-bold">WhatsApp</a>
                                                 </p>
                                             ))}
                                         </div>

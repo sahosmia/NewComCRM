@@ -28,6 +28,7 @@ class CustomerService
     public function create(array $data): Customer
     {
         $data['phones'] = array_filter($data['phones'] ?? []);
+
         $data['addresses'] = array_filter($data['addresses'] ?? []);
         return $this->customers->create($data);
     }

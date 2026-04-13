@@ -10,20 +10,18 @@ import { cn } from '@/lib/utils';
 
 const columns: Column<CustomerType>[] = [
     {
-        header: 'Customer Info',
+        header: 'Customer',
         accessor: (item: any) => (
             <div className="flex flex-col">
                 <div className="flex items-center gap-2">
                     <span className="font-medium text-foreground">{item.name}</span>
                     {/* Customer Type Badge */}
-                    <Badge variant="outline" className="text-[10px] px-1 py-0 h-4 capitalize font-normal">
-                        {item.type}
-                    </Badge>
+
                 </div>
                 <span className="text-xs text-muted-foreground">{item.designation || 'No Designation'}</span>
             </div>
         ),
-        className: 'w-3/12',
+        className: 'w-[18%]',
     },
     {
         header: 'Company',
@@ -31,17 +29,16 @@ const columns: Column<CustomerType>[] = [
             <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2">
                     <Building2 className="w-3.5 h-3.5 text-muted-foreground" />
-                    <span className="text-sm font-medium">{item.company_name}</span>
+                    <span className="text-sm font-medium truncate">{item.company_name}</span>
                 </div>
-                {/* একাধিক অ্যাড্রেস থাকলে শুধু প্রথমটি ছোট করে দেখানো */}
                 {item.addresses && item.addresses[0] && (
-                    <div className="flex items-center gap-1 text-[11px] text-muted-foreground line-clamp-1">
-                        <MapPin className="w-3 h-3" /> {item.addresses[0]}
+                    <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                        <MapPin className="w-3 h-3" /><span className="truncate">{item.addresses[0]}</span>
                     </div>
                 )}
             </div>
         ),
-        className: 'w-3/12',
+        className: 'w-[15%]',
     },
     {
         header: 'Contact',
@@ -49,7 +46,6 @@ const columns: Column<CustomerType>[] = [
             <div className="flex flex-col text-sm">
                 <div className="flex items-center gap-1 font-medium">
                     <Phone className="w-3 h-3" />
-                    {/* Multiple phones থাকলে প্রথমটি দেখানো এবং কয়টি আছে তা জানানো */}
                     {item.phones && item.phones[0] ? item.phones[0] : 'N/A'}
                     {item.phones && item.phones.length > 1 && (
                         <span className="text-[10px] bg-muted px-1 rounded text-muted-foreground">
@@ -60,7 +56,7 @@ const columns: Column<CustomerType>[] = [
                 <span className="text-xs text-muted-foreground">{item.email}</span>
             </div>
         ),
-        className: 'w-2/12',
+        className: 'w-[15%]',
     },
     {
         header: 'Assigned To',
@@ -83,20 +79,26 @@ const columns: Column<CustomerType>[] = [
     {
         header: 'Status',
         accessor: (item: any) => (
-            <Badge
-                variant={item.status === 'active' ? 'default' : 'secondary'}
-                className={cn(
-                    "capitalize",
-                    item.status === 'active' ? "bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 border-emerald-500/20" : ""
-                )}
-            >
-                {item.status}
-            </Badge>
+            <div className='flex flex-col gap-2'>
+                <Badge
+                    variant={item.status === 'active' ? 'default' : 'secondary'}
+                    className={cn(
+                        "capitalize text-[10px] px-1 py-0 h-4",
+                        item.status === 'active' ? "bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 border-emerald-500/20" : ""
+                    )}
+                >
+                    {item.status}
+                </Badge>
+
+                <Badge variant="outline" className="text-[10px] px-1 py-0 h-4 capitalize font-normal">
+                    {item.type}
+                </Badge>
+            </div>
         ),
-        className: 'w-1/12',
+        className: 'w-[10%]',
     },
     {
-        header: 'Actions',
+        header: '',
         accessor: (item) => (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -115,18 +117,18 @@ const columns: Column<CustomerType>[] = [
                             <SquarePen className="w-4 h-4 mr-2" /> Edit Info
                         </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator/>
+                    <DropdownMenuSeparator />
                     <AlertDialogDestructive
                         title="Delete Customer?"
                         description={`This action cannot be undone. All data for ${item.name} will be permanently removed.`}
                         onConfirm={() => handleDelete(item.id, 'customers.destroy')}
                     >
-                   
+
                     </AlertDialogDestructive>
                 </DropdownMenuContent>
             </DropdownMenu>
         ),
-        className: 'w-1/12',
+        className: 'w-[7%]',
     },
 ];
 

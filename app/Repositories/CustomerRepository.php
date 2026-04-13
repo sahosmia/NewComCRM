@@ -16,32 +16,47 @@ class CustomerRepository
             ->get();
     }
 
-    public function paginateForIndex(array $params): LengthAwarePaginator
-    {
-        $perPage = $params['per_page'] ?? 10;
+  public function paginateForIndex(array $params): LengthAwarePaginator
+{
+    $perPage = $params['per_page'] ?? 10;
 
-        return Customer::query()
-            ->with('assignedUser')
-            ->when($params['search'] ?? null, function ($query, $search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('company_name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
-                });
-            })
-            ->when($params['sort_by'] ?? 'created_at', function ($query, $sortBy) use ($params) {
-                $direction = $params['sort_direction'] ?? 'desc';
-                $query->orderBy($sortBy, $direction);
-            }, function ($query) {
-                $query->latest();
-            })
-            ->paginate($perPage)
-            ->withQueryString();
-    }
+    return Customer::query()
+        ->with('assignedUser')
+        ->when($params['search'] ?? null, function ($query, $search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('company_name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        })
+        ->when($params['status'] ?? null, function ($query, $status) {
+            $query->where('status', $status);
+        })
+        ->when($params['type'] ?? null, function ($query, $type) {
+            $query->where('type', $type);
+        })
+        ->when($params['date']?? null, function($query, $date){
+            $query->where('created_at', $date);
+        })
+        ->when($params['start_date'] ?? null, function ($query, $startDate) use ($params) {
+            $query->whereBetween('created_at', [
+                $startDate, ($params['end_date'] ?? $startDate)
+            ]);
+        })
+        // ------------------------------------
+        ->when($params['sort_by'] ?? 'created_at', function ($query, $sortBy) use ($params) {
+            $direction = $params['sort_direction'] ?? 'desc';
+            $query->orderBy($sortBy, $direction);
+        }, function ($query) {
+            $query->latest();
+        })
+        ->paginate($perPage)
+        ->withQueryString();
+}
 
     public function create(array $data): Customer
     {
-        
+
         return Customer::query()->create($data);
     }
 
