@@ -17,14 +17,14 @@ class CustomerController extends Controller
 
     public function index(Request $request)
     {
-        return Inertia::render('customers/index', [
+        return Inertia::render('Customers/Index', [
             'customers' => $this->customerService->paginateIndex($request->all()),
         ]);
     }
 
     public function create()
     {
-        return Inertia::render('customers/create', [
+        return Inertia::render('Customers/Create', [
             'users' => $this->customerService->usersForForm(),
         ]);
     }
@@ -39,14 +39,14 @@ class CustomerController extends Controller
 
     public function show(Customer $customer)
     {
-        return Inertia::render('customers/show', [
+        return Inertia::render('Customers/Show', [
             'customer' => $customer->load(['assignedUser', 'requirements', 'followUps', 'meetings']),
         ]);
     }
 
     public function edit(Customer $customer)
     {
-        return Inertia::render('customers/edit', [
+        return Inertia::render('Customers/Edit', [
             'customer' => $customer,
             'users' => $this->customerService->usersForForm(),
         ]);
