@@ -13,9 +13,9 @@ class UserService
         private UserRepository $users,
     ) {}
 
-    public function paginateIndex(int $perPage = 10): LengthAwarePaginator
+    public function paginateIndex(array $filters): LengthAwarePaginator
     {
-        return $this->users->paginateForIndex($perPage);
+        return $this->users->paginateForIndex($filters);
     }
 
     public function usersForForm(): Collection
@@ -25,16 +25,14 @@ class UserService
 
     public function create(array $data): User
     {
+        $data['phones'] = array_filter($data['phones'] ?? []);
+
+        $data['addresses'] = array_filter($data['addresses'] ?? []);
         return $this->users->create($data);
     }
 
-    public function update(User $customer, array $data): void
+    public function update(User $user, array $data): void
     {
-        $this->users->update($customer, $data);
-    }
-
-    public function delete(User $customer): void
-    {
-        $this->users->delete($customer);
+        $this->users->update($user, $data);
     }
 }

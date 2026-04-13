@@ -14,20 +14,17 @@ class UserController extends Controller
     public function __construct(
         private UserService $userService,
     ) {}
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    public function index(Request $request)
     {
-        return Inertia::render('users/index', ['users' =>$this->userService->paginateIndex()]);
+        return Inertia::render('Users/Index', [
+            'users' => $this->userService->paginateIndex($request->all()),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return Inertia::render('users/create', [
+        return Inertia::render('Users/Create', [
             'users' => $this->userService->usersForForm(),
         ]);
     }
@@ -40,10 +37,16 @@ class UserController extends Controller
             ->with('success', 'User created successfully');
     }
 
+    public function show(User $user)
+    {
+        return Inertia::render('Users/Show', [
+            'user' => $user,
+        ]);
+    }
 
     public function edit(User $user)
     {
-        return Inertia::render('users/edit', [
+        return Inertia::render('Users/Edit', [
             'user' => $user,
             'users' => $this->userService->usersForForm(),
         ]);
@@ -59,8 +62,16 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        $this->userService->delete($user);
-
-        return back();
+        $user->delete();
+        return back()->with('success', 'User deleted successfully!');
     }
+
+    public function bulkDestroy(Request $request)
+{
+    $ids = $request->input('ids', []);
+
+    User::whereIn('id', $ids)->delete();
+
+    return back()->with('success', 'Users deleted successfully');
+}
 }

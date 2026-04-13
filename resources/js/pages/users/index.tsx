@@ -1,64 +1,60 @@
-import { Link, router } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import AppLayout from "@/layouts/app-layout";
-import { User } from "@/types/user";
-import { PaginationType } from "@/types";
+import AppLayout from '@/layouts/app-layout';
+import { UserType, FilterOption, PaginationType, SortOption } from '@/types';
+import { Head } from '@inertiajs/react';
+import CommonTable from '@/components/admin/CommonTable';
+import Heading from '@/components/admin/heading';
+import { columns } from './columns';
 
 interface Props {
-    users: PaginationType<User>;
+    users: PaginationType<UserType>;
 }
 
-export default function Index({ users }: Props) {
-  const deleteUser = (id: number) => {
-    if (confirm("Are you sure?")) {
-      router.delete(route("users.destroy", id));
-    }
-  };
 
-  return (
-    <AppLayout breadcrumbs={[{ title: "Users", href: route("users.index") }]}>
-    <div className="p-6">
-      <div className="flex justify-between mb-4">
-        <h1 className="text-xl font-bold">Users</h1>
-        <Link href={route("users.create")}>
-          <Button>Create</Button>
-        </Link>
-      </div>
 
-      <table className="w-full border">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Company</th>
-            <th>Phone</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
+export default function UserIndex({ users }: Props) {
+    const breadcrumbs = [
+        { title: 'Dashboard', href: route('dashboard') },
+        { title: 'Users', href: route('users.index') },
+    ];
 
-        <tbody>
-          {users.data.map((user: any) => (
-            <tr key={user.id} className="border-t">
-              <td>{user.name}</td>
-              <td>{user.company_name}</td>
-              <td>{user.phone}</td>
-              <td>{user.status}</td>
-              <td className="space-x-2">
-                <Link href={route("users.edit", user.id)}>
-                  <Button variant="outline">Edit</Button>
-                </Link>
-                <Button
-                  variant="destructive"
-                  onClick={() => deleteUser(user.id)}
-                >
-                  Delete
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-    </AppLayout>
-  );
+    const filters: FilterOption[] = [
+        {
+            name: 'role',
+            label: 'User Role',
+            type: 'select',
+            options: [
+                { label: 'Super Admin', value: 'super-admin' },
+                { label: 'User', value: 'user' },
+            ]
+        },
+
+    ];
+
+    const userSortOptions :SortOption [] = [
+        { label: 'Newest First', sort: 'created_at', direction: 'desc' },
+        { label: 'Name (A-Z)', sort: 'name', direction: 'asc' },
+        { label: 'Email', sort: 'email', direction: 'asc' },
+    ];
+
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Users" />
+
+            <div className="flex flex-col flex-1 h-full gap-4 p-4 overflow-x-auto rounded-xl">
+                <Heading
+                    title={`Users (${users.total})`}
+                    description="Manage your client base, contact information, and account status."
+                />
+
+                <CommonTable
+                    data={users}
+                    columns={columns}
+                    create_route="users.create"
+                    routeName="users.index"
+                    filters={filters}
+                    sortOptions={userSortOptions}
+                />
+            </div>
+        </AppLayout>
+    );
 }

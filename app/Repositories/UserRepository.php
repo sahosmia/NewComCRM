@@ -15,26 +15,49 @@ class UserRepository
             ->get();
     }
 
-    public function paginateForIndex(int $perPage = 10): LengthAwarePaginator
+    public function paginateForIndex(array $params): LengthAwarePaginator
     {
+        $perPage = $params['per_page'] ?? 10;
+
         return User::query()
-            ->latest()
-            ->paginate($perPage);
+            ->when($params['search'] ?? null, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('phones', 'like', "%{$search}%");
+                });
+            })
+            ->when($params['status'] ?? null, function ($query, $status) {
+                $query->where('status', $status);
+            })
+
+            ->when($params['role'] ?? null, function ($query, $role) {
+                $query->where('type', $role);
+            })
+            // ------------------------------------
+            ->when(isset($params['sort']), function ($query) use ($params) {
+                $query->orderBy($params['sort'], $params['direction'] ?? 'desc');
+            }, function ($query) {
+                $query->latest();
+            })
+            ->paginate($perPage)
+            ->withQueryString($params);
     }
 
     public function create(array $data): User
     {
+
         return User::query()->create($data);
     }
 
-    public function update(User $customer, array $data): void
+    public function update(User $user, array $data): void
     {
-        $customer->update($data);
+        $user->update($data);
     }
 
-    public function delete(User $customer): void
+    public function delete(User $user): void
     {
-        $customer->delete();
+        $user->delete();
     }
 
     public function forRequirementForm(): Collection
@@ -48,19 +71,18 @@ class UserRepository
     {
         return User::query()
             ->active()
-            ->when(! $user->isSuperAdmin(), fn ($query) => $query->where('assigned_to', $user->id))
+            ->when(! $user->isSuperAdmin(), fn($query) => $query->where('assigned_to', $user->id))
             ->get();
     }
 
-    public function findWithRequirementsForQuotation(?int $customerId): ?User
+    public function findWithRequirementsForQuotation(?int $userId): ?User
     {
-        if (! $customerId) {
+        if (! $userId) {
             return null;
         }
 
         return User::query()
             ->with('requirements.product')
-            ->find($customerId);
+            ->find($userId);
     }
-
 }

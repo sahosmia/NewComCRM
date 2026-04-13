@@ -21,7 +21,7 @@ const columns: Column<CustomerType>[] = [
                 <span className="text-xs text-muted-foreground">{item.designation || 'No Designation'}</span>
             </div>
         ),
-        className: 'w-[18%]',
+        className: 'w-[25%]',
     },
     {
         header: 'Company',
@@ -38,7 +38,7 @@ const columns: Column<CustomerType>[] = [
                 )}
             </div>
         ),
-        className: 'w-[15%]',
+        className: 'w-[20%]',
     },
     {
         header: 'Contact',
@@ -74,7 +74,7 @@ const columns: Column<CustomerType>[] = [
                 )}
             </div>
         ),
-        className: 'w-[15%]',
+        className: 'w-[16%]',
     },
     {
         header: 'Status',

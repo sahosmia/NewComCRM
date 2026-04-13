@@ -1,154 +1,79 @@
 import { useForm } from "@inertiajs/react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-} from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
-import type { User } from "@/types/user";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import type { UserType } from "@/types";
+import ErrorMessage from "@/components/admin/ErrorMessage";
 
+interface Props { user?: UserType; }
 
-
-
-interface Props {
-    user?: User;
-    users: User[];
-}
-
-export default function UserForm({ user, users }: Props) {
+export default function UserForm({ user }: Props) {
     const [open, setOpen] = useState(false);
-    const { data, setData, post, put, processing, } = useForm({
+
+    const { data, setData, post, put, processing, errors } = useForm({
         name: user?.name || "",
-        designation: user?.designation || "",
-        company_name: user?.company_name || "",
-        phone: user?.phone || "",
         email: user?.email || "",
-        address: user?.address || "",
-        assigned_to: user?.assigned_to || "",
-        status: user?.status || "active",
+        role: user?.role || "user",
+        password: "",
     });
+
+    // --- Handlers ---
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-
-        if (user) {
-            put(route("users.update", user.id));
-        } else {
-            post(route("users.store"));
-        }
+        user ? put(route("users.update", user.id)) : post(route("users.store"));
     };
 
     return (
-        <form onSubmit={submit} className="space-y-4">
-            <Input
-                placeholder="Name"
-                value={data.name}
-                onChange={(e) => setData("name", e.target.value)}
-            />
-            <Input
-                placeholder="Company Name"
-                value={data.company_name}
-                onChange={(e) => setData("company_name", e.target.value)}
-            />
-            {/* error message */}
-            <Input
-                placeholder="Phone"
-                value={data.phone}
-                onChange={(e) => setData("phone", e.target.value)}
-            />
+        <form onSubmit={submit} className="space-y-8 p-6 rounded-xl border shadow-sm w-1/2 max-w-125">
 
-            <Input
-                placeholder="Email"
-                value={data.email}
-                onChange={(e) => setData("email", e.target.value)}
-            />
-            <Textarea
-                placeholder="Address"
-                value={data.address}
-                onChange={(e) => setData("address", e.target.value)}
-            />
+            {/* Section 1: Basic Information */}
+            <div className="grid grid-cols-1 gap-6">
+                <div className="space-y-4">
 
-            <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                    <Button
-                        variant="outline"
-                        role="combobox"
-                        className="w-full justify-between"
-                    >
-                        {data.assigned_to
-                            ? users.find((user) => user.id === data.assigned_to)?.name
-                            : "Select User"}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                </PopoverTrigger>
+                    <div className="space-y-1">
+                        <label className="text-sm font-medium">Full Name</label>
+                        <Input value={data.name} onChange={e => setData("name", e.target.value)} placeholder="John Doe" />
+                        <ErrorMessage message={errors.name} />
+                    </div>
 
-                <PopoverContent className="w-[--radix-popover-trigger-width] p-0"
-                    align="start">
-                    <Command>
-                        <CommandInput placeholder="Search user..." />
-                        <CommandEmpty>No user found.</CommandEmpty>
+                    <div className="space-y-1">
+                        <label className="text-sm font-medium">Email Address</label>
+                        <Input type="email" value={data.email} onChange={e => setData("email", e.target.value)} placeholder="john@example.com" />
+                        <ErrorMessage message={errors.email} />
+                    </div>
 
-                        <CommandGroup>
-                            {users.map((user) => (
-                                <CommandItem
-                                    key={user.id}
-                                    value={user.name}
-                                    onSelect={() => {
-                                        setData("assigned_to", user.id);
-                                        setOpen(false);
-                                    }}
-                                >
-                                    <Check
-                                        className={cn(
-                                            "mr-2 h-4 w-4",
-                                            data.assigned_to === user.id
-                                                ? "opacity-100"
-                                                : "opacity-0"
-                                        )}
-                                    />
-                                    {user.name}
-                                </CommandItem>
-                            ))}
-                        </CommandGroup>
-                    </Command>
-                </PopoverContent>
-            </Popover>
+                    <div className="space-y-1">
+                        <label className="text-sm font-medium">User Role</label>
+                        <Select value={data.role} onValueChange={val => setData("role", val as "user" | "super-admin")}>
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="user">User</SelectItem>
+                                <SelectItem value="super-admin">Super Admin</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
 
-            <Select
-                value={data.status}
-                onValueChange={(value) => setData("status", value as "active" | "inactive")}
-            >
-                <SelectTrigger>
-                    <SelectValue placeholder="Select Status" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
-                </SelectContent>
-            </Select>
+                    <div className="space-y-1">
+                        <label className="text-sm font-medium">Password</label>
+                        <Input type="password" value={data.password} onChange={e => setData("password", e.target.value)} placeholder="" />
+                        <ErrorMessage message={errors.password} />
+                    </div>
+                </div>
 
-            <Button type="submit" disabled={processing}>
-                {user ? "Update" : "Create"}
-            </Button>
-        </form >
+
+            </div>
+
+            {/* Submit */}
+            <div className="flex justify-end gap-3 pt-6 border-t">
+                <Button variant="ghost" type="button" onClick={() => window.history.back()}>Cancel</Button>
+                <Button type="submit" disabled={processing} className="px-8">
+                    {processing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                    {user ? "Save Changes" : "Create User"}
+                </Button>
+            </div>
+        </form>
     );
 }

@@ -142,10 +142,10 @@ const CommonTable = <T extends { id: number }>({
 
             {/* Table Container */}
             <div className="border rounded-lg overflow-hidden bg-card text-card-foreground shadow-sm">
-                <Table>
+                <Table className='table-fixed w-full'>
                     <TableHeader className="bg-muted/50">
                         <TableRow>
-                            <TableHead className="w-2">
+                            <TableHead className="w-10">
                                 <input
                                     type="checkbox"
                                     checked={data.data.length > 0 && selectedItems.length === data.data.length}
@@ -153,7 +153,7 @@ const CommonTable = <T extends { id: number }>({
                                     className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
                                 />
                             </TableHead>
-                            <TableHead className="w-2 font-bold">#</TableHead>
+                            <TableHead className="w-10 font-bold">#</TableHead>
                             {columns.map((column, index) => (
                                 <TableHead key={index} className={`${column.className} font-bold`}>
                                     {column.header}
@@ -176,16 +176,16 @@ const CommonTable = <T extends { id: number }>({
                         ) : (
                             data.data.map((item, i) => (
                                 <TableRow key={item.id} className="hover:bg-muted/30 transition-colors">
-                                    <TableCell>
+                                    <TableCell className='w-10'>
                                         <input
                                             type="checkbox"
                                             checked={selectedItems.includes(item.id)}
                                             onChange={() => handleSelectItem(item.id)}
-                                            className="w-4 h-4"
+                                            className="block w-4 h-4"
                                         />
                                     </TableCell>
 
-                                    <TableCell className="text-xs">
+                                    <TableCell className="w-10 text-xs">
                                         {data.from + i}
                                     </TableCell>
 
