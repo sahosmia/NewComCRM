@@ -6,23 +6,25 @@ import { DatePickerWithRange } from "./DatePickerWithRange";
 import { DatePickerSimple } from "./DataPickerSimple";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "../ui/button";
-import { FilterIcon,  } from "lucide-react";
+import { Check, ChevronsUpDown, FilterIcon } from "lucide-react";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { FilterOption } from "@/types";
 
-interface FilterOption {
-    name: string;
-    label: string;
-    type: string;
-    options?: { label: string; value: string }[];
-}
 
-export function TableFilters({ filters, queryParams = {} }: { filters: FilterOption[], queryParams: any }) {
 
-    const handleFilterChange = (name: string, value: string) => {
-        const newParams = { ...queryParams, [name]: value };
+export function TableFilters({ filters, queryParams = {}, routeName }: {
+    filters: FilterOption[], queryParams: any, routeName: string
+}) {
+    const [openSelect, setOpenSelect] = useState<string | null>(null);
+
+    const handleFilterChange = (name: string, value: string | number) => {
+        const newParams = { ...queryParams, [name]: value, page: 1 };
 
         if (value === 'all') delete newParams[name];
 
-        router.get(route(route().current() as string), newParams, {
+        router.get(route(routeName), newParams, {
             preserveState: true,
             replace: true,
             preserveScroll: true,
@@ -30,7 +32,7 @@ export function TableFilters({ filters, queryParams = {} }: { filters: FilterOpt
     };
 
     const handleDateChange = (range: DateRange | undefined) => {
-        const newParams = { ...queryParams };
+        const newParams = { ...queryParams, page: 1 };
 
         if (range?.from) {
             newParams.start_date = format(range.from, "yyyy-MM-dd");
@@ -44,13 +46,11 @@ export function TableFilters({ filters, queryParams = {} }: { filters: FilterOpt
             delete newParams.end_date;
         }
 
-        router.get(route(route().current() as string), newParams, {
+        router.get(route(routeName), newParams, {
             preserveState: true,
             replace: true,
         });
     };
-
-
 
     return (
         <Popover>
@@ -65,17 +65,17 @@ export function TableFilters({ filters, queryParams = {} }: { filters: FilterOpt
                 <div className="space-y-4">
                     <div className="flex items-center justify-between border-b pb-2">
                         <h4 className="font-medium leading-none">Filter Options</h4>
-
                     </div>
                     <div className="grid grid-cols-1 gap-3">
                         {filters.map((filter) => {
                             const filterKey = `filter-${filter.name}`;
+                            const currentValue = queryParams[filter.name];
 
                             if (filter.type === 'select') {
                                 return (
                                     <Select
                                         key={filterKey}
-                                        value={(queryParams && queryParams[filter.name]) ? String(queryParams[filter.name]) : "all"}
+                                        value={currentValue ? String(currentValue) : "all"}
                                         onValueChange={(val) => handleFilterChange(filter.name, val)}
                                     >
                                         <SelectTrigger className="h-8 text-xs">
@@ -84,18 +84,70 @@ export function TableFilters({ filters, queryParams = {} }: { filters: FilterOpt
                                         <SelectContent>
                                             <SelectItem value="all">All {filter.label}</SelectItem>
                                             {(filter.options ?? []).map(opt => (
-                                                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                                                <SelectItem key={String(opt.value)} value={String(opt.value)}>{opt.label}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
                                 );
                             }
 
+                            if (filter.type === 'searchSelect') {
+                                const selectedOption = filter.options?.find(opt => String(opt.value) === String(currentValue));
+
+                                return (
+                                    <Popover
+                                        key={filterKey}
+                                        open={openSelect === filter.name}
+                                        onOpenChange={(open) => setOpenSelect(open ? filter.name : null)}
+                                    >
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant="outline"
+                                                role="combobox"
+                                                className={cn("h-8 w-full justify-between text-xs font-normal", !currentValue && "text-muted-foreground")}
+                                            >
+                                                {selectedOption ? selectedOption.label : `Select ${filter.label}...`}
+                                                <ChevronsUpDown className="ml-2 h-3 w-3 shrink-0 opacity-50" />
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-[250px] p-0 shadow-lg border">
+                                            <Command>
+                                                <CommandInput placeholder={`Search ${filter.label}...`} className="h-8 text-xs" />
+                                                <CommandEmpty>No results found.</CommandEmpty>
+                                                <CommandGroup className="max-h-48 overflow-auto">
+                                                    <CommandItem
+                                                        onSelect={() => {
+                                                            handleFilterChange(filter.name, 'all');
+                                                            setOpenSelect(null);
+                                                        }}
+                                                    >
+                                                        <Check className={cn("mr-2 h-4 w-4", !currentValue ? "opacity-100" : "opacity-0")} />
+                                                        All {filter.label}
+                                                    </CommandItem>
+                                                    {(filter.options ?? []).map((opt) => (
+                                                        <CommandItem
+                                                            key={String(opt.value)}
+                                                            onSelect={() => {
+                                                                handleFilterChange(filter.name, String(opt.value));
+                                                                setOpenSelect(null);
+                                                            }}
+                                                        >
+                                                            <Check className={cn("mr-2 h-4 w-4", String(currentValue) === String(opt.value) ? "opacity-100" : "opacity-0")} />
+                                                            {opt.label}
+                                                        </CommandItem>
+                                                    ))}
+                                                </CommandGroup>
+                                            </Command>
+                                        </PopoverContent>
+                                    </Popover>
+                                );
+                            }
+
                             if (filter.type === 'date') {
                                 return (
                                     <DatePickerSimple
-                                        key={filter.name}
-                                        date={queryParams[filter.name] ? new Date(queryParams[filter.name]) : undefined}
+                                        key={filterKey}
+                                        date={currentValue ? new Date(currentValue) : undefined}
                                         onSelect={(date) => handleFilterChange(filter.name, date ? format(date, "yyyy-MM-dd") : 'all')}
                                         placeholder={filter.label}
                                     />

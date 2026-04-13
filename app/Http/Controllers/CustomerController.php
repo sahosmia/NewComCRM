@@ -19,6 +19,7 @@ class CustomerController extends Controller
     {
         return Inertia::render('Customers/Index', [
             'customers' => $this->customerService->paginateIndex($request->all()),
+            'users' => $this->customerService->usersForForm(),
         ]);
     }
 
@@ -65,4 +66,13 @@ class CustomerController extends Controller
         $customer->delete();
         return back()->with('success', 'Customer deleted successfully!');
     }
+
+    public function bulkDestroy(Request $request)
+{
+    $ids = $request->input('ids', []);
+
+    Customer::whereIn('id', $ids)->delete();
+
+    return back()->with('success', 'Customers deleted successfully');
+}
 }

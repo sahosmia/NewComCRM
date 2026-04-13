@@ -1,13 +1,16 @@
 import AppLayout from "@/layouts/app-layout";
-import UserForm from "./form";
+import CustomerForm from "./form";
+import { Head } from "@inertiajs/react";
 
 export default function Create({ users }: any) {
-  return (
-    <AppLayout breadcrumbs={[{ title: "Users", href: route("users.index") }, { title: "Create", href: route("users.create") }]}>
-    <div className="p-6">
-      <h1 className="text-xl font-bold mb-4">Create User</h1>
-      <UserForm users={users} />
-    </div>
-    </AppLayout>
-  );
+    return (
+        <AppLayout breadcrumbs={[{ title: "Customers", href: route("customers.index") }, { title: "Create", href: route("customers.create") }]}>
+            <Head title="Customer Create" />
+
+            <div className="p-6">
+                <h1 className="text-xl font-bold mb-4">Create Customer</h1>
+                <CustomerForm users={users} />
+            </div>
+        </AppLayout>
+    );
 }

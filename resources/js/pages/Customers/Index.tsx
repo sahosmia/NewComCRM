@@ -1,55 +1,72 @@
 import AppLayout from '@/layouts/app-layout';
-import { CustomerType, PaginationType } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { CustomerType, FilterOption, PaginationType, SortOption, UserTypeforForm } from '@/types';
+import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import { columns } from './columns';
 
 interface Props {
-    customers : PaginationType<CustomerType>;
+    customers: PaginationType<CustomerType>;
+    users: UserTypeforForm[];
 }
 
 
 
-export default function CustomerIndex({ customers }: Props) {
+export default function CustomerIndex({ customers, users }: Props) {
     const breadcrumbs = [
         { title: 'Dashboard', href: route('dashboard') },
         { title: 'Customers', href: route('customers.index') },
     ];
 
-const filters = [
-    {
-        name: 'status',
-        label: 'Status',
-        type: 'select',
-        options: [
-            { label: 'Active', value: 'active' },
-            { label: 'Inactive', value: 'inactive' },
-        ]
-    },
-    {
-        name: 'type',
-        label: 'Customer Type',
-        type: 'select',
-        options: [
-            { label: 'Corporate', value: 'corporate' },
-            { label: 'Reseller', value: 'reseller' },
-            { label: 'Personal', value: 'personal' },
-        ]
-    },
+    const filters: FilterOption[] = [
+        {
+            name: 'assigned_to',
+            label: 'Assigned To',
+            type: 'searchSelect',
+            options: users.map((user) => ({
+                label: user.name,
+                value: user.id,
+            }))
+        },
+        {
+            name: 'status',
+            label: 'Status',
+            type: 'select',
+            options: [
+                { label: 'Active', value: 'active' },
+                { label: 'Inactive', value: 'inactive' },
+            ]
+        },
+        {
+            name: 'type',
+            label: 'Customer Type',
+            type: 'select',
+            options: [
+                { label: 'Corporate', value: 'corporate' },
+                { label: 'Reseller', value: 'reseller' },
+                { label: 'Personal', value: 'personal' },
+            ]
+        },
 
-    {
-        name: 'date',
-        label: 'Created Date',
-        type: 'date',
-    },
+        {
+            name: 'date',
+            label: 'Created Date',
+            type: 'date',
+        },
 
-    {
-        name: 'date_range',
-        label: 'Created Date',
-        type: 'date_range',
-    }
-];
+        {
+            name: 'date_range',
+            label: 'Created Date',
+            type: 'date_range',
+        }
+    ];
+
+    const customerSortOptions :SortOption [] = [
+        { label: 'Newest First', sort: 'created_at', direction: 'desc' },
+        { label: 'Name (A-Z)', sort: 'name', direction: 'asc' },
+        { label: 'Email', sort: 'email', direction: 'asc' },
+    ];
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Customers" />
@@ -66,6 +83,7 @@ const filters = [
                     create_route="customers.create"
                     routeName="customers.index"
                     filters={filters}
+                    sortOptions={customerSortOptions}
                 />
             </div>
         </AppLayout>

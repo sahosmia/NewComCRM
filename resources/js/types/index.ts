@@ -178,6 +178,10 @@ export interface UserType {
     created_at: string;
     is_active: boolean;
 }
+export interface UserTypeforForm {
+    id: number;
+    name: string;
+}
 export interface Column<T> {
     header: string;
     accessor: keyof T | ((item: T) => React.ReactNode);
@@ -200,4 +204,36 @@ export interface CouponType {
     created_at: string;
     updated_at: string;
     used_count: number;
+}
+
+
+export interface FilterOption {
+    name: string;
+    label: string;
+    type: 'searchSelect' | 'select' | 'date' | 'date_range';
+    options?: { label: string; value: string | number }[];
+}
+
+export interface SortOption {
+    label: string;
+    sort: string;
+    direction: 'asc' | 'desc';
+}
+
+
+export interface Column<T> {
+    header: string;
+    accessor: keyof T | ((item: T) => React.ReactNode);
+    className?: string;
+}
+
+
+
+export interface CommonTableProps<T> {
+    data: PaginationType<T>;
+    columns: Column<T>[];
+    create_route: string;
+    routeName: string;
+    filters: FilterOption[];
+    sortOptions: SortOption[];
 }

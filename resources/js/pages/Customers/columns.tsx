@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { Building2, FileText, MoreHorizontal, Phone, SquarePen, Trash2, User2, MapPin } from 'lucide-react';
+import { Building2, FileText, MoreHorizontal, Phone, SquarePen, Trash2, MapPin,  } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import type { CustomerType, Column } from '@/types';
@@ -15,7 +15,7 @@ const columns: Column<CustomerType>[] = [
             <div className="flex flex-col">
                 <div className="flex items-center gap-2">
                     <span className="font-medium text-foreground">{item.name}</span>
-                    {/* Customer Type Badge */}
+                    Customer Type Badge
 
                 </div>
                 <span className="text-xs text-muted-foreground">{item.designation || 'No Designation'}</span>
@@ -121,9 +121,17 @@ const columns: Column<CustomerType>[] = [
                     <AlertDialogDestructive
                         title="Delete Customer?"
                         description={`This action cannot be undone. All data for ${item.name} will be permanently removed.`}
-                        onConfirm={() => handleDelete(item.id, 'customers.destroy')}
+                        onConfirm={() => handleDelete(item.id, 'customers.destroy', {
+                            redirectTo: 'customers.index',
+                        })}
                     >
-
+                        <DropdownMenuItem
+                            onSelect={(e) => e.preventDefault()}
+                            className="text-red-600 focus:text-red-600 cursor-pointer"
+                        >
+                            <Trash2 className="w-4 h-4 mr-2 text-red-600 focus:text-red-600 cursor-pointer" />
+                            <span>Delete</span>
+                        </DropdownMenuItem>
                     </AlertDialogDestructive>
                 </DropdownMenuContent>
             </DropdownMenu>

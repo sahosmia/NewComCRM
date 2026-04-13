@@ -1,67 +1,55 @@
 import { router } from "@inertiajs/react";
 
-const handleDelete = (id: number | string, url: string, index_url?: string) => {
-    router.delete(
-        route(url, id),
-        {
-            preserveState: true,
-            preserveScroll: true,
-            onSuccess: () => {
-                // toast({
-                //     title: "Success!",
-                //     description: "Item deleted successfully.",
-                //     className: "bg-green-500 text-white",
-                // });
-                // Optionally, you can redirect or update the UI after deletion
-                // Go index page or refresh the current page
-                console.log('Item deleted successfully:', id);
+interface ActionOptions {
+    onSuccess?: () => void;
+    onError?: (errors: any) => void;
+    redirectTo?: string;
+}
 
-                if (index_url) {
-                    router.get(route(index_url));
-                }
-            },
-            onError: (errors) => {
-                console.error('Error deleting item:', errors);
-                // toast({
-                //     title: "Error!",
-                //     description: "Failed to delete item. Please try again.",
-                //     variant: "destructive",
-                // });
-            }
-        }
-    );
-};
+interface BulkDeleteOptions {
+    onSuccess?: () => void;
+    onError?: (errors: any) => void;
+}
 
+export const handleDelete = (
+    id: number | string,
+    routeName: string,
+    options?: ActionOptions
+) => {
+    router.delete(route(routeName, id), {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: () => {
+            options?.onSuccess?.();
 
-const handleBulkDelete = (ids: number[], bulkDestroyRouteName: string, callback?: () => void) => {
-    router.delete(
-        route(bulkDestroyRouteName, { ids: ids.join(',') }),
-        {
-            preserveState: true,
-            preserveScroll: true,
-            onSuccess: () => {
-                // toast({
-                //     title: "Success!",
-                //     description: "Selected items deleted successfully!",
-                //     className: "bg-green-500 text-white",
-                // });
-                if (callback) {
-                    callback();
-                }
-            },
-            onError: (errors) => {
-                console.error('Error deleting items:', errors);
-                // toast({
-                //     title: "Error!",
-                //     description: "Failed to delete items. Please try again.",
-                //     variant: "destructive",
-                // });
+            if (options?.redirectTo) {
+                router.get(route(options.redirectTo));
             }
         },
-    );
+        onError: options?.onError,
+    });
 };
 
-const handleToggleStatus = (id: number, newStatus: boolean, url: string) => {
+
+export const handleBulkDelete = (
+    ids: number[],
+    routeName: string,
+    options?: BulkDeleteOptions
+) => {
+    if (!ids.length) return;
+
+    router.delete(route(routeName), {
+        data: { ids },
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: () => {
+            options?.onSuccess?.();
+        },
+        onError: options?.onError,
+    });
+};
+
+export const handleToggleStatus = (id: number, newStatus: boolean, url: string) => {
     router.put(
         route(url, id),
         { is_active: newStatus },
@@ -90,4 +78,3 @@ const handleToggleStatus = (id: number, newStatus: boolean, url: string) => {
 
 
 
-export { handleBulkDelete, handleDelete, handleToggleStatus };

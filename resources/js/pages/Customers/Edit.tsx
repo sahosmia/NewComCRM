@@ -1,6 +1,7 @@
 import AppLayout from "@/layouts/app-layout";
 import CustomerForm from "./form";
 import type { CustomerType } from "@/types"; // তোমার টাইপ ফাইল থেকে
+import { Head } from "@inertiajs/react";
 
 interface User {
     id: number;
@@ -20,11 +21,14 @@ export default function Edit({ customer, users }: Props) {
                 { title: "Edit Customer", href: route("customers.edit", customer.id) }
             ]}
         >
-                <div className="p-6">
-                    <h1 className="text-xl font-bold tracking-tight mb-4">Edit Customer</h1>
 
-                    <CustomerForm customer={customer} users={users} />
-                </div>
+            <Head title="Customer Edit" />
+
+            <div className="p-6">
+                <h1 className="text-xl font-bold tracking-tight mb-4">Edit Customer</h1>
+
+                <CustomerForm customer={customer} users={users} />
+            </div>
         </AppLayout>
     );
 }

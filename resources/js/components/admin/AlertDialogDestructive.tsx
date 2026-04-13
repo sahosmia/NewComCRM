@@ -10,30 +10,25 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { ReactNode } from "react";
 
 interface Props {
   onConfirm: () => void;
   title?: string;
   description?: string;
+  children?: ReactNode;
 }
 
 export function AlertDialogDestructive({
   onConfirm,
   title = "Delete record?",
-  description = "This action cannot be undone. This will permanently delete the data from our servers."
+  description = "This action cannot be undone. This will permanently delete the data from our servers.",
+  children,
 }: Props) {
   return (
     <AlertDialog>
-      {/* We use asChild and a DropdownMenuItem here so it fits inside your menu perfectly */}
       <AlertDialogTrigger asChild>
-        <DropdownMenuItem
-          onSelect={(e) => e.preventDefault()} // CRITICAL: Prevents menu from closing before dialog opens
-          className="text-red-600 focus:text-red-600 cursor-pointer"
-        >
-          <Trash2Icon className="w-4 h-4 mr-2 text-red-600 focus:text-red-600 cursor-pointer" />
-          <span>Delete</span>
-        </DropdownMenuItem>
+        {children}
       </AlertDialogTrigger>
 
       <AlertDialogContent>
@@ -43,7 +38,6 @@ export function AlertDialogDestructive({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          {/* Call the onConfirm function when clicked */}
           <AlertDialogAction
             onClick={onConfirm}
             className="bg-red-600 hover:bg-red-700 text-white"

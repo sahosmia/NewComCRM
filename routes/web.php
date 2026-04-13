@@ -28,13 +28,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // --- Customers ---
-    // Custom actions grouped by controller/prefix for readability
     Route::prefix('customers')->name('customers.')->controller(CustomerController::class)->group(function () {
-        Route::post('bulk-destroy', 'bulkDestroy')->name('bulk-destroy');
-        Route::get('export/excel', 'export')->name('export');
-        Route::post('import/excel', 'import')->name('import');
+        Route::delete('/bulk-destroy', 'bulkDestroy')->name('bulkDestroy');
+        Route::get('/export/excel', 'export')->name('export');
+        Route::post('/import/excel', 'import')->name('import');
     });
     Route::resource('customers', CustomerController::class);
+
+    
 
     // --- Follow Ups ---
     // Define custom member routes BEFORE the resource

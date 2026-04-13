@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare } from "lucide-react";
-import { Link } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import type { CustomerType } from "@/types";
 
 export default function Show({ customer }: { customer: any }) {
@@ -14,6 +14,8 @@ export default function Show({ customer }: { customer: any }) {
                 { title: customer.name, href: "#" }
             ]}
         >
+            <Head title={`${customer.name} - Customers`} />
+
             <div className="p-6 max-w-7xl mx-auto space-y-6">
 
                 {/* Header Section */}
@@ -65,7 +67,7 @@ export default function Show({ customer }: { customer: any }) {
                                             {customer.phones?.map((p: string, i: number) => (
                                                 <p key={i} className="text-sm text-muted-foreground flex items-center gap-2">
                                                     {p}
-                                                    <a href={`https://wa.me/88${p.replace(/\D/g,'')}`} target="_blank" className="text-emerald-500 hover:underline text-[10px] font-bold">WhatsApp</a>
+                                                    <a href={`https://wa.me/88${p.replace(/\D/g, '')}`} target="_blank" className="text-emerald-500 hover:underline text-[10px] font-bold">WhatsApp</a>
                                                 </p>
                                             ))}
                                         </div>
