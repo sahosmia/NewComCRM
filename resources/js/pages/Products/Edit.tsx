@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import ProductForm from "./Form";
+import ProductForm from "./form";
 
 export default function Edit({ product }: any) {
     return (

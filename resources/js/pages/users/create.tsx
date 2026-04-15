@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import UserForm from "./Form";
+import UserForm from "./form";
 import { Head } from "@inertiajs/react";
 
 export default function Create({ users }: any) {
