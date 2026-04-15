@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -105,7 +106,7 @@ class Quotation extends Model
     // Methods
     public function generatePDF()
     {
-        $pdf = PDF::loadView('pdf.quotation', ['quotation' => $this]);
+        $pdf = Pdf::loadView('pdf.quotation', ['quotation' => $this]);
         $path = 'quotations/quotation-' . $this->quotation_number . '.pdf';
         \Storage::put('public/' . $path, $pdf->output());
 

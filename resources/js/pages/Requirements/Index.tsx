@@ -16,7 +16,7 @@ export default function Index({ requirements }: Props) {
   };
 
   return (
-    <AppLayout breadcrumbs={[{ label: "Requirements" }]}>
+    <AppLayout breadcrumbs={[{ title: "Requirements" }]}>
       <div className="p-6">
         <div className="flex justify-between mb-4">
           <h1 className="text-xl font-bold">Requirements</h1>

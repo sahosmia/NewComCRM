@@ -1,17 +1,31 @@
 <?php
 
 use App\Models\Customer;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-it('test_can_search_customers_by_company_name', function ()
-{
-    // Arrange: Create one specific target and 5 random ones
-    Customer::factory()->create(['company_name' => 'Kamal Enterprise']);
-    Customer::factory()->count(5)->create();
+uses(RefreshDatabase::class);
 
-    // Act: Hit your Inertia/JSON route
-    $response = $this->get(route('customers.index', ['search' => 'Kamal']));
+it('test_can_search_customers_by_company_name', function () {
+    $user = User::factory()->create();
 
-    // Assert: Check if only the match is returned
+    Customer::factory()->create([
+        'company_name' => 'Kamal Enterprise',
+        'assigned_to'  => $user->id,
+    ]);
+
+    Customer::factory()->count(5)->create([
+        'assigned_to' => $user->id,
+    ]);
+
+    $response = $this->actingAs($user)
+                     ->get(route('customers.index', ['search' => 'Kamal']));
+
     $response->assertStatus(200);
-    $this->assertCount(1, $response->viewData('customers')->data);
+
+    $response->assertInertia(fn ($page) => $page
+        ->component('Customers/Index')
+        ->has('customers.data', 1)
+        ->where('customers.data.0.company_name', 'Kamal Enterprise')
+    );
 });
