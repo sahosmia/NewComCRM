@@ -2,14 +2,14 @@ import { Link } from '@inertiajs/react';
 import { FileText, MoreHorizontal, SquarePen, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import type { Column } from '@/types';
+import type { Column, Product } from '@/types';
 import { handleDelete } from '@/utils/table';
 import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
 
-const columns: Column<any>[] = [
+export const columns: Column<Product>[] = [
     {
         header: 'Name',
-        accessor: (item) => (
+        accessor: (item: Product) => (
             <div className="flex flex-col">
                 <span className="font-medium text-foreground">{item.name}</span>
             </div>
@@ -17,23 +17,23 @@ const columns: Column<any>[] = [
     },
     {
         header: 'Brand',
-        accessor: (item) => item.brand,
+        accessor: (item: Product) => item.brand,
     },
     {
         header: 'Category',
-        accessor: (item) => item.category,
+        accessor: (item: Product) => typeof item.category === 'string' ? item.category : item.category?.name || 'N/A',
     },
     {
         header: 'Price',
-        accessor: (item) => item.unit_price,
+        accessor: (item: Product) => item.unit_price,
     },
     {
         header: 'Stock',
-        accessor: (item) => item.stock_quantity,
+        accessor: (item: Product) => item.stock_quantity,
     },
     {
         header: '',
-        accessor: (item) => (
+        accessor: (item: Product) => (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="w-8 h-8 p-0">
@@ -73,5 +73,3 @@ const columns: Column<any>[] = [
         className: 'w-[7%]',
     },
 ];
-
-export { columns };

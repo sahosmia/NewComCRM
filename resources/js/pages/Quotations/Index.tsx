@@ -1,22 +1,29 @@
 import AppLayout from '@/layouts/app-layout';
-import { FilterOption, PaginationType, SortOption } from '@/types';
+import { FilterOption, PaginationType, SortOption, Quotation, BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import { columns } from './Columns';
+import { useMemo } from 'react';
 
 interface Props {
-    quotations: PaginationType<any>;
-    stats: any;
+    quotations: PaginationType<Quotation>;
+    stats: {
+        total: number;
+        draft: number;
+        sent: number;
+        accepted: number;
+        rejected: number;
+        expired: number;
+    };
 }
 
 export default function QuotationIndex({ quotations, stats }: Props) {
-    const breadcrumbs = [
+    const BREADCRUMBS: BreadcrumbItem[] = [
         { title: 'Dashboard', href: route('dashboard') },
         { title: 'Quotations', href: route('quotations.index') },
     ];
-
-    const filters: FilterOption[] = [
+    const filters: FilterOption[] = useMemo(() => [
         {
             name: 'status',
             label: 'Status',
@@ -29,17 +36,19 @@ export default function QuotationIndex({ quotations, stats }: Props) {
                 { label: 'Expired', value: 'expired' },
             ]
         },
-    ];
+    ], []);
 
-    const sortOptions: SortOption[] = [
+    const sortOptions: SortOption[] = useMemo(() => [
         { label: 'Newest First', sort: 'created_at', direction: 'desc' },
         { label: 'Date', sort: 'quotation_date', direction: 'desc' },
         { label: 'Total Amount', sort: 'total', direction: 'desc' },
-    ];
+    ], []);
+
+    const pageTitle = "Quotations Management | CRM";
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Quotations" />
+        <AppLayout breadcrumbs={BREADCRUMBS}>
+            <Head title={pageTitle} />
 
             <div className="flex flex-col flex-1 h-full gap-4 p-4 overflow-x-auto rounded-xl">
                 <Heading

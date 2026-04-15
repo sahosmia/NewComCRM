@@ -1,17 +1,15 @@
 import { Link } from '@inertiajs/react';
-import { Building2, FileText, MoreHorizontal, Phone, SquarePen, Trash2, MapPin,  } from 'lucide-react';
+import { FileText, MoreHorizontal, SquarePen, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import type { UserType, Column } from '@/types';
+import type { User, Column } from '@/types';
 import { handleDelete } from '@/utils/table';
-import { Badge } from '@/components/ui/badge';
 import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
-import { cn } from '@/lib/utils';
 
-const columns: Column<UserType>[] = [
+export const columns: Column<User>[] = [
     {
         header: 'Name',
-        accessor: (item: any) => (
+        accessor: (item: User) => (
             <div className="flex flex-col">
                 <span className="font-medium text-foreground">{item.name}</span>
             </div>
@@ -20,7 +18,7 @@ const columns: Column<UserType>[] = [
 
     {
         header: 'Email',
-        accessor: (item: any) => (
+        accessor: (item: User) => (
             <div className="flex flex-col text-sm">
                 {item.email}
             </div>
@@ -28,16 +26,16 @@ const columns: Column<UserType>[] = [
     },
     {
         header: 'Role',
-        accessor: (item: any) => (
+        accessor: (item: User) => (
             <div className="flex items-center gap-2">
-                {item.role == 'user' ? "User" : "Super Admin"}
+                {item.role === 'user' ? "User" : "Super Admin"}
             </div>
         ),
     },
 
     {
         header: '',
-        accessor: (item) => (
+        accessor: (item: User) => (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="w-8 h-8 p-0">
@@ -77,5 +75,3 @@ const columns: Column<UserType>[] = [
         className: 'w-[7%]',
     },
 ];
-
-export { columns };

@@ -3,19 +3,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useTableFilters } from '@/hooks/useTableFilters';
 import { CommonTableProps } from '@/types';
-import { Link } from '@inertiajs/react';
-import React, { ReactNode } from 'react';
+import { Link, router } from '@inertiajs/react';
+import React, { ReactNode, useEffect, useState, useMemo } from 'react';
 import { Input } from '@/components/ui/input';
 import { TableFilters } from './TableFilters';
 import { RotateCcw } from 'lucide-react';
-import { router } from "@inertiajs/react";
 import Pagination from './Pagination';
-import { useEffect, useState } from "react";
 import TableSkeleton from './TableSkeleton';
 import { handleBulkDelete } from '@/utils/table';
 import { AlertDialogDestructive } from './AlertDialogDestructive';
 
-const CommonTable = <T extends { id: number }>({
+const CommonTable = <T extends { id: number | string }>({
     data,
     columns,
     create_route,
@@ -23,8 +21,8 @@ const CommonTable = <T extends { id: number }>({
     filters,
     sortOptions
 }: CommonTableProps<T>) => {
-
     const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         const start = () => setLoading(true);
         const finish = () => setLoading(false);
@@ -37,6 +35,7 @@ const CommonTable = <T extends { id: number }>({
             unsubscribeFinish?.();
         };
     }, []);
+
     const {
         queryParams,
         search,
@@ -66,7 +65,7 @@ const CommonTable = <T extends { id: number }>({
         });
     };
 
-    const currentSort = React.useMemo(() => {
+    const currentSort = useMemo(() => {
         return sortOptions.find(
             opt =>
                 opt.sort === queryParams?.sort &&
@@ -74,11 +73,8 @@ const CommonTable = <T extends { id: number }>({
         );
     }, [sortOptions, queryParams]);
 
-
     return (
         <div className="space-y-4">
-            {/* Toolbar */}
-
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex flex-1 items-center space-x-2">
                     <Input
@@ -88,11 +84,15 @@ const CommonTable = <T extends { id: number }>({
                         onChange={handleSearchChange}
                         className="w-64 h-9 px-3 text-sm"
                     />
-                    {filters && <TableFilters filters={filters} queryParams={queryParams || {}} routeName={routeName}
-                    />}
+                    {filters && (
+                        <TableFilters
+                            filters={filters}
+                            queryParams={queryParams || {}}
+                            routeName={routeName}
+                        />
+                    )}
 
                     {sortOptions && sortOptions.length > 0 && (
-
                         <Select
                             value={currentSort?.label || ""}
                             onValueChange={handleSortChange}
@@ -109,7 +109,12 @@ const CommonTable = <T extends { id: number }>({
                             </SelectContent>
                         </Select>
                     )}
-                    <Button variant="ghost" size="sm" onClick={resetFilters} className="h-8 px-2 text-xs text-destructive">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={resetFilters}
+                        className="h-8 px-2 text-xs text-destructive"
+                    >
                         <RotateCcw className="mr-1 h-3 w-3" />
                         Reset
                     </Button>
@@ -117,9 +122,9 @@ const CommonTable = <T extends { id: number }>({
                 <div className='flex gap-2 items-center'>
                     {selectedItems.length > 0 && (
                         <AlertDialogDestructive
-                            title="Delete Selected Customers?"
-                            description={`This will delete ${selectedItems.length} customers permanently.`}
-                            onConfirm={() => handleBulkDelete(selectedItems, 'customers.bulkDestroy')}
+                            title="Confirm Bulk Action"
+                            description={`Are you sure you want to delete ${selectedItems.length} items? This action cannot be undone.`}
+                            onConfirm={() => handleBulkDelete(selectedItems, `${routeName.split('.')[0]}.bulkDestroy`)}
                         >
                             <Button
                                 variant="destructive"
@@ -129,18 +134,12 @@ const CommonTable = <T extends { id: number }>({
                             </Button>
                         </AlertDialogDestructive>
                     )}
-                    {/* <div className="text-sm font-medium">
-                        {selectedItems.length > 0 && (
-                            <span className="text-primary">{selectedItems.length} items selected</span>
-                        )}
-                    </div> */}
                     <Button variant="default" size="sm" asChild>
                         <Link href={route(create_route)}>Add New</Link>
                     </Button>
                 </div>
             </div>
 
-            {/* Table Container */}
             <div className="border rounded-lg overflow-hidden bg-card text-card-foreground shadow-sm">
                 <Table className='table-fixed w-full'>
                     <TableHeader className="bg-muted/50">
@@ -155,7 +154,7 @@ const CommonTable = <T extends { id: number }>({
                             </TableHead>
                             <TableHead className="w-10 font-bold">#</TableHead>
                             {columns.map((column, index) => (
-                                <TableHead key={index} className={`${column.className} font-bold`}>
+                                <TableHead key={index} className={`${column.className || ''} font-bold`}>
                                     {column.header}
                                 </TableHead>
                             ))}
@@ -179,8 +178,8 @@ const CommonTable = <T extends { id: number }>({
                                     <TableCell className='w-10'>
                                         <input
                                             type="checkbox"
-                                            checked={selectedItems.includes(item.id)}
-                                            onChange={() => handleSelectItem(item.id)}
+                                            checked={selectedItems.includes(Number(item.id))}
+                                            onChange={() => handleSelectItem(Number(item.id))}
                                             className="block w-4 h-4"
                                         />
                                     </TableCell>

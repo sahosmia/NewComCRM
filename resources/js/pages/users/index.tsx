@@ -1,23 +1,21 @@
 import AppLayout from '@/layouts/app-layout';
-import { UserType, FilterOption, PaginationType, SortOption } from '@/types';
+import { User, FilterOption, PaginationType, SortOption, BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
-import { columns } from './Columns';
+import { columns } from './columns';
+import { useMemo } from 'react';
 
 interface Props {
-    users: PaginationType<UserType>;
+    users: PaginationType<User>;
 }
 
-
-
 export default function UserIndex({ users }: Props) {
-    const breadcrumbs = [
+    const BREADCRUMBS: BreadcrumbItem[] = [
         { title: 'Dashboard', href: route('dashboard') },
         { title: 'Users', href: route('users.index') },
     ];
-
-    const filters: FilterOption[] = [
+    const filters: FilterOption[] = useMemo(() => [
         {
             name: 'role',
             label: 'User Role',
@@ -27,23 +25,24 @@ export default function UserIndex({ users }: Props) {
                 { label: 'User', value: 'user' },
             ]
         },
+    ], []);
 
-    ];
-
-    const userSortOptions :SortOption [] = [
+    const userSortOptions: SortOption[] = useMemo(() => [
         { label: 'Newest First', sort: 'created_at', direction: 'desc' },
         { label: 'Name (A-Z)', sort: 'name', direction: 'asc' },
         { label: 'Email', sort: 'email', direction: 'asc' },
-    ];
+    ], []);
+
+    const pageTitle = "Manage Users | CRM";
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Users" />
+        <AppLayout breadcrumbs={BREADCRUMBS}>
+            <Head title={pageTitle} />
 
             <div className="flex flex-col flex-1 h-full gap-4 p-4 overflow-x-auto rounded-xl">
                 <Heading
                     title={`Users (${users.total})`}
-                    description="Manage your client base, contact information, and account status."
+                    description="Manage your team members and their access levels."
                 />
 
                 <CommonTable

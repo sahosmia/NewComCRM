@@ -1,22 +1,26 @@
 import AppLayout from '@/layouts/app-layout';
-import { FilterOption, PaginationType, SortOption } from '@/types';
+import { FilterOption, PaginationType, SortOption, FollowUp, BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import { columns } from './Columns';
+import { useMemo } from 'react';
 
 interface Props {
-    followUps: PaginationType<any>;
-    stats: any;
+    followUps: PaginationType<FollowUp>;
+    stats: {
+        total: number;
+        pending: number;
+        completed: number;
+    };
 }
 
 export default function FollowUpIndex({ followUps, stats }: Props) {
-    const breadcrumbs = [
+    const BREADCRUMBS: BreadcrumbItem[] = [
         { title: 'Dashboard', href: route('dashboard') },
         { title: 'Follow Ups', href: route('follow-ups.index') },
     ];
-
-    const filters: FilterOption[] = [
+    const filters: FilterOption[] = useMemo(() => [
         {
             name: 'status',
             label: 'Status',
@@ -40,17 +44,19 @@ export default function FollowUpIndex({ followUps, stats }: Props) {
                 { label: 'Low', value: 'low' },
             ]
         },
-    ];
+    ], []);
 
-    const sortOptions: SortOption[] = [
+    const sortOptions: SortOption[] = useMemo(() => [
         { label: 'Newest First', sort: 'created_at', direction: 'desc' },
         { label: 'Follow Up Date', sort: 'follow_up_date', direction: 'asc' },
         { label: 'Priority', sort: 'priority', direction: 'desc' },
-    ];
+    ], []);
+
+    const pageTitle = "Follow Ups Tracking | CRM";
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Follow Ups" />
+        <AppLayout breadcrumbs={BREADCRUMBS}>
+            <Head title={pageTitle} />
 
             <div className="flex flex-col flex-1 h-full gap-4 p-4 overflow-x-auto rounded-xl">
                 <Heading

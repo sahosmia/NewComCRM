@@ -1,22 +1,20 @@
 import { Link } from '@inertiajs/react';
-import { Building2, FileText, MoreHorizontal, Phone, SquarePen, Trash2, MapPin,  } from 'lucide-react';
+import { Building2, FileText, MoreHorizontal, Phone, SquarePen, Trash2, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import type { CustomerType, Column } from '@/types';
+import type { Customer, Column } from '@/types';
 import { handleDelete } from '@/utils/table';
 import { Badge } from '@/components/ui/badge';
 import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
 import { cn } from '@/lib/utils';
 
-const columns: Column<CustomerType>[] = [
+export const columns: Column<Customer>[] = [
     {
         header: 'Customer',
-        accessor: (item: any) => (
+        accessor: (item: Customer) => (
             <div className="flex flex-col">
                 <div className="flex items-center gap-2">
                     <span className="font-medium text-foreground">{item.name}</span>
-                    Customer Type Badge
-
                 </div>
                 <span className="text-xs text-muted-foreground">{item.designation || 'No Designation'}</span>
             </div>
@@ -25,7 +23,7 @@ const columns: Column<CustomerType>[] = [
     },
     {
         header: 'Company',
-        accessor: (item: any) => (
+        accessor: (item: Customer) => (
             <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2">
                     <Building2 className="w-3.5 h-3.5 text-muted-foreground" />
@@ -42,7 +40,7 @@ const columns: Column<CustomerType>[] = [
     },
     {
         header: 'Contact',
-        accessor: (item: any) => (
+        accessor: (item: Customer) => (
             <div className="flex flex-col text-sm">
                 <div className="flex items-center gap-1 font-medium">
                     <Phone className="w-3 h-3" />
@@ -60,7 +58,7 @@ const columns: Column<CustomerType>[] = [
     },
     {
         header: 'Assigned To',
-        accessor: (item: any) => (
+        accessor: (item: Customer) => (
             <div className="flex items-center gap-2">
                 {item.assigned_user ? (
                     <div className="flex items-center gap-2">
@@ -78,7 +76,7 @@ const columns: Column<CustomerType>[] = [
     },
     {
         header: 'Status',
-        accessor: (item: any) => (
+        accessor: (item: Customer) => (
             <div className='flex flex-col gap-2'>
                 <Badge
                     variant={item.status === 'active' ? 'default' : 'secondary'}
@@ -99,7 +97,7 @@ const columns: Column<CustomerType>[] = [
     },
     {
         header: '',
-        accessor: (item) => (
+        accessor: (item: Customer) => (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="w-8 h-8 p-0">
@@ -139,5 +137,3 @@ const columns: Column<CustomerType>[] = [
         className: 'w-[7%]',
     },
 ];
-
-export { columns };

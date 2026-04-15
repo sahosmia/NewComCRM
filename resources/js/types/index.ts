@@ -1,26 +1,26 @@
+import type { BreadcrumbItem } from './breadcrumb';
+import type { User, Customer, Product, Coupon } from './models';
+import type { LucideIcon } from 'lucide-react';
+import type { Config } from 'ziggy-js';
+import type { ReactNode } from 'react';
+
 export type * from './auth';
 export type * from './navigation';
 export type * from './ui';
-import { LucideIcon } from 'lucide-react';
-import type { Config } from 'ziggy-js';
+export type * from './models';
+export type * from './breadcrumb';
 
 export interface Auth {
     user: User;
 }
 
 export interface SharedProps {
-    cart: {
-        items: CartItem[];
-        totalItems: number;
-    };
     [key: string]: unknown;
-    auth: {
-        user: null;
+    auth: Auth;
+    flash: {
+        success?: string;
+        error?: string;
     };
-}
-export interface BreadcrumbItem {
-    title: string;
-    href: string;
 }
 
 export interface NavGroup {
@@ -34,78 +34,16 @@ export interface NavItem {
     icon?: LucideIcon | null;
     isActive?: boolean;
 }
+
 export interface NavItemWithSubmenu extends NavItem {
     submenu?: NavItem[] | null;
 }
 
-export interface SharedData {
+export interface SharedData extends SharedProps {
     name: string;
     quote: { message: string; author: string };
-    auth: Auth;
     ziggy: Config & { location: string };
     sidebarOpen: boolean;
-    [key: string]: unknown;
-}
-
-export interface User {
-    id: number;
-    name: string;
-    email: string;
-    avatar?: string;
-    email_verified_at: string | null;
-    created_at: string;
-    updated_at: string;
-    [key: string]: unknown;
-}
-
-export interface CustomerType {
-    id: number;
-    name: string;
-    designation: string;
-    company_name: string;
-    phones: string[];
-    addresses: string[];
-    email: string;
-    type: 'corporate' | 'reseller' | 'personal';
-    assigned_to?: number | string;
-    status: 'active' | 'inactive';
-    remarks?: string;
-    assigned_user?: {
-        id: number;
-        name: string;
-    };
-    created_at: string;
-    updated_at: string;
-}
-
-export interface ReviewType {
-    approved: boolean;
-    approved_at: string | null;
-    comment: string;
-    id: number;
-    product_id: number;
-    rating: number;
-    user_id: number;
-    created_at: string;
-}
-
-export interface ProductType {
-    id: number;
-    name: string;
-    slug: string;
-    description: string;
-    price: number;
-    discount_type: string | null;
-    discount_value: number | null;
-    category_id: number;
-    image: string;
-    is_active: boolean;
-    category?: CategoryType;
-    discounted_price: number;
-    image_url: string;
-    reviews: ReviewType[],
-    another_product_description?: string;
-    additional_information?: string | [];
 }
 
 export interface PaginationLink {
@@ -130,83 +68,11 @@ export interface PaginationType<T> {
     total: number;
 }
 
-
-export interface AuthType {
-    user: {
-        id: number;
-        name: string;
-        email: string;
-    }[] | null;
-}
-
-
-export interface TeamType {
-    id: number;
-    name: string;
-    image: string;
-    designation: string;
-    facebook_url: string;
-    instagram_url: string;
-    image_url: string;
-
-}
-
-export interface PortfolioType {
-    id: number;
-    title: string;
-    category: string;
-    thumbnail: string;
-    thumbnail_url: string;
-    description: string;
-    project_url: string;
-    slug: string;
-
-}
-export interface CartType {
-    id: number;
-    user_id: number;
-    product_id: number;
-    quantity: number;
-    product: ProductType;
-    [key]: string
-}
-
-export interface UserType {
-    id: number;
-    name: string;
-    email: string;
-    role: string;
-    created_at: string;
-    is_active: boolean;
-}
-export interface UserTypeforForm {
-    id: number;
-    name: string;
-}
 export interface Column<T> {
     header: string;
-    accessor: keyof T | ((item: T) => React.ReactNode);
+    accessor: keyof T | ((item: T) => ReactNode);
     className?: string;
 }
-
-
-
-export interface CouponType {
-    id: number;
-    coupon_code: string;
-    discount_value: number | null;
-    min_order_amount: number | null;
-    usage_limit: number | null;
-    start_date: string;
-    end_date: string | null;
-    description: string | null;
-    is_active: boolean;
-    discount_type: "fixed_amount" | "percentage";
-    created_at: string;
-    updated_at: string;
-    used_count: number;
-}
-
 
 export interface FilterOption {
     name: string;
@@ -220,15 +86,6 @@ export interface SortOption {
     sort: string;
     direction: 'asc' | 'desc';
 }
-
-
-export interface Column<T> {
-    header: string;
-    accessor: keyof T | ((item: T) => React.ReactNode);
-    className?: string;
-}
-
-
 
 export interface CommonTableProps<T> {
     data: PaginationType<T>;

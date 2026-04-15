@@ -2,15 +2,15 @@ import { Link } from '@inertiajs/react';
 import { FileText, MoreHorizontal, SquarePen, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import type { Column } from '@/types';
+import type { Column, Meeting } from '@/types';
 import { handleDelete } from '@/utils/table';
 import { Badge } from '@/components/ui/badge';
 import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
 
-const columns: Column<any>[] = [
+export const columns: Column<Meeting>[] = [
     {
         header: 'Title',
-        accessor: (item) => (
+        accessor: (item: Meeting) => (
             <div className="flex flex-col">
                 <span className="font-medium text-foreground">{item.title}</span>
             </div>
@@ -18,15 +18,15 @@ const columns: Column<any>[] = [
     },
     {
         header: 'Customer',
-        accessor: (item) => item.customer?.name,
+        accessor: (item: Meeting) => item.customer?.name || 'N/A',
     },
     {
         header: 'Start Time',
-        accessor: (item) => new Date(item.start_time).toLocaleString(),
+        accessor: (item: Meeting) => new Date(item.start_time).toLocaleString(),
     },
     {
         header: 'Type',
-        accessor: (item) => (
+        accessor: (item: Meeting) => (
             <Badge variant="outline" className="capitalize">
                 {item.meeting_type}
             </Badge>
@@ -34,15 +34,25 @@ const columns: Column<any>[] = [
     },
     {
         header: 'Status',
-        accessor: (item) => (
-            <Badge variant={item.status === 'scheduled' ? 'default' : item.status === 'completed' ? 'success' : 'destructive'} className="capitalize">
-                {item.status}
-            </Badge>
-        ),
+        accessor: (item: Meeting) => {
+            const variantMap: Record<string, "default" | "success" | "destructive" | "secondary" | "outline"> = {
+                scheduled: 'default',
+                completed: 'success',
+                cancelled: 'destructive',
+            };
+            return (
+                <Badge
+                    variant={variantMap[item.status] || 'default'}
+                    className="capitalize"
+                >
+                    {item.status}
+                </Badge>
+            );
+        },
     },
     {
         header: '',
-        accessor: (item) => (
+        accessor: (item: Meeting) => (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="w-8 h-8 p-0">
@@ -82,5 +92,3 @@ const columns: Column<any>[] = [
         className: 'w-[7%]',
     },
 ];
-
-export { columns };

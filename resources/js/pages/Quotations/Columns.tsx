@@ -2,31 +2,31 @@ import { Link } from '@inertiajs/react';
 import { FileText, MoreHorizontal, SquarePen, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import type { Column } from '@/types';
+import type { Column, Quotation } from '@/types';
 import { handleDelete } from '@/utils/table';
 import { Badge } from '@/components/ui/badge';
 import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
 
-const columns: Column<any>[] = [
+export const columns: Column<Quotation>[] = [
     {
         header: 'Quotation #',
-        accessor: (item) => item.quotation_number,
+        accessor: (item: Quotation) => item.quotation_number,
     },
     {
         header: 'Customer',
-        accessor: (item) => item.customer?.name,
+        accessor: (item: Quotation) => item.customer?.name || 'N/A',
     },
     {
         header: 'Date',
-        accessor: (item) => new Date(item.quotation_date).toLocaleDateString(),
+        accessor: (item: Quotation) => new Date(item.quotation_date).toLocaleDateString(),
     },
     {
         header: 'Total',
-        accessor: (item) => item.total,
+        accessor: (item: Quotation) => item.total,
     },
     {
         header: 'Status',
-        accessor: (item) => (
+        accessor: (item: Quotation) => (
             <Badge variant="outline" className="capitalize">
                 {item.status}
             </Badge>
@@ -34,7 +34,7 @@ const columns: Column<any>[] = [
     },
     {
         header: '',
-        accessor: (item) => (
+        accessor: (item: Quotation) => (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="w-8 h-8 p-0">
@@ -74,5 +74,3 @@ const columns: Column<any>[] = [
         className: 'w-[7%]',
     },
 ];
-
-export { columns };

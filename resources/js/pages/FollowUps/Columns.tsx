@@ -2,23 +2,23 @@ import { Link } from '@inertiajs/react';
 import { FileText, MoreHorizontal, SquarePen, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import type { Column } from '@/types';
+import type { Column, FollowUp } from '@/types';
 import { handleDelete } from '@/utils/table';
 import { Badge } from '@/components/ui/badge';
 import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
 
-const columns: Column<any>[] = [
+export const columns: Column<FollowUp>[] = [
     {
         header: 'Customer',
-        accessor: (item) => item.customer?.name,
+        accessor: (item: FollowUp) => item.customer?.name || 'N/A',
     },
     {
         header: 'Follow Up Date',
-        accessor: (item) => new Date(item.follow_up_date).toLocaleDateString(),
+        accessor: (item: FollowUp) => new Date(item.follow_up_date).toLocaleDateString(),
     },
     {
         header: 'Status',
-        accessor: (item) => (
+        accessor: (item: FollowUp) => (
             <Badge variant="outline" className="capitalize">
                 {item.status.replace('_', ' ')}
             </Badge>
@@ -26,7 +26,7 @@ const columns: Column<any>[] = [
     },
     {
         header: 'Priority',
-        accessor: (item) => (
+        accessor: (item: FollowUp) => (
             <Badge variant={item.priority === 'high' ? 'destructive' : item.priority === 'medium' ? 'default' : 'secondary'} className="capitalize">
                 {item.priority}
             </Badge>
@@ -34,7 +34,7 @@ const columns: Column<any>[] = [
     },
     {
         header: '',
-        accessor: (item) => (
+        accessor: (item: FollowUp) => (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="w-8 h-8 p-0">
@@ -74,5 +74,3 @@ const columns: Column<any>[] = [
         className: 'w-[7%]',
     },
 ];
-
-export { columns };

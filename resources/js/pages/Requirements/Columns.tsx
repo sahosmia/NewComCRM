@@ -2,34 +2,34 @@ import { Link } from '@inertiajs/react';
 import { FileText, MoreHorizontal, SquarePen, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import type { Column } from '@/types';
+import type { Column, Requirement } from '@/types';
 import { handleDelete } from '@/utils/table';
 import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
 
-const columns: Column<any>[] = [
+export const columns: Column<Requirement>[] = [
     {
         header: 'Customer',
-        accessor: (item) => item.customer?.name,
+        accessor: (item: Requirement) => item.customer?.name || 'N/A',
     },
     {
         header: 'Product',
-        accessor: (item) => item.product?.name,
+        accessor: (item: Requirement) => item.product?.name || 'N/A',
     },
     {
         header: 'Quantity',
-        accessor: (item) => item.quantity,
+        accessor: (item: Requirement) => item.quantity,
     },
     {
         header: 'Unit Price',
-        accessor: (item) => item.unit_price,
+        accessor: (item: Requirement) => item.unit_price,
     },
     {
         header: 'Total Price',
-        accessor: (item) => item.total_price,
+        accessor: (item: Requirement) => item.total_price,
     },
     {
         header: '',
-        accessor: (item) => (
+        accessor: (item: Requirement) => (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="w-8 h-8 p-0">
@@ -69,5 +69,3 @@ const columns: Column<any>[] = [
         className: 'w-[7%]',
     },
 ];
-
-export { columns };

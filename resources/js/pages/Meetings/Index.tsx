@@ -1,21 +1,21 @@
 import AppLayout from '@/layouts/app-layout';
-import { FilterOption, PaginationType, SortOption } from '@/types';
+import { FilterOption, PaginationType, SortOption, Meeting, BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import { columns } from './Columns';
+import { useMemo } from 'react';
 
 interface Props {
-    meetings: PaginationType<any>;
+    meetings: PaginationType<Meeting>;
 }
 
 export default function MeetingIndex({ meetings }: Props) {
-    const breadcrumbs = [
+    const BREADCRUMBS: BreadcrumbItem[] = [
         { title: 'Dashboard', href: route('dashboard') },
         { title: 'Meetings', href: route('meetings.index') },
     ];
-
-    const filters: FilterOption[] = [
+    const filters: FilterOption[] = useMemo(() => [
         {
             name: 'meeting_type',
             label: 'Meeting Type',
@@ -36,17 +36,19 @@ export default function MeetingIndex({ meetings }: Props) {
                 { label: 'Cancelled', value: 'cancelled' },
             ]
         },
-    ];
+    ], []);
 
-    const sortOptions: SortOption[] = [
+    const sortOptions: SortOption[] = useMemo(() => [
         { label: 'Newest First', sort: 'created_at', direction: 'desc' },
         { label: 'Start Time', sort: 'start_time', direction: 'asc' },
         { label: 'Title', sort: 'title', direction: 'asc' },
-    ];
+    ], []);
+
+    const pageTitle = "Meetings Management | CRM";
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Meetings" />
+        <AppLayout breadcrumbs={BREADCRUMBS}>
+            <Head title={pageTitle} />
 
             <div className="flex flex-col flex-1 h-full gap-4 p-4 overflow-x-auto rounded-xl">
                 <Heading
