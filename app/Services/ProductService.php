@@ -12,9 +12,9 @@ class ProductService
         private ProductRepository $products,
     ) {}
 
-    public function paginateIndex(int $perPage = 10): LengthAwarePaginator
+    public function paginateIndex(array $filters): LengthAwarePaginator
     {
-        return $this->products->paginateLatest($perPage);
+        return $this->products->paginateForIndex($filters);
     }
 
     public function create(array $data): Product

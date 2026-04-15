@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import RequirementForm from "./form";
+import RequirementForm from "./Form";
 
 interface Props {
     customers: { id: number; name: string; company_name: string }[];

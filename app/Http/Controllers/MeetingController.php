@@ -6,6 +6,7 @@ use App\Http\Requests\StoreMeetingRequest;
 use App\Http\Requests\UpdateMeetingRequest;
 use App\Models\Meeting;
 use App\Services\MeetingService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -18,10 +19,10 @@ class MeetingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('Meetings/Index', [
-            'meetings' => $this->meetingService->paginateIndex(),
+            'meetings' => $this->meetingService->paginateIndex($request->all()),
         ]);
     }
 

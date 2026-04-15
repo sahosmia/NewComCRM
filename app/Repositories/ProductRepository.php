@@ -8,9 +8,28 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ProductRepository
 {
-    public function paginateLatest(int $perPage = 10): LengthAwarePaginator
+    public function paginateForIndex(array $params): LengthAwarePaginator
     {
-        return Product::query()->latest()->paginate($perPage);
+        $perPage = $params['per_page'] ?? 10;
+
+        return Product::query()
+            ->when($params['search'] ?? null, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('brand', 'like', "%{$search}%")
+                        ->orWhere('category', 'like', "%{$search}%");
+                });
+            })
+            ->when($params['category'] ?? null, function ($query, $category) {
+                $query->where('category', $category);
+            })
+            ->when(isset($params['sort']), function ($query) use ($params) {
+                $query->orderBy($params['sort'], $params['direction'] ?? 'desc');
+            }, function ($query) {
+                $query->latest();
+            })
+            ->paginate($perPage)
+            ->withQueryString($params);
     }
 
     public function all(): Collection

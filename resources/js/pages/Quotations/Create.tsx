@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import QuotationForm from "./form";
+import QuotationForm from "./Form";
 import { Product } from "@/types/product";
 
 interface Props {

@@ -15,9 +15,9 @@ class MeetingService
         private CustomerRepository $customers,
     ) {}
 
-    public function paginateIndex(int $perPage = 10): LengthAwarePaginator
+    public function paginateIndex(array $filters): LengthAwarePaginator
     {
-        return $this->meetings->paginateIndex($perPage);
+        return $this->meetings->paginateForIndex($filters);
     }
 
     public function customersForForm(): Collection

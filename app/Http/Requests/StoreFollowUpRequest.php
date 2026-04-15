@@ -2,24 +2,25 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Concerns\ValidatesFollowUpAttributes;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreFollowUpRequest extends FormRequest
 {
-     public function authorize()
+    use ValidatesFollowUpAttributes;
+
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
-        return [
-            'customer_id' => 'required|exists:customers,id',
-            'follow_up_date' => 'required|date',
-            'notes' => 'required|string',
-            'status' => 'required|in:price_shared,negotiation,purchase,lost,pending,follow_up',
-            'priority' => 'required|in:high,medium,low',
-            'next_follow_up' => 'nullable|date|after:follow_up_date'
-        ];
+        return $this->followUpAttributeRules();
+    }
+
+    public function messages(): array
+    {
+        return $this->followUpAttributeMessages();
     }
 }

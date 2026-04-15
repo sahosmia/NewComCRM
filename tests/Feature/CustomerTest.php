@@ -1,17 +1,28 @@
 <?php
 
 use App\Models\Customer;
+use App\Models\User;
 
 it('test_can_search_customers_by_company_name', function ()
 {
-    // Arrange: Create one specific target and 5 random ones
-    Customer::factory()->create(['company_name' => 'Kamal Enterprise']);
-    Customer::factory()->count(5)->create();
+    $user = User::factory()->create();
 
-    // Act: Hit your Inertia/JSON route
-    $response = $this->get(route('customers.index', ['search' => 'Kamal']));
+    Customer::factory()->create([
+        'company_name' => 'Kamal Enterprise',
+        'assigned_to' => $user->id
+    ]);
 
-    // Assert: Check if only the match is returned
+    Customer::factory()->count(5)->create([
+        'assigned_to' => $user->id
+    ]);
+
+    $response = $this->actingAs($user)
+                     ->get(route('customers.index', ['search' => 'Kamal']));
+
     $response->assertStatus(200);
-    $this->assertCount(1, $response->viewData('customers')->data);
+
+    $response->assertInertia(fn ($page) => $page
+        ->has('customers.data', 1)
+        ->where('customers.data.0.company_name', 'Kamal Enterprise')
+    );
 });

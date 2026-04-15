@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare } from "lucide-react";
 import { Head, Link } from "@inertiajs/react";
-import type { UserType } from "@/types";
 
 export default function Show({ user }: { user: any }) {
     return (

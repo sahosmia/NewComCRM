@@ -2,27 +2,25 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Concerns\ValidatesMeetingAttributes;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreMeetingRequest extends FormRequest
 {
-    public function authorize()
+    use ValidatesMeetingAttributes;
+
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
-        return [
-            'customer_id' => 'required|exists:customers,id',
-            'title' => 'required|string|max:255',
-            'start_time' => 'required|date',
-            'end_time' => 'required|date|after:start_time',
-            'meeting_type' => 'required|in:physical,virtual,phone',
-            'location' => 'required_if:meeting_type,physical|nullable|string',
-            'agenda' => 'nullable|string',
-            'notes' => 'nullable|string',
-            'status' => 'required|in:scheduled,completed,cancelled'
-        ];
+        return $this->meetingAttributeRules();
+    }
+
+    public function messages(): array
+    {
+        return $this->meetingAttributeMessages();
     }
 }
