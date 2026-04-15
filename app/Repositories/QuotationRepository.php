@@ -8,26 +8,28 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class QuotationRepository
 {
-    public function paginateForIndex(
-        User $user,
-        ?string $status,
-        ?string $customerId,
-        ?string $dateFrom,
-        ?string $dateTo,
-        string $sortField,
-        string $sortDirection,
-        int $perPage
-    ): LengthAwarePaginator {
+    public function paginateForIndex(array $params, User $user): LengthAwarePaginator
+    {
+        $perPage = $params['per_page'] ?? 10;
+
         return Quotation::query()
             ->with(['customer', 'user'])
             ->when(! $user->isSuperAdmin(), fn ($query) => $query->where('user_id', $user->id))
-            ->when($status, fn ($query, $s) => $query->where('status', $s))
-            ->when($customerId, fn ($query, $id) => $query->where('customer_id', $id))
-            ->when($dateFrom, fn ($query, $d) => $query->whereDate('quotation_date', '>=', $d))
-            ->when($dateTo, fn ($query, $d) => $query->whereDate('quotation_date', '<=', $d))
-            ->orderBy($sortField, $sortDirection)
+            ->when($params['search'] ?? null, function ($query, $search) {
+                $query->where('quotation_number', 'like', "%{$search}%")
+                    ->orWhereHas('customer', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    });
+            })
+            ->when($params['status'] ?? null, fn ($query, $status) => $query->where('status', $status))
+            ->when($params['customer_id'] ?? null, fn ($query, $id) => $query->where('customer_id', $id))
+            ->when(isset($params['sort']), function ($query) use ($params) {
+                $query->orderBy($params['sort'], $params['direction'] ?? 'desc');
+            }, function ($query) {
+                $query->latest();
+            })
             ->paginate($perPage)
-            ->withQueryString();
+            ->withQueryString($params);
     }
 
     /**
@@ -36,10 +38,25 @@ class QuotationRepository
     public function indexStats(): array
     {
         return [
-            'draft' => Quotation::query()->draft()->count(),
-            'sent' => Quotation::query()->sent()->count(),
-            'accepted' => Quotation::query()->accepted()->count(),
-            'total' => Quotation::query()->accepted()->sum('total'),
+            'draft' => Quotation::query()->where('status', 'draft')->count(),
+            'sent' => Quotation::query()->where('status', 'sent')->count(),
+            'accepted' => Quotation::query()->where('status', 'accepted')->count(),
+            'total' => Quotation::query()->where('status', 'accepted')->sum('total'),
         ];
+    }
+
+    public function create(array $data): Quotation
+    {
+        return Quotation::query()->create($data);
+    }
+
+    public function update(Quotation $quotation, array $data): void
+    {
+        $quotation->update($data);
+    }
+
+    public function delete(Quotation $quotation): void
+    {
+        $quotation->delete();
     }
 }

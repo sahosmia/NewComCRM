@@ -16,24 +16,14 @@ class FollowUpService
         private CustomerRepository $customers,
     ) {}
 
-    /**
-     * @return array{followUps: \Illuminate\Contracts\Pagination\LengthAwarePaginator, filters: array, stats: array}
-     */
-    public function indexData(User $user, Request $request): array
+    public function paginateIndex(array $filters, User $user)
     {
-        return [
-            'followUps' => $this->followUps->paginateForIndex(
-                $user,
-                $request->status,
-                $request->type,
-                $request->customer_id,
-                $request->sort_field ?? 'follow_up_date',
-                $request->sort_direction ?? 'asc',
-                (int) ($request->per_page ?? 10)
-            ),
-            'filters' => $request->only(['status', 'type', 'customer_id']),
-            'stats' => $this->followUps->indexStats(),
-        ];
+        return $this->followUps->paginateForIndex($filters, $user);
+    }
+
+    public function stats(): array
+    {
+        return $this->followUps->indexStats();
     }
 
     public function create(array $validated, int $userId): FollowUp

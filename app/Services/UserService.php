@@ -25,9 +25,6 @@ class UserService
 
     public function create(array $data): User
     {
-        $data['phones'] = array_filter($data['phones'] ?? []);
-
-        $data['addresses'] = array_filter($data['addresses'] ?? []);
         return $this->users->create($data);
     }
 

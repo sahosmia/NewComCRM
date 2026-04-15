@@ -47,11 +47,11 @@ export default function UserForm({ user }: Props) {
 
                     <div className="space-y-1">
                         <label className="text-sm font-medium">User Role</label>
-                        <Select value={data.role} onValueChange={val => setData("role", val as "user" | "super-admin")}>
+                        <Select value={data.role} onValueChange={val => setData("role", val as "user" | "super_admin")}>
                             <SelectTrigger><SelectValue /></SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="user">User</SelectItem>
-                                <SelectItem value="super-admin">Super Admin</SelectItem>
+                                <SelectItem value="super_admin">Super Admin</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>

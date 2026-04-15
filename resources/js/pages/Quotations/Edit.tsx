@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import QuotationForm from "./form";
+import QuotationForm from "./Form";
 import { Quotation } from "@/types/quotation";
 import { Product } from "@/types/product";
 

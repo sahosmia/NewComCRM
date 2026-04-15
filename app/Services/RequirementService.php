@@ -16,9 +16,9 @@ class RequirementService
         private ProductRepository $products,
     ) {}
 
-    public function paginateIndex(int $perPage = 10): LengthAwarePaginator
+    public function paginateIndex(array $filters): LengthAwarePaginator
     {
-        return $this->requirements->paginateIndex($perPage);
+        return $this->requirements->paginateForIndex($filters);
     }
 
     /**

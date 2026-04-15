@@ -46,10 +46,8 @@ class ProfileController extends Controller
     public function destroy(ProfileDeleteRequest $request): RedirectResponse
     {
         $user = $request->user();
-
-        Auth::logout();
-
         $this->profileService->delete($user);
+        Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

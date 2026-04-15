@@ -24,7 +24,10 @@ class QuotationController extends Controller
             abort(401);
         }
 
-        return Inertia::render('Quotations/Index', $this->quotationService->indexData($user, $request));
+        return Inertia::render('Quotations/Index', [
+            'quotations' => $this->quotationService->paginateIndex($request->all(), $user),
+            'stats' => $this->quotationService->stats(),
+        ]);
     }
 
     public function create(Request $request)
@@ -44,30 +47,19 @@ class QuotationController extends Controller
             (int) Auth::id()
         );
 
-        return redirect()->route('quotations.show', $quotation)
+        return redirect()->route('quotations.index')
             ->with('success', 'Quotation created successfully.');
     }
 
     public function show(Quotation $quotation)
     {
-        $this->authorize('view', $quotation);
-
-        $quotation->load(['customer', 'user', 'items.product']);
-
         return Inertia::render('Quotations/Show', [
-            'quotation' => $quotation,
+            'quotation' => $quotation->load(['customer', 'user', 'items.product']),
         ]);
     }
 
     public function edit(Quotation $quotation)
     {
-        $this->authorize('update', $quotation);
-
-        if ($quotation->status !== 'draft') {
-            return redirect()->route('quotations.show', $quotation)
-                ->with('error', 'Only draft quotations can be edited.');
-        }
-
         $user = Auth::user();
         if (! $user instanceof User) {
             abort(401);
@@ -83,53 +75,17 @@ class QuotationController extends Controller
 
     public function update(UpdateQuotationRequest $request, Quotation $quotation)
     {
-        $this->authorize('update', $quotation);
-
-        if ($quotation->status !== 'draft') {
-            return redirect()->back()
-                ->with('error', 'Only draft quotations can be updated.');
-        }
-
         $this->quotationService->update($quotation, $request->validated());
 
-        return redirect()->route('quotations.show', $quotation)
+        return redirect()->route('quotations.index')
             ->with('success', 'Quotation updated successfully.');
     }
 
     public function destroy(Quotation $quotation)
     {
-        $this->authorize('delete', $quotation);
-
         $this->quotationService->delete($quotation);
 
         return redirect()->route('quotations.index')
             ->with('success', 'Quotation deleted successfully.');
-    }
-
-    public function send(Quotation $quotation)
-    {
-        $this->authorize('update', $quotation);
-
-        $this->quotationService->send($quotation);
-
-        return redirect()->back()
-            ->with('success', 'Quotation sent successfully.');
-    }
-
-    public function download(Quotation $quotation)
-    {
-        $this->authorize('view', $quotation);
-
-        return $this->quotationService->downloadPdf($quotation);
-    }
-
-    public function duplicate(Quotation $quotation)
-    {
-        $this->authorize('create', Quotation::class);
-
-        $newQuotation = $this->quotationService->duplicate($quotation);
-
-        return redirect()->route('quotations.edit', $newQuotation)
-            ->with('success', 'Quotation duplicated successfully.');
     }
 }

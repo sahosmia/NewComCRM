@@ -2,16 +2,19 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Concerns\ValidatesUserAttributes;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreUserRequest extends FormRequest
 {
+    use ValidatesUserAttributes;
+
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +24,14 @@ class StoreUserRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        return $this->userAttributeRules();
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return $this->userAttributeMessages();
     }
 }

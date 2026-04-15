@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import MeetingForm from "./form";
+import MeetingForm from "./Form";
 import { Meeting } from "@/types/meeting";
 
 interface Props {

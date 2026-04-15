@@ -17,10 +17,10 @@ class RequirementController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
         return Inertia::render('Requirements/Index', [
-            'requirements' => $this->requirementService->paginateIndex(),
+            'requirements' => $this->requirementService->paginateIndex($request->all()),
         ]);
     }
 

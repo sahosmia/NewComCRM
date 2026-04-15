@@ -1,74 +1,49 @@
-import { Link, router } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import AppLayout from "@/layouts/app-layout";
-import { Requirement } from "@/types/requirement";
-import { PaginationType } from "@/types";
+import AppLayout from '@/layouts/app-layout';
+import { FilterOption, PaginationType, SortOption } from '@/types';
+import { Head } from '@inertiajs/react';
+import CommonTable from '@/components/admin/CommonTable';
+import Heading from '@/components/admin/heading';
+import { columns } from './Columns';
 
 interface Props {
-  requirements: PaginationType<Requirement>;
+    requirements: PaginationType<any>;
 }
 
-export default function Index({ requirements }: Props) {
-  const deleteRequirement = (id: number) => {
-    if (confirm("Are you sure?")) {
-      router.delete(route("requirements.destroy", id));
-    }
-  };
+export default function RequirementIndex({ requirements }: Props) {
+    const breadcrumbs = [
+        { title: 'Dashboard', href: route('dashboard') },
+        { title: 'Requirements', href: route('requirements.index') },
+    ];
 
-  return (
-    <AppLayout breadcrumbs={[{ title: "Requirements" }]}>
-      <div className="p-6">
-        <div className="flex justify-between mb-4">
-          <h1 className="text-xl font-bold">Requirements</h1>
-          <Link href={route("requirements.create")}>
-            <Button>Create Requirement</Button>
-          </Link>
-        </div>
+    const filters: FilterOption[] = [
+        // Add filters if needed
+    ];
 
-        <div className="border rounded-lg overflow-hidden">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-muted">
-              <tr>
-                <th className="p-3 border-b">Customer</th>
-                <th className="p-3 border-b">Product</th>
-                <th className="p-3 border-b">Quantity</th>
-                <th className="p-3 border-b">Total Price</th>
-                <th className="p-3 border-b text-right">Action</th>
-              </tr>
-            </thead>
+    const sortOptions: SortOption[] = [
+        { label: 'Newest First', sort: 'created_at', direction: 'desc' },
+        { label: 'Quantity', sort: 'quantity', direction: 'desc' },
+        { label: 'Total Price', sort: 'total_price', direction: 'desc' },
+    ];
 
-            <tbody>
-              {requirements.data.map((req) => (
-                <tr key={req.id} className="hover:bg-muted/50 transition-colors">
-                  <td className="p-3 border-b">{req.customer?.name}</td>
-                  <td className="p-3 border-b">{req.product?.name}</td>
-                  <td className="p-3 border-b">{req.quantity}</td>
-                  <td className="p-3 border-b">${req.total_price}</td>
-                  <td className="p-3 border-b text-right space-x-2">
-                    <Link href={route("requirements.edit", req.id)}>
-                      <Button variant="outline" size="sm">Edit</Button>
-                    </Link>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => deleteRequirement(req.id)}
-                    >
-                      Delete
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-              {requirements.data.length === 0 && (
-                <tr>
-                  <td colSpan={5} className="p-6 text-center text-muted-foreground">
-                    No requirements found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </AppLayout>
-  );
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Requirements" />
+
+            <div className="flex flex-col flex-1 h-full gap-4 p-4 overflow-x-auto rounded-xl">
+                <Heading
+                    title={`Requirements (${requirements.total})`}
+                    description="Track customer product requirements and needs."
+                />
+
+                <CommonTable
+                    data={requirements}
+                    columns={columns}
+                    create_route="requirements.create"
+                    routeName="requirements.index"
+                    filters={filters}
+                    sortOptions={sortOptions}
+                />
+            </div>
+        </AppLayout>
+    );
 }

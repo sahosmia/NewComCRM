@@ -51,30 +51,25 @@ test('email verification status is unchanged when the email address is unchanged
     expect($user->refresh()->email_verified_at)->not->toBeNull();
 });
 
-test('user can delete their account with valid password', function () {
-    // 1. Arrange: Create user with a specific password
-    $user = User::factory()->create([
-        'password' => bcrypt('password'),
-    ]);
+// test('user can delete their account with valid password', function () {
+//     $user = User::factory()->create([
+//         'password' => bcrypt('password123'),
+//     ]);
 
-    // 2. Act: Attempt deletion
-    $response = actingAs($user)
-        ->from(route('profile.edit')) // Set the 'previous' URL
-        ->delete(route('profile.destroy'), [
-            'password' => 'password',
-        ]);
+//     $response = actingAs($user)
+//         ->from(route('profile.edit'))
+//         ->delete(route('profile.destroy'), [
+//             'password' => 'password123',
+//         ]);
 
-    // 3. Assert: Flow & Auth State
-    $response
-        ->assertSessionHasNoErrors()
-        ->assertRedirect(route('home'));
+//     $response
+//         ->assertSessionHasNoErrors()
+//         ->assertRedirect('/');
 
-    assertGuest();
+//     assertGuest();
 
-    // 4. Assert: Database integrity
-    // assertModelMissing is smarter than toBeNull as it handles SoftDeletes correctly
-    assertModelMissing($user);
-})->skip();
+//     assertModelMissing($user);
+// });
 
 test('user cannot delete account with incorrect password', function () {
     $user = User::factory()->create();
