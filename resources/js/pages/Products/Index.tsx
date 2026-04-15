@@ -1,71 +1,58 @@
-import { Link, router } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import AppLayout from "@/layouts/app-layout";
-import type { Product } from "@/types/product";
+import AppLayout from '@/layouts/app-layout';
+import { FilterOption, PaginationType, SortOption } from '@/types';
+import { Head } from '@inertiajs/react';
+import CommonTable from '@/components/admin/CommonTable';
+import Heading from '@/components/admin/heading';
+import { columns } from './Columns';
 
-export default function Index({ products }: { products: Product[] }) {
-  const deleteProduct = (id: number) => {
-    if (confirm("Are you sure?")) {
-      router.delete(route("products.destroy", id));
-    }
-  };
+interface Props {
+    products: PaginationType<any>;
+}
 
-  return (
-    <AppLayout breadcrumbs={[{ title: "Products", href: route('products.index') }]}>
-      <div className="p-6">
-        <div className="flex justify-between mb-4">
-          <h1 className="text-xl font-bold">Products</h1>
-          <Link href={route("products.create")}>
-            <Button>Create Product</Button>
-          </Link>
-        </div>
+export default function ProductIndex({ products }: Props) {
+    const breadcrumbs = [
+        { title: 'Dashboard', href: route('dashboard') },
+        { title: 'Products', href: route('products.index') },
+    ];
 
-        <div className="border rounded-lg overflow-hidden">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-muted">
-              <tr>
-                <th className="p-3 border-b">Name</th>
-                <th className="p-3 border-b">Brand</th>
-                <th className="p-3 border-b">Category</th>
-                <th className="p-3 border-b">Price</th>
-                <th className="p-3 border-b">Stock</th>
-                <th className="p-3 border-b text-right">Action</th>
-              </tr>
-            </thead>
+    const filters: FilterOption[] = [
+        {
+            name: 'category',
+            label: 'Category',
+            type: 'select',
+            options: [
+                // Normally categories should be dynamic, but keeping it simple for now
+                { label: 'General', value: 'general' },
+            ]
+        },
+    ];
 
-            <tbody>
-              {products.data.map((product: Product) => (
-                <tr key={product.id} className="hover:bg-muted/50 transition-colors">
-                  <td className="p-3 border-b">{product.name}</td>
-                  <td className="p-3 border-b">{product.brand}</td>
-                  <td className="p-3 border-b">{product.category}</td>
-                  <td className="p-3 border-b">${product.unit_price}</td>
-                  <td className="p-3 border-b">{product.stock_quantity}</td>
-                  <td className="p-3 border-b text-right space-x-2">
-                    <Link href={route("products.edit", product.id)}>
-                      <Button variant="outline" size="sm">Edit</Button>
-                    </Link>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => deleteProduct(product.id)}
-                    >
-                      Delete
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-              {products.data.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="p-6 text-center text-muted-foreground">
-                    No products found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </AppLayout>
-  );
+    const sortOptions: SortOption[] = [
+        { label: 'Newest First', sort: 'created_at', direction: 'desc' },
+        { label: 'Name (A-Z)', sort: 'name', direction: 'asc' },
+        { label: 'Price (Low to High)', sort: 'unit_price', direction: 'asc' },
+        { label: 'Price (High to Low)', sort: 'unit_price', direction: 'desc' },
+    ];
+
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Products" />
+
+            <div className="flex flex-col flex-1 h-full gap-4 p-4 overflow-x-auto rounded-xl">
+                <Heading
+                    title={`Products (${products.total})`}
+                    description="Manage your inventory and product catalog."
+                />
+
+                <CommonTable
+                    data={products}
+                    columns={columns}
+                    create_route="products.create"
+                    routeName="products.index"
+                    filters={filters}
+                    sortOptions={sortOptions}
+                />
+            </div>
+        </AppLayout>
+    );
 }

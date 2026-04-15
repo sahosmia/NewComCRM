@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import UserForm from "./form";
+import UserForm from "./Form";
 import type { UserType } from "@/types"; // তোমার টাইপ ফাইল থেকে
 import { Head } from "@inertiajs/react";
 

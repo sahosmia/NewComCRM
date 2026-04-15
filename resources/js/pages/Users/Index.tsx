@@ -3,7 +3,7 @@ import { UserType, FilterOption, PaginationType, SortOption } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
-import { columns } from './columns';
+import { columns } from './Columns';
 
 interface Props {
     users: PaginationType<UserType>;
@@ -23,7 +23,7 @@ export default function UserIndex({ users }: Props) {
             label: 'User Role',
             type: 'select',
             options: [
-                { label: 'Super Admin', value: 'super-admin' },
+                { label: 'Super Admin', value: 'super_admin' },
                 { label: 'User', value: 'user' },
             ]
         },

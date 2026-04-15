@@ -24,9 +24,10 @@ class FollowUpController extends Controller
             abort(401);
         }
 
-        $data = $this->followUpService->indexData($user, $request);
-
-        return Inertia::render('FollowUps/Index', $data);
+        return Inertia::render('FollowUps/Index', [
+            'followUps' => $this->followUpService->paginateIndex($request->all(), $user),
+            'stats' => $this->followUpService->stats(),
+        ]);
     }
 
     public function create()
@@ -38,17 +39,20 @@ class FollowUpController extends Controller
 
     public function store(StoreFollowUpRequest $request)
     {
-        $followUp = $this->followUpService->create(
+        $this->followUpService->create(
             $request->validated(),
             (int) Auth::id()
         );
 
-        if ($request->wantsJson()) {
-            return response()->json($followUp->load('customer'));
-        }
-
-        return redirect()->back()
+        return redirect()->route('follow-ups.index')
             ->with('success', 'Follow up scheduled successfully.');
+    }
+
+    public function show(FollowUp $followUp)
+    {
+        return Inertia::render('FollowUps/Show', [
+            'followUp' => $followUp->load(['customer', 'user']),
+        ]);
     }
 
     public function edit(FollowUp $followUp)
@@ -61,28 +65,22 @@ class FollowUpController extends Controller
 
     public function update(UpdateFollowUpRequest $request, FollowUp $followUp)
     {
-        $this->authorize('update', $followUp);
-
         $this->followUpService->update($followUp, $request->validated());
 
-        return redirect()->back()
+        return redirect()->route('follow-ups.index')
             ->with('success', 'Follow up updated successfully.');
     }
 
     public function destroy(FollowUp $followUp)
     {
-        $this->authorize('delete', $followUp);
-
         $this->followUpService->delete($followUp);
 
-        return redirect()->back()
+        return redirect()->route('follow-ups.index')
             ->with('success', 'Follow up deleted successfully.');
     }
 
     public function complete(Request $request, FollowUp $followUp)
     {
-        $this->authorize('update', $followUp);
-
         $this->followUpService->complete(
             $followUp,
             $request->input('status', $followUp->status)

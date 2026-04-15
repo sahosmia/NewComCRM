@@ -8,31 +8,28 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class FollowUpRepository
 {
-    public function paginateForIndex(
-        User $user,
-        ?string $status,
-        ?string $type,
-        ?string $customerId,
-        string $sortField,
-        string $sortDirection,
-        int $perPage
-    ): LengthAwarePaginator {
+    public function paginateForIndex(array $params, User $user): LengthAwarePaginator
+    {
+        $perPage = $params['per_page'] ?? 10;
+
         return FollowUp::query()
             ->with(['customer', 'user'])
             ->when(! $user->isSuperAdmin(), fn ($query) => $query->where('user_id', $user->id))
-            ->when($status, fn ($query, $s) => $query->where('status', $s))
-            ->when($type, function ($query) use ($type) {
-                return match ($type) {
-                    'today' => $query->today(),
-                    'upcoming' => $query->upcoming(),
-                    'overdue' => $query->overdue(),
-                    default => $query,
-                };
+            ->when($params['search'] ?? null, function ($query, $search) {
+                $query->whereHas('customer', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                });
             })
-            ->when($customerId, fn ($query, $id) => $query->where('customer_id', $id))
-            ->orderBy($sortField, $sortDirection)
+            ->when($params['status'] ?? null, fn ($query, $status) => $query->where('status', $status))
+            ->when($params['priority'] ?? null, fn ($query, $priority) => $query->where('priority', $priority))
+            ->when($params['customer_id'] ?? null, fn ($query, $id) => $query->where('customer_id', $id))
+            ->when(isset($params['sort']), function ($query) use ($params) {
+                $query->orderBy($params['sort'], $params['direction'] ?? 'desc');
+            }, function ($query) {
+                $query->latest();
+            })
             ->paginate($perPage)
-            ->withQueryString();
+            ->withQueryString($params);
     }
 
     /**
@@ -41,10 +38,10 @@ class FollowUpRepository
     public function indexStats(): array
     {
         return [
-            'today' => FollowUp::query()->today()->count(),
-            'upcoming' => FollowUp::query()->upcoming()->count(),
-            'overdue' => FollowUp::query()->overdue()->count(),
-            'completed' => FollowUp::query()->completed()->count(),
+            'today' => FollowUp::query()->whereDate('follow_up_date', now())->count(),
+            'upcoming' => FollowUp::query()->whereDate('follow_up_date', '>', now())->count(),
+            'overdue' => FollowUp::query()->whereDate('follow_up_date', '<', now())->whereNull('completed_at')->count(),
+            'completed' => FollowUp::query()->whereNotNull('completed_at')->count(),
         ];
     }
 

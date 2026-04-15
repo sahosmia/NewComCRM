@@ -1,109 +1,61 @@
-import { Link, router } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import AppLayout from "@/layouts/app-layout";
-import { Quotation } from "@/types/quotation";
-import { PaginationType } from "@/types";
+import AppLayout from '@/layouts/app-layout';
+import { FilterOption, PaginationType, SortOption } from '@/types';
+import { Head } from '@inertiajs/react';
+import CommonTable from '@/components/admin/CommonTable';
+import Heading from '@/components/admin/heading';
+import { columns } from './Columns';
 
 interface Props {
-  quotations: PaginationType<Quotation>;
-  stats: any;
+    quotations: PaginationType<any>;
+    stats: any;
 }
 
-export default function Index({ quotations, stats }: Props) {
-  const deleteQuotation = (id: number) => {
-    if (confirm("Are you sure?")) {
-      router.delete(route("quotations.destroy", id));
-    }
-  };
+export default function QuotationIndex({ quotations, stats }: Props) {
+    const breadcrumbs = [
+        { title: 'Dashboard', href: route('dashboard') },
+        { title: 'Quotations', href: route('quotations.index') },
+    ];
 
-  return (
-    <AppLayout breadcrumbs={[{ label: "Quotations" }]}>
-      <div className="p-6">
-        <div className="flex justify-between mb-4">
-          <h1 className="text-xl font-bold">Quotations</h1>
-          <Link href={route("quotations.create")}>
-            <Button>Create Quotation</Button>
-          </Link>
-        </div>
+    const filters: FilterOption[] = [
+        {
+            name: 'status',
+            label: 'Status',
+            type: 'select',
+            options: [
+                { label: 'Draft', value: 'draft' },
+                { label: 'Sent', value: 'sent' },
+                { label: 'Accepted', value: 'accepted' },
+                { label: 'Rejected', value: 'rejected' },
+                { label: 'Expired', value: 'expired' },
+            ]
+        },
+    ];
 
-        <div className="grid grid-cols-4 gap-4 mb-6">
-            <div className="p-4 bg-card border rounded-lg">
-                <p className="text-sm text-muted-foreground">Draft</p>
-                <p className="text-2xl font-bold">{stats.draft}</p>
-            </div>
-            <div className="p-4 bg-card border rounded-lg text-blue-500">
-                <p className="text-sm">Sent</p>
-                <p className="text-2xl font-bold">{stats.sent}</p>
-            </div>
-            <div className="p-4 bg-card border rounded-lg text-green-500">
-                <p className="text-sm">Accepted</p>
-                <p className="text-2xl font-bold">{stats.accepted}</p>
-            </div>
-            <div className="p-4 bg-card border rounded-lg">
-                <p className="text-sm text-muted-foreground">Revenue</p>
-                <p className="text-2xl font-bold">${stats.total.toFixed(2)}</p>
-            </div>
-        </div>
+    const sortOptions: SortOption[] = [
+        { label: 'Newest First', sort: 'created_at', direction: 'desc' },
+        { label: 'Date', sort: 'quotation_date', direction: 'desc' },
+        { label: 'Total Amount', sort: 'total', direction: 'desc' },
+    ];
 
-        <div className="border rounded-lg overflow-hidden">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-muted">
-              <tr>
-                <th className="p-3 border-b">Number</th>
-                <th className="p-3 border-b">Customer</th>
-                <th className="p-3 border-b">Date</th>
-                <th className="p-3 border-b">Total</th>
-                <th className="p-3 border-b">Status</th>
-                <th className="p-3 border-b text-right">Action</th>
-              </tr>
-            </thead>
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Quotations" />
 
-            <tbody>
-              {quotations.data.map((q) => (
-                <tr key={q.id} className="hover:bg-muted/50 transition-colors">
-                  <td className="p-3 border-b font-mono">{q.quotation_number}</td>
-                  <td className="p-3 border-b">{q.customer?.name}</td>
-                  <td className="p-3 border-b">{new Date(q.quotation_date).toLocaleDateString()}</td>
-                  <td className="p-3 border-b">${q.total}</td>
-                  <td className="p-3 border-b capitalize">
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                          q.status === 'accepted' ? 'bg-green-100 text-green-800' :
-                          q.status === 'sent' ? 'bg-blue-100 text-blue-800' :
-                          'bg-gray-100 text-gray-800'
-                      }`}>
-                        {q.status}
-                      </span>
-                  </td>
-                  <td className="p-3 border-b text-right space-x-2">
-                    <Link href={route("quotations.show", q.id)}>
-                      <Button variant="outline" size="sm">View</Button>
-                    </Link>
-                    {q.status === 'draft' && (
-                        <Link href={route("quotations.edit", q.id)}>
-                          <Button variant="outline" size="sm">Edit</Button>
-                        </Link>
-                    )}
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => deleteQuotation(q.id)}
-                    >
-                      Delete
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-              {quotations.data.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="p-6 text-center text-muted-foreground">
-                    No quotations found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </AppLayout>
-  );
+            <div className="flex flex-col flex-1 h-full gap-4 p-4 overflow-x-auto rounded-xl">
+                <Heading
+                    title={`Quotations (${quotations.total})`}
+                    description="Generate and manage customer quotations."
+                />
+
+                <CommonTable
+                    data={quotations}
+                    columns={columns}
+                    create_route="quotations.create"
+                    routeName="quotations.index"
+                    filters={filters}
+                    sortOptions={sortOptions}
+                />
+            </div>
+        </AppLayout>
+    );
 }

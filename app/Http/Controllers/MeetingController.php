@@ -18,10 +18,10 @@ class MeetingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('Meetings/Index', [
-            'meetings' => $this->meetingService->paginateIndex(),
+            'meetings' => $this->meetingService->paginateIndex($request->all()),
         ]);
     }
 

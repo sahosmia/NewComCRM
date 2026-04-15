@@ -17,10 +17,10 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
         return Inertia::render('Products/Index', [
-            'products' => $this->productService->paginateIndex(),
+            'products' => $this->productService->paginateIndex($request->all()),
         ]);
     }
 

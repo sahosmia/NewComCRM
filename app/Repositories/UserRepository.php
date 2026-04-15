@@ -23,18 +23,12 @@ class UserRepository
             ->when($params['search'] ?? null, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%")
-                        ->orWhere('phones', 'like', "%{$search}%");
+                        ->orWhere('email', 'like', "%{$search}%");
                 });
             })
-            ->when($params['status'] ?? null, function ($query, $status) {
-                $query->where('status', $status);
-            })
-
             ->when($params['role'] ?? null, function ($query, $role) {
-                $query->where('type', $role);
+                $query->where('role', $role);
             })
-            // ------------------------------------
             ->when(isset($params['sort']), function ($query) use ($params) {
                 $query->orderBy($params['sort'], $params['direction'] ?? 'desc');
             }, function ($query) {
@@ -46,43 +40,19 @@ class UserRepository
 
     public function create(array $data): User
     {
-
         return User::query()->create($data);
     }
 
     public function update(User $user, array $data): void
     {
+        if (empty($data['password'])) {
+            unset($data['password']);
+        }
         $user->update($data);
     }
 
     public function delete(User $user): void
     {
         $user->delete();
-    }
-
-    public function forRequirementForm(): Collection
-    {
-        return User::query()
-            ->select('id', 'name', 'company_name')
-            ->get();
-    }
-
-    public function activeForQuotation(User $user): Collection
-    {
-        return User::query()
-            ->active()
-            ->when(! $user->isSuperAdmin(), fn($query) => $query->where('assigned_to', $user->id))
-            ->get();
-    }
-
-    public function findWithRequirementsForQuotation(?int $userId): ?User
-    {
-        if (! $userId) {
-            return null;
-        }
-
-        return User::query()
-            ->with('requirements.product')
-            ->find($userId);
     }
 }

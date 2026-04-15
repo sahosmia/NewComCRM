@@ -1,101 +1,72 @@
-import { Link, router } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import AppLayout from "@/layouts/app-layout";
-import { FollowUp } from "@/types/follow-up";
-import type { PaginationType } from "@/types";
+import AppLayout from '@/layouts/app-layout';
+import { FilterOption, PaginationType, SortOption } from '@/types';
+import { Head } from '@inertiajs/react';
+import CommonTable from '@/components/admin/CommonTable';
+import Heading from '@/components/admin/heading';
+import { columns } from './Columns';
 
 interface Props {
-  followUps: PaginationType<FollowUp>;
-  stats: any;
+    followUps: PaginationType<any>;
+    stats: any;
 }
 
-export default function Index({ followUps, stats }: Props) {
-  const deleteFollowUp = (id: number) => {
-    if (confirm("Are you sure?")) {
-      router.delete(route("follow-ups.destroy", id));
-    }
-  };
+export default function FollowUpIndex({ followUps, stats }: Props) {
+    const breadcrumbs = [
+        { title: 'Dashboard', href: route('dashboard') },
+        { title: 'Follow Ups', href: route('follow-ups.index') },
+    ];
 
-  const completeFollowUp = (id: number) => {
-      router.post(route("follow-ups.complete", id));
-  };
+    const filters: FilterOption[] = [
+        {
+            name: 'status',
+            label: 'Status',
+            type: 'select',
+            options: [
+                { label: 'Pending', value: 'pending' },
+                { label: 'Price Shared', value: 'price_shared' },
+                { label: 'Negotiation', value: 'negotiation' },
+                { label: 'Purchase', value: 'purchase' },
+                { label: 'Lost', value: 'lost' },
+                { label: 'Follow Up', value: 'follow_up' },
+            ]
+        },
+        {
+            name: 'priority',
+            label: 'Priority',
+            type: 'select',
+            options: [
+                { label: 'High', value: 'high' },
+                { label: 'Medium', value: 'medium' },
+                { label: 'Low', value: 'low' },
+            ]
+        },
+    ];
 
-  return (
-    <AppLayout breadcrumbs={[{ title: "Follow Ups", href: route("follow-ups.index") }]}>
-      <div className="p-6">
-        <div className="flex justify-between mb-4">
-          <h1 className="text-xl font-bold">Follow Ups</h1>
-          <Link href={route("follow-ups.create")}>
-            <Button>Schedule Follow Up</Button>
-          </Link>
-        </div>
+    const sortOptions: SortOption[] = [
+        { label: 'Newest First', sort: 'created_at', direction: 'desc' },
+        { label: 'Follow Up Date', sort: 'follow_up_date', direction: 'asc' },
+        { label: 'Priority', sort: 'priority', direction: 'desc' },
+    ];
 
-        <div className="grid grid-cols-4 gap-4 mb-6">
-            <div className="p-4 bg-card border rounded-lg">
-                <p className="text-sm text-muted-foreground">Today</p>
-                <p className="text-2xl font-bold">{stats.today}</p>
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Follow Ups" />
+
+            <div className="flex flex-col flex-1 h-full gap-4 p-4 overflow-x-auto rounded-xl">
+                <Heading
+                    title={`Follow Ups (${followUps.total})`}
+                    description="Manage customer follow-ups and engagement status."
+                />
+
+                <CommonTable
+                    data={followUps}
+                    columns={columns}
+                    create_route="follow-ups.create"
+                    routeName="follow-ups.index"
+                    filters={filters}
+                    sortOptions={sortOptions}
+                />
             </div>
-            <div className="p-4 bg-card border rounded-lg">
-                <p className="text-sm text-muted-foreground">Upcoming</p>
-                <p className="text-2xl font-bold">{stats.upcoming}</p>
-            </div>
-            <div className="p-4 bg-card border rounded-lg text-red-500">
-                <p className="text-sm">Overdue</p>
-                <p className="text-2xl font-bold">{stats.overdue}</p>
-            </div>
-            <div className="p-4 bg-card border rounded-lg text-green-500">
-                <p className="text-sm">Completed</p>
-                <p className="text-2xl font-bold">{stats.completed}</p>
-            </div>
-        </div>
-
-        <div className="border rounded-lg overflow-hidden">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-muted">
-              <tr>
-                <th className="p-3 border-b">Customer</th>
-                <th className="p-3 border-b">Date</th>
-                <th className="p-3 border-b">Status</th>
-                <th className="p-3 border-b">Priority</th>
-                <th className="p-3 border-b text-right">Action</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {followUps.data.map((fu) => (
-                <tr key={fu.id} className="hover:bg-muted/50 transition-colors">
-                  <td className="p-3 border-b">{fu.customer?.name}</td>
-                  <td className="p-3 border-b">{new Date(fu.follow_up_date).toLocaleDateString()}</td>
-                  <td className="p-3 border-b capitalize">{fu.status.replace('_', ' ')}</td>
-                  <td className="p-3 border-b capitalize">{fu.priority}</td>
-                  <td className="p-3 border-b text-right space-x-2">
-                    {!fu.completed_at && (
-                        <Button variant="outline" size="sm" onClick={() => completeFollowUp(fu.id)}>Complete</Button>
-                    )}
-                    <Link href={route("follow-ups.edit", fu.id)}>
-                      <Button variant="outline" size="sm">Edit</Button>
-                    </Link>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => deleteFollowUp(fu.id)}
-                    >
-                      Delete
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-              {followUps.data.length === 0 && (
-                <tr>
-                  <td colSpan={5} className="p-6 text-center text-muted-foreground">
-                    No follow ups found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </AppLayout>
-  );
+        </AppLayout>
+    );
 }

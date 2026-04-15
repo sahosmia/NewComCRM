@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import RequirementForm from "./form";
+import RequirementForm from "./Form";
 import { Requirement } from "@/types/requirement";
 
 interface Props {
