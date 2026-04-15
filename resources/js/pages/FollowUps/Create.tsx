@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import FollowUpForm from "./Form";
+import FollowUpForm from "./form";
 
 interface Props {
     customers: { id: number; name: string }[];

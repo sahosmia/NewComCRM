@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import FollowUpForm from "./Form";
+import FollowUpForm from "./form";
 import type { FollowUp } from "@/types/follow-up";
 
 interface Props {
