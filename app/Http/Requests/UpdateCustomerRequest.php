@@ -11,7 +11,7 @@ class UpdateCustomerRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('update', $this->route('customer'));
     }
 
     /**
@@ -20,6 +20,7 @@ class UpdateCustomerRequest extends FormRequest
     public function rules(): array
     {
         return $this->customerAttributeRules();
+
     }
 
     /**

@@ -3,7 +3,7 @@ import { UserType, FilterOption, PaginationType, SortOption } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
-import { columns } from './Columns';
+import { columns } from './columns';
 
 interface Props {
     users: PaginationType<UserType>;

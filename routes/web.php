@@ -33,9 +33,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/export/excel', 'export')->name('export');
         Route::post('/import/excel', 'import')->name('import');
     });
+
     Route::resource('customers', CustomerController::class);
 
-    
+
 
     // --- Follow Ups ---
     // Define custom member routes BEFORE the resource

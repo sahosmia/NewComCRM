@@ -9,10 +9,6 @@ export interface Auth {
 }
 
 export interface SharedProps {
-    cart: {
-        items: CartItem[];
-        totalItems: number;
-    };
     [key: string]: unknown;
     auth: {
         user: null;
@@ -32,7 +28,8 @@ export interface NavItem {
     title: string;
     href?: string;
     icon?: LucideIcon | null;
-    isActive?: boolean;
+    hidden?: boolean;
+
 }
 export interface NavItemWithSubmenu extends NavItem {
     submenu?: NavItem[] | null;
@@ -100,7 +97,6 @@ export interface ProductType {
     category_id: number;
     image: string;
     is_active: boolean;
-    category?: CategoryType;
     discounted_price: number;
     image_url: string;
     reviews: ReviewType[],

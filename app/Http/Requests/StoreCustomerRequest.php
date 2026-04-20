@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Concerns\ValidatesCustomerAttributes;
+use App\Models\Customer;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCustomerRequest extends FormRequest
@@ -11,7 +12,7 @@ class StoreCustomerRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('create', Customer::class);
     }
 
     /**
@@ -19,7 +20,7 @@ class StoreCustomerRequest extends FormRequest
      */
     public function rules(): array
     {
-       return $this->customerAttributeRules();
+        return $this->customerAttributeRules();
     }
 
     /**

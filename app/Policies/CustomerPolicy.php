@@ -1,33 +1,46 @@
 <?php
+
 namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Customer;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class CustomerPolicy
 {
-    // public function viewAny(User $user)
-    // {
-    //     return true;
-    // }
+    use HandlesAuthorization;
 
-    // public function view(User $user, Customer $customer)
-    // {
-    //     return $user->isSuperAdmin() || $user->id === $customer->assigned_to;
-    // }
 
-    // public function create(User $user)
-    // {
-    //     return true;
-    // }
+    public function before(User $user, string $ability): ?bool
+    {
+        if ($user->isSuperAdmin()) {
+            return true;
+        }
+        return null;
+    }
 
-    // public function update(User $user, Customer $customer)
-    // {
-    //     return $user->isSuperAdmin() || $user->id === $customer->assigned_to;
-    // }
+    public function viewAny(User $user): bool
+    {
+        return true;
+    }
 
-    // public function delete(User $user, Customer $customer)
-    // {
-    //     return $user->isSuperAdmin() || $user->id === $customer->assigned_to;
-    // }
+    public function view(User $user, Customer $customer): bool
+    {
+        return $user->id === $customer->assigned_to;
+    }
+
+    public function create(User $user): bool
+    {
+        return true;
+    }
+
+    public function update(User $user, Customer $customer): bool
+    {
+        return $user->id === $customer->assigned_to;
+    }
+
+    public function delete(User $user, Customer $customer): bool
+    {
+        return $user->id === $customer->assigned_to;
+    }
 }

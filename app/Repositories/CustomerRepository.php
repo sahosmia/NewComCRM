@@ -6,62 +6,53 @@ use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Builder;
 
 class CustomerRepository
 {
-    public function selectOptions(): Collection
+    private function query(): Builder
     {
         return Customer::query()
-            ->select('id', 'name')
-            ->get();
+            ->when(!auth()->user()?->isSuperAdmin(), function ($query) {
+                $query->where('assigned_to', auth()->id());
+            });
     }
 
     public function paginateForIndex(array $params): LengthAwarePaginator
     {
-        $perPage = $params['per_page'] ?? 10;
-
-        return Customer::query()
+        return $this->query()
             ->with('assignedUser')
-            ->when($params['search'] ?? null, function ($query, $search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('company_name', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%")
-                        ->orWhere('phones', 'like', "%{$search}%");
-                });
+            ->when($params['search'] ?? null, fn($q, $s) => $this->applySearch($q, $s))
+            ->when($params['status'] ?? null, fn($q, $v) => $q->where('status', $v))
+            ->when($params['assigned_to'] ?? null, fn($q, $v) => $q->where('assigned_to', $v))
+            ->when($params['type'] ?? null, fn($q, $v) => $q->where('type', $v))
+            ->when($params['date'] ?? null, fn($q, $v) => $q->whereDate('created_at', $v))
+            ->when($params['start_date'] ?? null, function ($q, $start) use ($params) {
+                $q->whereBetween('created_at', [$start, $params['end_date'] ?? $start]);
             })
-            ->when($params['status'] ?? null, function ($query, $status) {
-                $query->where('status', $status);
-            })
-            ->when($params['assigned_to'] ?? null, function ($query, $assigned_to) {
-                $query->where('assigned_to', $assigned_to);
-            })
-            ->when($params['type'] ?? null, function ($query, $type) {
-                $query->where('type', $type);
-            })
-            ->when($params['date'] ?? null, function ($query, $date) {
-                $query->whereDate('created_at', $date);
-            })
-            ->when($params['start_date'] ?? null, function ($query, $startDate) use ($params) {
-                $query->whereBetween('created_at', [
-                    $startDate,
-                    ($params['end_date'] ?? $startDate)
-                ]);
-            })
-            // ------------------------------------
-            ->when(isset($params['sort']), function ($query) use ($params) {
-                $query->orderBy($params['sort'], $params['direction'] ?? 'desc');
-            }, function ($query) {
-                $query->latest();
-            })
-            ->paginate($perPage)
-            ->withQueryString($params);
+            ->latest($params['sort'] ?? 'created_at') // Simplified sorting
+            ->paginate($params['per_page'] ?? 10)
+            ->withQueryString();
+    }
+
+    private function applySearch(Builder $query, string $search): void
+    {
+        $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+                ->orWhere('company_name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%")
+                ->orWhere('phones', 'like', "%{$search}%");
+        });
+    }
+
+    public function selectOptions(): Collection
+    {
+        return $this->query()->select('id', 'name')->get();
     }
 
     public function create(array $data): Customer
     {
-
-        return Customer::query()->create($data);
+        return Customer::create($data);
     }
 
     public function update(Customer $customer, array $data): void
@@ -98,5 +89,11 @@ class CustomerRepository
         return Customer::query()
             ->with('requirements.product')
             ->find($customerId);
+    }
+
+    public function bulkDelete(array $ids): void
+    {
+        // Use the query() to ensure users can only bulk delete THEIR customers
+        $this->query()->whereIn('id', $ids)->delete();
     }
 }
