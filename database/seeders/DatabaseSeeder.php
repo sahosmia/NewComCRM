@@ -3,8 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Customer;
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Requirement;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -23,11 +22,15 @@ class DatabaseSeeder extends Seeder
             CustomerSeeder::class,
             FollowUpSeeder::class,
             MeetingSeeder::class,
-            ]);
+        ]);
 
         Customer::factory()
             ->count(10)
             ->inactive()
             ->create();
-   }
+
+        Requirement::factory()
+            ->hasItems(3)
+            ->create();
+    }
 }

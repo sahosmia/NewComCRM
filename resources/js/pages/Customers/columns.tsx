@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { Building2, FileText, MoreHorizontal, Phone, SquarePen, Trash2, MapPin,  } from 'lucide-react';
+import { Building2, FileText, MoreHorizontal, Phone, SquarePen, Trash2, MapPin, } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import type { CustomerType, Column } from '@/types';
@@ -15,7 +15,6 @@ const columns: Column<CustomerType>[] = [
             <div className="flex flex-col">
                 <div className="flex items-center gap-2">
                     <span className="font-medium text-foreground">{item.name}</span>
-                    Customer Type Badge
 
                 </div>
                 <span className="text-xs text-muted-foreground">{item.designation || 'No Designation'}</span>

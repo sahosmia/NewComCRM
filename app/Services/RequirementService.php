@@ -7,6 +7,7 @@ use App\Repositories\CustomerRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\RequirementRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class RequirementService
 {
@@ -21,9 +22,6 @@ class RequirementService
         return $this->requirements->paginateForIndex($filters);
     }
 
-    /**
-     * @return array{customers: \Illuminate\Database\Eloquent\Collection, products: \Illuminate\Database\Eloquent\Collection}
-     */
     public function formOptions(): array
     {
         return [
@@ -34,12 +32,32 @@ class RequirementService
 
     public function create(array $data): Requirement
     {
-        return $this->requirements->create($data);
+        return DB::transaction(function () use ($data) {
+            $requirement = $this->requirements->create([
+                'customer_id' => $data['customer_id'],
+                'notes'       => $data['notes'] ?? null,
+                'status'      => 'pending'
+            ]);
+
+            $requirement->items()->createMany($data['items']);
+
+            return $requirement;
+        });
     }
 
     public function update(Requirement $requirement, array $data): void
     {
-        $this->requirements->update($requirement, $data);
+        DB::transaction(function () use ($requirement, $data) {
+            $this->requirements->update($requirement, [
+                'customer_id' => $data['customer_id'],
+                'notes'       => $data['notes'] ?? null,
+                'status'       => $data['status'] ?? 'pending',
+            ]);
+
+            $requirement->items()->delete();
+
+            $requirement->items()->createMany($data['items']);
+        });
     }
 
     public function delete(Requirement $requirement): void

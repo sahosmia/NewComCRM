@@ -14,12 +14,11 @@ return new class extends Migration
         Schema::create('requirements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained()->onDelete('cascade');
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->integer('quantity');
-            $table->decimal('unit_price', 10, 2);
-            $table->decimal('total_price', 10, 2);
+            $table->decimal('grand_total', 12, 2)->default(0); 
             $table->text('notes')->nullable();
+            $table->string('status')->default('pending');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->index('customer_id');
         });

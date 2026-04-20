@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Concerns\ValidatesRequirementAttributes;
+use App\Models\Requirement;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequirementRequest extends FormRequest
@@ -11,7 +12,7 @@ class StoreRequirementRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('create', Requirement::class);
     }
 
     public function rules(): array

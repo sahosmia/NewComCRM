@@ -10,26 +10,42 @@ class RequirementRepository
     public function paginateForIndex(array $params): LengthAwarePaginator
     {
         $perPage = $params['per_page'] ?? 10;
+        $user = auth()->user();
 
         return Requirement::query()
-            ->with(['customer', 'product'])
-            ->when($params['search'] ?? null, function ($query, $search) {
-                $query->whereHas('customer', function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%");
-                })->orWhereHas('product', function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%");
+            ->with([
+                'customer' => fn($q) => $q->withTrashed(),
+                'items.product'
+            ])
+
+            ->when(!$user->isSuperAdmin(), function ($query) use ($user) {
+                $query->whereHas('customer', function ($q) use ($user) {
+                    $q->where('assigned_to', $user->id);
                 });
             })
+
+            ->when($params['search'] ?? null, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->whereHas('customer', function ($sub) use ($search) {
+                        $sub->where('name', 'like', "%{$search}%");
+                    })->orWhereHas('items.product', function ($sub) use ($search) {
+                        $sub->where('name', 'like', "%{$search}%");
+                    });
+                });
+            })
+
             ->when($params['customer_id'] ?? null, function ($query, $customer_id) {
                 $query->where('customer_id', $customer_id);
             })
+
             ->when(isset($params['sort']), function ($query) use ($params) {
                 $query->orderBy($params['sort'], $params['direction'] ?? 'desc');
             }, function ($query) {
                 $query->latest();
             })
+
             ->paginate($perPage)
-            ->withQueryString($params);
+            ->withQueryString();
     }
 
     public function create(array $data): Requirement

@@ -5,27 +5,57 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import type { Column } from '@/types';
 import { handleDelete } from '@/utils/table';
 import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
+import { Badge } from '@/components/ui/badge';
 
 const columns: Column<any>[] = [
     {
         header: 'Customer',
-        accessor: (item) => item.customer?.name,
+        accessor: (item) => (
+            <div className="flex flex-col min-w-35">
+                <span className="font-medium leading-none">{item.customer?.name}</span>
+                <span className="text-[11px] text-muted-foreground mt-1 truncate">{item.customer?.company_name}</span>
+            </div>
+        ),
     },
     {
-        header: 'Product',
-        accessor: (item) => item.product?.name,
+        header: 'Requested Products',
+        accessor: (item) => (
+            <div className="flex flex-wrap gap-1 max-w-62">
+                {item.items?.map((row: any) => (
+                    <span key={row.id}  className="text-sm py-0  whitespace-nowrap truncate">
+                        {row.product?.name}
+                         x {row.quantity}
+                    </span>
+                ))}
+
+            </div>
+        ),
     },
     {
-        header: 'Quantity',
-        accessor: (item) => item.quantity,
+        header: 'Grand Total',
+        accessor: (item) => (
+            <div className="font-semibold text-sm">
+                {item.grand_total}
+            </div>
+        ),
     },
     {
-        header: 'Unit Price',
-        accessor: (item) => item.unit_price,
+        header: 'Status',
+        accessor: (item) => (
+            <Badge variant={item.status === 'pending' ? 'outline' : 'default'} className="text-[10px] h-5 capitalize">
+                {item.status}
+            </Badge>
+        ),
     },
     {
-        header: 'Total Price',
-        accessor: (item) => item.total_price,
+        header: 'Notes',
+        accessor: (item) => (
+           <div className="max-w-50">
+                 <p className="text-xs text-muted-foreground truncate" title={item.notes}>
+                    {item.notes || '---'}
+                </p>
+            </div>
+        ),
     },
     {
         header: '',
@@ -36,7 +66,7 @@ const columns: Column<any>[] = [
                         <MoreHorizontal className="w-4 h-4" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-40">
+                <DropdownMenuContent align="end" className="w-45">
                     <DropdownMenuItem asChild>
                         <Link href={route('requirements.show', item.id)}>
                             <FileText className="w-4 h-4 mr-2" /> View Details
@@ -50,7 +80,7 @@ const columns: Column<any>[] = [
                     <DropdownMenuSeparator />
                     <AlertDialogDestructive
                         title="Delete Requirement?"
-                        description="This action cannot be undone. This requirement will be permanently removed."
+                        description="Warning: This will delete the requirement and all items associated with it."
                         onConfirm={() => handleDelete(item.id, 'requirements.destroy', {
                             redirectTo: 'requirements.index',
                         })}
@@ -59,7 +89,7 @@ const columns: Column<any>[] = [
                             onSelect={(e) => e.preventDefault()}
                             className="text-red-600 focus:text-red-600 cursor-pointer"
                         >
-                            <Trash2 className="w-4 h-4 mr-2 text-red-600 focus:text-red-600 cursor-pointer" />
+                            <Trash2 className="w-4 h-4 mr-2" />
                             <span>Delete</span>
                         </DropdownMenuItem>
                     </AlertDialogDestructive>

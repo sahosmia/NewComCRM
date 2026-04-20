@@ -11,7 +11,6 @@ class CustomerSeeder extends Seeder
 {
     public function run()
     {
-        // 'user' রোলের ইউজারদের খুঁজে বের করা, যদি না থাকে তবে প্রথম ইউজারকে নেওয়া
         $users = User::all();
 
         if ($users->isEmpty()) {
@@ -24,9 +23,9 @@ class CustomerSeeder extends Seeder
                 'name' => 'Musabbir',
                 'designation' => 'Manager',
                 'company_name' => 'Samuda Chemical Com',
-                'phones' => ['01799-992813', '01800-000000'], // Array format
+                'phones' => ['01799-992813', '01800-000000'],
                 'email' => 'contact@samuda.com',
-                'addresses' => ['T.K Bhaban (8th & 9th F), Dhaka'], // Array format
+                'addresses' => ['T.K Bhaban (8th & 9th F), Dhaka'],
                 'type' => 'corporate',
                 'status' => 'active',
                 'remarks' => 'Key account for chemical supplies.',
@@ -68,24 +67,30 @@ class CustomerSeeder extends Seeder
                 'assigned_to' => $users->random()->id
             ]));
 
-            $this->createRequirements($customer);
+            $this->createRequirementWithItems($customer);
         }
 
-        Customer::factory()->count(10)->create();
+        Customer::factory()->count(10)->create()->each(function ($customer) {
+            $this->createRequirementWithItems($customer);
+        });
     }
 
-    private function createRequirements($customer)
+    private function createRequirementWithItems($customer)
     {
-        $products = Product::inRandomOrder()->take(rand(1, 3))->get();
+        $requirement = $customer->requirements()->create([
+            'notes' => 'Generated via Seeder',
+            'status' => 'pending'
+        ]);
+
+        $products = Product::inRandomOrder()->take(rand(1, 4))->get();
 
         foreach ($products as $product) {
-            $quantity = rand(5, 50);
-            $customer->requirements()->create([
+            $quantity = rand(1, 10);
+
+            $requirement->items()->create([
                 'product_id' => $product->id,
-                'quantity' => $quantity,
+                'quantity'   => $quantity,
                 'unit_price' => $product->unit_price,
-                'total_price' => $quantity * $product->unit_price,
-                'notes' => 'Generated via Seeder'
             ]);
         }
     }

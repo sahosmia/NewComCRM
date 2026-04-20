@@ -4,43 +4,33 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Requirement extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'customer_id', 'product_id', 'quantity', 'unit_price', 'total_price', 'notes'
-    ];
+    protected $fillable = ['customer_id', 'grand_total', 'notes', 'status'];
 
     protected $casts = [
-        'quantity' => 'integer',
-        'unit_price' => 'decimal:2',
-        'total_price' => 'decimal:2'
+        'grand_total' => 'decimal:2'
     ];
 
-    protected static function boot()
+    public function items(): HasMany
     {
-        parent::boot();
-
-        static::creating(function ($requirement) {
-            $requirement->total_price = $requirement->quantity * $requirement->unit_price;
-        });
-
-        static::updating(function ($requirement) {
-            $requirement->total_price = $requirement->quantity * $requirement->unit_price;
-        });
+        return $this->hasMany(RequirementItem::class);
     }
 
-    // Relationships
-    public function customer()
+    public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
     }
 
-    public function product()
+    public function calculateGrandTotal(): void
     {
-        return $this->belongsTo(Product::class);
+        $total = $this->items()->sum('total_price');
+
+        $this->updateQuietly(['grand_total' => $total]);
     }
 }

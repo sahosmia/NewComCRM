@@ -11,11 +11,13 @@ trait ValidatesRequirementAttributes
     {
         return [
             'customer_id' => 'required|exists:customers,id',
-            'product_id'  => 'required|exists:products,id',
-            'quantity'    => 'required|integer|min:1',
-            'unit_price'  => 'required|numeric|min:0',
-            'total_price' => 'required|numeric|min:0',
             'notes'       => 'nullable|string',
+            'status'       => 'nullable|string',
+
+            'items'              => 'required|array|min:1',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.quantity'   => 'required|integer|min:1',
+            'items.*.unit_price' => 'required|numeric|min:0',
         ];
     }
 
@@ -25,10 +27,12 @@ trait ValidatesRequirementAttributes
     protected function requirementAttributeMessages(): array
     {
         return [
-            'customer_id.required' => 'Please select a customer',
-            'product_id.required' => 'Please select a product',
-            'quantity.required' => 'Quantity is required',
-            'unit_price.required' => 'Unit price is required',
+            'customer_id.required'    => 'Please select a customer.',
+            'items.required'          => 'At least one product item is required.',
+            'items.array'             => 'Product items must be provided as a list.',
+            'items.*.product_id.required' => 'Please select a product for all items.',
+            'items.*.quantity.required'   => 'Quantity is required for all items.',
+            'items.*.unit_price.required' => 'Unit price is required for all items.',
         ];
     }
 }

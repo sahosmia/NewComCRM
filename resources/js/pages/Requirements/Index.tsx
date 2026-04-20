@@ -15,6 +15,7 @@ export default function RequirementIndex({ requirements }: Props) {
         { title: 'Requirements', href: route('requirements.index') },
     ];
 
+
     const filters: FilterOption[] = [
         // Add filters if needed
     ];

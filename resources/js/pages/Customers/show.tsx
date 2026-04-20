@@ -2,7 +2,7 @@ import AppLayout from "@/layouts/app-layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2, Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare } from "lucide-react";
+import { Building2, Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare, LayoutList, Plus } from "lucide-react";
 import { Head, Link } from "@inertiajs/react";
 import type { CustomerType } from "@/types";
 
@@ -107,6 +107,74 @@ export default function Show({ customer }: { customer: any }) {
 
                     {/* Right Column: Remarks & Activity */}
                     <div className="lg:col-span-2 space-y-6">
+
+                        {/* Requirements Section */}
+<Card className="overflow-hidden">
+    <CardHeader className="bg-muted/20 flex flex-row justify-between items-center py-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+            <LayoutList className="w-5 h-5 text-primary" />
+            Requirement History
+        </CardTitle>
+        <Button size="sm" asChild>
+            <Link href={route("requirements.create", { customer_id: customer.id })}>
+                <Plus className="w-4 h-4 mr-1" /> New Requirement
+            </Link>
+        </Button>
+    </CardHeader>
+    <CardContent className="p-0">
+        <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left">
+                <thead className="bg-muted/50 text-muted-foreground uppercase text-[10px] font-bold">
+                    <tr>
+                        <th className="px-4 py-3">ID</th>
+                        <th className="px-4 py-3">Date</th>
+                        <th className="px-4 py-3">Total Amount</th>
+                        <th className="px-4 py-3">Status</th>
+                        <th className="px-4 py-3 text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody className="divide-y">
+                    {customer.requirements?.length > 0 ? (
+                        customer.requirements.map((req: any) => (
+                            <tr key={req.id} className="hover:bg-muted/30 transition-colors">
+                                <td className="px-4 py-3 font-medium">#{req.id}</td>
+                                <td className="px-4 py-3 text-muted-foreground">
+                                    {new Date(req.created_at).toLocaleDateString()}
+                                </td>
+                                <td className="px-4 py-3 font-bold">
+                                    ৳ {parseFloat(req.grand_total).toLocaleString()}
+                                </td>
+                                <td className="px-4 py-3">
+                                    <Badge variant="secondary" className={`
+                                        capitalize font-normal
+                                        ${req.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : ''}
+                                        ${req.status === 'completed' ? 'bg-green-100 text-green-700' : ''}
+                                        ${req.status === 'cancelled' ? 'bg-red-100 text-red-700' : ''}
+                                    `}>
+                                        {req.status}
+                                    </Badge>
+                                </td>
+                                <td className="px-4 py-3 text-right">
+                                    <Button variant="ghost" size="sm" asChild>
+                                        <Link href={route("requirements.show", req.id)}>View</Link>
+                                    </Button>
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan={5} className="text-center py-10 text-muted-foreground">
+                                No requirements found for this customer.
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+        </div>
+    </CardContent>
+</Card>
+
+
                         <Card>
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">

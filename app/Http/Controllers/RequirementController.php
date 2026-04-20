@@ -6,7 +6,9 @@ use App\Http\Requests\StoreRequirementRequest;
 use App\Http\Requests\UpdateRequirementRequest;
 use App\Models\Requirement;
 use App\Services\RequirementService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
+
 
 class RequirementController extends Controller
 {
@@ -17,8 +19,9 @@ class RequirementController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(\Illuminate\Http\Request $request)
+    public function index(Request $request)
     {
+        $this->authorize('viewAny', Requirement::class);
         return Inertia::render('Requirements/Index', [
             'requirements' => $this->requirementService->paginateIndex($request->all()),
         ]);
@@ -28,7 +31,8 @@ class RequirementController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
+    {        $this->authorize('create', Requirement::class);
+
         return Inertia::render('Requirements/Create', $this->requirementService->formOptions());
     }
 
@@ -37,6 +41,8 @@ class RequirementController extends Controller
      */
     public function store(StoreRequirementRequest $request)
     {
+                $this->authorize('create', Requirement::class);
+
         $this->requirementService->create($request->validated());
 
         return redirect()->route('requirements.index')
@@ -49,7 +55,7 @@ class RequirementController extends Controller
     public function show(Requirement $requirement)
     {
         return Inertia::render('Requirements/Show', [
-            'requirement' => $requirement->load(['customer', 'product']),
+            'requirement' => $requirement->load(['customer', 'items.product']),
         ]);
     }
 
@@ -59,7 +65,7 @@ class RequirementController extends Controller
     public function edit(Requirement $requirement)
     {
         return Inertia::render('Requirements/Edit', array_merge(
-            ['requirement' => $requirement],
+            ['requirement' => $requirement->load('items')],
             $this->requirementService->formOptions()
         ));
     }
