@@ -14,10 +14,13 @@ class ProductFactory extends Factory
         return [
             'name'           => $this->faker->words(3, true),
             'brand'          => $this->faker->company(),
-            'unit_price'     => $this->faker->randomFloat(2, 10, 1000),
+            'model'          => $this->faker->bothify('MODEL-####??'),
             'description'    => $this->faker->sentence(),
-            'category'       => $this->faker->randomElement(['Electronics', 'Stationery', 'Furniture', 'Software']),
+            'category'       => $this->faker->randomElement(['Electronics', 'Cable', 'Switch', 'Accessories']),
             'stock_quantity' => $this->faker->numberBetween(0, 100),
+            'unit_price'     => $this->faker->randomFloat(2, 10, 50000),
+            'supplier_name'  => $this->faker->name(),
+            'source'         => $this->faker->paragraph(),
         ];
     }
 
@@ -26,7 +29,7 @@ class ProductFactory extends Factory
      */
     public function outOfStock(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'stock_quantity' => 0,
         ]);
     }
@@ -36,7 +39,7 @@ class ProductFactory extends Factory
      */
     public function inStock(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'stock_quantity' => $this->faker->numberBetween(1, 100),
         ]);
     }

@@ -1,7 +1,8 @@
 import AppLayout from "@/layouts/app-layout";
 import ProductForm from "./form";
+import { Product } from "@/types/product";
 
-export default function Edit({ product }: any) {
+export default function Edit({ product }: { product: Product }) {
     return (
         <AppLayout breadcrumbs={[{ title: "Products", href: route('products.index') }, { title: "Edit", href: route('products.edit', product.id) }]}>
             <div className="p-6 max-w-2xl">

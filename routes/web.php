@@ -19,7 +19,7 @@ use App\Http\Controllers\{
 |--------------------------------------------------------------------------
 */
 
-// Redirect root to login using named route for better maintenance
+// Root redirect
 Route::get('/', fn() => redirect()->route('login'))->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -28,23 +28,31 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // --- Customers ---
-    Route::prefix('customers')->name('customers.')->controller(CustomerController::class)->group(function () {
-        Route::delete('/bulk-destroy', 'bulkDestroy')->name('bulkDestroy');
-        Route::get('/export/excel', 'export')->name('export');
-        Route::post('/import/excel', 'import')->name('import');
+    Route::prefix('customers')->name('customers.')->group(function () {
+        Route::controller(CustomerController::class)->group(function () {
+            Route::delete('bulk-destroy', 'bulkDestroy')->name('bulkDestroy');
+            Route::get('export/excel', 'export')->name('export');
+            Route::post('import/excel', 'import')->name('import');
+        });
+        Route::resource('/', CustomerController::class)->parameters(['' => 'customer']);
     });
-
     Route::resource('customers', CustomerController::class);
 
-
+    // --- Products ---
+    Route::prefix('products')->name('products.')->group(function () {
+        Route::controller(ProductController::class)->group(function () {
+            Route::delete('bulk-destroy', 'bulkDestroy')->name('bulkDestroy');
+            Route::get('export/excel', 'export')->name('export');
+            Route::post('import/excel', 'import')->name('import');
+        });
+    });
+    Route::resource('products', ProductController::class);
 
     // --- Follow Ups ---
-    // Define custom member routes BEFORE the resource
     Route::post('follow-ups/{follow_up}/complete', [FollowUpController::class, 'complete'])->name('follow-ups.complete');
     Route::resource('follow-ups', FollowUpController::class);
 
     // --- Meetings ---
-    // Specifically defined before resource to avoid 'calendar' being treated as an {id}
     Route::get('meetings/calendar', [MeetingController::class, 'calendar'])->name('meetings.calendar');
     Route::resource('meetings', MeetingController::class);
 
@@ -63,10 +71,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('customers', 'customers')->name('customers');
     });
 
-    // --- Simple Resources ---
-    // Grouping simple CRUD resources saves vertical space
+    // --- Other Resources ---
     Route::resources([
-        'products'     => ProductController::class,
         'requirements' => RequirementController::class,
     ]);
 

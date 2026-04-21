@@ -21,7 +21,10 @@ const CommonTable = <T extends { id: number }>({
     create_route,
     routeName,
     filters,
-    sortOptions
+    sortOptions,
+    dataKey,
+    bulkDeleteRoute,
+    entityName
 }: CommonTableProps<T>) => {
 
     const [loading, setLoading] = useState(false);
@@ -48,6 +51,7 @@ const CommonTable = <T extends { id: number }>({
     } = useTableFilters({
         data: data,
         routeName: routeName,
+        dataKey: dataKey
     });
 
     const handleSortChange = (value: string) => {
@@ -63,6 +67,7 @@ const CommonTable = <T extends { id: number }>({
             preserveState: true,
             replace: true,
             preserveScroll: true,
+            ...(dataKey && { only: [dataKey] }),
         });
     };
 
@@ -117,9 +122,9 @@ const CommonTable = <T extends { id: number }>({
                 <div className='flex gap-2 items-center'>
                     {selectedItems.length > 0 && (
                         <AlertDialogDestructive
-                            title="Delete Selected Customers?"
-                            description={`This will delete ${selectedItems.length} customers permanently.`}
-                            onConfirm={() => handleBulkDelete(selectedItems, 'customers.bulkDestroy')}
+                            title={`Delete Selected ${entityName}s?`}
+                            description={`This will delete ${selectedItems.length} ${entityName?.toLowerCase()}s permanently.`}
+                            onConfirm={() => handleBulkDelete(selectedItems, bulkDeleteRoute || '')}
                         >
                             <Button
                                 variant="destructive"

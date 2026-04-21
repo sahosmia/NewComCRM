@@ -5,31 +5,44 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import type { Column } from '@/types';
 import { handleDelete } from '@/utils/table';
 import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
+import { Product } from '@/types/product';
 
-const columns: Column<any>[] = [
+const columns: Column<Product>[] = [
     {
-        header: 'Name',
+        header: 'Product Details',
         accessor: (item) => (
             <div className="flex flex-col">
                 <span className="font-medium text-foreground">{item.name}</span>
+                <span className="text-xs text-muted-foreground truncate">{item.brand} {item.model ? `| ${item.model}` : ''}</span>
             </div>
         ),
     },
-    {
-        header: 'Brand',
-        accessor: (item) => item.brand,
-    },
+
     {
         header: 'Category',
         accessor: (item) => item.category,
+                className: "w-1/10"
+
     },
     {
         header: 'Price',
         accessor: (item) => item.unit_price,
+        className: "w-1/10"
     },
     {
         header: 'Stock',
         accessor: (item) => item.stock_quantity,
+        className: "w-1/10"
+    },
+
+    {
+        header: 'Supplier',
+        accessor: (item) => (
+            <div className="flex flex-col">
+                <span className="font-medium text-foreground">{item.supplier_name}</span>
+                <span className="text-xs text-muted-foreground truncate">{item.source ? item.source : ''}</span>
+            </div>
+        ),
     },
     {
         header: '',

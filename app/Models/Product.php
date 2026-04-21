@@ -12,7 +12,15 @@ class Product extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name', 'brand', 'unit_price', 'description', 'category', 'stock_quantity'
+        'name',
+        'brand',
+        'model',
+        'description',
+        'category',
+        'stock_quantity',
+        'unit_price',
+        'supplier_name',
+        'source'
     ];
 
     protected $casts = [

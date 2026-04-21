@@ -2,19 +2,26 @@ import { useForm } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Product } from "@/types/product";
+import { Loader2 } from "lucide-react";
+import ErrorMessage from "@/components/admin/ErrorMessage";
 
 interface Props {
-    product?: any;
+    product?: Product;
 }
 
 export default function ProductForm({ product }: Props) {
     const { data, setData, post, put, processing, errors } = useForm({
         name: product?.name || "",
         brand: product?.brand || "",
+        model: product?.model || "",
         unit_price: product?.unit_price || "",
-        description: product?.description || "",
         category: product?.category || "",
         stock_quantity: product?.stock_quantity || 0,
+        supplier_name: product?.supplier_name || "",
+        source: product?.source || "",
+        description: product?.description || "",
     });
 
     const submit = (e: React.FormEvent) => {
@@ -28,67 +35,144 @@ export default function ProductForm({ product }: Props) {
     };
 
     return (
-        <form onSubmit={submit} className="space-y-4">
-            <div>
-                <Input
-                    placeholder="Product Name"
-                    value={data.name}
-                    onChange={(e) => setData("name", e.target.value)}
-                />
-                {errors.name && <div className="text-red-500 text-sm">{errors.name}</div>}
+        <form onSubmit={submit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Product Name */}
+                <div className="space-y-2 md:col-span-2">
+                    <Label htmlFor="name">Product Name</Label>
+                    <Input
+                        id="name"
+                        placeholder="e.g. Rosenberger Optical Patch Cord"
+                        value={data.name}
+                        onChange={(e) => setData("name", e.target.value)}
+                        className={errors.name ? "border-red-500" : ""}
+                    />
+                    <ErrorMessage message={errors.name} />
+
+                </div>
+
+                {/* Brand */}
+                <div className="space-y-2">
+                    <Label htmlFor="brand">Brand</Label>
+                    <Input
+                        id="brand"
+                        placeholder="Brand Name"
+                        value={data.brand}
+                        onChange={(e) => setData("brand", e.target.value)}
+                    />
+                    <ErrorMessage message={errors.brand} />
+
+                </div>
+
+                {/* Model */}
+                <div className="space-y-2">
+                    <Label htmlFor="model">Model</Label>
+                    <Input
+                        id="model"
+                        placeholder="Model Number"
+                        value={data.model}
+                        onChange={(e) => setData("model", e.target.value)}
+                    />
+                    <ErrorMessage message={errors.model} />
+
+                </div>
+
+                {/* Unit Price */}
+                <div className="space-y-2">
+                    <Label htmlFor="unit_price">Unit Price</Label>
+                    <Input
+                        id="unit_price"
+                        type="number"
+                        step="0.01"
+                        placeholder="0.00"
+                        value={data.unit_price}
+                        onChange={(e) => setData("unit_price", e.target.value)}
+                    />
+                    <ErrorMessage message={errors.unit_price} />
+
+                </div>
+
+                {/* Stock Quantity */}
+                <div className="space-y-2">
+                    <Label htmlFor="stock_quantity">Stock Quantity</Label>
+                    <Input
+                        id="stock_quantity"
+                        type="number"
+                        placeholder="0"
+                        value={data.stock_quantity}
+                        onChange={(e) => setData("stock_quantity", parseInt(e.target.value) || 0)}
+                    />
+                    <ErrorMessage message={errors.stock_quantity} />
+
+                </div>
+
+                {/* Category */}
+                <div className="space-y-2">
+                    <Label htmlFor="category">Category</Label>
+                    <Input
+                        id="category"
+                        placeholder="Product Category"
+                        value={data.category}
+                        onChange={(e) => setData("category", e.target.value)}
+                    />
+                    <ErrorMessage message={errors.category} />
+
+                </div>
+
+                {/* Supplier Name */}
+                <div className="space-y-2">
+                    <Label htmlFor="supplier_name">Supplier Name</Label>
+                    <Input
+                        id="supplier_name"
+                        placeholder="Main Supplier"
+                        value={data.supplier_name}
+                        onChange={(e) => setData("supplier_name", e.target.value)}
+                    />
+                    <ErrorMessage message={errors.supplier_name} />
+
+                </div>
             </div>
 
-            <div>
-                <Input
-                    placeholder="Brand"
-                    value={data.brand}
-                    onChange={(e) => setData("brand", e.target.value)}
-                />
-                {errors.brand && <div className="text-red-500 text-sm">{errors.brand}</div>}
-            </div>
-
-            <div>
-                <Input
-                    type="number"
-                    step="0.01"
-                    placeholder="Unit Price"
-                    value={data.unit_price}
-                    onChange={(e) => setData("unit_price", e.target.value)}
-                />
-                {errors.unit_price && <div className="text-red-500 text-sm">{errors.unit_price}</div>}
-            </div>
-
-            <div>
-                <Input
-                    placeholder="Category"
-                    value={data.category}
-                    onChange={(e) => setData("category", e.target.value)}
-                />
-                {errors.category && <div className="text-red-500 text-sm">{errors.category}</div>}
-            </div>
-
-            <div>
-                <Input
-                    type="number"
-                    placeholder="Stock Quantity"
-                    value={data.stock_quantity}
-                    onChange={(e) => setData("stock_quantity", parseInt(e.target.value) || 0)}
-                />
-                {errors.stock_quantity && <div className="text-red-500 text-sm">{errors.stock_quantity}</div>}
-            </div>
-
-            <div>
+            {/* Source / Purchase Info */}
+            <div className="space-y-2">
+                <Label htmlFor="source">Source / Purchase From</Label>
                 <Textarea
-                    placeholder="Description"
+                    id="source"
+                    placeholder="Where to buy or find this?"
+                    value={data.source}
+                    rows={4}
+                    onChange={(e) => setData("source", e.target.value)}
+                />
+                <ErrorMessage message={errors.source} />
+
+            </div>
+
+            {/* Description */}
+            <div className="space-y-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                    id="description"
+                    placeholder="Product details and specifications..."
+                    rows={4}
                     value={data.description}
                     onChange={(e) => setData("description", e.target.value)}
                 />
-                {errors.description && <div className="text-red-500 text-sm">{errors.description}</div>}
+                <ErrorMessage message={errors.description} />
+
             </div>
 
-            <Button type="submit" disabled={processing}>
-                {product ? "Update" : "Create"}
-            </Button>
+            <div className="flex justify-end pt-4">
+                <Button type="submit" disabled={processing} className="w-full md:w-32">
+                    {processing ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Saving...
+                        </>
+                    ) : (
+                        product ? "Update Product" : "Create Product"
+                    )}
+                </Button>
+            </div>
         </form>
     );
 }

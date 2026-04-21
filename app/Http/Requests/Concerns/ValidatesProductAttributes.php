@@ -9,13 +9,16 @@ trait ValidatesProductAttributes
      */
     protected function productAttributeRules(): array
     {
-        return [
+       return [
             'name'           => 'required|string|max:255',
             'brand'          => 'nullable|string|max:255',
+            'model'          => 'nullable|string|max:255',
             'unit_price'     => 'required|numeric|min:0',
             'description'    => 'nullable|string',
             'category'       => 'nullable|string|max:255',
             'stock_quantity' => 'required|integer|min:0',
+            'supplier_name'  => 'nullable|string|max:255',
+            'source'         => 'nullable|string',
         ];
     }
 

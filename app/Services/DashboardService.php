@@ -85,39 +85,30 @@ class DashboardService
     }
 
     private function chartData(User $user): array
-    {
-        $months = collect(range(5, 0))->map(fn ($i) => now()->subMonths($i)->format('M'));
+{
+    return collect(range(5, 0))->map(function ($i) use ($user) {
+        $date = now()->subMonths($i);
 
-        $followups = collect(range(5, 0))->map(function ($i) use ($user) {
-            $date = now()->subMonths($i);
-            $query = FollowUp::query()
-                ->whereMonth('created_at', $date->month)
-                ->whereYear('created_at', $date->year);
+        // Followups Count
+        $followupQuery = FollowUp::query()
+            ->whereMonth('created_at', $date->month)
+            ->whereYear('created_at', $date->year);
 
-            if (! $user->isSuperAdmin()) {
-                $query->where('user_id', $user->id);
-            }
+        // Quotations Count
+        $quotationQuery = Quotation::query()
+            ->whereMonth('created_at', $date->month)
+            ->whereYear('created_at', $date->year);
 
-            return $query->count();
-        });
-
-        $quotations = collect(range(5, 0))->map(function ($i) use ($user) {
-            $date = now()->subMonths($i);
-            $query = Quotation::query()
-                ->whereMonth('created_at', $date->month)
-                ->whereYear('created_at', $date->year);
-
-            if (! $user->isSuperAdmin()) {
-                $query->where('user_id', $user->id);
-            }
-
-            return $query->count();
-        });
+        if (!$user->isSuperAdmin()) {
+            $followupQuery->where('user_id', $user->id);
+            $quotationQuery->where('user_id', $user->id);
+        }
 
         return [
-            'months' => $months,
-            'followups' => $followups,
-            'quotations' => $quotations,
+            'name' => $date->format('M'), 
+            'followups' => $followupQuery->count(),
+            'quotations' => $quotationQuery->count(),
         ];
-    }
+    })->toArray();
+}
 }

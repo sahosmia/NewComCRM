@@ -1,4 +1,4 @@
-    import { useForm } from "@inertiajs/react";
+import { useForm } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,6 +10,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import type { FollowUp } from "@/types/follow-up";
+import ErrorMessage from "@/components/admin/ErrorMessage";
 
 interface Props {
     followUp?: FollowUp;
@@ -62,7 +63,8 @@ export default function FollowUpForm({ followUp, customers }: Props) {
                         ))}
                     </SelectContent>
                 </Select>
-                {errors.customer_id && <div className="text-red-500 text-sm">{errors.customer_id}</div>}
+                <ErrorMessage message={errors.customer_id} />
+
             </div>
 
             <div>
@@ -93,7 +95,8 @@ export default function FollowUpForm({ followUp, customers }: Props) {
                         <SelectItem value="follow_up">Follow Up</SelectItem>
                     </SelectContent>
                 </Select>
-                {errors.status && <div className="text-red-500 text-sm">{errors.status}</div>}
+                <ErrorMessage message={errors.status} />
+
             </div>
 
             <div>
@@ -111,7 +114,8 @@ export default function FollowUpForm({ followUp, customers }: Props) {
                         <SelectItem value="high">High</SelectItem>
                     </SelectContent>
                 </Select>
-                {errors.priority && <div className="text-red-500 text-sm">{errors.priority}</div>}
+                <ErrorMessage message={errors.priority} />
+
             </div>
 
             <div>
@@ -121,7 +125,8 @@ export default function FollowUpForm({ followUp, customers }: Props) {
                     value={data.next_follow_up}
                     onChange={(e) => setData("next_follow_up", e.target.value)}
                 />
-                {errors.next_follow_up && <div className="text-red-500 text-sm">{errors.next_follow_up}</div>}
+                <ErrorMessage message={errors.next_follow_up} />
+
             </div>
 
             <div>
@@ -130,7 +135,8 @@ export default function FollowUpForm({ followUp, customers }: Props) {
                     value={data.notes}
                     onChange={(e) => setData("notes", e.target.value)}
                 />
-                {errors.notes && <div className="text-red-500 text-sm">{errors.notes}</div>}
+                <ErrorMessage message={errors.notes} />
+
             </div>
 
             <Button type="submit" disabled={processing}>

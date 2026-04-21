@@ -9,7 +9,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Meeting } from "@/types/meeting";
+import { Meeting } from "@/types/metting";
+import ErrorMessage from "@/components/admin/ErrorMessage";
 
 interface Props {
     meeting?: Meeting;
@@ -58,7 +59,7 @@ export default function MeetingForm({ meeting, customers }: Props) {
                         ))}
                     </SelectContent>
                 </Select>
-                {errors.customer_id && <div className="text-red-500 text-sm">{errors.customer_id}</div>}
+                <ErrorMessage message={errors.customer_id} />
             </div>
 
             <div>
@@ -68,7 +69,7 @@ export default function MeetingForm({ meeting, customers }: Props) {
                     value={data.title}
                     onChange={(e) => setData("title", e.target.value)}
                 />
-                {errors.title && <div className="text-red-500 text-sm">{errors.title}</div>}
+                <ErrorMessage message={errors.title} />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -79,7 +80,7 @@ export default function MeetingForm({ meeting, customers }: Props) {
                         value={data.start_time}
                         onChange={(e) => setData("start_time", e.target.value)}
                     />
-                    {errors.start_time && <div className="text-red-500 text-sm">{errors.start_time}</div>}
+                    <ErrorMessage message={errors.start_time} />
                 </div>
                 <div>
                     <label className="text-sm font-medium">End Time</label>
@@ -88,7 +89,7 @@ export default function MeetingForm({ meeting, customers }: Props) {
                         value={data.end_time}
                         onChange={(e) => setData("end_time", e.target.value)}
                     />
-                    {errors.end_time && <div className="text-red-500 text-sm">{errors.end_time}</div>}
+                    <ErrorMessage message={errors.end_time} />
                 </div>
             </div>
 
@@ -107,7 +108,7 @@ export default function MeetingForm({ meeting, customers }: Props) {
                         <SelectItem value="phone">Phone</SelectItem>
                     </SelectContent>
                 </Select>
-                {errors.meeting_type && <div className="text-red-500 text-sm">{errors.meeting_type}</div>}
+                <ErrorMessage message={errors.meeting_type} />
             </div>
 
             {data.meeting_type === 'physical' && (
@@ -118,7 +119,7 @@ export default function MeetingForm({ meeting, customers }: Props) {
                         value={data.location}
                         onChange={(e) => setData("location", e.target.value)}
                     />
-                    {errors.location && <div className="text-red-500 text-sm">{errors.location}</div>}
+                    <ErrorMessage message={errors.location} />
                 </div>
             )}
 
@@ -129,7 +130,7 @@ export default function MeetingForm({ meeting, customers }: Props) {
                     value={data.agenda}
                     onChange={(e) => setData("agenda", e.target.value)}
                 />
-                {errors.agenda && <div className="text-red-500 text-sm">{errors.agenda}</div>}
+                <ErrorMessage message={errors.agenda} />
             </div>
 
             <div>
@@ -147,7 +148,7 @@ export default function MeetingForm({ meeting, customers }: Props) {
                         <SelectItem value="cancelled">Cancelled</SelectItem>
                     </SelectContent>
                 </Select>
-                {errors.status && <div className="text-red-500 text-sm">{errors.status}</div>}
+                <ErrorMessage message={errors.status} />
             </div>
 
             <Button type="submit" disabled={processing}>

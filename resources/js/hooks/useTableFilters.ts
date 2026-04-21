@@ -5,11 +5,13 @@ import { PaginationType } from '@/types';
 interface UseTableFiltersProps<T> {
     data: PaginationType<T>;
     routeName: string;
+    dataKey?: string;
 }
 
 export const useTableFilters = <T extends { id: number }>({
     data,
     routeName,
+    dataKey,
 }: UseTableFiltersProps<T>) => {
 
     const { url } = usePage();
@@ -42,7 +44,7 @@ export const useTableFilters = <T extends { id: number }>({
         (newFilters: { search?: string; per_page?: string; page?: number }) => {
 
             const params: Record<string, any> = {
-                ...paramsObject, // ✅ preserve other filters
+                ...paramsObject, // preserve other filters
                 search: newFilters.search ?? search,
                 per_page: newFilters.per_page ?? perPage,
                 page: newFilters.page,
@@ -56,9 +58,10 @@ export const useTableFilters = <T extends { id: number }>({
                 preserveState: true,
                 preserveScroll: true,
                 replace: true,
+                ...(dataKey && { only: [dataKey] }),
             });
         },
-        [perPage, search, routeName, paramsObject]
+        [routeName, paramsObject, dataKey]
     );
 
     // ✅ Debounced search (fixed deps)
@@ -66,11 +69,11 @@ export const useTableFilters = <T extends { id: number }>({
         if (search === "" && !queryParams.has('search')) return;
 
         const timeout = setTimeout(() => {
-            applyFilters({ search });
-        }, 300);
+            applyFilters({ search, page: 1 });
+        }, 500);
 
         return () => clearTimeout(timeout);
-    }, [search, applyFilters, queryParams]);
+    }, [search]);
 
     // ✅ Sync state when URL changes (VERY IMPORTANT)
     useEffect(() => {

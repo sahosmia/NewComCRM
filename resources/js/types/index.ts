@@ -233,4 +233,7 @@ export interface CommonTableProps<T> {
     routeName: string;
     filters: FilterOption[];
     sortOptions: SortOption[];
+    dataKey?: string;
+    bulkDeleteRoute?: string;
+    entityName?: string;
 }

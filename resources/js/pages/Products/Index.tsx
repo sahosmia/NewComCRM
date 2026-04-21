@@ -4,9 +4,10 @@ import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import { columns } from './Columns';
+import { Product } from '@/types/product';
 
 interface Props {
-    products: PaginationType<any>;
+    products: PaginationType<Product>;
 }
 
 export default function ProductIndex({ products }: Props) {
@@ -47,10 +48,13 @@ export default function ProductIndex({ products }: Props) {
                 <CommonTable
                     data={products}
                     columns={columns}
-                    create_route="products.create"
-                    routeName="products.index"
                     filters={filters}
+                    dataKey='products'
+                    entityName='Product'
                     sortOptions={sortOptions}
+                    routeName="products.index"
+                    create_route="products.create"
+                    bulkDeleteRoute='products.bulkDestroy'
                 />
             </div>
         </AppLayout>

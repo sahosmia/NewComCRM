@@ -1,2 +1,8 @@
 1. Product ki super_admin create korbe naki user create korte parbe?
-2.
+2. Diffrents of meeting and followups
+
+
+
+Pending Task
+1. Dashbord Card Desgin
+2. Get user wise total
