@@ -71,6 +71,17 @@ class FollowUpController extends Controller
             ->with('success', 'Follow up updated successfully.');
     }
 
+    public function updateStatus(Request $request, FollowUp $followUp)
+    {
+        $data = $request->validate([
+            'status' => 'required|in:pending,done'
+        ]);
+
+        $followUp->update(['status' => $data['status']]);
+
+        return back()->with('success', 'Status updated successfully');
+    }
+
     public function destroy(FollowUp $followUp)
     {
         $this->followUpService->delete($followUp);

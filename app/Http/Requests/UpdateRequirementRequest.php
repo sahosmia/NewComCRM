@@ -12,7 +12,7 @@ class UpdateRequirementRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return $this->user()->can('update', Requirement::class);
+        return $this->user()->can('update', $this->route('requirement'));
     }
 
     public function rules(): array

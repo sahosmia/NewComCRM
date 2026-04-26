@@ -6,6 +6,7 @@ import type { Column } from '@/types';
 import { handleDelete } from '@/utils/table';
 import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
 import { Badge } from '@/components/ui/badge';
+import { RequirementStatusUpdate } from './StatusUpdate';
 
 const columns: Column<any>[] = [
     {
@@ -42,9 +43,7 @@ const columns: Column<any>[] = [
     {
         header: 'Status',
         accessor: (item) => (
-            <Badge variant={item.status === 'pending' ? 'outline' : 'default'} className="text-[10px] h-5 capitalize">
-                {item.status}
-            </Badge>
+            <RequirementStatusUpdate requirement={item} />
         ),
     },
     {

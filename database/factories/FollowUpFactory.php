@@ -18,7 +18,7 @@ class FollowUpFactory extends Factory
             'user_id'        => User::factory(),
             'follow_up_date' => $this->faker->dateTimeBetween('now', '+1 month'),
             'notes'          => $this->faker->paragraph(),
-            'status'         => $this->faker->randomElement(['price_shared', 'negotiation', 'purchase', 'lost', 'pending', 'follow_up']),
+            'status'         => $this->faker->randomElement(['pending', 'done']),
             'priority'       => $this->faker->randomElement(['high', 'medium', 'low']),
             'completed_at'   => null,
             'next_follow_up' => null,

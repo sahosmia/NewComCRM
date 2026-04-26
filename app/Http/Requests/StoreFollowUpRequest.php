@@ -11,7 +11,7 @@ class StoreFollowUpRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return $this->user()->can('create', $this->route('follow_up'));
+        return $this->user()->can('create', \App\Models\FollowUp::class);
     }
 
     public function rules(): array

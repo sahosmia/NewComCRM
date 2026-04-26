@@ -56,9 +56,9 @@ export default function FollowUpForm({ followUp, customers }: Props) {
                         <SelectValue placeholder="Select Customer" />
                     </SelectTrigger>
                     <SelectContent>
-                        {customers.map((customer) => (
+                        {customers.map((customer: any) => (
                             <SelectItem key={customer.id} value={customer.id.toString()}>
-                                {customer.name}
+                                {customer.full_name_with_company || customer.name}
                             </SelectItem>
                         ))}
                     </SelectContent>
@@ -88,11 +88,7 @@ export default function FollowUpForm({ followUp, customers }: Props) {
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="pending">Pending</SelectItem>
-                        <SelectItem value="price_shared">Price Shared</SelectItem>
-                        <SelectItem value="negotiation">Negotiation</SelectItem>
-                        <SelectItem value="purchase">Purchase</SelectItem>
-                        <SelectItem value="lost">Lost</SelectItem>
-                        <SelectItem value="follow_up">Follow Up</SelectItem>
+                        <SelectItem value="done">Done</SelectItem>
                     </SelectContent>
                 </Select>
                 <ErrorMessage message={errors.status} />

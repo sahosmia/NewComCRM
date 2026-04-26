@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
 use App\Models\User;
 use App\Services\CustomerService;
+use App\Services\CompanyService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,6 +15,7 @@ class CustomerController extends Controller
 {
     public function __construct(
         private CustomerService $customerService,
+        private CompanyService $companyService,
     ) {}
 
 
@@ -24,6 +26,7 @@ class CustomerController extends Controller
         return Inertia::render('Customers/Index', [
             'customers' => $this->customerService->paginateIndex($request->all()),
             'users' => $this->customerService->usersForForm(),
+            'companies' => $this->companyService->listAll(),
         ]);
     }
 
@@ -32,6 +35,7 @@ class CustomerController extends Controller
         $this->authorize('create', Customer::class);
         return Inertia::render('Customers/Create', [
             'users' => $this->customerService->usersForForm(),
+            'companies' => $this->companyService->listAll(),
         ]);
     }
 
@@ -57,6 +61,7 @@ class CustomerController extends Controller
         return Inertia::render('Customers/Edit', [
             'customer' => $customer,
             'users' => $this->customerService->usersForForm(),
+            'companies' => $this->companyService->listAll(),
         ]);
     }
 

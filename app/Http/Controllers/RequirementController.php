@@ -81,6 +81,17 @@ class RequirementController extends Controller
             ->with('success', 'Requirement updated successfully');
     }
 
+    public function updateStatus(Request $request, Requirement $requirement)
+    {
+        $data = $request->validate([
+            'status' => 'required|in:pending,processing,purchased,cancel'
+        ]);
+
+        $requirement->update(['status' => $data['status']]);
+
+        return back()->with('success', 'Status updated successfully');
+    }
+
     /**
      * Remove the specified resource from storage.
      */

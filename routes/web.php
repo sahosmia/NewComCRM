@@ -10,7 +10,8 @@ use App\Http\Controllers\{
     QuotationController,
     RequirementController,
     UserController,
-    ReportController
+    ReportController,
+    CompanyController
 };
 
 /*
@@ -49,6 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('products', ProductController::class);
 
     // --- Follow Ups ---
+    Route::patch('follow-ups/{follow_up}/status', [FollowUpController::class, 'updateStatus'])->name('follow-ups.update-status');
     Route::post('follow-ups/{follow_up}/complete', [FollowUpController::class, 'complete'])->name('follow-ups.complete');
     Route::resource('follow-ups', FollowUpController::class);
 
@@ -72,8 +74,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // --- Other Resources ---
+    Route::patch('requirements/{requirement}/status', [RequirementController::class, 'updateStatus'])->name('requirements.update-status');
     Route::resources([
         'requirements' => RequirementController::class,
+        'companies' => CompanyController::class,
     ]);
 
     // --- Administration ---

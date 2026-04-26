@@ -87,9 +87,9 @@ export default function QuotationForm({ quotation, customers, products }: Props)
                             <SelectValue placeholder="Select Customer" />
                         </SelectTrigger>
                         <SelectContent>
-                            {customers.map((customer) => (
+                            {customers.map((customer: any) => (
                                 <SelectItem key={customer.id} value={customer.id.toString()}>
-                                    {customer.name}
+                                    {customer.full_name_with_company || customer.name}
                                 </SelectItem>
                             ))}
                         </SelectContent>

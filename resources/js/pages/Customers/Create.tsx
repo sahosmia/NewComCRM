@@ -6,9 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface CreateProps {
     users: User[];
+    companies: any[];
 }
 
-export default function Create({ users }: CreateProps) {
+export default function Create({ users, companies }: CreateProps) {
     // Breadcrumbs definition for better readability
     const breadcrumbs = [
         { title: "Customers", href: route("customers.index") },
@@ -35,7 +36,7 @@ export default function Create({ users }: CreateProps) {
                     </CardHeader>
                     <CardContent>
                         {/* CustomerForm is kept decoupled for easier testing */}
-                        <CustomerForm users={users} />
+                        <CustomerForm users={users} companies={companies} />
                     </CardContent>
                 </Card>
             </div>

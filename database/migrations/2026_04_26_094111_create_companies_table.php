@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('requirements', function (Blueprint $table) {
+        Schema::create('companies', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained()->onDelete('cascade');
-            $table->decimal('grand_total', 12, 2)->default(0); 
-            $table->text('notes')->nullable();
-            $table->enum('status', ['pending', 'processing', 'purchased', 'cancel'])->default('pending');
+            $table->string('name')->unique();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('website')->nullable();
+            $table->text('address')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
-            $table->index('customer_id');
         });
     }
 
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('requirements');
+        Schema::dropIfExists('companies');
     }
 };
