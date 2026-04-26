@@ -11,7 +11,8 @@ use App\Http\Controllers\{
     RequirementController,
     UserController,
     ReportController,
-    CompanyController
+    CompanyController,
+    SaleController
 };
 
 /*
@@ -74,6 +75,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // --- Other Resources ---
+    Route::get('sales', [SaleController::class, 'index'])->name('sales.index');
     Route::patch('requirements/{requirement}/status', [RequirementController::class, 'updateStatus'])->name('requirements.update-status');
     Route::resources([
         'requirements' => RequirementController::class,
