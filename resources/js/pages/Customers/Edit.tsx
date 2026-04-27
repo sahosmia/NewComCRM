@@ -7,9 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 interface Props {
     customer: CustomerType;
     users: User[];
+    companies: any[];
 }
 
-export default function Edit({ customer, users }: Props) {
+export default function Edit({ customer, users, companies }: Props) {
 
     const breadcrumbs = [
         { title: "Customers", href: route("customers.index") },
@@ -31,7 +32,7 @@ export default function Edit({ customer, users }: Props) {
                         <p className="text-sm text-muted-foreground">Update the details below to maintain accurate customer records in the system.</p>
                     </CardHeader>
                     <CardContent>
-                        <CustomerForm customer={customer} users={users} />
+                        <CustomerForm customer={customer} users={users} companies={companies} />
                     </CardContent>
                 </Card>
             </div >

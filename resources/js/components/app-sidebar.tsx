@@ -21,7 +21,9 @@ import {
     CalendarDays,
     FileText,
     ClipboardList,
-    UserCog
+    UserCog,
+    BadgeDollarSign,
+    Building2
 } from 'lucide-react';
 
 export function AppSidebar() {
@@ -33,12 +35,14 @@ export function AppSidebar() {
 
     const mainNavItems: NavItem[] = [
         { title: 'Dashboard', href: route('dashboard'), icon: LayoutDashboard },
+        { title: 'Companies', href: route('companies.index'), icon: Building2 },
         { title: 'Customers', href: route('customers.index'), icon: Users },
         { title: 'Products', href: route('products.index'), icon: Package },
         { title: 'Follow-ups', href: route('follow-ups.index'), icon: PhoneCall },
         { title: 'Meetings', href: route('meetings.index'), icon: CalendarDays },
         { title: 'Quotations', href: route('quotations.index'), icon: FileText },
         { title: 'Requirements', href: route('requirements.index'), icon: ClipboardList },
+        { title: 'Sales', href: route('sales.index'), icon: BadgeDollarSign },
         {
             title: 'Users',
             href: route('users.index'),

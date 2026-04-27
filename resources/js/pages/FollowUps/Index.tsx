@@ -23,11 +23,7 @@ export default function FollowUpIndex({ followUps, stats }: Props) {
             type: 'select',
             options: [
                 { label: 'Pending', value: 'pending' },
-                { label: 'Price Shared', value: 'price_shared' },
-                { label: 'Negotiation', value: 'negotiation' },
-                { label: 'Purchase', value: 'purchase' },
-                { label: 'Lost', value: 'lost' },
-                { label: 'Follow Up', value: 'follow_up' },
+                { label: 'Done', value: 'done' },
             ]
         },
         {
@@ -65,6 +61,8 @@ export default function FollowUpIndex({ followUps, stats }: Props) {
                     routeName="follow-ups.index"
                     filters={filters}
                     sortOptions={sortOptions}
+                    exportRoute="follow-ups.export"
+                    printRoute="follow-ups.print"
                 />
             </div>
         </AppLayout>

@@ -13,7 +13,7 @@ trait ValidatesFollowUpAttributes
             'customer_id'    => 'required|exists:customers,id',
             'follow_up_date' => 'required|date',
             'notes'          => 'required|string',
-            'status'         => 'required|in:price_shared,negotiation,purchase,lost,pending,follow_up',
+            'status'         => 'required|in:pending,done',
             'priority'       => 'required|in:high,medium,low',
             'completed_at'   => 'nullable|date',
             'next_follow_up' => 'nullable|date|after:follow_up_date',

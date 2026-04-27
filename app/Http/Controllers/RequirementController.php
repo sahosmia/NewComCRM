@@ -8,6 +8,8 @@ use App\Models\Requirement;
 use App\Services\RequirementService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Exports\GeneralExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 class RequirementController extends Controller
@@ -81,6 +83,17 @@ class RequirementController extends Controller
             ->with('success', 'Requirement updated successfully');
     }
 
+    public function updateStatus(Request $request, Requirement $requirement)
+    {
+        $data = $request->validate([
+            'status' => 'required|in:pending,processing,purchased,cancel'
+        ]);
+
+        $requirement->update(['status' => $data['status']]);
+
+        return back()->with('success', 'Status updated successfully');
+    }
+
     /**
      * Remove the specified resource from storage.
      */
@@ -90,5 +103,66 @@ class RequirementController extends Controller
 
         return redirect()->route('requirements.index')
             ->with('success', 'Requirement deleted successfully');
+    }
+
+    public function export(Request $request)
+    {
+        $ids = $request->input('ids', []);
+
+        $query = Requirement::query()->with(['customer', 'items.product']);
+
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+
+        $requirements = $query->get();
+
+        return Excel::download(new GeneralExport(
+            $requirements,
+            ['Customer', 'Items', 'Total Price', 'Status', 'Date'],
+            function ($requirement) {
+                $items = $requirement->items->map(function($item) {
+                    return ($item->product ? $item->product->name : 'Unknown') . " (x{$item->quantity})";
+                })->implode(', ');
+
+                return [
+                    $requirement->customer ? $requirement->customer->name : 'N/A',
+                    $items,
+                    $requirement->grand_total,
+                    $requirement->status,
+                    $requirement->created_at->toDateTimeString(),
+                ];
+            }
+        ), 'requirements.xlsx');
+    }
+
+    public function print(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        $query = Requirement::query()->with(['customer', 'items.product']);
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+        $requirements = $query->get();
+
+        $data = $requirements->map(function($requirement) {
+            $items = $requirement->items->map(function($item) {
+                return ($item->product ? $item->product->name : 'Unknown') . " (x{$item->quantity})";
+            })->implode(', ');
+
+            return [
+                $requirement->customer ? $requirement->customer->name : 'N/A',
+                $items,
+                $requirement->grand_total,
+                $requirement->status,
+                $requirement->created_at->toDateTimeString(),
+            ];
+        });
+
+        return view('print.general', [
+            'title' => 'Requirement List',
+            'headings' => ['Customer', 'Items', 'Total Price', 'Status', 'Date'],
+            'data' => $data
+        ]);
     }
 }

@@ -14,7 +14,7 @@ class RequirementFactory extends Factory
         return [
             'customer_id' => Customer::factory(),
             'grand_total' => 0,
-            'status'      => $this->faker->randomElement(['pending', 'completed', 'cancelled']),
+            'status'      => $this->faker->randomElement(['pending', 'processing', 'purchased', 'cancel']),
             'notes'       => $this->faker->paragraph(),
         ];
     }

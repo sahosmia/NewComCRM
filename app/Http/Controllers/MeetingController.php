@@ -9,6 +9,8 @@ use App\Services\MeetingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Exports\GeneralExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MeetingController extends Controller
 {
@@ -91,5 +93,58 @@ class MeetingController extends Controller
 
         return redirect()->route('meetings.index')
             ->with('success', 'Meeting deleted successfully');
+    }
+
+    public function export(Request $request)
+    {
+        $ids = $request->input('ids', []);
+
+        $query = Meeting::query()->with(['customer', 'user']);
+
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+
+        $meetings = $query->get();
+
+        return Excel::download(new GeneralExport(
+            $meetings,
+            ['Customer', 'Title', 'Date', 'Type', 'Status'],
+            function ($meeting) {
+                return [
+                    $meeting->customer ? $meeting->customer->name : 'N/A',
+                    $meeting->title,
+                    $meeting->start_time,
+                    $meeting->meeting_type,
+                    $meeting->status,
+                ];
+            }
+        ), 'meetings.xlsx');
+    }
+
+    public function print(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        $query = Meeting::query()->with(['customer', 'user']);
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+        $meetings = $query->get();
+
+        $data = $meetings->map(function($meeting) {
+            return [
+                $meeting->customer ? $meeting->customer->name : 'N/A',
+                $meeting->title,
+                $meeting->start_time,
+                $meeting->meeting_type,
+                $meeting->status,
+            ];
+        });
+
+        return view('print.general', [
+            'title' => 'Meeting List',
+            'headings' => ['Customer', 'Title', 'Date', 'Type', 'Status'],
+            'data' => $data
+        ]);
     }
 }

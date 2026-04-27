@@ -69,8 +69,8 @@ export default function RequirementForm({ requirement, customers, products }: Pr
                             <SelectValue placeholder="Select Customer" />
                         </SelectTrigger>
                         <SelectContent>
-                            {customers.map((c) => (
-                                <SelectItem key={c.id} value={c.id.toString()}>{c.name} ({c.company_name})</SelectItem>
+                            {customers.map((c: any) => (
+                                <SelectItem key={c.id} value={c.id.toString()}>{c.full_name_with_company || `${c.name} - ${c.company_name}`}</SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
@@ -85,10 +85,9 @@ export default function RequirementForm({ requirement, customers, products }: Pr
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="pending">Pending</SelectItem>
-                            <SelectItem value="approved">Approved</SelectItem>
                             <SelectItem value="processing">Processing</SelectItem>
-                            <SelectItem value="completed">Completed</SelectItem>
-                            <SelectItem value="cancelled">Cancelled</SelectItem>
+                            <SelectItem value="purchased">Purchased</SelectItem>
+                            <SelectItem value="cancel">Cancel</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>

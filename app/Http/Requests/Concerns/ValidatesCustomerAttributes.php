@@ -10,11 +10,15 @@ trait ValidatesCustomerAttributes
     protected function customerAttributeRules(): array
     {
         $customerId = $this->route('customer') ? $this->route('customer')->id : null;
+        $type = $this->input('type');
+        $isPersonal = $type === 'personal';
+
         return [
             'name'          => 'required|string|max:255',
-            'designation'   => 'nullable|string|max:255',
-            'company_name'  => 'required|string|max:255',
-            'email'         => "nullable|email|max:255|unique:customers,email,{$customerId}",
+            'designation'   => $isPersonal ? 'nullable|string|max:255' : 'required|string|max:255',
+            'company_id'    => 'nullable|exists:companies,id',
+            'company_name'  => $isPersonal ? 'nullable|string|max:255' : 'required|string|max:255',
+            'email'         => ($isPersonal ? 'nullable' : 'required') . "|email|max:255|unique:customers,email,{$customerId}",
             'type'          => 'required|in:corporate,reseller,personal',
             'phones'        => 'required|array|min:1',
             'phones.*'      => ['required', 'string', 'regex:/^01[3-9]\d{8}$/',],

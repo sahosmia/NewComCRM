@@ -12,9 +12,9 @@ class FollowUpSeeder extends Seeder
     public function run()
     {
         $customers = Customer::all();
-        $users = User::where('role', 'user')->get();
+        $users = User::all(); // Get all users since role seeder might not have run or filtered users
 
-        $statuses = ['price_shared', 'negotiation', 'purchase', 'lost', 'pending', 'follow_up'];
+        $statuses = ['pending', 'done'];
         $priorities = ['high', 'medium', 'low'];
 
         // Create today's follow-ups
@@ -48,7 +48,7 @@ class FollowUpSeeder extends Seeder
                 'user_id' => $users->random()->id,
                 'follow_up_date' => Carbon::today()->subDays(rand(1, 5))->setTime(rand(9, 17), rand(0, 59)),
                 'notes' => 'Customer requested call back',
-                'status' => $statuses[array_rand($statuses)],
+                'status' => 'pending',
                 'priority' => 'high',
             ]);
         }
@@ -62,7 +62,7 @@ class FollowUpSeeder extends Seeder
                 'follow_up_date' => $completedAt->copy()->subDays(rand(1, 5)),
                 'completed_at' => $completedAt,
                 'notes' => 'Discussion completed, customer interested',
-                'status' => $statuses[array_rand(['purchase', 'lost'])],
+                'status' => 'done',
                 'priority' => $priorities[array_rand($priorities)],
             ]);
         }

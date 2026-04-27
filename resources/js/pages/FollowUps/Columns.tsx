@@ -6,6 +6,7 @@ import type { Column } from '@/types';
 import { handleDelete } from '@/utils/table';
 import { Badge } from '@/components/ui/badge';
 import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
+import { FollowUpStatusUpdate } from './StatusUpdate';
 
 const columns: Column<any>[] = [
     {
@@ -19,9 +20,7 @@ const columns: Column<any>[] = [
     {
         header: 'Status',
         accessor: (item) => (
-            <Badge variant="outline" className="capitalize">
-                {item.status.replace('_', ' ')}
-            </Badge>
+            <FollowUpStatusUpdate followUp={item} />
         ),
     },
     {

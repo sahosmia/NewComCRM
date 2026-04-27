@@ -64,7 +64,7 @@ it('can_update_an_existing_follow_up', function () {
         'customer_id' => $followUp->customer_id,
         'follow_up_date' => now()->addDays(2)->format('Y-m-d H:i:s'),
         'notes' => 'Updated notes',
-        'status' => 'negotiation',
+        'status' => 'done',
         'priority' => 'high',
     ];
 
@@ -75,7 +75,7 @@ it('can_update_an_existing_follow_up', function () {
     $this->assertDatabaseHas('follow_ups', [
         'id' => $followUp->id,
         'notes' => 'Updated notes',
-        'status' => 'negotiation',
+        'status' => 'done',
     ]);
 });
 
