@@ -99,9 +99,6 @@ class CustomerController extends Controller
 
         if (!empty($ids)) {
             $query->whereIn('id', $ids);
-        } else {
-            // Apply current filters if any
-            // For now just export all if no selection
         }
 
         $customers = $query->get();
@@ -121,5 +118,33 @@ class CustomerController extends Controller
                 ];
             }
         ), 'customers.xlsx');
+    }
+
+    public function print(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        $query = Customer::query()->with('company', 'assignedUser');
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+        $customers = $query->get();
+
+        $data = $customers->map(function($customer) {
+            return [
+                $customer->name,
+                $customer->email,
+                $customer->company ? $customer->company->name : $customer->company_name,
+                $customer->designation,
+                $customer->type,
+                $customer->status,
+                $customer->assignedUser ? $customer->assignedUser->name : '',
+            ];
+        });
+
+        return view('print.general', [
+            'title' => 'Customer List',
+            'headings' => ['Name', 'Email', 'Company', 'Designation', 'Type', 'Status', 'Assigned To'],
+            'data' => $data
+        ]);
     }
 }

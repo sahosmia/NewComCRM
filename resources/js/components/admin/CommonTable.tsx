@@ -7,7 +7,7 @@ import { Link } from '@inertiajs/react';
 import React, { ReactNode } from 'react';
 import { Input } from '@/components/ui/input';
 import { TableFilters } from './TableFilters';
-import { RotateCcw, Download } from 'lucide-react';
+import { RotateCcw, Download, Printer } from 'lucide-react';
 import { router } from "@inertiajs/react";
 import Pagination from './Pagination';
 import { useEffect, useState } from "react";
@@ -25,8 +25,9 @@ const CommonTable = <T extends { id: number }>({
     dataKey,
     bulkDeleteRoute,
     entityName,
-    exportRoute
-}: CommonTableProps<T> & { exportRoute?: string }) => {
+    exportRoute,
+    printRoute
+}: CommonTableProps<T> & { exportRoute?: string, printRoute?: string }) => {
 
     const [loading, setLoading] = useState(false);
     useEffect(() => {
@@ -63,6 +64,15 @@ const CommonTable = <T extends { id: number }>({
         selectedItems.forEach(id => url.searchParams.append('ids[]', id.toString()));
 
         window.location.href = url.toString();
+    };
+
+    const handlePrint = () => {
+        if (!printRoute) return;
+
+        const url = new URL(route(printRoute), window.location.origin);
+        selectedItems.forEach(id => url.searchParams.append('ids[]', id.toString()));
+
+        window.open(url.toString(), '_blank');
     };
 
     const handleSortChange = (value: string) => {
@@ -140,6 +150,17 @@ const CommonTable = <T extends { id: number }>({
                         >
                             <Download className="mr-2 h-4 w-4" />
                             Export {selectedItems.length > 0 ? `(${selectedItems.length})` : 'All'}
+                        </Button>
+                    )}
+                    {printRoute && (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handlePrint}
+                            className="h-8"
+                        >
+                            <Printer className="mr-2 h-4 w-4" />
+                            Print {selectedItems.length > 0 ? `(${selectedItems.length})` : 'All'}
                         </Button>
                     )}
                     {selectedItems.length > 0 && (

@@ -34,6 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::controller(CustomerController::class)->group(function () {
             Route::delete('bulk-destroy', 'bulkDestroy')->name('bulkDestroy');
             Route::get('export/excel', 'export')->name('export');
+            Route::get('print', 'print')->name('print');
             Route::post('import/excel', 'import')->name('import');
         });
         Route::resource('/', CustomerController::class)->parameters(['' => 'customer']);
@@ -45,18 +46,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::controller(ProductController::class)->group(function () {
             Route::delete('bulk-destroy', 'bulkDestroy')->name('bulkDestroy');
             Route::get('export/excel', 'export')->name('export');
+            Route::get('print', 'print')->name('print');
             Route::post('import/excel', 'import')->name('import');
         });
     });
     Route::resource('products', ProductController::class);
 
     // --- Follow Ups ---
-    Route::patch('follow-ups/{follow_up}/status', [FollowUpController::class, 'updateStatus'])->name('follow-ups.update-status');
-    Route::post('follow-ups/{follow_up}/complete', [FollowUpController::class, 'complete'])->name('follow-ups.complete');
+    Route::prefix('follow-ups')->name('follow-ups.')->group(function() {
+        Route::get('export/excel', [FollowUpController::class, 'export'])->name('export');
+        Route::get('print', [FollowUpController::class, 'print'])->name('print');
+        Route::patch('{follow_up}/status', [FollowUpController::class, 'updateStatus'])->name('update-status');
+        Route::post('{follow_up}/complete', [FollowUpController::class, 'complete'])->name('complete');
+    });
     Route::resource('follow-ups', FollowUpController::class);
 
     // --- Meetings ---
-    Route::get('meetings/calendar', [MeetingController::class, 'calendar'])->name('meetings.calendar');
+    Route::prefix('meetings')->name('meetings.')->group(function() {
+        Route::get('calendar', [MeetingController::class, 'calendar'])->name('calendar');
+        Route::get('export/excel', [MeetingController::class, 'export'])->name('export');
+        Route::get('print', [MeetingController::class, 'print'])->name('print');
+    });
     Route::resource('meetings', MeetingController::class);
 
     // --- Quotations ---
@@ -77,9 +87,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // --- Other Resources ---
     Route::get('sales', [SaleController::class, 'index'])->name('sales.index');
     Route::get('sales/export', [SaleController::class, 'export'])->name('sales.export');
+    Route::get('sales/print', [SaleController::class, 'print'])->name('sales.print');
 
     Route::prefix('requirements')->name('requirements.')->group(function() {
         Route::get('export/excel', [RequirementController::class, 'export'])->name('export');
+        Route::get('print', [RequirementController::class, 'print'])->name('print');
         Route::patch('{requirement}/status', [RequirementController::class, 'updateStatus'])->name('update-status');
     });
 

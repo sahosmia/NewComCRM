@@ -45,4 +45,28 @@ class SaleController extends Controller
             }
         ), 'sales.xlsx');
     }
+
+    public function print(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        $query = Sale::query()->with(['customer']);
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+        $sales = $query->get();
+
+        $data = $sales->map(function($sale) {
+            return [
+                $sale->customer ? $sale->customer->name : 'N/A',
+                $sale->amount,
+                $sale->sale_date->toDateTimeString(),
+            ];
+        });
+
+        return view('print.general', [
+            'title' => 'Sale List',
+            'headings' => ['Customer', 'Amount', 'Sale Date'],
+            'data' => $data
+        ]);
+    }
 }

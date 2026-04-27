@@ -135,4 +135,34 @@ class RequirementController extends Controller
             }
         ), 'requirements.xlsx');
     }
+
+    public function print(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        $query = Requirement::query()->with(['customer', 'items.product']);
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+        $requirements = $query->get();
+
+        $data = $requirements->map(function($requirement) {
+            $items = $requirement->items->map(function($item) {
+                return ($item->product ? $item->product->name : 'Unknown') . " (x{$item->quantity})";
+            })->implode(', ');
+
+            return [
+                $requirement->customer ? $requirement->customer->name : 'N/A',
+                $items,
+                $requirement->grand_total,
+                $requirement->status,
+                $requirement->created_at->toDateTimeString(),
+            ];
+        });
+
+        return view('print.general', [
+            'title' => 'Requirement List',
+            'headings' => ['Customer', 'Items', 'Total Price', 'Status', 'Date'],
+            'data' => $data
+        ]);
+    }
 }

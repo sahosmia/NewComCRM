@@ -66,6 +66,7 @@ export default function SaleIndex({ sales }: Props) {
                     columns={columns}
                     routeName="sales.index"
                     exportRoute="sales.export"
+                    printRoute="sales.print"
                 />
             </div>
         </AppLayout>

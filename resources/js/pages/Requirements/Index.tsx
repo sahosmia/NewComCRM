@@ -44,6 +44,7 @@ export default function RequirementIndex({ requirements }: Props) {
                     filters={filters}
                     sortOptions={sortOptions}
                     exportRoute="requirements.export"
+                    printRoute="requirements.print"
                 />
             </div>
         </AppLayout>
