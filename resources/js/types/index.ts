@@ -59,6 +59,7 @@ export interface CustomerType {
     id: number;
     name: string;
     designation: string;
+    company_id: number;
     company_name: string;
     phones: string[];
     addresses: string[];
@@ -158,14 +159,7 @@ export interface PortfolioType {
     slug: string;
 
 }
-export interface CartType {
-    id: number;
-    user_id: number;
-    product_id: number;
-    quantity: number;
-    product: ProductType;
-    [key]: string
-}
+
 
 export interface UserType {
     id: number;
@@ -229,10 +223,10 @@ export interface Column<T> {
 export interface CommonTableProps<T> {
     data: PaginationType<T>;
     columns: Column<T>[];
-    create_route: string;
+    create_route?: string;
     routeName: string;
-    filters: FilterOption[];
-    sortOptions: SortOption[];
+    filters?: FilterOption[];
+    sortOptions?: SortOption[];
     dataKey?: string;
     bulkDeleteRoute?: string;
     entityName?: string;

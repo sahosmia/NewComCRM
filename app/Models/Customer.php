@@ -14,6 +14,7 @@ class Customer extends Model
     protected $fillable = [
         'name',
         'designation',
+        'company_id',
         'company_name',
         'type',
         'phones',
@@ -23,6 +24,8 @@ class Customer extends Model
         'status',
         'remarks'
     ];
+
+    protected $appends = ['full_name_with_company'];
 
     protected $casts = [
         'status' => 'string',
@@ -46,6 +49,11 @@ class Customer extends Model
     public function assignedUser()
     {
         return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 
     public function requirements()
@@ -78,6 +86,12 @@ class Customer extends Model
 
         $phone = preg_replace('/[^0-9]/', '', $primaryPhone);
         return "https://wa.me/{$phone}";
+    }
+
+    public function getFullNameWithCompanyAttribute(): string
+    {
+        $companyName = $this->company ? $this->company->name : $this->company_name;
+        return $companyName ? "{$this->name} - {$companyName}" : $this->name;
     }
 
     // Scopes

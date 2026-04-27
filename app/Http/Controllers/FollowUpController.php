@@ -10,6 +10,8 @@ use App\Services\FollowUpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Exports\GeneralExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FollowUpController extends Controller
 {
@@ -71,6 +73,17 @@ class FollowUpController extends Controller
             ->with('success', 'Follow up updated successfully.');
     }
 
+    public function updateStatus(Request $request, FollowUp $followUp)
+    {
+        $data = $request->validate([
+            'status' => 'required|in:pending,done'
+        ]);
+
+        $followUp->update(['status' => $data['status']]);
+
+        return back()->with('success', 'Status updated successfully');
+    }
+
     public function destroy(FollowUp $followUp)
     {
         $this->followUpService->delete($followUp);
@@ -88,5 +101,58 @@ class FollowUpController extends Controller
 
         return redirect()->back()
             ->with('success', 'Follow up marked as completed.');
+    }
+
+    public function export(Request $request)
+    {
+        $ids = $request->input('ids', []);
+
+        $query = FollowUp::query()->with(['customer', 'user']);
+
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+
+        $followUps = $query->get();
+
+        return Excel::download(new GeneralExport(
+            $followUps,
+            ['Customer', 'Date', 'Status', 'Priority', 'Notes'],
+            function ($followUp) {
+                return [
+                    $followUp->customer ? $followUp->customer->name : 'N/A',
+                    $followUp->follow_up_date,
+                    $followUp->status,
+                    $followUp->priority,
+                    $followUp->notes,
+                ];
+            }
+        ), 'follow_ups.xlsx');
+    }
+
+    public function print(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        $query = FollowUp::query()->with(['customer', 'user']);
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+        $followUps = $query->get();
+
+        $data = $followUps->map(function($followUp) {
+            return [
+                $followUp->customer ? $followUp->customer->name : 'N/A',
+                $followUp->follow_up_date,
+                $followUp->status,
+                $followUp->priority,
+                $followUp->notes,
+            ];
+        });
+
+        return view('print.general', [
+            'title' => 'Follow Up List',
+            'headings' => ['Customer', 'Date', 'Status', 'Priority', 'Notes'],
+            'data' => $data
+        ]);
     }
 }

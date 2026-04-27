@@ -7,13 +7,17 @@ use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
 use App\Models\User;
 use App\Services\CustomerService;
+use App\Services\CompanyService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Exports\GeneralExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CustomerController extends Controller
 {
     public function __construct(
         private CustomerService $customerService,
+        private CompanyService $companyService,
     ) {}
 
 
@@ -24,6 +28,7 @@ class CustomerController extends Controller
         return Inertia::render('Customers/Index', [
             'customers' => $this->customerService->paginateIndex($request->all()),
             'users' => $this->customerService->usersForForm(),
+            'companies' => $this->companyService->listAll(),
         ]);
     }
 
@@ -32,6 +37,7 @@ class CustomerController extends Controller
         $this->authorize('create', Customer::class);
         return Inertia::render('Customers/Create', [
             'users' => $this->customerService->usersForForm(),
+            'companies' => $this->companyService->listAll(),
         ]);
     }
 
@@ -57,6 +63,7 @@ class CustomerController extends Controller
         return Inertia::render('Customers/Edit', [
             'customer' => $customer,
             'users' => $this->customerService->usersForForm(),
+            'companies' => $this->companyService->listAll(),
         ]);
     }
 
@@ -82,5 +89,62 @@ class CustomerController extends Controller
         $this->customerService->bulkDelete($ids);
 
         return back()->with('success', 'Customers deleted successfully');
+    }
+
+    public function export(Request $request)
+    {
+        $ids = $request->input('ids', []);
+
+        $query = Customer::query()->with('company', 'assignedUser');
+
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+
+        $customers = $query->get();
+
+        return Excel::download(new GeneralExport(
+            $customers,
+            ['Name', 'Email', 'Company', 'Designation', 'Type', 'Status', 'Assigned To'],
+            function ($customer) {
+                return [
+                    $customer->name,
+                    $customer->email,
+                    $customer->company ? $customer->company->name : $customer->company_name,
+                    $customer->designation,
+                    $customer->type,
+                    $customer->status,
+                    $customer->assignedUser ? $customer->assignedUser->name : '',
+                ];
+            }
+        ), 'customers.xlsx');
+    }
+
+    public function print(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        $query = Customer::query()->with('company', 'assignedUser');
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+        $customers = $query->get();
+
+        $data = $customers->map(function($customer) {
+            return [
+                $customer->name,
+                $customer->email,
+                $customer->company ? $customer->company->name : $customer->company_name,
+                $customer->designation,
+                $customer->type,
+                $customer->status,
+                $customer->assignedUser ? $customer->assignedUser->name : '',
+            ];
+        });
+
+        return view('print.general', [
+            'title' => 'Customer List',
+            'headings' => ['Name', 'Email', 'Company', 'Designation', 'Type', 'Status', 'Assigned To'],
+            'data' => $data
+        ]);
     }
 }

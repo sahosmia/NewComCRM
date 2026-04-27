@@ -8,6 +8,8 @@ use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Exports\GeneralExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -84,5 +86,70 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')
             ->with('success', 'Product deleted successfully');
+    }
+
+    public function bulkDestroy(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        $this->productService->bulkDelete($ids);
+
+        return back()->with('success', 'Products deleted successfully');
+    }
+
+    public function export(Request $request)
+    {
+        $ids = $request->input('ids', []);
+
+        $query = Product::query();
+
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+
+        $products = $query->get();
+
+        return Excel::download(new GeneralExport(
+            $products,
+            ['Name', 'Brand', 'Model', 'Category', 'Stock', 'Price', 'Supplier'],
+            function ($product) {
+                return [
+                    $product->name,
+                    $product->brand,
+                    $product->model,
+                    $product->category,
+                    $product->stock_quantity,
+                    $product->unit_price,
+                    $product->supplier_name,
+                ];
+            }
+        ), 'products.xlsx');
+    }
+
+    public function print(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        $query = Product::query();
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+        $products = $query->get();
+
+        $data = $products->map(function($product) {
+            return [
+                $product->name,
+                $product->brand,
+                $product->model,
+                $product->category,
+                $product->stock_quantity,
+                $product->unit_price,
+                $product->supplier_name,
+            ];
+        });
+
+        return view('print.general', [
+            'title' => 'Product List',
+            'headings' => ['Name', 'Brand', 'Model', 'Category', 'Stock', 'Price', 'Supplier'],
+            'data' => $data
+        ]);
     }
 }

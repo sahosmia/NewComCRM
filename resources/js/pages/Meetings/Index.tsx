@@ -61,6 +61,8 @@ export default function MeetingIndex({ meetings }: Props) {
                     routeName="meetings.index"
                     filters={filters}
                     sortOptions={sortOptions}
+                    exportRoute="meetings.export"
+                    printRoute="meetings.print"
                 />
             </div>
         </AppLayout>

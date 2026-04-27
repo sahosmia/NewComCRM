@@ -11,9 +11,15 @@ import { cn } from "@/lib/utils";
 import type { CustomerType, User } from "@/types";
 import ErrorMessage from "@/components/admin/ErrorMessage";
 
+interface Company {
+    id: number;
+    name: string;
+}
+
 interface Props {
     customer?: CustomerType;
     users: User[];
+    companies: Company[];
 }
 
 const FormLabel = ({ children }: { children: React.ReactNode }) => (
@@ -22,12 +28,14 @@ const FormLabel = ({ children }: { children: React.ReactNode }) => (
     </label>
 );
 
-export default function CustomerForm({ customer, users }: Props) {
+export default function CustomerForm({ customer, users, companies }: Props) {
     const [openPopover, setOpenPopover] = useState(false);
+    const [openCompanyPopover, setOpenCompanyPopover] = useState(false);
 
     const { data, setData, post, put, processing, errors } = useForm({
         name: customer?.name ?? "",
         designation: customer?.designation ?? "",
+        company_id: customer?.company_id ?? "",
         company_name: customer?.company_name ?? "",
         email: customer?.email ?? "",
         assigned_to: customer?.assigned_to ?? "",
@@ -85,9 +93,45 @@ export default function CustomerForm({ customer, users }: Props) {
 
                         <div className="grid sm:grid-cols-2 gap-4">
                             <div className="grid gap-2">
-                                <FormLabel>Company Name</FormLabel>
-                                <Input value={data.company_name} onChange={e => setData("company_name", e.target.value)} placeholder="Acme Corp" />
-                                <ErrorMessage message={errors.company_name} />
+                                <FormLabel>Company</FormLabel>
+                                <Popover open={openCompanyPopover} onOpenChange={setOpenCompanyPopover}>
+                                    <PopoverTrigger asChild>
+                                        <Button variant="outline" className={cn("w-full justify-between font-normal", !data.company_id && "text-muted-foreground")}>
+                                            {data.company_id ? companies.find(c => c.id === Number(data.company_id))?.name : (data.company_name || "Select company")}
+                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                                        <Command>
+                                            <CommandInput placeholder="Search company..." />
+                                            <CommandEmpty>
+                                                <div className="p-2 space-y-2">
+                                                    <p className="text-xs text-muted-foreground">No company found.</p>
+                                                    <Input
+                                                        placeholder="Or type manual name..."
+                                                        className="h-8 text-xs"
+                                                        value={data.company_name}
+                                                        onChange={(e) => {
+                                                            setData(prev => ({ ...prev, company_name: e.target.value, company_id: "" }));
+                                                        }}
+                                                    />
+                                                </div>
+                                            </CommandEmpty>
+                                            <CommandGroup className="max-h-60 overflow-auto">
+                                                {companies.map(company => (
+                                                    <CommandItem key={company.id} onSelect={() => {
+                                                        setData(prev => ({ ...prev, company_id: company.id, company_name: company.name }));
+                                                        setOpenCompanyPopover(false);
+                                                    }}>
+                                                        <Check className={cn("mr-2 h-4 w-4", data.company_id === company.id ? "opacity-100" : "opacity-0")} />
+                                                        {company.name}
+                                                    </CommandItem>
+                                                ))}
+                                            </CommandGroup>
+                                        </Command>
+                                    </PopoverContent>
+                                </Popover>
+                                <ErrorMessage message={errors.company_id || errors.company_name} />
                             </div>
                             <div className="grid gap-2">
                                 <FormLabel>Designation</FormLabel>

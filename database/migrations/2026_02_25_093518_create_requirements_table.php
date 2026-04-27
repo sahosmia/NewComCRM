@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('requirements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained()->onDelete('cascade');
-            $table->decimal('grand_total', 12, 2)->default(0); 
+            $table->decimal('grand_total', 12, 2)->default(0);
             $table->text('notes')->nullable();
-            $table->string('status')->default('pending');
+            $table->enum('status', ['pending', 'processing', 'purchased', 'cancel'])->default('pending');
             $table->timestamps();
             $table->softDeletes();
 

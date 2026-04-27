@@ -35,10 +35,13 @@ it('can_store_a_new_requirement', function () {
 
     $requirementData = [
         'customer_id' => $customer->id,
-        'product_id' => $product->id,
-        'quantity' => 5,
-        'unit_price' => 100.00,
-        'total_price' => 500.00,
+        'items' => [
+            [
+                'product_id' => $product->id,
+                'quantity' => 5,
+                'unit_price' => 100.00,
+            ]
+        ],
         'notes' => 'Some notes',
     ];
 
@@ -48,10 +51,11 @@ it('can_store_a_new_requirement', function () {
     $response->assertRedirect(route('requirements.index'));
     $this->assertDatabaseHas('requirements', [
         'customer_id' => $customer->id,
+    ]);
+    $this->assertDatabaseHas('requirement_items', [
         'product_id' => $product->id,
         'quantity' => 5,
         'unit_price' => 100.00,
-        'total_price' => 500.00,
     ]);
 });
 
@@ -59,29 +63,32 @@ it('validates_required_fields_on_store', function () {
     $response = $this->actingAs($this->user)
         ->post(route('requirements.store'), []);
 
-    $response->assertSessionHasErrors(['customer_id', 'product_id', 'quantity', 'unit_price']);
+    $response->assertSessionHasErrors(['customer_id', 'items']);
 });
 
 it('can_update_an_existing_requirement', function () {
     $requirement = Requirement::factory()->create();
+    $product = Product::factory()->create();
 
     $updatedData = [
         'customer_id' => $requirement->customer_id,
-        'product_id' => $requirement->product_id,
-        'quantity' => 10,
-        'unit_price' => 150.00,
-        'total_price' => 1500.00,
+        'items' => [
+            [
+                'product_id' => $product->id,
+                'quantity' => 10,
+                'unit_price' => 150.00,
+            ]
+        ],
     ];
 
     $response = $this->actingAs($this->user)
         ->put(route('requirements.update', $requirement), $updatedData);
 
     $response->assertRedirect(route('requirements.index'));
-    $this->assertDatabaseHas('requirements', [
-        'id' => $requirement->id,
+    $this->assertDatabaseHas('requirement_items', [
+        'requirement_id' => $requirement->id,
         'quantity' => 10,
         'unit_price' => 150.00,
-        'total_price' => 1500.00,
     ]);
 });
 
@@ -95,4 +102,16 @@ it('can_delete_a_requirement', function () {
     $this->assertDatabaseMissing('requirements', [
         'id' => $requirement->id,
     ]);
+});
+
+it('can_update_status_of_a_requirement', function () {
+    $requirement = Requirement::factory()->create(['status' => 'pending']);
+
+    $response = $this->actingAs($this->user)
+        ->patch(route('requirements.update-status', $requirement), [
+            'status' => 'processing'
+        ]);
+
+    $response->assertStatus(302);
+    $this->assertEquals('processing', $requirement->fresh()->status);
 });

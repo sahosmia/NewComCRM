@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import type { UserType } from "@/types";
 import ErrorMessage from "@/components/admin/ErrorMessage";
 
-interface Props { user?: UserType; }
+interface Props { user?: UserType;}
 
 export default function UserForm({ user }: Props) {
     const [open, setOpen] = useState(false);
