@@ -65,7 +65,7 @@ export default function SaleIndex({ sales }: Props) {
                     data={sales}
                     columns={columns}
                     routeName="sales.index"
-                    // Sales are read-only, so no create_route
+                    exportRoute="sales.export"
                 />
             </div>
         </AppLayout>

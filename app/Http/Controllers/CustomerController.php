@@ -10,6 +10,8 @@ use App\Services\CustomerService;
 use App\Services\CompanyService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Exports\GeneralExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CustomerController extends Controller
 {
@@ -87,5 +89,37 @@ class CustomerController extends Controller
         $this->customerService->bulkDelete($ids);
 
         return back()->with('success', 'Customers deleted successfully');
+    }
+
+    public function export(Request $request)
+    {
+        $ids = $request->input('ids', []);
+
+        $query = Customer::query()->with('company', 'assignedUser');
+
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        } else {
+            // Apply current filters if any
+            // For now just export all if no selection
+        }
+
+        $customers = $query->get();
+
+        return Excel::download(new GeneralExport(
+            $customers,
+            ['Name', 'Email', 'Company', 'Designation', 'Type', 'Status', 'Assigned To'],
+            function ($customer) {
+                return [
+                    $customer->name,
+                    $customer->email,
+                    $customer->company ? $customer->company->name : $customer->company_name,
+                    $customer->designation,
+                    $customer->type,
+                    $customer->status,
+                    $customer->assignedUser ? $customer->assignedUser->name : '',
+                ];
+            }
+        ), 'customers.xlsx');
     }
 }

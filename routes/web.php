@@ -76,7 +76,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // --- Other Resources ---
     Route::get('sales', [SaleController::class, 'index'])->name('sales.index');
-    Route::patch('requirements/{requirement}/status', [RequirementController::class, 'updateStatus'])->name('requirements.update-status');
+    Route::get('sales/export', [SaleController::class, 'export'])->name('sales.export');
+
+    Route::prefix('requirements')->name('requirements.')->group(function() {
+        Route::get('export/excel', [RequirementController::class, 'export'])->name('export');
+        Route::patch('{requirement}/status', [RequirementController::class, 'updateStatus'])->name('update-status');
+    });
+
     Route::resources([
         'requirements' => RequirementController::class,
         'companies' => CompanyController::class,

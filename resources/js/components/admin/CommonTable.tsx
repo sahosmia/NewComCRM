@@ -7,7 +7,7 @@ import { Link } from '@inertiajs/react';
 import React, { ReactNode } from 'react';
 import { Input } from '@/components/ui/input';
 import { TableFilters } from './TableFilters';
-import { RotateCcw } from 'lucide-react';
+import { RotateCcw, Download } from 'lucide-react';
 import { router } from "@inertiajs/react";
 import Pagination from './Pagination';
 import { useEffect, useState } from "react";
@@ -24,8 +24,9 @@ const CommonTable = <T extends { id: number }>({
     sortOptions,
     dataKey,
     bulkDeleteRoute,
-    entityName
-}: CommonTableProps<T>) => {
+    entityName,
+    exportRoute
+}: CommonTableProps<T> & { exportRoute?: string }) => {
 
     const [loading, setLoading] = useState(false);
     useEffect(() => {
@@ -53,6 +54,16 @@ const CommonTable = <T extends { id: number }>({
         routeName: routeName,
         dataKey: dataKey
     });
+
+    const handleExport = () => {
+        if (!exportRoute) return;
+
+        // Use a hidden form or window.location to trigger download with selected IDs
+        const url = new URL(route(exportRoute), window.location.origin);
+        selectedItems.forEach(id => url.searchParams.append('ids[]', id.toString()));
+
+        window.location.href = url.toString();
+    };
 
     const handleSortChange = (value: string) => {
         const option = sortOptions.find(opt => opt.label === value);
@@ -120,6 +131,17 @@ const CommonTable = <T extends { id: number }>({
                     </Button>
                 </div>
                 <div className='flex gap-2 items-center'>
+                    {exportRoute && (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handleExport}
+                            className="h-8"
+                        >
+                            <Download className="mr-2 h-4 w-4" />
+                            Export {selectedItems.length > 0 ? `(${selectedItems.length})` : 'All'}
+                        </Button>
+                    )}
                     {selectedItems.length > 0 && (
                         <AlertDialogDestructive
                             title={`Delete Selected ${entityName}s?`}

@@ -43,3 +43,14 @@ npm warn Unknown project config "public-hoist-pattern". This will stop working i
 11:11:44 AM [vite] full reload routes/web.php
 11:11:45 AM [vite] (client) info: Types generated for actions, routes, form variants
   Plugin: @laravel/vite-plugin-wayfinder
+5:09:49 AM [vite] (client) info: Types generated for actions, routes, form variants
+  Plugin: @laravel/vite-plugin-wayfinder
+5:15:53 AM [vite] (client) info: Types generated for actions, routes, form variants
+  Plugin: @laravel/vite-plugin-wayfinder
+5:16:02 AM [vite] full reload routes/web.php
+5:16:03 AM [vite] (client) info: Types generated for actions, routes, form variants
+  Plugin: @laravel/vite-plugin-wayfinder
+5:16:42 AM [vite] (client) info: Types generated for actions, routes, form variants
+  Plugin: @laravel/vite-plugin-wayfinder
+5:21:31 AM [vite] (client) info: Types generated for actions, routes, form variants
+  Plugin: @laravel/vite-plugin-wayfinder

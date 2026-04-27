@@ -8,6 +8,8 @@ use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Exports\GeneralExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {

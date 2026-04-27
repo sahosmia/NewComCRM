@@ -84,6 +84,7 @@ export default function CustomerIndex({ customers, users }: Props) {
                     routeName="customers.index"
                     filters={filters}
                     sortOptions={customerSortOptions}
+                    exportRoute="customers.export"
                 />
             </div>
         </AppLayout>

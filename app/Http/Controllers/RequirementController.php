@@ -8,6 +8,8 @@ use App\Models\Requirement;
 use App\Services\RequirementService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Exports\GeneralExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 class RequirementController extends Controller
@@ -101,5 +103,36 @@ class RequirementController extends Controller
 
         return redirect()->route('requirements.index')
             ->with('success', 'Requirement deleted successfully');
+    }
+
+    public function export(Request $request)
+    {
+        $ids = $request->input('ids', []);
+
+        $query = Requirement::query()->with(['customer', 'items.product']);
+
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+
+        $requirements = $query->get();
+
+        return Excel::download(new GeneralExport(
+            $requirements,
+            ['Customer', 'Items', 'Total Price', 'Status', 'Date'],
+            function ($requirement) {
+                $items = $requirement->items->map(function($item) {
+                    return ($item->product ? $item->product->name : 'Unknown') . " (x{$item->quantity})";
+                })->implode(', ');
+
+                return [
+                    $requirement->customer ? $requirement->customer->name : 'N/A',
+                    $items,
+                    $requirement->grand_total,
+                    $requirement->status,
+                    $requirement->created_at->toDateTimeString(),
+                ];
+            }
+        ), 'requirements.xlsx');
     }
 }

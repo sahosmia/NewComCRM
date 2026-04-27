@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Sale;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use App\Exports\GeneralExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SaleController extends Controller
 {
@@ -17,5 +19,30 @@ class SaleController extends Controller
         return Inertia::render('Sales/Index', [
             'sales' => $sales
         ]);
+    }
+
+    public function export(Request $request)
+    {
+        $ids = $request->input('ids', []);
+
+        $query = Sale::query()->with(['customer', 'requirement.items.product']);
+
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+
+        $sales = $query->get();
+
+        return Excel::download(new GeneralExport(
+            $sales,
+            ['Customer', 'Amount', 'Sale Date'],
+            function ($sale) {
+                return [
+                    $sale->customer ? $sale->customer->name : 'N/A',
+                    $sale->amount,
+                    $sale->sale_date->toDateTimeString(),
+                ];
+            }
+        ), 'sales.xlsx');
     }
 }

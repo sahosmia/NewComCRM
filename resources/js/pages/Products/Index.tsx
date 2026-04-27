@@ -55,6 +55,7 @@ export default function ProductIndex({ products }: Props) {
                     routeName="products.index"
                     create_route="products.create"
                     bulkDeleteRoute='products.bulkDestroy'
+                    exportRoute="products.export"
                 />
             </div>
         </AppLayout>
