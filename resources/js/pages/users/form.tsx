@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { UserType } from "@/types";
-import ErrorMessage from "@/components/admin/ErrorMessage";
+import ErrorMessage from "@/components/admin/form/ErrorMessage";
 
 interface Props { user?: UserType;}
 

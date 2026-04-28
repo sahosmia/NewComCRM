@@ -7,13 +7,19 @@ import { Link } from '@inertiajs/react';
 import React, { ReactNode } from 'react';
 import { Input } from '@/components/ui/input';
 import { TableFilters } from './TableFilters';
-import { RotateCcw, Download, Printer } from 'lucide-react';
+import { RotateCcw, Download, Printer, Plus } from 'lucide-react';
 import { router } from "@inertiajs/react";
 import Pagination from './Pagination';
 import { useEffect, useState } from "react";
 import TableSkeleton from './TableSkeleton';
 import { handleBulkDelete } from '@/utils/table';
 import { AlertDialogDestructive } from './AlertDialogDestructive';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Building2, Globe, Mail, MoreHorizontal, Phone, SquarePen, Trash2, MapPin } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+
+
 
 const CommonTable = <T extends { id: number }>({
     data,
@@ -21,7 +27,7 @@ const CommonTable = <T extends { id: number }>({
     create_route,
     routeName,
     filters,
-    sortOptions= [],
+    sortOptions = [],
     dataKey,
     bulkDeleteRoute,
     entityName,
@@ -140,117 +146,149 @@ const CommonTable = <T extends { id: number }>({
                         Reset
                     </Button>
                 </div>
-                <div className='flex gap-2 items-center'>
-                    {exportRoute && (
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handleExport}
-                            className="h-8"
-                        >
-                            <Download className="mr-2 h-4 w-4" />
-                            Export {selectedItems.length > 0 ? `(${selectedItems.length})` : 'All'}
-                        </Button>
-                    )}
-                    {printRoute && (
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handlePrint}
-                            className="h-8"
-                        >
-                            <Printer className="mr-2 h-4 w-4" />
-                            Print {selectedItems.length > 0 ? `(${selectedItems.length})` : 'All'}
-                        </Button>
-                    )}
+                <div className="flex items-center gap-3">
+                    {/* Selection Status - Uses a Badge for better visual weight */}
                     {selectedItems.length > 0 && (
-                        <AlertDialogDestructive
-                            title={`Delete Selected ${entityName}s?`}
-                            description={`This will delete ${selectedItems.length} ${entityName?.toLowerCase()}s permanently.`}
-                            onConfirm={() => handleBulkDelete(selectedItems, bulkDeleteRoute || '')}
-                        >
-                            <Button
-                                variant="destructive"
-                                size="sm"
-                            >
-                                Delete ({selectedItems.length})
-                            </Button>
-                        </AlertDialogDestructive>
+                        <Badge variant="secondary" className="font-medium animate-in fade-in zoom-in duration-200">
+                            {selectedItems.length} selected
+                        </Badge>
                     )}
-                    {/* <div className="text-sm font-medium">
-                        {selectedItems.length > 0 && (
-                            <span className="text-primary">{selectedItems.length} items selected</span>
-                        )}
-                    </div> */}
-                    <Button variant="default" size="sm" asChild>
-                        <Link href={route(create_route)}>Add New</Link>
+
+                    {/* Primary Action: Create */}
+                    <Button size="sm" asChild className="gap-2">
+                        <Link href={route(create_route)}>
+                            <Plus className="h-4 w-4" />
+                            <span>Add {entityName}</span>
+                        </Link>
                     </Button>
+
+                    {/* Secondary Actions: Dropdown */}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" size="sm" className="h-9 w-9 p-0">
+                                <MoreHorizontal className="h-4 w-4" />
+                                <span className="sr-only">Open menu</span>
+                            </Button>
+                        </DropdownMenuTrigger>
+
+                        <DropdownMenuContent align="end" className="w-52">
+                            {exportRoute && (
+                                <DropdownMenuItem onClick={handleExport} className="cursor-pointer">
+                                    <Download className="mr-2 h-4 w-4" />
+                                    <span>Export {selectedItems.length > 0 ? 'Selected' : 'All'}</span>
+                                </DropdownMenuItem>
+                            )}
+
+                            {printRoute && (
+                                <DropdownMenuItem onClick={handlePrint} className="cursor-pointer">
+                                    <Printer className="mr-2 h-4 w-4" />
+                                    <span>Print {selectedItems.length > 0 ? 'Selected' : 'All'}</span>
+                                </DropdownMenuItem>
+                            )}
+
+                            {selectedItems.length > 0 && (
+                                <>
+                                    <DropdownMenuSeparator />
+                                    <AlertDialogDestructive
+                                        title={`Delete ${selectedItems.length} ${entityName}s?`}
+                                        description="This action cannot be undone. This will permanently delete the selected records."
+                                        onConfirm={() => handleBulkDelete(selectedItems, bulkDeleteRoute || '')}
+                                    >
+                                        {/* We use DropdownMenuItem as the trigger for the Dialog */}
+                                        <DropdownMenuItem
+                                            onSelect={(e) => e.preventDefault()}
+                                            className="text-red-600 focus:text-red-600 cursor-pointer"
+                                        >
+                                            <Trash2 className="mr-2 h-4 w-4" />
+                                            <span>Delete Selected</span>
+                                        </DropdownMenuItem>
+                                    </AlertDialogDestructive>
+                                </>
+                            )}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
             </div>
 
             {/* Table Container */}
-            <div className="border rounded-lg overflow-hidden bg-card text-card-foreground shadow-sm">
-                <Table className='table-fixed w-full'>
-                    <TableHeader className="bg-muted/50">
-                        <TableRow>
-                            <TableHead className="w-10">
+            {/* 1. Added horizontal scroll wrapper and removed 'table-fixed' */}
+<div className="border rounded-lg bg-card text-card-foreground shadow-sm">
+    <div className="overflow-x-auto overflow-y-hidden">
+        <Table className='w-full min-w-[800px] md:min-w-full'>
+            <TableHeader className="bg-muted/50">
+                <TableRow>
+                    {/* Fixed widths for small utility columns */}
+                    <TableHead className="w-[40px] px-4">
+                        <input
+                            type="checkbox"
+                            checked={data.data.length > 0 && selectedItems.length === data.data.length}
+                            onChange={handleSelectAllItems}
+                            className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary align-middle"
+                        />
+                    </TableHead>
+                    <TableHead className="w-[50px] font-bold text-xs">#</TableHead>
+
+                    {columns.map((column, index) => (
+                        <TableHead
+                            key={index}
+                            className={cn(
+                                "font-bold whitespace-nowrap",
+                                column.className
+                            )}
+                        >
+                            {column.header}
+                        </TableHead>
+                    ))}
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                {loading ? (
+                    <TableSkeleton columns={columns.length + 2} />
+                ) : data.data.length === 0 ? (
+                    <TableRow>
+                        <TableCell
+                            colSpan={columns.length + 2}
+                            className="h-32 text-center text-muted-foreground"
+                        >
+                            No data found matching your criteria.
+                        </TableCell>
+                    </TableRow>
+                ) : (
+                    data.data.map((item, i) => (
+                        <TableRow key={item.id} className="hover:bg-muted/30 transition-colors">
+                            <TableCell className='px-4'>
                                 <input
                                     type="checkbox"
-                                    checked={data.data.length > 0 && selectedItems.length === data.data.length}
-                                    onChange={handleSelectAllItems}
-                                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                                    checked={selectedItems.includes(item.id)}
+                                    onChange={() => handleSelectItem(item.id)}
+                                    className="block w-4 h-4 rounded border-gray-300 text-primary"
                                 />
-                            </TableHead>
-                            <TableHead className="w-10 font-bold">#</TableHead>
-                            {columns.map((column, index) => (
-                                <TableHead key={index} className={`${column.className} font-bold`}>
-                                    {column.header}
-                                </TableHead>
+                            </TableCell>
+
+                            <TableCell className="text-xs text-muted-foreground">
+                                {data.from + i}
+                            </TableCell>
+
+                            {columns.map((column, colIndex) => (
+                                <TableCell
+                                    key={colIndex}
+                                    className={cn("py-3", column.className)}
+                                >
+                                    <div className="max-w-full">
+                                        {typeof column.accessor === 'function'
+                                            ? column.accessor(item)
+                                            : (item[column.accessor as keyof T] as ReactNode)
+                                        }
+                                    </div>
+                                </TableCell>
                             ))}
                         </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {loading ? (
-                            <TableSkeleton columns={columns.length + 2} />
-                        ) : data.data.length === 0 ? (
-                            <TableRow>
-                                <TableCell
-                                    colSpan={columns.length + 2}
-                                    className="h-32 text-center text-muted-foreground"
-                                >
-                                    No data found matching your criteria.
-                                </TableCell>
-                            </TableRow>
-                        ) : (
-                            data.data.map((item, i) => (
-                                <TableRow key={item.id} className="hover:bg-muted/30 transition-colors">
-                                    <TableCell className='w-10'>
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedItems.includes(item.id)}
-                                            onChange={() => handleSelectItem(item.id)}
-                                            className="block w-4 h-4"
-                                        />
-                                    </TableCell>
-
-                                    <TableCell className="w-10 text-xs">
-                                        {data.from + i}
-                                    </TableCell>
-
-                                    {columns.map((column, colIndex) => (
-                                        <TableCell key={colIndex}>
-                                            {typeof column.accessor === 'function'
-                                                ? column.accessor(item)
-                                                : (item[column.accessor as keyof T] as ReactNode)
-                                            }
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            ))
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
+                    ))
+                )}
+            </TableBody>
+        </Table>
+    </div>
+</div>
 
             <Pagination routeName={routeName} data={data} />
         </div>

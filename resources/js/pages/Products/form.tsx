@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Product } from "@/types/product";
 import { Loader2 } from "lucide-react";
-import ErrorMessage from "@/components/admin/ErrorMessage";
+import ErrorMessage from "@/components/admin/form/ErrorMessage";
 
 interface Props {
     product?: Product;

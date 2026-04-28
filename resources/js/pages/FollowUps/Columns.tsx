@@ -1,12 +1,12 @@
-import { Link } from '@inertiajs/react';
-import { FileText, MoreHorizontal, SquarePen, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import type { Column } from '@/types';
-import { handleDelete } from '@/utils/table';
 import { Badge } from '@/components/ui/badge';
-import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
-import { FollowUpStatusUpdate } from './StatusUpdate';
+import { TableRowActions } from '@/components/table/TableRowActions';
+import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
+
+const FOLLOW_UP_OPTIONS = [
+    { value: 'pending', label: 'Pending', colorClass: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20' },
+    { value: 'done', label: 'Done', colorClass: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' },
+];
 
 const columns: Column<any>[] = [
     {
@@ -20,7 +20,12 @@ const columns: Column<any>[] = [
     {
         header: 'Status',
         accessor: (item) => (
-            <FollowUpStatusUpdate followUp={item} />
+            <InlineStatusUpdate
+                id={item.id}
+                currentStatus={item.status}
+                routeName="follow-ups.update-status"
+                options={FOLLOW_UP_OPTIONS}
+            />
         ),
     },
     {
@@ -34,41 +39,11 @@ const columns: Column<any>[] = [
     {
         header: '',
         accessor: (item) => (
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="w-8 h-8 p-0">
-                        <MoreHorizontal className="w-4 h-4" />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-40">
-                    <DropdownMenuItem asChild>
-                        <Link href={route('follow-ups.show', item.id)}>
-                            <FileText className="w-4 h-4 mr-2" /> View Details
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                        <Link href={route('follow-ups.edit', item.id)}>
-                            <SquarePen className="w-4 h-4 mr-2" /> Edit Info
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <AlertDialogDestructive
-                        title="Delete Follow Up?"
-                        description="This action cannot be undone. This follow up will be permanently removed."
-                        onConfirm={() => handleDelete(item.id, 'follow-ups.destroy', {
-                            redirectTo: 'follow-ups.index',
-                        })}
-                    >
-                        <DropdownMenuItem
-                            onSelect={(e) => e.preventDefault()}
-                            className="text-red-600 focus:text-red-600 cursor-pointer"
-                        >
-                            <Trash2 className="w-4 h-4 mr-2 text-red-600 focus:text-red-600 cursor-pointer" />
-                            <span>Delete</span>
-                        </DropdownMenuItem>
-                    </AlertDialogDestructive>
-                </DropdownMenuContent>
-            </DropdownMenu>
+            <TableRowActions
+                item={item}
+                resource="follow-ups"
+                label="Follow Up"
+            />
         ),
         className: 'w-[7%]',
     },

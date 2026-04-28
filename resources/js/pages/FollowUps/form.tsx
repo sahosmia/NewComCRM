@@ -10,7 +10,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import type { FollowUp } from "@/types/follow-up";
-import ErrorMessage from "@/components/admin/ErrorMessage";
+import ErrorMessage from "@/components/admin/form/ErrorMessage";
 
 interface Props {
     followUp?: FollowUp;

@@ -10,7 +10,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Meeting } from "@/types/metting";
-import ErrorMessage from "@/components/admin/ErrorMessage";
+import ErrorMessage from "@/components/admin/form/ErrorMessage";
 
 interface Props {
     meeting?: Meeting;
