@@ -1,6 +1,7 @@
 import { Link } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/layouts/app-layout";
+import { EditResourceButton, DeleteResourceButton } from "@/components/resource-actions";
 
 export default function Show({ product }: any) {
     return (
@@ -8,9 +9,15 @@ export default function Show({ product }: any) {
             <div className="p-6 max-w-2xl mx-auto">
                 <div className="flex justify-between items-center mb-4">
                     <h1 className="text-xl font-bold">{product.name}</h1>
-                    <Link href={route("products.edit", product.id)}>
-                        <Button variant="outline">Edit</Button>
-                    </Link>
+                    <div className="flex gap-2">
+                        <EditResourceButton href={route("products.edit", product.id)} />
+                        <DeleteResourceButton
+                            id={product.id}
+                            routeName="products.destroy"
+                            label="Product"
+                            redirectTo="products.index"
+                        />
+                    </div>
                 </div>
 
                 <div className="bg-card p-6 border rounded-lg shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6">

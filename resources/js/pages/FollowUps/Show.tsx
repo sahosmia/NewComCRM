@@ -11,6 +11,7 @@ import { Head, Link } from "@inertiajs/react";
 import { cn } from "@/lib/utils";
 import { formatDateTime } from "@/utils/date-format";
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
+import { EditResourceButton, DeleteResourceButton } from "@/components/resource-actions";
 
 
 export default function Show({ followUp }: { followUp: any }) {
@@ -40,11 +41,13 @@ export default function Show({ followUp }: { followUp: any }) {
                                 <ArrowLeft className="w-4 h-4 mr-2" /> Back
                             </Link>
                         </Button>
-                        <Button asChild>
-                            <Link href={route("follow-ups.edit", followUp.id)}>
-                                Edit 
-                            </Link>
-                        </Button>
+                        <EditResourceButton href={route("follow-ups.edit", followUp.id)} />
+                        <DeleteResourceButton
+                            id={followUp.id}
+                            routeName="follow-ups.destroy"
+                            label="Follow Up"
+                            redirectTo="follow-ups.index"
+                        />
                     </div>
                 </div>
 

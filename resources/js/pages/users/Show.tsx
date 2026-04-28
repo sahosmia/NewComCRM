@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare } from "lucide-react";
 import { Head, Link } from "@inertiajs/react";
+import { EditResourceButton, DeleteResourceButton } from "@/components/resource-actions";
 
 export default function Show({ user }: { user: any }) {
     return (
@@ -33,11 +34,13 @@ export default function Show({ user }: { user: any }) {
                                 <ArrowLeft className="w-4 h-4 mr-2" /> Back
                             </Link>
                         </Button>
-                        <Button asChild>
-                            <Link href={route("users.edit", user.id)}>
-                                <Edit className="w-4 h-4 mr-2" /> Edit Profile
-                            </Link>
-                        </Button>
+                        <EditResourceButton href={route("users.edit", user.id)} label="Edit Profile" />
+                        <DeleteResourceButton
+                            id={user.id}
+                            routeName="users.destroy"
+                            label="User"
+                            redirectTo="users.index"
+                        />
                     </div>
                 </div>
 

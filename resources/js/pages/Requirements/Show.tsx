@@ -1,6 +1,7 @@
 import { Link, Head } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/layouts/app-layout";
+import { EditResourceButton, DeleteResourceButton } from "@/components/resource-actions";
 import { Badge } from "@/components/ui/badge";
 import {
     Calendar,
@@ -63,9 +64,17 @@ export default function Show({ requirement }: any) {
                         <Button variant="outline" size="sm" className="flex-1 md:flex-none">
                             <Printer className="w-4 h-4 mr-2" /> Print
                         </Button>
-                        <Link href={route("requirements.edit", requirement.id)} className="flex-1 md:flex-none">
-                            <Button variant="outline" size="sm" className="w-full">Edit</Button>
-                        </Link>
+                        <EditResourceButton
+                            href={route("requirements.edit", requirement.id)}
+                            className="flex-1 md:flex-none"
+                        />
+                        <DeleteResourceButton
+                            id={requirement.id}
+                            routeName="requirements.destroy"
+                            label="Requirement"
+                            redirectTo="requirements.index"
+                            className="flex-1 md:flex-none"
+                        />
                         <Button className="bg-blue-600 hover:bg-blue-700 text-white flex-1 md:flex-none shadow-md">
                             <FileCheck className="w-4 h-4 mr-2" /> Generate Quote
                         </Button>
