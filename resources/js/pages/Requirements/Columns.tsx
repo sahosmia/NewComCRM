@@ -1,11 +1,6 @@
-import { Link } from '@inertiajs/react';
-import { FileText, MoreHorizontal, SquarePen, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import type { Column } from '@/types';
-import { handleDelete } from '@/utils/table';
-import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
+import { TableRowActions } from '@/components/table/TableRowActions';
 
 const RequirementOptions = [
     { value: 'pending', label: "Pending", colorClass: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20' },
@@ -73,44 +68,14 @@ const columns: Column<any>[] = [
     {
         header: '',
         accessor: (item) => (
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="w-8 h-8 p-0">
-                        <MoreHorizontal className="w-4 h-4" />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-45">
-                    <DropdownMenuItem asChild>
-                        <Link href={route('requirements.show', item.id)}>
-                            <FileText className="w-4 h-4 mr-2" /> View Details
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                        <Link href={route('requirements.edit', item.id)}>
-                            <SquarePen className="w-4 h-4 mr-2" /> Edit Info
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <AlertDialogDestructive
-                        title="Delete Requirement?"
-                        description="Warning: This will delete the requirement and all items associated with it."
-                        onConfirm={() => handleDelete(item.id, 'requirements.destroy', {
-                            redirectTo: 'requirements.index',
-                        })}
-                    >
-                        <DropdownMenuItem
-                            onSelect={(e) => e.preventDefault()}
-                            className="text-red-600 focus:text-red-600 cursor-pointer"
-                        >
-                            <Trash2 className="w-4 h-4 mr-2" />
-                            <span>Delete</span>
-                        </DropdownMenuItem>
-                    </AlertDialogDestructive>
-                </DropdownMenuContent>
-            </DropdownMenu>
+            <TableRowActions
+                item={item}
+                resource="requirements"
+                label="Requirement"
+            />
         ),
         className: 'w-[7%]',
     },
 ];
 
-export { columns };
+export { columns, RequirementOptions };

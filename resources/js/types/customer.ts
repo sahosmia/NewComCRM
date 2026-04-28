@@ -12,4 +12,5 @@ export interface Customer {
     updated_at: string;
     deleted_at?: string | null;
     assigned_user?: any;
+    full_name_with_company:string
 }

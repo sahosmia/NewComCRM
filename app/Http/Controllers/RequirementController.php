@@ -35,6 +35,7 @@ class RequirementController extends Controller
     public function create()
     {        $this->authorize('create', Requirement::class);
 
+
         return Inertia::render('Requirements/Create', $this->requirementService->formOptions());
     }
 

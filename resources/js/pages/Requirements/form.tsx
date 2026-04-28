@@ -2,11 +2,14 @@ import { useForm } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Trash2, Plus, Info, LayoutList } from "lucide-react";
+import { Trash2, Plus, LayoutList } from "lucide-react";
 import { Requirement, RequirementItem } from "@/types/requirement";
 import { Customer } from "@/types/customer";
 import { Product } from "@/types/product";
+import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
+import ErrorMessage from "@/components/admin/form/ErrorMessage";
+import { FormSelect } from "@/components/admin/form/FormSelect";
+import { RequirementOptions } from "./Columns";
 
 interface Props {
     requirement: Requirement;
@@ -15,8 +18,12 @@ interface Props {
 }
 
 export default function RequirementForm({ requirement, customers, products }: Props) {
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const preSelectedCustomerId = urlParams.get('customer_id');
+
     const { data, setData, post, put, processing, errors } = useForm({
-        customer_id: requirement?.customer_id || "",
+        customer_id: requirement?.customer_id || (preSelectedCustomerId ? parseInt(preSelectedCustomerId) : ""),
         notes: requirement?.notes || "",
         status: requirement?.status || "pending",
         items: requirement?.items || [
@@ -34,7 +41,7 @@ export default function RequirementForm({ requirement, customers, products }: Pr
 
     const handleItemChange = (index: number, field: keyof RequirementItem, value: any) => {
         const newItems = [...data.items] as RequirementItem[];
-         if (field === "product_id") {
+        if (field === "product_id") {
             const product = products.find(p => p.id === parseInt(value));
             newItems[index].product_id = parseInt(value);
             newItems[index].unit_price = product ? product.unit_price : "";
@@ -57,39 +64,27 @@ export default function RequirementForm({ requirement, customers, products }: Pr
         <form onSubmit={submit} className="max-w-5xl mx-auto space-y-8 pb-10">
             {/* Top Section: Customer & Status */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-card p-6 border rounded-xl shadow-sm">
-                <div className="md:col-span-2 space-y-2">
-                    <label className="text-sm font-bold flex items-center gap-2 uppercase tracking-wider text-muted-foreground">
-                        <Info className="w-4 h-4" /> Customer Information
-                    </label>
-                    <Select
-                        value={data.customer_id.toString()}
-                        onValueChange={(value) => setData("customer_id", parseInt(value))}
-                    >
-                        <SelectTrigger className="h-11">
-                            <SelectValue placeholder="Select Customer" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {customers.map((c: any) => (
-                                <SelectItem key={c.id} value={c.id.toString()}>{c.full_name_with_company || `${c.name} - ${c.company_name}`}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    {errors.customer_id && <p className="text-destructive text-xs italic">{errors.customer_id}</p>}
+                <div className="md:col-span-2 space-y-1">
+                    <GenericCombobox
+                        label="Customer Information"
+                        items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company_name}` }))}
+                        selectedId={data.customer_id}
+                        onSelect={(id) => setData("customer_id", id as number)}
+                        placeholder="Select Customer"
+                        searchPlaceholder="Search customers..."
+                        allowManualInput={false}
+                    />
+                    <ErrorMessage message={errors.customer_id} />
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Status</label>
-                    <Select value={data.status} onValueChange={(v) => setData("status", v)}>
-                        <SelectTrigger className="h-11">
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="pending">Pending</SelectItem>
-                            <SelectItem value="processing">Processing</SelectItem>
-                            <SelectItem value="purchased">Purchased</SelectItem>
-                            <SelectItem value="cancel">Cancel</SelectItem>
-                        </SelectContent>
-                    </Select>
+                    <FormSelect
+                        label="Status"
+                        value={data.status}
+                        onChange={(v) => setData("status", v as Requirement["status"])}
+                        options={RequirementOptions}
+                        error={errors.status}
+                    />
                 </div>
             </div>
 
@@ -117,19 +112,15 @@ export default function RequirementForm({ requirement, customers, products }: Pr
                     {data.items.map((item: any, index: number) => (
                         <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 items-center bg-muted/20 md:bg-transparent p-4 md:p-0 rounded-lg md:rounded-none border md:border-0 relative">
                             <div className="col-span-1 md:col-span-5">
-                                <Select
-                                    value={item.product_id?.toString()}
-                                    onValueChange={(val) => handleItemChange(index, "product_id", val)}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select Product" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {products.map((p) => (
-                                            <SelectItem key={p.id} value={p.id.toString()}>{p.name}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
+                                <GenericCombobox
+                                    label=""
+                                    items={products.map(p => ({ id: p.id, name: p.name }))}
+                                    selectedId={item.product_id}
+                                    onSelect={(id) => handleItemChange(index, "product_id", id)}
+                                    placeholder="Select Product"
+                                    searchPlaceholder="Search products..."
+                                    allowManualInput={false}
+                                />
                             </div>
 
                             <div className="col-span-1 md:col-span-2">

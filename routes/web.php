@@ -32,6 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // --- Customers ---
     Route::prefix('customers')->name('customers.')->group(function () {
         Route::controller(CustomerController::class)->group(function () {
+            Route::patch('{customer}/status', 'updateStatus')->name('update-status');
             Route::delete('bulk-destroy', 'bulkDestroy')->name('bulkDestroy');
             Route::get('export/excel', 'export')->name('export');
             Route::get('print', 'print')->name('print');
@@ -71,6 +72,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // --- Quotations ---
     Route::prefix('quotations')->name('quotations.')->controller(QuotationController::class)->group(function () {
+        Route::patch('{quotation}/status', 'updateStatus')->name('update-status');
         Route::post('{quotation}/send', 'send')->name('send');
         Route::get('{quotation}/download', 'download')->name('download');
         Route::post('{quotation}/duplicate', 'duplicate')->name('duplicate');

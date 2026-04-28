@@ -47,7 +47,7 @@ class CustomerRepository
 
     public function selectOptions(): Collection
     {
-        return $this->query()->select('id', 'name')->get();
+        return $this->query()->select('id', 'name', 'company_id', 'company_name')->get();
     }
 
     public function create(array $data): Customer

@@ -18,6 +18,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Building2, Globe, Mail, MoreHorizontal, Phone, SquarePen, Trash2, MapPin } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { TableBulkActions } from '../table/TableBulkActions';
 
 
 
@@ -55,7 +56,8 @@ const CommonTable = <T extends { id: number }>({
         handleSearchChange,
         handleSelectAllItems,
         handleSelectItem,
-        resetFilters
+        resetFilters,
+        setSelectedItems
     } = useTableFilters({
         data: data,
         routeName: routeName,
@@ -163,132 +165,102 @@ const CommonTable = <T extends { id: number }>({
                     </Button>
 
                     {/* Secondary Actions: Dropdown */}
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="sm" className="h-9 w-9 p-0">
-                                <MoreHorizontal className="h-4 w-4" />
-                                <span className="sr-only">Open menu</span>
-                            </Button>
-                        </DropdownMenuTrigger>
-
-                        <DropdownMenuContent align="end" className="w-52">
-                            {exportRoute && (
-                                <DropdownMenuItem onClick={handleExport} className="cursor-pointer">
-                                    <Download className="mr-2 h-4 w-4" />
-                                    <span>Export {selectedItems.length > 0 ? 'Selected' : 'All'}</span>
-                                </DropdownMenuItem>
-                            )}
-
-                            {printRoute && (
-                                <DropdownMenuItem onClick={handlePrint} className="cursor-pointer">
-                                    <Printer className="mr-2 h-4 w-4" />
-                                    <span>Print {selectedItems.length > 0 ? 'Selected' : 'All'}</span>
-                                </DropdownMenuItem>
-                            )}
-
-                            {selectedItems.length > 0 && (
-                                <>
-                                    <DropdownMenuSeparator />
-                                    <AlertDialogDestructive
-                                        title={`Delete ${selectedItems.length} ${entityName}s?`}
-                                        description="This action cannot be undone. This will permanently delete the selected records."
-                                        onConfirm={() => handleBulkDelete(selectedItems, bulkDeleteRoute || '')}
-                                    >
-                                        {/* We use DropdownMenuItem as the trigger for the Dialog */}
-                                        <DropdownMenuItem
-                                            onSelect={(e) => e.preventDefault()}
-                                            className="text-red-600 focus:text-red-600 cursor-pointer"
-                                        >
-                                            <Trash2 className="mr-2 h-4 w-4" />
-                                            <span>Delete Selected</span>
-                                        </DropdownMenuItem>
-                                    </AlertDialogDestructive>
-                                </>
-                            )}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    <TableBulkActions
+                        selectedItems={selectedItems}
+                        entityName={entityName}
+                        exportRoute={exportRoute}
+                        printRoute={printRoute}
+                        bulkDeleteRoute={bulkDeleteRoute}
+                        handleExport={handleExport}
+                        handlePrint={handlePrint}
+                        handleBulkDelete={(ids, bulkRoute) => {
+                            handleBulkDelete(ids, bulkRoute, {
+                                onSuccess: () => setSelectedItems(new Set()),
+                            });
+                        }}
+                    />
                 </div>
             </div>
 
             {/* Table Container */}
             {/* 1. Added horizontal scroll wrapper and removed 'table-fixed' */}
-<div className="border rounded-lg bg-card text-card-foreground shadow-sm">
-    <div className="overflow-x-auto overflow-y-hidden">
-        <Table className='w-full min-w-[800px] md:min-w-full'>
-            <TableHeader className="bg-muted/50">
-                <TableRow>
-                    {/* Fixed widths for small utility columns */}
-                    <TableHead className="w-[40px] px-4">
-                        <input
-                            type="checkbox"
-                            checked={data.data.length > 0 && selectedItems.length === data.data.length}
-                            onChange={handleSelectAllItems}
-                            className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary align-middle"
-                        />
-                    </TableHead>
-                    <TableHead className="w-[50px] font-bold text-xs">#</TableHead>
+            <div className="border rounded-lg bg-card text-card-foreground shadow-sm">
+                <div className="overflow-x-auto overflow-y-hidden">
+                    <Table className='w-full min-w-200 md:min-w-full'>
+                        <TableHeader className="bg-muted/50">
+                            <TableRow>
+                                {/* Fixed widths for small utility columns */}
+                                <TableHead className="w-10 px-4">
+                                    <input
+                                        type="checkbox"
+                                        checked={data.data.length > 0 && selectedItems.length === data.data.length}
+                                        onChange={handleSelectAllItems}
+                                        className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary align-middle"
+                                    />
+                                </TableHead>
+                                <TableHead className="w-12.5 font-bold text-xs">#</TableHead>
 
-                    {columns.map((column, index) => (
-                        <TableHead
-                            key={index}
-                            className={cn(
-                                "font-bold whitespace-nowrap",
-                                column.className
+                                {columns.map((column, index) => (
+                                    <TableHead
+                                        key={index}
+                                        className={cn(
+                                            "font-bold whitespace-nowrap",
+                                            column.className
+                                        )}
+                                    >
+                                        {column.header}
+                                    </TableHead>
+                                ))}
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {loading ? (
+                                <TableSkeleton columns={columns.length + 2} />
+                            ) : data.data.length === 0 ? (
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={columns.length + 2}
+                                        className="h-32 text-center text-muted-foreground"
+                                    >
+                                        No data found matching your criteria.
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
+                                data.data.map((item, i) => (
+                                    <TableRow key={item.id} className="hover:bg-muted/30 transition-colors">
+                                        <TableCell className='px-4'>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedItems.includes(item.id)}
+                                                onChange={() => handleSelectItem(item.id)}
+                                                className="block w-4 h-4 rounded border-gray-300 text-primary"
+                                            />
+                                        </TableCell>
+
+                                        <TableCell className="text-xs text-muted-foreground">
+                                            {data.from + i}
+                                        </TableCell>
+
+                                        {columns.map((column, colIndex) => (
+                                            <TableCell
+                                                key={colIndex}
+                                                className={cn("py-3", column.className)}
+                                            >
+                                                <div className="max-w-full">
+                                                    {typeof column.accessor === 'function'
+                                                        ? column.accessor(item)
+                                                        : (item[column.accessor as keyof T] as ReactNode)
+                                                    }
+                                                </div>
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                ))
                             )}
-                        >
-                            {column.header}
-                        </TableHead>
-                    ))}
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {loading ? (
-                    <TableSkeleton columns={columns.length + 2} />
-                ) : data.data.length === 0 ? (
-                    <TableRow>
-                        <TableCell
-                            colSpan={columns.length + 2}
-                            className="h-32 text-center text-muted-foreground"
-                        >
-                            No data found matching your criteria.
-                        </TableCell>
-                    </TableRow>
-                ) : (
-                    data.data.map((item, i) => (
-                        <TableRow key={item.id} className="hover:bg-muted/30 transition-colors">
-                            <TableCell className='px-4'>
-                                <input
-                                    type="checkbox"
-                                    checked={selectedItems.includes(item.id)}
-                                    onChange={() => handleSelectItem(item.id)}
-                                    className="block w-4 h-4 rounded border-gray-300 text-primary"
-                                />
-                            </TableCell>
-
-                            <TableCell className="text-xs text-muted-foreground">
-                                {data.from + i}
-                            </TableCell>
-
-                            {columns.map((column, colIndex) => (
-                                <TableCell
-                                    key={colIndex}
-                                    className={cn("py-3", column.className)}
-                                >
-                                    <div className="max-w-full">
-                                        {typeof column.accessor === 'function'
-                                            ? column.accessor(item)
-                                            : (item[column.accessor as keyof T] as ReactNode)
-                                        }
-                                    </div>
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    ))
-                )}
-            </TableBody>
-        </Table>
-    </div>
-</div>
+                        </TableBody>
+                    </Table>
+                </div>
+            </div>
 
             <Pagination routeName={routeName} data={data} />
         </div>
