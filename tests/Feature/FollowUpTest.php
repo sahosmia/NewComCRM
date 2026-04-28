@@ -54,7 +54,8 @@ it('validates_required_fields_on_store', function () {
     $response = $this->actingAs($this->user)
         ->post(route('follow-ups.store'), []);
 
-    $response->assertSessionHasErrors(['customer_id', 'follow_up_date', 'notes', 'status', 'priority']);
+    $response->assertSessionHasErrors(['customer_id', 'follow_up_date', 'status', 'priority']);
+    $response->assertSessionDoesntHaveErrors(['notes']);
 });
 
 it('can_update_an_existing_follow_up', function () {
