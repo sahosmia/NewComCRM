@@ -2,6 +2,7 @@ import { Link } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/layouts/app-layout";
 import { Badge } from "@/components/ui/badge";
+import { formatDateTime } from "@/utils/date-format";
 
 export default function Show({ followUp }: any) {
     const breadcrumbs = [
@@ -31,7 +32,7 @@ export default function Show({ followUp }: any) {
                         </div>
                         <div>
                             <h3 className="text-sm font-medium text-muted-foreground">Follow Up Date</h3>
-                            <p>{new Date(followUp.follow_up_date).toLocaleString()}</p>
+                            <p>{formatDateTime(followUp.follow_up_date)}</p>
                         </div>
                         <div>
                             <h3 className="text-sm font-medium text-muted-foreground">Priority</h3>
@@ -48,7 +49,7 @@ export default function Show({ followUp }: any) {
                         {followUp.completed_at && (
                             <div>
                                 <h3 className="text-sm font-medium text-muted-foreground">Completed At</h3>
-                                <p>{new Date(followUp.completed_at).toLocaleString()}</p>
+                                <p>{formatDateTime(followUp.completed_at)}</p>
                             </div>
                         )}
                     </div>
@@ -59,7 +60,7 @@ export default function Show({ followUp }: any) {
                     {followUp.next_follow_up && (
                         <div>
                             <h3 className="text-sm font-medium text-muted-foreground">Next Follow Up</h3>
-                            <p>{new Date(followUp.next_follow_up).toLocaleString()}</p>
+                            <p>{formatDateTime(followUp.next_follow_up)}</p>
                         </div>
                     )}
                 </div>

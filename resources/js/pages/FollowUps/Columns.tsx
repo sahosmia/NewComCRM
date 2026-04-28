@@ -2,6 +2,7 @@ import type { Column } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { TableRowActions } from '@/components/table/TableRowActions';
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
+import { formatDate } from '@/utils/date-format';
 
 const FOLLOW_UP_OPTIONS = [
     { value: 'pending', label: 'Pending', colorClass: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20' },
@@ -15,7 +16,7 @@ const columns: Column<any>[] = [
     },
     {
         header: 'Follow Up Date',
-        accessor: (item) => new Date(item.follow_up_date).toLocaleDateString(),
+        accessor: (item) => formatDate(item.follow_up_date),
     },
     {
         header: 'Status',

@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use App\Models\Requirement;
+use App\Models\FollowUp;
 use App\Observers\RequirementObserver;
+use App\Observers\FollowUpObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
         Requirement::observe(RequirementObserver::class);
+        FollowUp::observe(FollowUpObserver::class);
     }
 
     /**

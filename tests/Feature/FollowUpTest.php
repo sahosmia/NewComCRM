@@ -54,7 +54,8 @@ it('validates_required_fields_on_store', function () {
     $response = $this->actingAs($this->user)
         ->post(route('follow-ups.store'), []);
 
-    $response->assertSessionHasErrors(['customer_id', 'follow_up_date', 'notes']);
+    $response->assertSessionHasErrors(['customer_id', 'follow_up_date', 'status', 'priority']);
+    $response->assertSessionDoesntHaveErrors(['notes']);
 });
 
 it('can_update_an_existing_follow_up', function () {
@@ -89,4 +90,45 @@ it('can_delete_a_follow_up', function () {
     $this->assertDatabaseMissing('follow_ups', [
         'id' => $followUp->id,
     ]);
+});
+
+it('updates_dates_when_status_is_updated_to_done', function () {
+    $followUp = FollowUp::factory()->create([
+        'user_id' => $this->user->id,
+        'status' => 'pending',
+        'completed_at' => null
+    ]);
+
+    $response = $this->actingAs($this->user)
+        ->patch(route('follow-ups.update-status', $followUp), [
+            'status' => 'done'
+        ]);
+
+    $response->assertRedirect();
+    $followUp->refresh();
+
+    expect($followUp->status)->toBe('done');
+    expect($followUp->completed_at)->not->toBeNull();
+});
+
+it('updates_follow_up_date_when_status_is_updated_from_done_to_pending', function () {
+    $originalDate = now()->subDays(5);
+    $followUp = FollowUp::factory()->create([
+        'user_id' => $this->user->id,
+        'status' => 'done',
+        'follow_up_date' => $originalDate,
+        'completed_at' => now()
+    ]);
+
+    $response = $this->actingAs($this->user)
+        ->patch(route('follow-ups.update-status', $followUp), [
+            'status' => 'pending'
+        ]);
+
+    $response->assertRedirect();
+    $followUp->refresh();
+
+    expect($followUp->status)->toBe('pending');
+    expect($followUp->completed_at)->toBeNull();
+    expect($followUp->follow_up_date->gt($originalDate))->toBeTrue();
 });
