@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
 import { cn } from "@/lib/utils";
+import StatusBadge from "@/components/shared/StatusBadge";
 
 export default function Show({ requirement }: any) {
     const breadcrumbs = [
@@ -45,12 +46,9 @@ export default function Show({ requirement }: any) {
                         <div>
                             <div className="flex items-center gap-2">
                                 <h1 className="text-2xl font-black tracking-tight">REQ-{requirement.id}</h1>
-                                <Badge className={cn(
-                                    "capitalize font-bold",
-                                    requirement.status === 'pending' ? "bg-amber-100 text-amber-700 hover:bg-amber-100" : "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
-                                )}>
-                                    {requirement.status}
-                                </Badge>
+
+
+                                <StatusBadge status={requirement.status} />
                             </div>
                             <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1 font-medium">
                                 <Calendar className="w-3 h-3 text-primary" />

@@ -1,5 +1,7 @@
 import type { UserType, Column } from '@/types';
 import { TableRowActions } from '@/components/table/TableRowActions';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { Link } from '@inertiajs/react';
 
 const columns: Column<UserType>[] = [
     {
