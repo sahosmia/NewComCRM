@@ -1,8 +1,13 @@
 import { Building2, Phone, MapPin, } from 'lucide-react';
 import type { CustomerType, Column } from '@/types';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
 import { TableRowActions } from '@/components/table/TableRowActions';
+import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
+
+const CUSTOMER_STATUS_OPTIONS = [
+    { value: 'active', label: 'Active', colorClass: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' },
+    { value: 'inactive', label: 'Inactive', colorClass: 'bg-gray-500/10 text-gray-600 border-gray-500/20' },
+];
 
 const columns: Column<CustomerType>[] = [
     {
@@ -72,17 +77,14 @@ const columns: Column<CustomerType>[] = [
         header: 'Status',
         accessor: (item: any) => (
             <div className='flex flex-col gap-2'>
-                <Badge
-                    variant={item.status === 'active' ? 'default' : 'secondary'}
-                    className={cn(
-                        "capitalize text-[10px] px-1 py-0 h-4",
-                        item.status === 'active' ? "bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 border-emerald-500/20" : ""
-                    )}
-                >
-                    {item.status}
-                </Badge>
+                <InlineStatusUpdate
+                    id={item.id}
+                    currentStatus={item.status}
+                    routeName="customers.update-status"
+                    options={CUSTOMER_STATUS_OPTIONS}
+                />
 
-                <Badge variant="outline" className="text-[10px] px-1 py-0 h-4 capitalize font-normal">
+                <Badge variant="outline" className="text-[10px] px-1 py-0 h-4 capitalize font-normal w-fit">
                     {item.type}
                 </Badge>
             </div>

@@ -83,6 +83,19 @@ class CustomerController extends Controller
         return back()->with('success', 'Customer deleted successfully!');
     }
 
+    public function updateStatus(Request $request, Customer $customer)
+    {
+        $this->authorize('update', $customer);
+
+        $validated = $request->validate([
+            'status' => 'required|string|in:active,inactive',
+        ]);
+
+        $customer->update(['status' => $validated['status']]);
+
+        return back()->with('success', 'Customer status updated successfully');
+    }
+
     public function bulkDestroy(Request $request)
     {
         $ids = $request->input('ids', []);

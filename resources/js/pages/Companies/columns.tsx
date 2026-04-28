@@ -1,10 +1,7 @@
 import { Link } from '@inertiajs/react';
-import { Building2, Globe, Mail, MoreHorizontal, Phone, SquarePen, Trash2, MapPin } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Building2, Globe, Mail, Phone, MapPin } from 'lucide-react';
 import type { Column } from '@/types';
-import { handleDelete } from '@/utils/table';
-import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
+import { TableRowActions } from '@/components/table/TableRowActions';
 
 const columns: Column<any>[] = [
     {
@@ -58,36 +55,12 @@ const columns: Column<any>[] = [
     {
         header: '',
         accessor: (item: any) => (
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="w-8 h-8 p-0">
-                        <MoreHorizontal className="w-4 h-4" />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[160px]">
-                    <DropdownMenuItem asChild>
-                        <Link href={route('companies.edit', item.id)}>
-                            <SquarePen className="w-4 h-4 mr-2" /> Edit Company
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <AlertDialogDestructive
-                        title="Delete Company?"
-                        description={`This action cannot be undone. All data for ${item.name} will be permanently removed.`}
-                        onConfirm={() => handleDelete(item.id, 'companies.destroy', {
-                            redirectTo: 'companies.index',
-                        })}
-                    >
-                        <DropdownMenuItem
-                            onSelect={(e) => e.preventDefault()}
-                            className="text-red-600 focus:text-red-600 cursor-pointer"
-                        >
-                            <Trash2 className="w-4 h-4 mr-2 text-red-600 focus:text-red-600 cursor-pointer" />
-                            <span>Delete</span>
-                        </DropdownMenuItem>
-                    </AlertDialogDestructive>
-                </DropdownMenuContent>
-            </DropdownMenu>
+            <TableRowActions
+                item={item}
+                resource="companies"
+                label="Company"
+                hideView
+            />
         ),
         className: 'w-[10%]',
     },
