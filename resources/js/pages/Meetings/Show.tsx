@@ -5,9 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-    Calendar, MapPin, FileText, ClipboardList,
-    ArrowLeft, Edit, MessageSquare, Clock
+    Calendar, MapPin, ClipboardList,
+    MessageSquare, Clock
 } from "lucide-react";
+import StatusBadge from "@/components/shared/StatusBadge";
 
 export default function Show({ meeting }: any) {
     const breadcrumbs = [
@@ -29,6 +30,8 @@ export default function Show({ meeting }: any) {
                             <Badge variant="secondary" className="bg-primary/10 text-primary border-none">
                                 Meeting ID: #{meeting.id}
                             </Badge>
+                            <StatusBadge status={meeting.status} className="shadow-sm" />
+
                         </div>
                         <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                             <div className="flex items-center gap-1">
@@ -47,12 +50,12 @@ export default function Show({ meeting }: any) {
                     <div className="flex gap-2 shrink-0">
                         <Button variant="outline" size="sm" asChild>
                             <Link href={route("meetings.index")}>
-                               Back
+                                Back
                             </Link>
                         </Button>
                         <Button size="sm" asChild>
                             <Link href={route("meetings.edit", meeting.id)}>
-                                 Edit
+                                Edit
                             </Link>
                         </Button>
                     </div>

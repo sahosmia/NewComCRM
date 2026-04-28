@@ -115,6 +115,8 @@ export default function Show({ customer }: { customer: any }) {
                                 <div className="bg-muted/30 p-4 rounded-lg border italic text-sm text-muted-foreground min-h-[100px]">
                                     {customer.remarks || "No internal notes added yet."}
                                 </div>
+
+
                             </CardContent>
                         </Card>
                     </div>
@@ -226,6 +228,8 @@ export default function Show({ customer }: { customer: any }) {
                                                     <p className="text-sm text-muted-foreground line-clamp-2 italic">
                                                         "{fu.notes || "No notes provided."}"
                                                     </p>
+
+
                                                     <div className="mt-3 flex items-center gap-4">
                                                         <Badge variant="secondary" className="text-[10px] h-5">
                                                             Priority: {fu.priority}
