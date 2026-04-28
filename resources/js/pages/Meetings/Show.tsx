@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import AppLayout from "@/layouts/app-layout";
 import { Badge } from "@/components/ui/badge";
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
+import { EditResourceButton, DeleteResourceButton } from "@/components/resource-actions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     Calendar, MapPin, FileText, ClipboardList,
@@ -50,11 +51,13 @@ export default function Show({ meeting }: any) {
                                Back
                             </Link>
                         </Button>
-                        <Button size="sm" asChild>
-                            <Link href={route("meetings.edit", meeting.id)}>
-                                 Edit
-                            </Link>
-                        </Button>
+                        <EditResourceButton href={route("meetings.edit", meeting.id)} />
+                        <DeleteResourceButton
+                            id={meeting.id}
+                            routeName="meetings.destroy"
+                            label="Meeting"
+                            redirectTo="meetings.index"
+                        />
                     </div>
                 </div>
 

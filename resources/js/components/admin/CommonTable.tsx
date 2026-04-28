@@ -7,7 +7,7 @@ import { Link } from '@inertiajs/react';
 import React, { ReactNode } from 'react';
 import { Input } from '@/components/ui/input';
 import { TableFilters } from '../table/TableFilters';
-import { RotateCcw, Download, Printer, Plus } from 'lucide-react';
+import { RotateCcw, Download, Printer } from 'lucide-react';
 import { router } from "@inertiajs/react";
 import Pagination from './Pagination';
 import { useEffect, useState } from "react";
@@ -19,6 +19,7 @@ import { Building2, Globe, Mail, MoreHorizontal, Phone, SquarePen, Trash2, MapPi
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { TableBulkActions } from '../table/TableBulkActions';
+import { AddResourceButton } from '../resource-actions';
 
 
 
@@ -157,12 +158,12 @@ const CommonTable = <T extends { id: number }>({
                     )}
 
                     {/* Primary Action: Create */}
-                    <Button size="sm" asChild className="gap-2">
-                        <Link href={route(create_route)}>
-                            <Plus className="h-4 w-4" />
-                            <span>Add {entityName}</span>
-                        </Link>
-                    </Button>
+                    {create_route && (
+                        <AddResourceButton
+                            href={route(create_route)}
+                            label={`Add ${entityName || 'Item'}`}
+                        />
+                    )}
 
                     {/* Secondary Actions: Dropdown */}
                     <TableBulkActions

@@ -2,9 +2,10 @@ import AppLayout from "@/layouts/app-layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2, Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare, LayoutList, Plus } from "lucide-react";
+import { Mail, Phone, MapPin, User, Calendar, ArrowLeft, MessageSquare, LayoutList, Plus } from "lucide-react";
 import { Head, Link } from "@inertiajs/react";
 import type { CustomerType } from "@/types";
+import { EditResourceButton, DeleteResourceButton } from "@/components/resource-actions";
 
 export default function Show({ customer }: { customer: any }) {
     return (
@@ -34,11 +35,13 @@ export default function Show({ customer }: { customer: any }) {
                                 <ArrowLeft className="w-4 h-4 mr-2" /> Back
                             </Link>
                         </Button>
-                        <Button asChild>
-                            <Link href={route("customers.edit", customer.id)}>
-                                <Edit className="w-4 h-4 mr-2" /> Edit Profile
-                            </Link>
-                        </Button>
+                        <EditResourceButton href={route("customers.edit", customer.id)} label="Edit Profile" />
+                        <DeleteResourceButton
+                            id={customer.id}
+                            routeName="customers.destroy"
+                            label="Customer"
+                            redirectTo="customers.index"
+                        />
                     </div>
                 </div>
 
