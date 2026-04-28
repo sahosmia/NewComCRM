@@ -22,9 +22,10 @@ it('can_list_all_follow_ups', function () {
         ->get(route('follow-ups.index'));
 
     $response->assertStatus(200);
-    $response->assertInertia(fn ($page) => $page
-        ->component('FollowUps/Index')
-        ->has('followUps.data', 3)
+    $response->assertInertia(
+        fn($page) => $page
+            ->component('FollowUps/Index')
+            ->has('followUps.data', 3)
     );
 });
 
@@ -54,7 +55,8 @@ it('validates_required_fields_on_store', function () {
     $response = $this->actingAs($this->user)
         ->post(route('follow-ups.store'), []);
 
-    $response->assertSessionHasErrors(['customer_id', 'follow_up_date', 'notes']);
+    $response->assertSessionHasErrors(['customer_id', 'follow_up_date', 'status', 'priority']);
+    $response->assertSessionDoesntHaveErrors(['notes']);
 });
 
 it('can_update_an_existing_follow_up', function () {

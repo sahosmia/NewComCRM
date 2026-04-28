@@ -1,9 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { formatDisplayDate } from "@/utils/date-format"
 import { Calendar } from "@/components/ui/calendar"
 import {
   Popover,
@@ -33,7 +33,7 @@ export function DatePickerSimple({ date, onSelect, placeholder = "Pick a date" }
             )}
           >
             <CalendarIcon className="mr-2 h-3 w-3" />
-            {date ? format(date, "PPP") : <span>{placeholder}</span>}
+            {date ? formatDisplayDate(date) : <span>{placeholder}</span>}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">

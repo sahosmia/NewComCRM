@@ -27,7 +27,6 @@ trait ValidatesFollowUpAttributes
         return [
             'customer_id.required' => 'Please select a customer',
             'follow_up_date.required' => 'Follow up date is required',
-            'notes.required' => 'Notes are required',
             'status.required' => 'Please select a status',
             'priority.required' => 'Please select a priority',
         ];
