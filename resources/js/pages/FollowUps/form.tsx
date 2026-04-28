@@ -19,6 +19,9 @@ interface Props {
 }
 
 export default function FollowUpForm({ followUp, customers }: Props) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const preSelectedCustomerId = urlParams.get('customer_id');
+
     const { data, setData, post, put, processing, errors } = useForm<{
         customer_id: number | string;
         follow_up_date: string;
@@ -27,7 +30,7 @@ export default function FollowUpForm({ followUp, customers }: Props) {
         priority: string;
         next_follow_up: string;
     }>({
-        customer_id: followUp?.customer_id || 0,
+        customer_id: followUp?.customer_id || (preSelectedCustomerId ? parseInt(preSelectedCustomerId) : 0),
         follow_up_date: followUp?.follow_up_date ? new Date(followUp.follow_up_date).toISOString().slice(0, 16) : "",
         notes: followUp?.notes || "",
         status: followUp?.status || "pending",

@@ -16,8 +16,12 @@ interface Props {
 }
 
 export default function RequirementForm({ requirement, customers, products }: Props) {
+    // Check for customer_id in URL params if we're creating a new requirement
+    const urlParams = new URLSearchParams(window.location.search);
+    const preSelectedCustomerId = urlParams.get('customer_id');
+
     const { data, setData, post, put, processing, errors } = useForm({
-        customer_id: requirement?.customer_id || "",
+        customer_id: requirement?.customer_id || (preSelectedCustomerId ? parseInt(preSelectedCustomerId) : ""),
         notes: requirement?.notes || "",
         status: requirement?.status || "pending",
         items: requirement?.items || [

@@ -19,8 +19,11 @@ interface Props {
 }
 
 export default function MeetingForm({ meeting, customers }: Props) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const preSelectedCustomerId = urlParams.get('customer_id');
+
     const { data, setData, post, put, processing, errors } = useForm({
-        customer_id: meeting?.customer_id || "",
+        customer_id: meeting?.customer_id || (preSelectedCustomerId ? parseInt(preSelectedCustomerId) : ""),
         title: meeting?.title || "",
         start_time: meeting?.start_time ? new Date(meeting.start_time).toISOString().slice(0, 16) : "",
         end_time: meeting?.end_time ? new Date(meeting.end_time).toISOString().slice(0, 16) : "",

@@ -12,16 +12,20 @@ import {
 import { Quotation, QuotationItem } from "@/types/quotation";
 import { Product } from "@/types/product";
 import { Plus, Trash } from "lucide-react";
+import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 
 interface Props {
     quotation?: Quotation;
-    customers: { id: number; name: string }[];
+    customers: { id: number; name: string; full_name_with_company?: string }[];
     products: Product[];
 }
 
 export default function QuotationForm({ quotation, customers, products }: Props) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const preSelectedCustomerId = urlParams.get('customer_id');
+
     const { data, setData, post, put, processing, errors } = useForm({
-        customer_id: quotation?.customer_id || "",
+        customer_id: quotation?.customer_id || (preSelectedCustomerId ? parseInt(preSelectedCustomerId) : ""),
         valid_until: quotation?.valid_until ? new Date(quotation.valid_until).toISOString().slice(0, 10) : "",
         items: quotation?.items || [{ product_id: "", quantity: 1, unit_price: "0", description: "" }],
         tax: quotation?.tax || "0",
@@ -76,24 +80,17 @@ export default function QuotationForm({ quotation, customers, products }: Props)
     return (
         <form onSubmit={submit} className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
-                <div>
-                    <label className="text-sm font-medium">Customer</label>
-                    <Select
-                        value={data.customer_id.toString()}
-                        onValueChange={(value) => setData("customer_id", parseInt(value))}
-                        disabled={!!quotation}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select Customer" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {customers.map((customer) => (
-                                <SelectItem key={customer.id} value={customer.id.toString()}>
-                                    {customer.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                <div className="space-y-1">
+                    <GenericCombobox
+                        label="Customer"
+                        items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || c.name }))}
+                        selectedId={data.customer_id}
+                        onSelect={(id) => setData("customer_id", id as number)}
+                        placeholder="Select Customer"
+                        searchPlaceholder="Search customers..."
+                        allowManualInput={false}
+                        className={!!quotation ? "opacity-50 pointer-events-none" : ""}
+                    />
                     {errors.customer_id && <div className="text-red-500 text-sm">{errors.customer_id}</div>}
                 </div>
                 <div>
@@ -118,23 +115,16 @@ export default function QuotationForm({ quotation, customers, products }: Props)
 
                 {data.items.map((item: any, index) => (
                     <div key={index} className="grid grid-cols-12 gap-2 items-end border p-2 rounded">
-                        <div className="col-span-4">
-                            <label className="text-xs">Product</label>
-                            <Select
-                                value={item.product_id.toString()}
-                                onValueChange={(value) => updateItem(index, 'product_id', value)}
-                            >
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Product" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {products.map((product) => (
-                                        <SelectItem key={product.id} value={product.id.toString()}>
-                                            {product.name}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                        <div className="col-span-4 space-y-1">
+                            <GenericCombobox
+                                label="Product"
+                                items={products.map(p => ({ id: p.id, name: p.name }))}
+                                selectedId={item.product_id}
+                                onSelect={(id) => updateItem(index, 'product_id', id)}
+                                placeholder="Select Product"
+                                searchPlaceholder="Search products..."
+                                allowManualInput={false}
+                            />
                         </div>
                         <div className="col-span-2">
                             <label className="text-xs">Qty</label>
