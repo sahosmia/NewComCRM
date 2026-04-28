@@ -3,19 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 class Customer extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $fillable = [
         'name',
         'designation',
         'company_id',
-        'company_name',
         'type',
         'phones',
         'email',
@@ -37,7 +35,7 @@ class Customer extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['name', 'company_name', 'type', 'email', 'status'])
+            ->logOnly(['name', 'type', 'email', 'status'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
     }

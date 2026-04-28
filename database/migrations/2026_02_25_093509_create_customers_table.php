@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('designation')->nullable();
-            $table->string('company_name');
+            $table->foreignId('company_id')->nullable()->constrained()->onDelete('set null');
             $table->string('email')->nullable();
             $table->foreignId('assigned_to')->constrained('users')->onDelete('cascade');
             $table->enum('type', ['corporate', 'reseller', 'personal'])->default('corporate');
@@ -24,7 +24,6 @@ return new class extends Migration
             $table->text('remarks')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
-            $table->softDeletes();
 
             $table->index('assigned_to');
             $table->index('status');
