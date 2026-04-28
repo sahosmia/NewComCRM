@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->dateTime('follow_up_date');
-            $table->text('notes');
+            $table->text('notes')->nullable();
             $table->enum('status', [
                 'price_shared',
                 'negotiation',

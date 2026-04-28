@@ -1,23 +1,23 @@
-import { Link } from "@inertiajs/react";
+import { Link, Head } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/layouts/app-layout";
-import { Head } from "@inertiajs/react";
 import { Badge } from "@/components/ui/badge";
 import {
     Calendar,
-    User,
-    Building2,
-    Mail,
-    Phone,
     FileText,
     ArrowLeft,
-    Package
+    Package,
+    Printer,
+    FileCheck,
+    History
 } from "lucide-react";
+import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
+import { cn } from "@/lib/utils";
 
 export default function Show({ requirement }: any) {
     const breadcrumbs = [
         { title: "Requirements", href: route('requirements.index') },
-        { title: `Details #${requirement.id}`, href: route('requirements.show', requirement.id) }
+        { title: `REQ-${requirement.id}`, href: "#" }
     ];
 
     const formatCurrency = (amount: number) => {
@@ -32,9 +32,10 @@ export default function Show({ requirement }: any) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Requirement #${requirement.id}`} />
 
-            <div className="p-6 max-w-5xl mx-auto space-y-6">
-                {/* Header Section */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="p-6 max-w-6xl mx-auto space-y-6">
+
+                {/* Top Action Bar */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-background">
                     <div className="flex items-center gap-3">
                         <Link href={route('requirements.index')}>
                             <Button variant="ghost" size="icon" className="rounded-full">
@@ -42,120 +43,120 @@ export default function Show({ requirement }: any) {
                             </Button>
                         </Link>
                         <div>
-                            <h1 className="text-2xl font-bold tracking-tight">Requirement #{requirement.id}</h1>
-                            <div className="flex items-center gap-2 text-muted-foreground mt-1 text-sm">
-                                <Calendar className="w-4 h-4" />
-                                <span>Created on {new Date(requirement.created_at).toLocaleDateString()}</span>
-                                <Badge variant="secondary" className="ml-2 capitalize">{requirement.status}</Badge>
+                            <div className="flex items-center gap-2">
+                                <h1 className="text-2xl font-black tracking-tight">REQ-{requirement.id}</h1>
+                                <Badge className={cn(
+                                    "capitalize font-bold",
+                                    requirement.status === 'pending' ? "bg-amber-100 text-amber-700 hover:bg-amber-100" : "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+                                )}>
+                                    {requirement.status}
+                                </Badge>
                             </div>
+                            <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1 font-medium">
+                                <Calendar className="w-3 h-3 text-primary" />
+                                Created on {new Date(requirement.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                            </p>
                         </div>
                     </div>
-                    <div className="flex gap-2">
-                        <Link href={route("requirements.edit", requirement.id)}>
-                            <Button variant="outline">Edit Requirement</Button>
+
+                    <div className="flex items-center gap-2 w-full md:w-auto">
+                        <Button variant="outline" size="sm" className="flex-1 md:flex-none">
+                            <Printer className="w-4 h-4 mr-2" /> Print
+                        </Button>
+                        <Link href={route("requirements.edit", requirement.id)} className="flex-1 md:flex-none">
+                            <Button variant="outline" size="sm" className="w-full">Edit</Button>
                         </Link>
-                        <Button className="bg-blue-600 hover:bg-blue-700 text-white">Generate Quote</Button>
+                        <Button className="bg-blue-600 hover:bg-blue-700 text-white flex-1 md:flex-none shadow-md">
+                            <FileCheck className="w-4 h-4 mr-2" /> Generate Quote
+                        </Button>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Left Column: Customer Details */}
-                    <div className="md:col-span-1 space-y-6">
-                        <div className="bg-card border rounded-xl p-5 shadow-sm space-y-4">
-                            <div className="flex items-center gap-2 border-b pb-3 mb-2">
-                                <User className="w-5 h-5 text-blue-500" />
-                                <h2 className="font-semibold italic uppercase text-sm tracking-wider">Customer Info</h2>
-                            </div>
-                            <div className="space-y-3">
-                                <div>
-                                    <p className="text-xs text-muted-foreground uppercase">Name</p>
-                                    <p className="font-medium text-blue-600 underline underline-offset-4 decoration-blue-200">{requirement.customer?.name}</p>
-                                </div>
-                                <div className="flex items-start gap-2">
-                                    <Building2 className="w-4 h-4 text-muted-foreground mt-1" />
-                                    <div>
-                                        <p className="text-xs text-muted-foreground uppercase">Company</p>
-                                        <p className="text-sm">{requirement.customer?.company_name}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-2">
-                                    <Mail className="w-4 h-4 text-muted-foreground mt-1" />
-                                    <div>
-                                        <p className="text-xs text-muted-foreground uppercase">Email</p>
-                                        <p className="text-sm">{requirement.customer?.email}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-2">
-                                    <Phone className="w-4 h-4 text-muted-foreground mt-1" />
-                                    <div>
-                                        <p className="text-xs text-muted-foreground uppercase">Phone</p>
-                                        <p className="text-sm">{requirement.customer?.phones?.[0]}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                    {/* Left Side: Customer & Internal Info (4 Columns) */}
+                    <div className="lg:col-span-4 space-y-6">
+                        <CustomerInfoCard customer={requirement.customer} />
 
                         {/* Notes Section */}
                         {requirement.notes && (
-                            <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 shadow-sm">
-                                <div className="flex items-center gap-2 mb-3">
-                                    <FileText className="w-5 h-5 text-amber-600" />
-                                    <h2 className="font-semibold text-amber-800 text-sm uppercase">Internal Notes</h2>
+                            <div className="bg-amber-50/50 border border-amber-200 rounded-xl p-5 shadow-sm relative overflow-hidden">
+                                <div className="absolute top-0 right-0 p-2 opacity-10">
+                                    <FileText className="w-12 h-12 text-amber-600" />
                                 </div>
-                                <p className="text-sm text-amber-900 whitespace-pre-wrap leading-relaxed italic">
+                                <h2 className="font-bold text-amber-800 text-[10px] uppercase tracking-widest mb-3 flex items-center gap-2">
+                                    <FileText className="w-3 h-3" />
+                                    Internal Notes
+                                </h2>
+                                <p className="text-sm text-amber-900/80 leading-relaxed italic relative z-10">
                                     "{requirement.notes}"
                                 </p>
                             </div>
                         )}
+
+                        {/* Quick Logs/History Placeholder */}
+                        <div className="border border-dashed rounded-xl p-5 flex items-center justify-center text-muted-foreground italic text-xs gap-2">
+                            <History className="w-3 h-3" />
+                            No recent activity logs.
+                        </div>
                     </div>
 
-                    {/* Right Column: Items List Table */}
-                    <div className="md:col-span-2">
+                    {/* Right Side: Items Table (8 Columns) */}
+                    <div className="lg:col-span-8">
                         <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
-                            <div className="p-5 border-b bg-muted/30 flex justify-between items-center">
+                            <div className="p-5 border-b bg-muted/20 flex justify-between items-center">
                                 <div className="flex items-center gap-2">
-                                    <Package className="w-5 h-5 text-blue-500" />
-                                    <h2 className="font-bold uppercase text-sm tracking-wider">Requirement Items</h2>
+                                    <Package className="w-4 h-4 text-primary" />
+                                    <h2 className="font-bold text-sm tracking-tight uppercase">Requirement Items</h2>
                                 </div>
-                                <Badge variant="outline" className="bg-gray-600">{requirement.items?.length} Items</Badge>
+                                <Badge variant="secondary" className="font-mono text-[10px]">
+                                    {requirement.items?.length || 0} Total Items
+                                </Badge>
                             </div>
-                            <table className="w-full text-left text-sm">
-                                <thead className="bg-muted/50 text-muted-foreground uppercase text-[10px] font-bold">
-                                    <tr>
-                                        <th className="px-5 py-3">Product Description</th>
-                                        <th className="px-5 py-3 text-center">Qty</th>
-                                        <th className="px-5 py-3 text-right">Unit Price</th>
-                                        <th className="px-5 py-3 text-right">Subtotal</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y">
-                                    {requirement.items?.map((item: any) => (
-                                        <tr key={item.id} className="hover:bg-muted/20 transition-colors">
-                                            <td className="px-5 py-4">
-                                                <p className="font-medium">{item.product?.name}</p>
-                                                <p className="text-[11px] text-muted-foreground">{item.product?.brand}</p>
-                                            </td>
-                                            <td className="px-5 py-4 text-center font-mono">
-                                                {item.quantity}
-                                            </td>
-                                            <td className="px-5 py-4 text-right font-mono">
-                                                {formatCurrency(item.unit_price)}
-                                            </td>
-                                            <td className="px-5 py-4 text-right font-bold text-blue-600">
-                                                {formatCurrency(item.total_price)}
+
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left text-sm">
+                                    <thead className="bg-muted/30 text-muted-foreground uppercase text-[10px] font-bold tracking-wider border-b">
+                                        <tr>
+                                            <th className="px-6 py-4">Product Description</th>
+                                            <th className="px-6 py-4 text-center">Qty</th>
+                                            <th className="px-6 py-4 text-right whitespace-nowrap">Unit Price</th>
+                                            <th className="px-6 py-4 text-right">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-border/50">
+                                        {requirement.items?.map((item: any) => (
+                                            <tr key={item.id} className="hover:bg-muted/5 transition-colors group">
+                                                <td className="px-6 py-4">
+                                                    <p className="font-semibold text-foreground leading-none">{item.product?.name}</p>
+                                                    <p className="text-[10px] text-muted-foreground mt-1.5 uppercase font-medium tracking-tighter">
+                                                        Brand: <span className="text-foreground/70">{item.product?.brand || 'N/A'}</span>
+                                                    </p>
+                                                </td>
+                                                <td className="px-6 py-4 text-center font-mono font-medium">
+                                                    {item.quantity}
+                                                </td>
+                                                <td className="px-6 py-4 text-right font-mono text-xs text-muted-foreground">
+                                                    {formatCurrency(item.unit_price)}
+                                                </td>
+                                                <td className="px-6 py-4 text-right font-bold text-primary">
+                                                    {formatCurrency(item.total_price)}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                    <tfoot className="bg-primary/[0.02] border-t-2 border-primary/10">
+                                        <tr>
+                                            <td colSpan={3} className="px-6 py-5 text-right uppercase text-[10px] font-black tracking-[0.2em] text-muted-foreground">Grand Total Amount</td>
+                                            <td className="px-6 py-5 text-right">
+                                                <span className="text-xl font-black text-primary tracking-tighter">
+                                                    {formatCurrency(requirement.grand_total)}
+                                                </span>
                                             </td>
                                         </tr>
-                                    ))}
-                                </tbody>
-                                <tfoot className="bg-muted/30 font-bold border-t-2 border-muted">
-                                    <tr>
-                                        <td colSpan={3} className="px-5 py-4 text-right uppercase text-xs tracking-widest">Grand Total</td>
-                                        <td className="px-5 py-4 text-right text-lg text-blue-700">
-                                            {formatCurrency(requirement.grand_total)}
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                                    </tfoot>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
