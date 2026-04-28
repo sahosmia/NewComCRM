@@ -24,11 +24,7 @@ class DatabaseSeeder extends Seeder
             MeetingSeeder::class,
         ]);
 
-        Customer::factory()
-            ->count(10)
-            ->inactive()
-            ->create();
-
+       Customer::factory()->count(5)->state(['status' => 'inactive'])->create();
         Requirement::factory()
             ->hasItems(3)
             ->create();

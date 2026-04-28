@@ -18,7 +18,6 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->enum('status', ['pending', 'processing', 'purchased', 'cancel'])->default('pending');
             $table->timestamps();
-            $table->softDeletes();
 
             $table->index('customer_id');
         });

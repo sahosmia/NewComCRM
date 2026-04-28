@@ -18,12 +18,8 @@ return new class extends Migration
             $table->dateTime('follow_up_date');
             $table->text('notes')->nullable();
             $table->enum('status', [
-                'price_shared',
-                'negotiation',
-                'purchase',
-                'lost',
                 'pending',
-                'follow_up'
+                'done',
             ])->default('pending');
             $table->enum('priority', ['high', 'medium', 'low'])->default('medium');
             $table->dateTime('completed_at')->nullable();

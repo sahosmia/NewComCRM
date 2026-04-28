@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Company;
 use Illuminate\Database\Seeder;
 
 class CustomerSeeder extends Seeder
@@ -63,7 +64,14 @@ class CustomerSeeder extends Seeder
         ];
 
         foreach ($customers as $customerData) {
+            $company = Company::firstOrCreate([
+                'name' => $customerData['company_name']
+            ]);
+
+            unset($customerData['company_name']);
+
             $customer = Customer::create(array_merge($customerData, [
+                'company_id' => $company->id,
                 'assigned_to' => $users->random()->id
             ]));
 

@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('supplier_name')->nullable()->index();
             $table->text('source')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
