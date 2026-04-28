@@ -12,11 +12,10 @@ trait ValidatesFollowUpAttributes
         return [
             'customer_id'    => 'required|exists:customers,id',
             'follow_up_date' => 'required|date',
-            'notes'          => 'required|string',
+            'notes'          => 'nullable|string',
             'status'         => 'required|in:pending,done',
             'priority'       => 'required|in:high,medium,low',
             'completed_at'   => 'nullable|date',
-            'next_follow_up' => 'nullable|date|after:follow_up_date',
         ];
     }
 

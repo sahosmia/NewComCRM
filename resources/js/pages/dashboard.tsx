@@ -28,7 +28,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Dashboard({ stats, todayFollowups, upcomingMeetings, chartData }: DashboardProps) {
-    console.log(upcomingMeetings);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
