@@ -88,4 +88,17 @@ class QuotationController extends Controller
         return redirect()->route('quotations.index')
             ->with('success', 'Quotation deleted successfully.');
     }
+
+    public function updateStatus(Request $request, Quotation $quotation)
+    {
+        $this->authorize('update', $quotation);
+
+        $validated = $request->validate([
+            'status' => 'required|string|in:draft,sent,accepted,declined',
+        ]);
+
+        $quotation->update(['status' => $validated['status']]);
+
+        return back()->with('success', 'Quotation status updated successfully');
+    }
 }

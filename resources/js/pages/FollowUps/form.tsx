@@ -11,10 +11,11 @@ import {
 } from "@/components/ui/select";
 import type { FollowUp } from "@/types/follow-up";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
+import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 
 interface Props {
     followUp?: FollowUp;
-    customers: { id: number; name: string }[];
+    customers: { id: number; name: string; full_name_with_company?: string }[];
 }
 
 export default function FollowUpForm({ followUp, customers }: Props) {
@@ -46,25 +47,17 @@ export default function FollowUpForm({ followUp, customers }: Props) {
 
     return (
         <form onSubmit={submit} className="space-y-4">
-            <div>
-                <label className="text-sm font-medium">Customer</label>
-                <Select
-                    value={data.customer_id.toString()}
-                    onValueChange={(value) => setData("customer_id", parseInt(value))}
-                >
-                    <SelectTrigger>
-                        <SelectValue placeholder="Select Customer" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {customers.map((customer: any) => (
-                            <SelectItem key={customer.id} value={customer.id.toString()}>
-                                {customer.full_name_with_company || customer.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
+            <div className="space-y-1">
+                <GenericCombobox
+                    label="Customer"
+                    items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || c.name }))}
+                    selectedId={data.customer_id}
+                    onSelect={(id) => setData("customer_id", id as number)}
+                    placeholder="Select Customer"
+                    searchPlaceholder="Search customers..."
+                    allowManualInput={false}
+                />
                 <ErrorMessage message={errors.customer_id} />
-
             </div>
 
             <div>
