@@ -3,7 +3,7 @@ import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import ErrorMessage from "@/components/admin/ErrorMessage";
+import ErrorMessage from "@/components/admin/form/ErrorMessage";
 
 interface Props {
     company?: any;

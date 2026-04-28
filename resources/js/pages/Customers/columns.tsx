@@ -1,12 +1,8 @@
-import { Link } from '@inertiajs/react';
-import { Building2, FileText, MoreHorizontal, Phone, SquarePen, Trash2, MapPin, } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Building2, Phone, MapPin, } from 'lucide-react';
 import type { CustomerType, Column } from '@/types';
-import { handleDelete } from '@/utils/table';
 import { Badge } from '@/components/ui/badge';
-import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
 import { cn } from '@/lib/utils';
+import { TableRowActions } from '@/components/table/TableRowActions';
 
 const columns: Column<CustomerType>[] = [
     {
@@ -52,7 +48,7 @@ const columns: Column<CustomerType>[] = [
                         </span>
                     )}
                 </div>
-                <span className="text-xs text-muted-foreground">{item.email}</span>
+                <span className="text-xs text-muted-foreground truncate">{item.email}</span>
             </div>
         ),
         className: 'w-[15%]',
@@ -62,11 +58,8 @@ const columns: Column<CustomerType>[] = [
         accessor: (item: any) => (
             <div className="flex items-center gap-2">
                 {item.assigned_user ? (
-                    <div className="flex items-center gap-2">
-                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-[10px] font-medium text-primary border border-primary/20">
-                            {item.assigned_user.name.charAt(0)}
-                        </div>
-                        <span className="text-sm font-medium">{item.assigned_user.name}</span>
+                    <div className="flex items-center gap-2 ">
+                        <span className="text-sm font-medium truncate">{item.assigned_user.name}</span>
                     </div>
                 ) : (
                     <span className="text-xs text-muted-foreground italic">Unassigned</span>
@@ -99,41 +92,11 @@ const columns: Column<CustomerType>[] = [
     {
         header: '',
         accessor: (item) => (
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="w-8 h-8 p-0">
-                        <MoreHorizontal className="w-4 h-4" />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[160px]">
-                    <DropdownMenuItem asChild>
-                        <Link href={route('customers.show', item.id)}>
-                            <FileText className="w-4 h-4 mr-2" /> View Details
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                        <Link href={route('customers.edit', item.id)}>
-                            <SquarePen className="w-4 h-4 mr-2" /> Edit Info
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <AlertDialogDestructive
-                        title="Delete Customer?"
-                        description={`This action cannot be undone. All data for ${item.name} will be permanently removed.`}
-                        onConfirm={() => handleDelete(item.id, 'customers.destroy', {
-                            redirectTo: 'customers.index',
-                        })}
-                    >
-                        <DropdownMenuItem
-                            onSelect={(e) => e.preventDefault()}
-                            className="text-red-600 focus:text-red-600 cursor-pointer"
-                        >
-                            <Trash2 className="w-4 h-4 mr-2 text-red-600 focus:text-red-600 cursor-pointer" />
-                            <span>Delete</span>
-                        </DropdownMenuItem>
-                    </AlertDialogDestructive>
-                </DropdownMenuContent>
-            </DropdownMenu>
+            <TableRowActions
+                item={item}
+                resource="customers"
+                label="Customer"
+            />
         ),
         className: 'w-[7%]',
     },

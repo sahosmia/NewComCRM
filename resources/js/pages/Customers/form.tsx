@@ -9,7 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type { CustomerType, User } from "@/types";
-import ErrorMessage from "@/components/admin/ErrorMessage";
+import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
+import FormLabel from "@/components/admin/form/FormLabel";
+import ErrorMessage from "@/components/admin/form/ErrorMessage";
 
 interface Company {
     id: number;
@@ -22,11 +24,7 @@ interface Props {
     companies: Company[];
 }
 
-const FormLabel = ({ children }: { children: React.ReactNode }) => (
-    <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-        {children}
-    </label>
-);
+
 
 export default function CustomerForm({ customer, users, companies }: Props) {
     const [openPopover, setOpenPopover] = useState(false);
@@ -93,44 +91,20 @@ export default function CustomerForm({ customer, users, companies }: Props) {
 
                         <div className="grid sm:grid-cols-2 gap-4">
                             <div className="grid gap-2">
-                                <FormLabel>Company</FormLabel>
-                                <Popover open={openCompanyPopover} onOpenChange={setOpenCompanyPopover}>
-                                    <PopoverTrigger asChild>
-                                        <Button variant="outline" className={cn("w-full justify-between font-normal", !data.company_id && "text-muted-foreground")}>
-                                            {data.company_id ? companies.find(c => c.id === Number(data.company_id))?.name : (data.company_name || "Select company")}
-                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                        </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
-                                        <Command>
-                                            <CommandInput placeholder="Search company..." />
-                                            <CommandEmpty>
-                                                <div className="p-2 space-y-2">
-                                                    <p className="text-xs text-muted-foreground">No company found.</p>
-                                                    <Input
-                                                        placeholder="Or type manual name..."
-                                                        className="h-8 text-xs"
-                                                        value={data.company_name}
-                                                        onChange={(e) => {
-                                                            setData(prev => ({ ...prev, company_name: e.target.value, company_id: "" }));
-                                                        }}
-                                                    />
-                                                </div>
-                                            </CommandEmpty>
-                                            <CommandGroup className="max-h-60 overflow-auto">
-                                                {companies.map(company => (
-                                                    <CommandItem key={company.id} onSelect={() => {
-                                                        setData(prev => ({ ...prev, company_id: company.id, company_name: company.name }));
-                                                        setOpenCompanyPopover(false);
-                                                    }}>
-                                                        <Check className={cn("mr-2 h-4 w-4", data.company_id === company.id ? "opacity-100" : "opacity-0")} />
-                                                        {company.name}
-                                                    </CommandItem>
-                                                ))}
-                                            </CommandGroup>
-                                        </Command>
-                                    </PopoverContent>
-                                </Popover>
+                                <GenericCombobox
+                                    label="Company"
+                                    items={companies}
+                                    selectedId={data.company_id}
+                                    manualValue={data.company_name}
+                                    placeholder="Select company"
+                                    searchPlaceholder="Search company..."
+                                    onSelect={(id, name) => setData(prev => ({
+                                        ...prev,
+                                        company_id: id,
+                                        company_name: name
+                                    }))}
+                                />
+
                                 <ErrorMessage message={errors.company_id || errors.company_name} />
                             </div>
                             <div className="grid gap-2">
