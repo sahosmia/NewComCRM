@@ -1,6 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { router } from "@inertiajs/react";
-import { format } from "date-fns";
+import { formatDateForInput } from "@/utils/date-format";
 import type { DateRange } from "react-day-picker";
 import { DatePickerWithRange } from "./DatePickerWithRange";
 import { DatePickerSimple } from "./DataPickerSimple";
@@ -35,13 +35,13 @@ export function TableFilters({ filters, queryParams = {}, routeName }: {
         const newParams = { ...queryParams, page: 1 };
 
         if (range?.from) {
-            newParams.start_date = format(range.from, "yyyy-MM-dd");
+            newParams.start_date = formatDateForInput(range.from);
         } else {
             delete newParams.start_date;
         }
 
         if (range?.to) {
-            newParams.end_date = format(range.to, "yyyy-MM-dd");
+            newParams.end_date = formatDateForInput(range.to);
         } else {
             delete newParams.end_date;
         }
@@ -148,7 +148,7 @@ export function TableFilters({ filters, queryParams = {}, routeName }: {
                                     <DatePickerSimple
                                         key={filterKey}
                                         date={currentValue ? new Date(currentValue) : undefined}
-                                        onSelect={(date) => handleFilterChange(filter.name, date ? format(date, "yyyy-MM-dd") : 'all')}
+                                        onSelect={(date) => handleFilterChange(filter.name, date ? formatDateForInput(date) : 'all')}
                                         placeholder={filter.label}
                                     />
                                 )

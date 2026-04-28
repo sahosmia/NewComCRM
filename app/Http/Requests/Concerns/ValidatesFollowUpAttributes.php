@@ -12,7 +12,7 @@ trait ValidatesFollowUpAttributes
         return [
             'customer_id'    => 'required|exists:customers,id',
             'follow_up_date' => 'required|date',
-            'notes'          => 'nullable|string',
+            'notes'          => 'required|string',
             'status'         => 'required|in:pending,done',
             'priority'       => 'required|in:high,medium,low',
             'completed_at'   => 'nullable|date',
