@@ -12,18 +12,26 @@ interface Props { user?: UserType;}
 export default function UserForm({ user }: Props) {
     const [open, setOpen] = useState(false);
 
-    const { data, setData, post, put, processing, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         name: user?.name || "",
         email: user?.email || "",
         role: user?.role || "user",
         password: "",
+        signature: null as File | null,
+        _method: user ? "put" : undefined,
     });
 
     // --- Handlers ---
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        user ? put(route("users.update", user.id)) : post(route("users.store"));
+        if (user) {
+            post(route("users.update", user.id), {
+                forceFormData: true,
+            });
+        } else {
+            post(route("users.store"));
+        }
     };
 
     return (
@@ -60,6 +68,22 @@ export default function UserForm({ user }: Props) {
                         <label className="text-sm font-medium">Password</label>
                         <Input type="password" value={data.password} onChange={e => setData("password", e.target.value)} placeholder="" />
                         <ErrorMessage message={errors.password} />
+                    </div>
+
+                    <div className="space-y-1">
+                        <label className="text-sm font-medium">Signature</label>
+                        <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={e => setData("signature", e.target.files ? e.target.files[0] : null)}
+                        />
+                        {user?.signature_url && (
+                            <div className="mt-2">
+                                <p className="text-xs text-muted-foreground mb-1">Current Signature:</p>
+                                <img src={user.signature_url} alt="Signature" className="h-20 object-contain border rounded p-1" />
+                            </div>
+                        )}
+                        <ErrorMessage message={errors.signature} />
                     </div>
                 </div>
 

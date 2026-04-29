@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -12,7 +13,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, Notifiable, TwoFactorAuthenticatable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -20,7 +21,7 @@ class User extends Authenticatable
      * @var list<string>
      */
      protected $fillable = [
-        'name', 'email', 'password', 'role',
+        'name', 'email', 'password', 'role', 'signature',
     ];
 
     /**
@@ -33,6 +34,15 @@ class User extends Authenticatable
         'two_factor_secret',
         'two_factor_recovery_codes',
         'remember_token',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'signature_url',
     ];
 
     /**
@@ -91,7 +101,20 @@ class User extends Authenticatable
         return $this->role === 'user';
     }
 
-    public function hasRole($role) {
-    return $this->role === $role;
-}
+    public function hasRole($role)
+    {
+        return $this->role === $role;
+    }
+
+    /**
+     * Get the URL for the user's signature.
+     *
+     * @return string|null
+     */
+    public function getSignatureUrlAttribute()
+    {
+        return $this->signature
+            ? asset('storage/'.$this->signature)
+            : null;
+    }
 }
