@@ -4,7 +4,7 @@ import { Requirement } from "@/types/requirement";
 
 interface Props {
     requirement: Requirement;
-    customers: { id: number; name: string; company_name: string }[];
+    customers: any[];
     products: { id: number; name: string; unit_price: string }[];
 }
 

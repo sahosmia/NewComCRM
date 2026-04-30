@@ -32,7 +32,7 @@ export default function Show({ quotation }: Props) {
                     <div className="p-4 border rounded-lg">
                         <h3 className="font-bold mb-2">Customer Info</h3>
                         <p>{quotation.customer?.name}</p>
-                        <p className="text-sm text-muted-foreground">{quotation.customer?.company_name}</p>
+                        <p className="text-sm text-muted-foreground">{quotation.customer?.company?.name}</p>
                         <p className="text-sm">{quotation.customer?.email}</p>
                     </div>
                     <div className="p-4 border rounded-lg">

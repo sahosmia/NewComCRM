@@ -34,7 +34,6 @@ export default function CustomerForm({ customer, users, companies }: Props) {
         name: customer?.name ?? "",
         designation: customer?.designation ?? "",
         company_id: customer?.company_id ?? "",
-        company_name: customer?.company_name ?? "",
         email: customer?.email ?? "",
         assigned_to: customer?.assigned_to ?? "",
         status: customer?.status ?? "active",
@@ -95,17 +94,12 @@ export default function CustomerForm({ customer, users, companies }: Props) {
                                     label="Company"
                                     items={companies}
                                     selectedId={data.company_id}
-                                    manualValue={data.company_name}
                                     placeholder="Select company"
                                     searchPlaceholder="Search company..."
-                                    onSelect={(id, name) => setData(prev => ({
-                                        ...prev,
-                                        company_id: id,
-                                        company_name: name
-                                    }))}
+                                    onSelect={(id) => setData("company_id", id)}
                                 />
 
-                                <ErrorMessage message={errors.company_id || errors.company_name} />
+                                <ErrorMessage message={errors.company_id} />
                             </div>
                             <div className="grid gap-2">
                                 <FormLabel>Designation</FormLabel>

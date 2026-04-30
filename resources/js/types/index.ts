@@ -60,7 +60,10 @@ export interface CustomerType {
     name: string;
     designation: string;
     company_id: number;
-    company_name: string;
+    company?: {
+        id: number;
+        name: string;
+    };
     phones: string[];
     addresses: string[];
     email: string;
