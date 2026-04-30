@@ -22,7 +22,7 @@ export default function CompanyIndex({ companies }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Companies" />
+            <Head title="Companies | CVS CRM" />
 
             <div className="flex flex-col flex-1 h-full gap-4 p-4 overflow-x-auto rounded-xl">
                 <Heading

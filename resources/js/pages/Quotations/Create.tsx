@@ -1,4 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
+import { Head } from "@inertiajs/react";
 import QuotationForm from "./form";
 import { Product } from "@/types/product";
 
@@ -10,6 +11,7 @@ interface Props {
 export default function Create({ customers, products }: Props) {
     return (
         <AppLayout breadcrumbs={[{ title: "Quotations", href: route('quotations.index') }, { title: "Create", href:"" }]}>
+            <Head title="Create Quotation | CVS CRM" />
             <div className="p-6 max-w-4xl mx-auto">
                 <h1 className="text-xl font-bold mb-4">Create Quotation</h1>
                 <div className="bg-card p-6 border rounded-lg shadow-sm">

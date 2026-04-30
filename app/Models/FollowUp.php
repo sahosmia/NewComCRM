@@ -4,11 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Scopes\AssignedDataScope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 
 
+#[ScopedBy([AssignedDataScope::class])]
 class FollowUp extends Model
 {
     use HasFactory;
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($followUp) {
+            if (empty($followUp->user_id)) {
+                $followUp->user_id = auth()->id();
+            }
+        });
+    }
 
     protected $fillable = [
         'customer_id', 'user_id', 'follow_up_date', 'notes',

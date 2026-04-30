@@ -21,7 +21,7 @@ export default function Show({ followUp }: { followUp: any }) {
                 { title: `Follow Up Details`, href: "#" }
             ]}
         >
-            <Head title={`Follow Up Detail - ${followUp.customer?.name}`} />
+            <Head title={`Follow Up Detail: ${followUp.customer?.name} | CVS CRM`} />
 
             <div className="p-6 max-w-7xl mx-auto space-y-6">
 

@@ -12,10 +12,7 @@ class CustomerRepository
 {
     private function query(): Builder
     {
-        return Customer::query()
-            ->when(!auth()->user()?->isSuperAdmin(), function ($query) {
-                $query->where('assigned_to', auth()->id());
-            });
+        return Customer::query();
     }
 
     public function paginateForIndex(array $params): LengthAwarePaginator

@@ -12,7 +12,7 @@ export default function Create() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Create Company" />
+            <Head title="Create Company | CVS CRM" />
             <div className="p-4 md:p-8">
                 <div className="max-w-2xl mx-auto">
                     <Heading

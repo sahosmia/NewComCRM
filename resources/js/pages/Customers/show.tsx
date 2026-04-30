@@ -14,7 +14,7 @@ export default function Show({ customer }: { customer: any }) {
                 { title: customer.name, href: "#" }
             ]}
         >
-            <Head title={`${customer.name} - Customers`} />
+            <Head title={`Customer: ${customer.name} | CVS CRM`} />
 
             <div className="p-6 max-w-7xl mx-auto space-y-6">
 

@@ -87,7 +87,8 @@ class CustomerSeeder extends Seeder
     {
         $requirement = $customer->requirements()->create([
             'notes' => 'Generated via Seeder',
-            'status' => 'pending'
+            'status' => 'pending',
+            'user_id' => $customer->assigned_to
         ]);
 
         $products = Product::inRandomOrder()->take(rand(1, 4))->get();

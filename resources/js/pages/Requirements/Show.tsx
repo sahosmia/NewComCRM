@@ -31,7 +31,7 @@ export default function Show({ requirement }: any) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Requirement #${requirement.id}`} />
+            <Head title={`Requirement: ${requirement.customer?.name} | CVS CRM`} />
 
             <div className="p-6 max-w-6xl mx-auto space-y-6">
 

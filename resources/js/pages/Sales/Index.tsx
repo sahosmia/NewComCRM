@@ -57,7 +57,7 @@ export default function SaleIndex({ sales }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Sales" />
+            <Head title="Sales Reports | CVS CRM" />
 
             <div className="flex flex-col flex-1 h-full gap-4 p-4 overflow-x-auto rounded-xl">
                 <Heading

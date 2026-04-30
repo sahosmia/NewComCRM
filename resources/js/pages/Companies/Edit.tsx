@@ -16,7 +16,7 @@ export default function Edit({ company }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Edit ${company.name}`} />
+            <Head title={`Edit ${company.name} | CVS CRM`} />
             <div className="p-4 md:p-8">
                 <div className="max-w-2xl mx-auto">
                     <Heading

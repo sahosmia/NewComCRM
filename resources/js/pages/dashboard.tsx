@@ -31,7 +31,7 @@ export default function Dashboard({ stats, todayFollowups, upcomingMeetings, cha
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard" />
+            <Head title="Dashboard | CVS CRM" />
 
             <div className='p-4'>
                 {/* Header Section with proper vertical spacing */}

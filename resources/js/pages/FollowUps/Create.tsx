@@ -9,7 +9,7 @@ interface Props {
 export default function Create({ customers }: Props) {
     return (
         <AppLayout breadcrumbs={[{ title: "Follow Ups", href: route('follow-ups.index') }, { title: "New Schedule", href: "#" }]}>
-                        <Head title="Create Follow Ups" />
+                        <Head title="Create Follow Up | CVS CRM" />
 
             <div className="flex-1 space-y-4 p-4 pt-6 md:p-8 max-w-3xl">
                 <div className="mb-6">

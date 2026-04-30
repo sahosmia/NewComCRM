@@ -18,7 +18,7 @@ export default function Show({ meeting }: any) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Meeting: ${meeting.title}`} />
+            <Head title={`Meeting: ${meeting.title} | CVS CRM`} />
 
             <div className="p-6 max-w-7xl mx-auto space-y-6">
 

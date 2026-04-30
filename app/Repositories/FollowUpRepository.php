@@ -14,7 +14,6 @@ class FollowUpRepository
 
         return FollowUp::query()
             ->with(['customer', 'user'])
-            ->when(! $user->isSuperAdmin(), fn ($query) => $query->where('user_id', $user->id))
             ->when($params['search'] ?? null, function ($query, $search) {
                 $query->whereHas('customer', function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%");

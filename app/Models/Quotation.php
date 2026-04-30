@@ -5,9 +5,11 @@ namespace App\Models;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Scopes\AssignedDataScope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 
 
-
+#[ScopedBy([AssignedDataScope::class])]
 class Quotation extends Model
 {
     use HasFactory;
@@ -41,6 +43,9 @@ class Quotation extends Model
 
         static::creating(function ($quotation) {
             $quotation->quotation_number = self::generateQuotationNumber();
+            if (empty($quotation->user_id)) {
+                $quotation->user_id = auth()->id();
+            }
         });
     }
 
