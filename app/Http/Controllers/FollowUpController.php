@@ -29,6 +29,7 @@ class FollowUpController extends Controller
         return Inertia::render('FollowUps/Index', [
             'followUps' => $this->followUpService->paginateIndex($request->all(), $user),
             'stats' => $this->followUpService->stats(),
+            'customers' => $this->followUpService->customersForForm(),
         ]);
     }
 

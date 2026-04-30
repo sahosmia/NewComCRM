@@ -16,8 +16,8 @@ const columns: Column<any>[] = [
         accessor: (item) => item.customer?.name,
     },
     {
-        header: 'Start Time',
-        accessor: (item) => new Date(item.start_time).toLocaleString(),
+        header: 'Schedule Date Time',
+        accessor: (item) => new Date(item.scheduled_at).toLocaleString(),
     },
     {
         header: 'Type',

@@ -23,6 +23,7 @@ class CustomerRepository
         return $this->query()
             ->with(['assignedUser', 'company'])
             ->when($params['search'] ?? null, fn($q, $s) => $this->applySearch($q, $s))
+            ->when($params['company_id'] ?? null, fn($q, $v) => $q->where('company_id', $v))
             ->when($params['status'] ?? null, fn($q, $v) => $q->where('status', $v))
             ->when($params['assigned_to'] ?? null, fn($q, $v) => $q->where('assigned_to', $v))
             ->when($params['type'] ?? null, fn($q, $v) => $q->where('type', $v))
@@ -30,7 +31,14 @@ class CustomerRepository
             ->when($params['start_date'] ?? null, function ($q, $start) use ($params) {
                 $q->whereBetween('created_at', [$start, $params['end_date'] ?? $start]);
             })
-            ->latest($params['sort'] ?? 'created_at') // Simplified sorting
+            ->when($params['sort'] ?? null, function ($query, $sort) use ($params) {
+                $allowedSorts = ['name', 'email', 'created_at'];
+                if (in_array($sort, $allowedSorts)) {
+                    $query->orderBy($sort, $params['direction'] ?? 'asc');
+                }
+            }, function ($query) {
+                $query->latest();
+            })
             ->paginate($params['per_page'] ?? 10)
             ->withQueryString();
     }

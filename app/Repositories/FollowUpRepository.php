@@ -23,8 +23,15 @@ class FollowUpRepository
             ->when($params['status'] ?? null, fn ($query, $status) => $query->where('status', $status))
             ->when($params['priority'] ?? null, fn ($query, $priority) => $query->where('priority', $priority))
             ->when($params['customer_id'] ?? null, fn ($query, $id) => $query->where('customer_id', $id))
-            ->when(isset($params['sort']), function ($query) use ($params) {
-                $query->orderBy($params['sort'], $params['direction'] ?? 'desc');
+            ->when($params['date'] ?? null, fn($q, $v) => $q->whereDate('follow_up_date', $v))
+            ->when($params['start_date'] ?? null, function ($q, $start) use ($params) {
+                $q->whereBetween('follow_up_date', [$start, $params['end_date'] ?? $start]);
+            })
+            ->when($params['sort'] ?? null, function ($query, $sort) use ($params) {
+                $allowedSorts = ['follow_up_date', 'status', 'priority', 'created_at'];
+                if (in_array($sort, $allowedSorts)) {
+                    $query->orderBy($sort, $params['direction'] ?? 'desc');
+                }
             }, function ($query) {
                 $query->latest();
             })

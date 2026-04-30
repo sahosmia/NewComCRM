@@ -13,15 +13,13 @@ class MeetingFactory extends Factory
 
     public function definition(): array
     {
-        $startTime = $this->faker->dateTimeBetween('now', '+1 month');
-        $endTime = (clone $startTime)->modify('+1 hour');
+        $scheduledAt = $this->faker->dateTimeBetween('now', '+1 month');
 
         return [
             'customer_id'  => Customer::factory(),
             'user_id'      => User::factory(),
             'title'        => $this->faker->sentence(3),
-            'start_time'   => $startTime,
-            'end_time'     => $endTime,
+            'scheduled_at' => $scheduledAt,
             'meeting_type' => $this->faker->randomElement(['physical', 'virtual', 'phone']),
             'location'     => $this->faker->address(),
             'agenda'       => $this->faker->paragraph(),

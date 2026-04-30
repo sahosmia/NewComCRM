@@ -11,13 +11,12 @@ class Meeting extends Model
     use HasFactory;
 
     protected $fillable = [
-        'customer_id', 'user_id', 'title', 'start_time', 'end_time',
+        'customer_id', 'user_id', 'title', 'scheduled_at',
         'meeting_type', 'location', 'agenda', 'notes', 'status'
     ];
 
     protected $casts = [
-        'start_time' => 'datetime',
-        'end_time' => 'datetime'
+        'scheduled_at' => 'datetime',
     ];
 
     const TYPES = [
@@ -51,26 +50,21 @@ class Meeting extends Model
 
     public function scopeToday($query)
     {
-        return $query->whereDate('start_time', today());
+        return $query->whereDate('scheduled_at', today());
     }
 
     public function scopeUpcoming($query)
     {
-        return $query->where('start_time', '>', now())
+        return $query->where('scheduled_at', '>', now())
                      ->where('status', 'scheduled');
     }
 
-     public function scopeByUser($query, $userId)
+    public function scopeByUser($query, $userId)
     {
         return $query->where('user_id', $userId);
     }
 
     // Accessors
-    public function getDurationAttribute()
-    {
-        return $this->start_time->diffInMinutes($this->end_time);
-    }
-
     public function getTypeLabelAttribute()
     {
         return self::TYPES[$this->meeting_type] ?? $this->meeting_type;

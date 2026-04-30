@@ -3,8 +3,7 @@ export interface Meeting {
     customer_id: number;
     user_id: number;
     title: string;
-    start_time: string;
-    end_time: string;
+    scheduled_at: string;
     meeting_type: 'physical' | 'virtual' | 'phone';
     location: string | null;
     agenda: string | null;
