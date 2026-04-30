@@ -1,11 +1,13 @@
 import AppLayout from "@/layouts/app-layout";
 import RequirementForm from "./form";
 import { Requirement } from "@/types/requirement";
+import { Product } from "@/types/product";
+import { Customer } from "@/types/customer";
 
 interface Props {
     requirement: Requirement;
-    customers: { id: number; name: string; company_name: string }[];
-    products: { id: number; name: string; unit_price: string }[];
+    customers: Customer[];
+    products: Product[];
 }
 
 export default function Edit({ requirement, customers, products }: Props) {

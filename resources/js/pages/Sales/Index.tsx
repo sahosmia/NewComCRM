@@ -15,7 +15,7 @@ const columns: any[] = [
         accessor: (item: any) => (
             <div className="flex flex-col">
                 <span className="font-medium text-foreground">{item.customer?.name}</span>
-                <span className="text-xs text-muted-foreground">{item.customer?.company_name}</span>
+                <span className="text-xs text-muted-foreground">{item.customer?.company?.name}</span>
             </div>
         ),
     },

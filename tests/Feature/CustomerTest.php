@@ -33,9 +33,10 @@ test('super admin can see all customers in index', function () {
 });
 
 test('authenticated user can create a customer', function () {
+    $company = \App\Models\Company::factory()->create();
     $data = [
         'name'          => 'John Doe',
-        'company_name'  => 'Tech Corp',
+        'company_id'    => $company->id,
         'email'         => 'john.' . uniqid() . '@example.com',
         'assigned_to'   => $this->user->id,
         'type'          => 'corporate',
@@ -62,10 +63,11 @@ test('user cannot view someone else customer detail', function () {
 
 test('user can update their own customer', function () {
     $customer = Customer::factory()->create(['assigned_to' => $this->user->id]);
+    $company = \App\Models\Company::factory()->create();
 
     $updatedData = [
         'name'          => 'Updated Name',
-        'company_name'  => 'Updated Corp',
+        'company_id'    => $company->id,
         'email'         => $customer->email,
         'assigned_to'   => $this->user->id,
         'type'          => 'reseller',

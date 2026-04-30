@@ -26,7 +26,7 @@ export default function Show({ customer }: { customer: any }) {
                             <Badge className="capitalize">{customer.status}</Badge>
                             <Badge variant="outline" className="capitalize">{customer.type}</Badge>
                         </div>
-                        <p className="text-muted-foreground mt-1">{customer.designation} at <span className="font-semibold text-foreground">{customer.company_name}</span></p>
+                        <p className="text-muted-foreground mt-1">{customer.designation} at <span className="font-semibold text-foreground">{customer.company?.name || 'N/A'}</span></p>
                     </div>
                     <div className="flex gap-2">
                         <Button variant="outline" asChild>

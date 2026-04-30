@@ -16,10 +16,11 @@ trait ValidatesUserAttributes
         return [
             'name'     => 'required|string|max:255',
             'email'    => "required|email|max:255|unique:users,email,{$userId}",
-            'role'     => 'required|in:super_admin,user',
-            'password' => $this->isMethod('post')
+            'role'      => 'required|in:super_admin,user',
+            'password'  => $this->isMethod('post')
                 ? ['required', Password::defaults()]
                 : ['nullable', Password::defaults()],
+            'signature' => 'nullable|image|max:2048',
         ];
     }
 

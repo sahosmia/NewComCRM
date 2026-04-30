@@ -17,7 +17,7 @@ const columns: Column<any>[] = [
         accessor: (item) => (
             <div className="flex flex-col min-w-35">
                 <span className="font-medium leading-none">{item.customer?.name}</span>
-                <span className="text-[11px] text-muted-foreground mt-1 truncate">{item.customer?.company_name}</span>
+                <span className="text-[11px] text-muted-foreground mt-1 truncate">{item.customer?.company?.name}</span>
             </div>
         ),
     },

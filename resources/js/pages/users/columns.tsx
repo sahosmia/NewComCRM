@@ -12,6 +12,19 @@ const columns: Column<UserType>[] = [
             </div>
         ),
     },
+    {
+
+        header: 'Signature',
+        accessor: (item: any) => (
+            <div className="flex items-center gap-2">
+                {item.signature_url ? (
+                    <img src={item.signature_url} alt="Signature" className="h-8 w-16 object-contain border rounded bg-white" />
+                ) : (
+                    <span className="text-muted-foreground text-xs italic">No signature</span>
+                )}
+            </div>
+        ),
+    },
 
     {
         header: 'Email',

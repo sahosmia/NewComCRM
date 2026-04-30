@@ -2,7 +2,7 @@ import AppLayout from "@/layouts/app-layout";
 import RequirementForm from "./form";
 
 interface Props {
-    customers: { id: number; name: string; company_name: string }[];
+    customers: any[];
     products: { id: number; name: string; unit_price: string }[];
 }
 

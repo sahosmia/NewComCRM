@@ -123,7 +123,7 @@ class CustomerController extends Controller
                 return [
                     $customer->name,
                     $customer->email,
-                    $customer->company ? $customer->company->name : $customer->company_name,
+                    $customer->company?->name,
                     $customer->designation,
                     $customer->type,
                     $customer->status,
@@ -146,7 +146,7 @@ class CustomerController extends Controller
             return [
                 $customer->name,
                 $customer->email,
-                $customer->company ? $customer->company->name : $customer->company_name,
+                $customer->company?->name,
                 $customer->designation,
                 $customer->type,
                 $customer->status,

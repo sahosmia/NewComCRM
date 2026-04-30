@@ -14,7 +14,7 @@ class RequirementRepository
 
         return Requirement::query()
             ->with([
-                'customer' => fn($q) => $q->withTrashed(),
+                'customer',
                 'items.product'
             ])
 

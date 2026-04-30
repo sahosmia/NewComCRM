@@ -7,7 +7,9 @@ interface CustomerInfoProps {
         id: number;
         name: string;
         designation?: string;
-        company_name?: string;
+        company?: {
+            name: string;
+        };
         email?: string;
         phones?: string[];
         addresses?: string[];
@@ -33,9 +35,9 @@ export default function CustomerInfoCard({ customer }: CustomerInfoProps) {
                         <Link href={route('customers.show', customer.id)} className="hover:underline">
                             <p className="text-sm font-bold text-foreground leading-none">{customer.name}</p>
                         </Link>
-                        {(customer.designation || customer.company_name) && (
+                        {(customer.designation || customer.company?.name) && (
                             <p className="text-xs text-muted-foreground mt-1.5 leading-tight">
-                                {customer.designation} {customer.designation && customer.company_name ? 'at' : ''} <span className="font-semibold text-foreground/80">{customer.company_name}</span>
+                                {customer.designation} {customer.designation && customer.company?.name ? 'at' : ''} <span className="font-semibold text-foreground/80">{customer.company?.name}</span>
                             </p>
                         )}
                     </div>
