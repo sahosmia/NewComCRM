@@ -1,7 +1,6 @@
 export interface User {
     id: number;
     name: string;
-    company_name: string;
     phone: string;
     status: string;
     created_at: string;

@@ -31,7 +31,7 @@ const columns: Column<CustomerType>[] = [
             <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2">
                     <Building2 className="w-3.5 h-3.5 text-muted-foreground" />
-                    <span className="text-sm font-medium truncate">{item.company_name}</span>
+                    <span className="text-sm font-medium truncate">{item.company?.name || 'N/A'}</span>
                 </div>
                 {item.addresses && item.addresses[0] && (
                     <div className="flex items-center gap-1 text-[11px] text-muted-foreground">

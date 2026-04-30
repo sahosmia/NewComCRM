@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -88,7 +88,7 @@ class Customer extends Model
 
     public function getFullNameWithCompanyAttribute(): string
     {
-        $companyName = $this->company ? $this->company->name : $this->company_name;
+        $companyName = $this->company?->name;
         return $companyName ? "{$this->name} - {$companyName}" : $this->name;
     }
 

@@ -21,7 +21,7 @@ class CustomerRepository
     public function paginateForIndex(array $params): LengthAwarePaginator
     {
         return $this->query()
-            ->with('assignedUser')
+            ->with(['assignedUser', 'company'])
             ->when($params['search'] ?? null, fn($q, $s) => $this->applySearch($q, $s))
             ->when($params['status'] ?? null, fn($q, $v) => $q->where('status', $v))
             ->when($params['assigned_to'] ?? null, fn($q, $v) => $q->where('assigned_to', $v))
@@ -39,7 +39,9 @@ class CustomerRepository
     {
         $query->where(function ($q) use ($search) {
             $q->where('name', 'like', "%{$search}%")
-                ->orWhere('company_name', 'like', "%{$search}%")
+                ->orWhereHas('company', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                })
                 ->orWhere('email', 'like', "%{$search}%")
                 ->orWhere('phones', 'like', "%{$search}%");
         });
@@ -47,7 +49,7 @@ class CustomerRepository
 
     public function selectOptions(): Collection
     {
-        return $this->query()->select('id', 'name', 'company_id', 'company_name')->get();
+        return $this->query()->with('company')->select('id', 'name', 'company_id')->get();
     }
 
     public function create(array $data): Customer
@@ -68,7 +70,8 @@ class CustomerRepository
     public function forRequirementForm(): Collection
     {
         return Customer::query()
-            ->select('id', 'name', 'company_name')
+            ->with('company')
+            ->select('id', 'name', 'company_id')
             ->get();
     }
 
