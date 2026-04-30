@@ -114,7 +114,7 @@ class MeetingController extends Controller
                 return [
                     $meeting->customer ? $meeting->customer->name : 'N/A',
                     $meeting->title,
-                    $meeting->start_time,
+                    $meeting->scheduled_at,
                     $meeting->meeting_type,
                     $meeting->status,
                 ];
@@ -135,7 +135,7 @@ class MeetingController extends Controller
             return [
                 $meeting->customer ? $meeting->customer->name : 'N/A',
                 $meeting->title,
-                $meeting->start_time,
+                $meeting->scheduled_at,
                 $meeting->meeting_type,
                 $meeting->status,
             ];
