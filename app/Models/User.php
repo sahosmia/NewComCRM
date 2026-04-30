@@ -19,8 +19,12 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-     protected $fillable = [
-        'name', 'email', 'password', 'role',
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role',
+        'signature',
     ];
 
     /**
@@ -33,6 +37,15 @@ class User extends Authenticatable
         'two_factor_secret',
         'two_factor_recovery_codes',
         'remember_token',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'signature_url',
     ];
 
     /**
@@ -91,7 +104,19 @@ class User extends Authenticatable
         return $this->role === 'user';
     }
 
-    public function hasRole($role) {
-    return $this->role === $role;
-}
+    public function hasRole($role)
+    {
+        return $this->role === $role;
+    }
+    /**
+     * Get the URL for the user's signature.
+     *
+     * @return string|null
+     */
+    public function getSignatureUrlAttribute()
+    {
+        return $this->signature
+            ? asset('storage/' . $this->signature)
+            : null;
+    }
 }

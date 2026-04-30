@@ -2,7 +2,11 @@ export interface Customer {
     id: number;
     name: string;
     designation: string | null;
-    company_name: string;
+    company_id: number | null;
+    company?: {
+        id: number;
+        name: string;
+    };
     phone: string;
     email: string | null;
     address: string | null;

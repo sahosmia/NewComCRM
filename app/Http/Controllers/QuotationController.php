@@ -99,4 +99,10 @@ class QuotationController extends Controller
 
         return back()->with('success', 'Quotation status updated successfully');
     }
+
+      public function download(Quotation $quotation)
+    {
+        return $this->quotationService->downloadPdf($quotation);
+    }
+
 }

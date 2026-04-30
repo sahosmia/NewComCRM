@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Exports\GeneralExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
+
 
 
 class RequirementController extends Controller
@@ -104,6 +106,14 @@ class RequirementController extends Controller
 
         return redirect()->route('requirements.index')
             ->with('success', 'Requirement deleted successfully');
+    }
+
+     public function downloadPdf(Requirement $requirement)
+    {
+
+        $path = $requirement->generatePDF();
+        return $path;
+        return Storage::download('public/' . $path);
     }
 
     public function export(Request $request)

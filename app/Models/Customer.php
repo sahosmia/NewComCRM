@@ -88,7 +88,7 @@ class Customer extends Model
 
     public function getFullNameWithCompanyAttribute(): string
     {
-        $companyName = $this->company ? $this->company->name : $this->company_name;
+        $companyName = $this->company?->name;
         return $companyName ? "{$this->name} - {$companyName}" : $this->name;
     }
 

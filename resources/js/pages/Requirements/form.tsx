@@ -67,7 +67,7 @@ export default function RequirementForm({ requirement, customers, products }: Pr
                 <div className="md:col-span-2 space-y-1">
                     <GenericCombobox
                         label="Customer Information"
-                        items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company_name}` }))}
+                        items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company?.name || ''}` }))}
                         selectedId={data.customer_id}
                         onSelect={(id) => setData("customer_id", id as number)}
                         placeholder="Select Customer"

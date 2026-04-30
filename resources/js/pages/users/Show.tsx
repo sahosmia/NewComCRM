@@ -26,7 +26,7 @@ export default function Show({ user }: { user: any }) {
                             <Badge className="capitalize">{user.status}</Badge>
                             <Badge variant="outline" className="capitalize">{user.type}</Badge>
                         </div>
-                        <p className="text-muted-foreground mt-1">{user.designation} at <span className="font-semibold text-foreground">{user.company_name}</span></p>
+                        <p className="text-muted-foreground mt-1">{user.designation}</p>
                     </div>
                     <div className="flex gap-2">
                         <Button variant="outline" asChild>

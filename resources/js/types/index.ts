@@ -60,8 +60,10 @@ export interface CustomerType {
     name: string;
     designation: string;
     company_id: number;
-    company_name: string;
-    phones: string[];
+    company?: {
+        id: number;
+        name: string;
+    };    phones: string[];
     addresses: string[];
     email: string;
     type: 'corporate' | 'reseller' | 'personal';
@@ -168,6 +170,8 @@ export interface UserType {
     role: string;
     created_at: string;
     is_active: boolean;
+      signature?: string | null;
+    signature_url?: string | null;
 }
 export interface UserTypeforForm {
     id: number;

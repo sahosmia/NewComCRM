@@ -1,10 +1,8 @@
-import { Building2, Phone, MapPin, FilePlus2, CalendarDays, MessageSquarePlus, } from 'lucide-react';
+import { Building2, Phone, MapPin } from 'lucide-react';
 import type { CustomerType, Column } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { TableRowActions } from '@/components/table/TableRowActions';
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
-import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { Link } from '@inertiajs/react';
 
 const CUSTOMER_STATUS_OPTIONS = [
     { value: 'active', label: 'Active', colorClass: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' },
@@ -31,7 +29,8 @@ const columns: Column<CustomerType>[] = [
             <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2">
                     <Building2 className="w-3.5 h-3.5 text-muted-foreground" />
-                    <span className="text-sm font-medium truncate">{item.company_name}</span>
+                    <span className="text-sm font-medium truncate">{item.company?.name || 'N/A'}</span>
+
                 </div>
                 {item.addresses && item.addresses[0] && (
                     <div className="flex items-center gap-1 text-[11px] text-muted-foreground">

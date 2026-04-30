@@ -50,7 +50,7 @@ function MeetingList({ meetings }: { meetings: any[] }) {
                             </span>
                             <span className="flex items-center text-[11px] text-muted-foreground truncate">
                                 <MapPin className="mr-1 h-3 w-3" />
-                                {meeting.customer?.company_name || 'No Location'}
+                                {meeting.customer?.company?.name || 'No Location'}
                             </span>
                         </div>
                     </div>

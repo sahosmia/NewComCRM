@@ -4,24 +4,31 @@ import type { Column } from '@/types';
 import { TableRowActions } from '@/components/table/TableRowActions';
 
 const columns: Column<any>[] = [
-    {
-        header: 'Company Name',
-        accessor: (item: any) => (
-            <div className="flex flex-col">
-                <div className="flex items-center gap-2">
-                    <Building2 className="w-4 h-4 text-muted-foreground" />
-                    <span className="font-medium text-foreground">{item.name}</span>
-                </div>
-                {item.website && (
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-                        <Globe className="w-3 h-3" />
-                        <span className="truncate">{item.website}</span>
-                    </div>
-                )}
+  {
+    header: 'Company Name',
+    accessor: (item: any) => (
+        <div className="flex flex-col min-w-0"> {/* min-w-0 helps flex children truncate */}
+            <div className="flex items-center gap-2">
+                <Building2 className="w-4 h-4 text-muted-foreground shrink-0" />
+                <span className="font-medium text-foreground truncate">{item.name}</span>
             </div>
-        ),
-        className: 'w-[30%]',
-    },
+            {item.website && (
+                <a
+                    href={item.website.startsWith('http') ? item.website : `https://${item.website}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-[10px] leading-tight text-muted-foreground mt-1 hover:text-primary transition-colors max-w-full"
+                >
+                    <Globe className="w-3 h-3 shrink-0" />
+                    <span className="truncate block max-w-[180px]">
+                        {item.website.replace(/(^\w+:|^)\/\//, '')} {/* Removes https:// for a cleaner look */}
+                    </span>
+                </a>
+            )}
+        </div>
+    ),
+    className: 'w-[30%]',
+},
     {
         header: 'Contact Info',
         accessor: (item: any) => (

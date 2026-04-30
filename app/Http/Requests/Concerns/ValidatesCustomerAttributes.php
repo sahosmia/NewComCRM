@@ -16,8 +16,7 @@ trait ValidatesCustomerAttributes
         return [
             'name'          => 'required|string|max:255',
             'designation'   => $isPersonal ? 'nullable|string|max:255' : 'required|string|max:255',
-            'company_id'    => 'nullable|exists:companies,id',
-            'company_name'  => $isPersonal ? 'nullable|string|max:255' : 'required|string|max:255',
+            'company_id'    => $isPersonal ? 'nullable|exists:companies,id' : 'required|exists:companies,id',
             'email'         => ($isPersonal ? 'nullable' : 'required') . "|email|max:255|unique:customers,email,{$customerId}",
             'type'          => 'required|in:corporate,reseller,personal',
             'phones'        => 'required|array|min:1',
@@ -38,7 +37,7 @@ trait ValidatesCustomerAttributes
     {
         return [
             'name.required' => 'Customer name is required',
-            'company_name.required' => 'Company name is required',
+            'company_id.required' => 'Company is required',
             'phones.*.regex' => 'Each phone number must be a valid 11-digit BD number (e.g., 01712345678).',
             'assigned_to.required' => 'Please assign this customer to a user',
         ];
