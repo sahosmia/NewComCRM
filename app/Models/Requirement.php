@@ -16,18 +16,7 @@ class Requirement extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['customer_id', 'grand_total', 'notes', 'status', 'user_id'];
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($requirement) {
-            if (empty($requirement->user_id)) {
-                $requirement->user_id = auth()->id();
-            }
-        });
-    }
+    protected $fillable = ['customer_id', 'grand_total', 'notes', 'status'];
 
     protected $casts = [
         'grand_total' => 'decimal:2'

@@ -42,13 +42,12 @@ class DashboardService
     private function userStats(int $userId): array
     {
         return [
-            'totalCustomers' => Customer::query()->assignedTo($userId)->count(),
-            'todayFollowups' => FollowUp::query()->byUser($userId)->today()->count(),
-            'overdueFollowups' => FollowUp::query()->byUser($userId)->overdue()->count(),
-            'upcomingMeetings' => Meeting::query()->byUser($userId)->upcoming()->count(),
-            'pendingFollowups' => FollowUp::query()->byUser($userId)->pending()->count(),
+            'totalCustomers' => Customer::query()->count(),
+            'todayFollowups' => FollowUp::query()->today()->count(),
+            'overdueFollowups' => FollowUp::query()->overdue()->count(),
+            'upcomingMeetings' => Meeting::query()->upcoming()->count(),
+            'pendingFollowups' => FollowUp::query()->pending()->count(),
             'monthlyQuotations' => Quotation::query()
-                ->where('user_id', $userId)
                 ->whereMonth('created_at', now()->month)
                 ->count(),
         ];
@@ -56,32 +55,22 @@ class DashboardService
 
     private function todayFollowups(User $user)
     {
-        $query = FollowUp::query()
+        return FollowUp::query()
             ->with('customer')
             ->today()
             ->pending()
-            ->orderBy('follow_up_date');
-
-        if (! $user->isSuperAdmin()) {
-            $query->where('user_id', $user->id);
-        }
-
-        return $query->get();
+            ->orderBy('follow_up_date')
+            ->get();
     }
 
     private function upcomingMeetings(User $user)
     {
-        $query = Meeting::query()
+        return Meeting::query()
             ->with('customer')
             ->upcoming()
-            ->orderBy('start_time')
-            ->limit(5);
-
-        if (! $user->isSuperAdmin()) {
-            $query->where('user_id', $user->id);
-        }
-
-        return $query->get();
+            ->orderBy('scheduled_at')
+            ->limit(5)
+            ->get();
     }
 
     private function chartData(User $user): array
