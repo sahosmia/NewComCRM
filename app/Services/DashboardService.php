@@ -74,7 +74,7 @@ class DashboardService
         $query = Meeting::query()
             ->with('customer')
             ->upcoming()
-            ->orderBy('start_time')
+            ->orderBy('scheduled_at')
             ->limit(5);
 
         if (! $user->isSuperAdmin()) {
@@ -105,7 +105,7 @@ class DashboardService
         }
 
         return [
-            'name' => $date->format('M'), 
+            'name' => $date->format('M'),
             'followups' => $followupQuery->count(),
             'quotations' => $quotationQuery->count(),
         ];

@@ -31,10 +31,10 @@ function MeetingList({ meetings }: { meetings: any[] }) {
                     {/* Date Box */}
                     <div className="flex h-14 w-14 flex-shrink-0 flex-col items-center justify-center rounded-xl bg-primary/5 text-primary border border-primary/10 transition-colors group-hover:bg-primary group-hover:text-white">
                         <span className="text-[10px] font-bold uppercase leading-none">
-                            {new Date(meeting.start_time).toLocaleDateString('en-GB', { month: 'short' })}
+                            {new Date(meeting.scheduled_at).toLocaleDateString('en-GB', { month: 'short' })}
                         </span>
                         <span className="text-xl font-bold leading-tight">
-                            {new Date(meeting.start_time).getDate()}
+                            {new Date(meeting.scheduled_at).getDate()}
                         </span>
                     </div>
 
@@ -46,7 +46,7 @@ function MeetingList({ meetings }: { meetings: any[] }) {
                         <div className="flex flex-col gap-0.5">
                             <span className="flex items-center text-[11px] text-muted-foreground">
                                 <Clock className="mr-1 h-3 w-3" />
-                                {formatTime(meeting.start_time)}
+                                {formatTime(meeting.scheduled_at)}
                             </span>
                             <span className="flex items-center text-[11px] text-muted-foreground truncate">
                                 <MapPin className="mr-1 h-3 w-3" />
