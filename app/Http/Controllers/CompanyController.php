@@ -12,10 +12,10 @@ class CompanyController extends Controller
     {
     }
 
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('Companies/Index', [
-            'companies' => $this->service->getAllCompanies()
+            'companies' => $this->service->getAllCompanies($request->all())
         ]);
     }
 

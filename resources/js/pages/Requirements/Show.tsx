@@ -8,11 +8,9 @@ import {
     ArrowLeft,
     Package,
     Printer,
-    FileCheck,
     History
 } from "lucide-react";
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
-import { cn } from "@/lib/utils";
 import StatusBadge from "@/components/shared/StatusBadge";
 
 export default function Show({ requirement }: any) {
@@ -31,7 +29,7 @@ export default function Show({ requirement }: any) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Requirement #${requirement.id}`} />
+            <Head title={`Requirement: ${requirement.customer?.name}`} />
 
             <div className="p-6 max-w-6xl mx-auto space-y-6">
 

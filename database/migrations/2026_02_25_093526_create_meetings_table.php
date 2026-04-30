@@ -16,8 +16,7 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
-            $table->dateTime('start_time');
-            $table->dateTime('end_time');
+            $table->dateTime('scheduled_at')->nullable();
             $table->enum('meeting_type', ['physical', 'virtual', 'phone'])->default('physical');
             $table->string('location')->nullable();
             $table->text('agenda')->nullable();
@@ -25,7 +24,8 @@ return new class extends Migration
             $table->enum('status', ['scheduled', 'completed', 'cancelled'])->default('scheduled');
             $table->timestamps();
 
-            $table->index(['user_id', 'start_time']);
+            $table->index(['user_id', 'scheduled_at']);
+            $table->index('meeting_type');
             $table->index('status');
         });
     }

@@ -5,9 +5,11 @@ namespace App\Models;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Scopes\AssignedDataScope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 
 
-
+#[ScopedBy([AssignedDataScope::class])]
 class Quotation extends Model
 {
     use HasFactory;

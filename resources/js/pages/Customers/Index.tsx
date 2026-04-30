@@ -8,17 +8,27 @@ import { columns } from './columns';
 interface Props {
     customers: PaginationType<CustomerType>;
     users: UserTypeforForm[];
+    companies: { id: number; name: string }[];
 }
 
 
 
-export default function CustomerIndex({ customers, users }: Props) {
+export default function CustomerIndex({ customers, users, companies }: Props) {
     const breadcrumbs = [
         { title: 'Dashboard', href: route('dashboard') },
         { title: 'Customers', href: route('customers.index') },
     ];
 
     const filters: FilterOption[] = [
+        {
+            name: 'company_id',
+            label: 'Company',
+            type: 'searchSelect',
+            options: companies.map((company) => ({
+                label: company.name,
+                value: company.id,
+            }))
+        },
         {
             name: 'assigned_to',
             label: 'Assigned To',

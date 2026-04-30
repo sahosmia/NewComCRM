@@ -34,8 +34,7 @@ it('can_store_a_new_meeting', function () {
     $meetingData = [
         'customer_id' => $customer->id,
         'title' => 'Project Kickoff',
-        'start_time' => now()->addDay()->format('Y-m-d H:i:s'),
-        'end_time' => now()->addDay()->addHour()->format('Y-m-d H:i:s'),
+        'scheduled_at' => now()->addDay()->format('Y-m-d H:i:s'),
         'meeting_type' => 'virtual',
         'location' => 'Zoom',
         'agenda' => 'Initial discussion',
@@ -57,7 +56,7 @@ it('validates_required_fields_on_store', function () {
     $response = $this->actingAs($this->user)
         ->post(route('meetings.store'), []);
 
-    $response->assertSessionHasErrors(['customer_id', 'title', 'start_time', 'end_time']);
+    $response->assertSessionHasErrors(['customer_id', 'title', 'scheduled_at']);
 });
 
 it('can_update_an_existing_meeting', function () {
@@ -66,8 +65,7 @@ it('can_update_an_existing_meeting', function () {
     $updatedData = [
         'customer_id' => $meeting->customer_id,
         'title' => 'Updated Meeting Title',
-        'start_time' => now()->addDays(2)->format('Y-m-d H:i:s'),
-        'end_time' => now()->addDays(2)->addHour()->format('Y-m-d H:i:s'),
+        'scheduled_at' => now()->addDays(2)->format('Y-m-d H:i:s'),
         'meeting_type' => 'physical',
         'location' => 'Office',
         'status' => 'completed',

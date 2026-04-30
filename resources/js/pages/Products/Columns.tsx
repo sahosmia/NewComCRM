@@ -16,8 +16,19 @@ const columns: Column<Product>[] = [
     {
         header: 'Category',
         accessor: (item) => item.category,
-                className: "w-1/10"
+        className: "w-1/10"
 
+    },
+  {
+        header: 'Description',
+        accessor: (item) => (
+            <div className="max-w-[250px] min-w-[150px]">
+                <p className="text-xs text-muted-foreground whitespace-normal break-words leading-relaxed">
+                    {item.description || "No description."}
+                </p>
+            </div>
+        ),
+        className: "w-[25%]" 
     },
     {
         header: 'Price',
@@ -33,9 +44,15 @@ const columns: Column<Product>[] = [
     {
         header: 'Supplier',
         accessor: (item) => (
-            <div className="flex flex-col">
-                <span className="font-medium text-foreground">{item.supplier_name}</span>
-                <span className="text-xs text-muted-foreground truncate">{item.source ? item.source : ''}</span>
+            <div className="flex flex-col min-w-0 max-w-50">
+                <span className="font-medium text-foreground truncate">
+                    {item.supplier_name}
+                </span>
+                {item.source && (
+                    <span className="text-xs text-muted-foreground truncate block">
+                        {item.source}
+                    </span>
+                )}
             </div>
         ),
     },

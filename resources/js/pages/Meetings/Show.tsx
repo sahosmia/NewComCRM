@@ -36,7 +36,7 @@ export default function Show({ meeting }: any) {
                         <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                             <div className="flex items-center gap-1">
                                 <Calendar className="w-4 h-4" />
-                                {new Date(meeting.created_at).toLocaleDateString()}
+                                {new Date(meeting.scheduled_at).toLocaleString()}
                             </div>
                             {meeting.location && (
                                 <div className="flex items-center gap-1 text-primary font-medium">

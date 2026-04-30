@@ -23,6 +23,7 @@ class CustomerRepository
         return $this->query()
             ->with(['assignedUser', 'company'])
             ->when($params['search'] ?? null, fn($q, $s) => $this->applySearch($q, $s))
+            ->when($params['company_id'] ?? null, fn($q, $v) => $q->where('company_id', $v))
             ->when($params['status'] ?? null, fn($q, $v) => $q->where('status', $v))
             ->when($params['assigned_to'] ?? null, fn($q, $v) => $q->where('assigned_to', $v))
             ->when($params['type'] ?? null, fn($q, $v) => $q->where('type', $v))

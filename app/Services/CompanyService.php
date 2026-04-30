@@ -10,9 +10,9 @@ class CompanyService
     {
     }
 
-    public function getAllCompanies()
+    public function getAllCompanies(array $params = [])
     {
-        return $this->repository->getAll();
+        return $this->repository->getAll($params);
     }
 
     public function listAll()

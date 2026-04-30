@@ -24,13 +24,12 @@ class MeetingSeeder extends Seeder
 
         // Today's meetings
         foreach (range(1, 3) as $i) {
-            $startTime = Carbon::today()->setTime(rand(10, 16), 0);
+            $scheduledAt = Carbon::today()->setTime(rand(10, 16), 0);
             Meeting::create([
                 'customer_id' => $customers->random()->id,
                 'user_id' => $users->random()->id,
                 'title' => 'Product Demo Meeting',
-                'start_time' => $startTime,
-                'end_time' => $startTime->copy()->addHours(1),
+                'scheduled_at' => $scheduledAt,
                 'meeting_type' => $types[array_rand($types)],
                 'location' => 'Conference Room / Zoom',
                 'agenda' => 'Discuss requirements and demonstrate products',
@@ -40,13 +39,12 @@ class MeetingSeeder extends Seeder
 
         // Upcoming meetings
         foreach (range(1, 8) as $i) {
-            $startTime = Carbon::today()->addDays(rand(1, 7))->setTime(rand(10, 16), 0);
+            $scheduledAt = Carbon::today()->addDays(rand(1, 7))->setTime(rand(10, 16), 0);
             Meeting::create([
                 'customer_id' => $customers->random()->id,
                 'user_id' => $users->random()->id,
                 'title' => 'Follow-up Meeting',
-                'start_time' => $startTime,
-                'end_time' => $startTime->copy()->addHours(1),
+                'scheduled_at' => $scheduledAt,
                 'meeting_type' => $types[array_rand($types)],
                 'location' => 'Customer Office / Online',
                 'agenda' => 'Review quotation and finalize order',
@@ -56,13 +54,12 @@ class MeetingSeeder extends Seeder
 
         // Past meetings
         foreach (range(1, 20) as $i) {
-            $startTime = Carbon::today()->subDays(rand(1, 30))->setTime(rand(10, 16), 0);
+            $scheduledAt = Carbon::today()->subDays(rand(1, 30))->setTime(rand(10, 16), 0);
             Meeting::create([
                 'customer_id' => $customers->random()->id,
                 'user_id' => $users->random()->id,
                 'title' => 'Initial Meeting',
-                'start_time' => $startTime,
-                'end_time' => $startTime->copy()->addHours(1),
+                'scheduled_at' => $scheduledAt,
                 'meeting_type' => $types[array_rand($types)],
                 'location' => 'Various',
                 'agenda' => 'Introduction and requirement gathering',

@@ -69,11 +69,7 @@ export default function CustomerForm({ customer, users, companies }: Props) {
 
                 {/* Section 1: Identity & Contact */}
                 <div className="space-y-6">
-                    <header>
-                        <h3 className="text-lg font-semibold text-primary">Identity & Contact</h3>
-                        <p className="text-sm text-muted-foreground">Primary details and contact information.</p>
-                        <div className="h-px bg-border mt-2" />
-                    </header>
+
 
                     <div className="grid gap-4">
                         <div className="grid gap-2">
@@ -138,11 +134,6 @@ export default function CustomerForm({ customer, users, companies }: Props) {
 
                 {/* Section 2: Localization & Assignment */}
                 <div className="space-y-6">
-                    <header>
-                        <h3 className="text-lg font-semibold text-primary">Work & Status</h3>
-                        <p className="text-sm text-muted-foreground">Configuration and internal management.</p>
-                        <div className="h-px bg-border mt-2" />
-                    </header>
 
                     <div className="grid gap-4">
                         <div className="grid sm:grid-cols-2 gap-4">

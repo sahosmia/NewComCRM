@@ -4,21 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Scopes\AssignedDataScope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 
 
+#[ScopedBy([AssignedDataScope::class])]
 class FollowUp extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'customer_id', 'user_id', 'follow_up_date', 'notes',
-        'status', 'priority', 'completed_at', 'next_follow_up'
+        'status', 'priority', 'completed_at',
     ];
 
     protected $casts = [
         'follow_up_date' => 'datetime',
         'completed_at' => 'datetime',
-        'next_follow_up' => 'datetime'
     ];
 
     const STATUSES = [

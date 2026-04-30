@@ -16,17 +16,7 @@ export default function ProductIndex({ products }: Props) {
         { title: 'Products', href: route('products.index') },
     ];
 
-    const filters: FilterOption[] = [
-        {
-            name: 'category',
-            label: 'Category',
-            type: 'select',
-            options: [
-                // Normally categories should be dynamic, but keeping it simple for now
-                { label: 'General', value: 'general' },
-            ]
-        },
-    ];
+
 
     const sortOptions: SortOption[] = [
         { label: 'Newest First', sort: 'created_at', direction: 'desc' },
@@ -48,7 +38,6 @@ export default function ProductIndex({ products }: Props) {
                 <CommonTable
                     data={products}
                     columns={columns}
-                    filters={filters}
                     dataKey='products'
                     entityName='Product'
                     sortOptions={sortOptions}

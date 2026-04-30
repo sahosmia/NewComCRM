@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import { Link } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import { Quotation } from "@/types/quotation";
 
@@ -9,7 +9,9 @@ interface Props {
 
 export default function Show({ quotation }: Props) {
     return (
-        <AppLayout breadcrumbs={[{ label: "Quotations", href: route('quotations.index') }, { label: quotation.quotation_number }]}>
+        <AppLayout breadcrumbs={[{ title: "Quotations", href: route('quotations.index') }, { title: "Details View", href: "#" }]}>
+                        <Head title={`Quotation: ${quotation.quotation_number}`} />
+
             <div className="p-6 max-w-4xl mx-auto">
                 <div className="flex justify-between items-center mb-6">
                     <div>
