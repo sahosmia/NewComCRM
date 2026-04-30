@@ -8,15 +8,25 @@ import { columns } from './Columns';
 interface Props {
     followUps: PaginationType<any>;
     stats: any;
+    customers: { id: number; name: string }[];
 }
 
-export default function FollowUpIndex({ followUps, stats }: Props) {
+export default function FollowUpIndex({ followUps, stats, customers }: Props) {
     const breadcrumbs = [
         { title: 'Dashboard', href: route('dashboard') },
         { title: 'Follow Ups', href: route('follow-ups.index') },
     ];
 
     const filters: FilterOption[] = [
+        {
+            name: 'customer_id',
+            label: 'Customer',
+            type: 'searchSelect',
+            options: customers.map((customer) => ({
+                label: customer.name,
+                value: customer.id,
+            }))
+        },
         {
             name: 'status',
             label: 'Status',
@@ -36,6 +46,17 @@ export default function FollowUpIndex({ followUps, stats }: Props) {
                 { label: 'Low', value: 'low' },
             ]
         },
+        {
+            name: 'date',
+            label: 'Follow Up Date',
+            type: 'date',
+        },
+
+        {
+            name: 'date_range',
+            label: 'Follow Up Date Range',
+            type: 'date_range',
+        }
     ];
 
     const sortOptions: SortOption[] = [
