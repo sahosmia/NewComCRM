@@ -140,6 +140,7 @@ class RequirementController extends Controller
 
     public function downloadPdf(Requirement $requirement)
     {
+        $this->authorize('view', $requirement);
         $path = $requirement->generatePDF();
         return Storage::download('public/' . $path);
     }
