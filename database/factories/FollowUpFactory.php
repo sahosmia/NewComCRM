@@ -21,7 +21,6 @@ class FollowUpFactory extends Factory
             'status'         => $this->faker->randomElement(['pending', 'done']),
             'priority'       => $this->faker->randomElement(['high', 'medium', 'low']),
             'completed_at'   => null,
-            'next_follow_up' => null,
         ];
     }
 

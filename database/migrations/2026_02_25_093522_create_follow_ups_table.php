@@ -23,12 +23,10 @@ return new class extends Migration
             ])->default('pending');
             $table->enum('priority', ['high', 'medium', 'low'])->default('medium');
             $table->dateTime('completed_at')->nullable();
-            $table->dateTime('next_follow_up')->nullable();
             $table->timestamps();
 
             $table->index(['user_id', 'follow_up_date']);
             $table->index('status');
-            $table->index('next_follow_up');
         });
     }
 

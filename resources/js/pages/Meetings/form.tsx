@@ -26,9 +26,8 @@ export default function MeetingForm({ meeting, customers }: Props) {
     const { data, setData, post, put, processing, errors } = useForm({
         customer_id: meeting?.customer_id || (preSelectedCustomerId ? parseInt(preSelectedCustomerId) : ""),
         title: meeting?.title || "",
-        start_time: meeting?.start_time ? new Date(meeting.start_time).toISOString().slice(0, 16) : "",
-        end_time: meeting?.end_time ? new Date(meeting.end_time).toISOString().slice(0, 16) : "",
-        meeting_type: meeting?.meeting_type || "physical",
+        scheduled_at: meeting?.scheduled_at ? new Date(meeting.scheduled_at).toISOString().slice(0, 16) : "",
+        meeting_type: meeting?.meeting_type || "virtual",
         location: meeting?.location || "",
         agenda: meeting?.agenda || "",
         notes: meeting?.notes || "",
@@ -70,25 +69,14 @@ export default function MeetingForm({ meeting, customers }: Props) {
                 <ErrorMessage message={errors.title} />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-                <div>
-                    <label className="text-sm font-medium">Start Time</label>
-                    <Input
-                        type="datetime-local"
-                        value={data.start_time}
-                        onChange={(e) => setData("start_time", e.target.value)}
-                    />
-                    <ErrorMessage message={errors.start_time} />
-                </div>
-                <div>
-                    <label className="text-sm font-medium">End Time</label>
-                    <Input
-                        type="datetime-local"
-                        value={data.end_time}
-                        onChange={(e) => setData("end_time", e.target.value)}
-                    />
-                    <ErrorMessage message={errors.end_time} />
-                </div>
+            <div>
+                <label className="text-sm font-medium">Schedule Date Time</label>
+                <Input
+                    type="datetime-local"
+                    value={data.scheduled_at}
+                    onChange={(e) => setData("scheduled_at", e.target.value)}
+                />
+                <ErrorMessage message={errors.scheduled_at} />
             </div>
 
             <div>
@@ -101,8 +89,8 @@ export default function MeetingForm({ meeting, customers }: Props) {
                         <SelectValue placeholder="Select Type" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="physical">Physical</SelectItem>
                         <SelectItem value="virtual">Virtual</SelectItem>
+                        <SelectItem value="physical">Physical</SelectItem>
                         <SelectItem value="phone">Phone</SelectItem>
                     </SelectContent>
                 </Select>

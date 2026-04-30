@@ -28,14 +28,12 @@ export default function FollowUpForm({ followUp, customers }: Props) {
         notes: string;
         status: string;
         priority: string;
-        next_follow_up: string;
     }>({
         customer_id: followUp?.customer_id || (preSelectedCustomerId ? parseInt(preSelectedCustomerId) : ""),
         follow_up_date: followUp?.follow_up_date ? new Date(followUp.follow_up_date).toISOString().slice(0, 16) : "",
         notes: followUp?.notes || "",
         status: followUp?.status || "pending",
         priority: followUp?.priority || "medium",
-        next_follow_up: followUp?.next_follow_up ? new Date(followUp.next_follow_up).toISOString().slice(0, 16) : "",
     });
 
     const submit = (e: React.FormEvent) => {
@@ -70,7 +68,8 @@ export default function FollowUpForm({ followUp, customers }: Props) {
                     value={data.follow_up_date}
                     onChange={(e) => setData("follow_up_date", e.target.value)}
                 />
-                {errors.follow_up_date && <div className="text-red-500 text-sm">{errors.follow_up_date}</div>}
+                <ErrorMessage message={errors.follow_up_date}/>
+
             </div>
 
             <div>
@@ -107,18 +106,6 @@ export default function FollowUpForm({ followUp, customers }: Props) {
                     </SelectContent>
                 </Select>
                 <ErrorMessage message={errors.priority} />
-
-            </div>
-
-            <div>
-                <label className="text-sm font-medium">Next Follow Up (Optional)</label>
-                <Input
-                    type="datetime-local"
-                    value={data.next_follow_up}
-                    onChange={(e) => setData("next_follow_up", e.target.value)}
-                />
-                <ErrorMessage message={errors.next_follow_up} />
-
             </div>
 
             <div>

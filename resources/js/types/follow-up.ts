@@ -7,7 +7,6 @@ export interface FollowUp {
     status: 'price_shared' | 'negotiation' | 'purchase' | 'lost' | 'pending' | 'follow_up';
     priority: 'high' | 'medium' | 'low';
     completed_at: string | null;
-    next_follow_up: string | null;
     created_at: string;
     updated_at: string;
     customer?: any;

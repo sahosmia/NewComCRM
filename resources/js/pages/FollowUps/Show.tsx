@@ -42,7 +42,7 @@ export default function Show({ followUp }: { followUp: any }) {
                         </Button>
                         <Button asChild>
                             <Link href={route("follow-ups.edit", followUp.id)}>
-                                Edit 
+                                Edit
                             </Link>
                         </Button>
                     </div>
@@ -169,31 +169,6 @@ export default function Show({ followUp }: { followUp: any }) {
                             </CardHeader>
                             <CardContent className="pt-6 flex-1 italic text-muted-foreground leading-relaxed whitespace-pre-wrap">
                                 {followUp.notes || "No detailed notes were recorded for this activity."}
-                            </CardContent>
-                        </Card>
-
-                        {/* Next Action Card */}
-                        <Card className="border-l-4 border-l-primary">
-                            <CardHeader>
-                                <CardTitle className="text-base flex items-center gap-2 text-primary">
-                                    <AlertCircle className="w-5 h-5" />
-                                    Next Planned Action
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                {followUp.next_follow_up ? (
-                                    <div className="flex items-center justify-between bg-primary/5 p-4 rounded-lg border border-primary/10">
-                                        <div>
-                                            <p className="text-xs text-primary font-bold uppercase">Scheduled Next Date</p>
-                                            <p className="text-lg font-bold">{new Date(followUp.next_follow_up).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                                        </div>
-                                        <Calendar className="w-10 h-10 text-primary/20" />
-                                    </div>
-                                ) : (
-                                    <div className="text-sm text-muted-foreground p-4 text-center border-dashed border-2 rounded-lg">
-                                        No future follow-up has been scheduled yet.
-                                    </div>
-                                )}
                             </CardContent>
                         </Card>
 
