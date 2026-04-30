@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class Requirement extends Model
 {
@@ -32,5 +34,14 @@ class Requirement extends Model
         $total = $this->items()->sum('total_price');
 
         $this->updateQuietly(['grand_total' => $total]);
+    }
+
+    public function generatePDF(): string
+    {
+        $pdf = Pdf::loadView('pdf.requirement', ['requirement' => $this->load(['customer', 'items.product'])]);
+        $path = 'requirements/requirement-' . $this->id . '.pdf';
+        Storage::put('public/' . $path, $pdf->output());
+
+        return $path;
     }
 }

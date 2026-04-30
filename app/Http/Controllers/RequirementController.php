@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateRequirementRequest;
 use App\Models\Requirement;
 use App\Services\RequirementService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use App\Exports\GeneralExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -135,6 +136,12 @@ class RequirementController extends Controller
                 ];
             }
         ), 'requirements.xlsx');
+    }
+
+    public function downloadPdf(Requirement $requirement)
+    {
+        $path = $requirement->generatePDF();
+        return Storage::download('public/' . $path);
     }
 
     public function print(Request $request)

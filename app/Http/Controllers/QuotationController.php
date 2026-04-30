@@ -89,7 +89,12 @@ class QuotationController extends Controller
             ->with('success', 'Quotation deleted successfully.');
     }
 
-     public function updateStatus(Request $request, Quotation $quotation)
+    public function download(Quotation $quotation)
+    {
+        return $this->quotationService->downloadPdf($quotation);
+    }
+
+    public function updateStatus(Request $request, Quotation $quotation)
     {
         $validated = $request->validate([
             'status' => 'required|string|in:draft,sent,accepted,declined',
