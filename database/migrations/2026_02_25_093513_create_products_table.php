@@ -22,6 +22,7 @@ return new class extends Migration
             $table->decimal('unit_price', 10, 2);
             $table->string('supplier_name')->nullable()->index();
             $table->text('source')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
