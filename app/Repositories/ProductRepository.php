@@ -42,7 +42,7 @@ class ProductRepository
     public function forRequirementForm(): Collection
     {
         return Product::query()
-            ->select('id', 'name', 'unit_price')
+            ->select('id', 'name', 'unit_price', 'description')
             ->get();
     }
 

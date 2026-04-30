@@ -27,9 +27,6 @@ export default function Show({ meeting }: any) {
                     <div>
                         <div className="flex items-center gap-3 mb-1">
                             <h1 className="text-2xl font-bold tracking-tight">{meeting.title}</h1>
-                            <Badge variant="secondary" className="bg-primary/10 text-primary border-none">
-                                Meeting ID: #{meeting.id}
-                            </Badge>
                             <StatusBadge status={meeting.status} className="shadow-sm" />
 
                         </div>
@@ -101,27 +98,7 @@ export default function Show({ meeting }: any) {
                             </CardContent>
                         </Card>
 
-                        {/* Discussion Notes Card */}
-                        <Card className="border-l-4 border-l-primary flex-1">
-                            <CardHeader className="flex flex-row items-center justify-between pb-2">
-                                <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 text-primary">
-                                    <MessageSquare className="w-4 h-4" />
-                                    Discussion Notes
-                                </CardTitle>
-                                <Clock className="w-4 h-4 text-muted-foreground" />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="prose prose-sm max-w-none text-muted-foreground leading-7 whitespace-pre-wrap">
-                                    {meeting.notes ? (
-                                        meeting.notes
-                                    ) : (
-                                        <div className="italic py-8 text-center border-2 border-dashed rounded-lg">
-                                            No notes recorded yet.
-                                        </div>
-                                    )}
-                                </div>
-                            </CardContent>
-                        </Card>
+                        
 
                     </div>
                 </div>

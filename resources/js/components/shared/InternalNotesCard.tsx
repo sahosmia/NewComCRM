@@ -18,7 +18,6 @@ export default function InternalNotesCard({
     className
 }: InternalNotesCardProps) {
 
-    // ভেরিয়েন্ট অনুযায়ী কালার স্কিম
     const variants = {
         amber: "bg-amber-50/50 border-amber-200 text-amber-900",
         blue: "bg-blue-50/50 border-blue-200 text-blue-900",

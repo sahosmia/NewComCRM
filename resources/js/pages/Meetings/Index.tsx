@@ -40,7 +40,7 @@ export default function MeetingIndex({ meetings }: Props) {
 
     const sortOptions: SortOption[] = [
         { label: 'Newest First', sort: 'created_at', direction: 'desc' },
-        { label: 'Start Time', sort: 'start_time', direction: 'asc' },
+        { label: 'Schedule Date Time', sort: 'scheduled_at', direction: 'asc' },
         { label: 'Title', sort: 'title', direction: 'asc' },
     ];
 
