@@ -14,15 +14,21 @@ import { DatePickerSimple } from "../admin/DataPickerSimple";
 
 
 
-export function TableFilters({ filters, queryParams = {}, routeName }: {
-    filters: FilterOption[], queryParams: any, routeName: string
+export function TableFilters({ filters, queryParams, routeName }: {
+    filters: FilterOption[], queryParams: Record<string, string>, routeName: string
 }) {
     const [openSelect, setOpenSelect] = useState<string | null>(null);
 
     const handleFilterChange = (name: string, value: string | number) => {
-        const newParams = { ...queryParams, [name]: value, page: 1 };
+        const newParams: Record<string, string> = { ...queryParams, [name]: String(value), page: '1' };
 
         if (value === 'all') delete newParams[name];
+
+        Object.keys(newParams).forEach(key => {
+            if (newParams[key] === undefined || newParams[key] === null || newParams[key] === '') {
+                delete newParams[key];
+            }
+        });
 
         router.get(route(routeName), newParams, {
             preserveState: true,
@@ -32,7 +38,7 @@ export function TableFilters({ filters, queryParams = {}, routeName }: {
     };
 
     const handleDateChange = (range: DateRange | undefined) => {
-        const newParams = { ...queryParams, page: 1 };
+        const newParams = { ...queryParams, page: '1' };
 
         if (range?.from) {
             newParams.start_date = formatDateForInput(range.from);

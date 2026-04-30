@@ -39,7 +39,7 @@ class MeetingRepository
                 $query->latest();
             })
             ->paginate($perPage)
-            ->withQueryString($params);
+            ->withQueryString();
     }
 
     public function create(array $data): Meeting

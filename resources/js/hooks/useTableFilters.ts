@@ -18,11 +18,13 @@ export const useTableFilters = <T extends { id: number }>({
 
     // ✅ Memoize query parsing (IMPORTANT)
     const queryParams = useMemo(() => {
-        return new URLSearchParams(url.split('?')[1] || '');
+        const searchPart = url.includes('?') ? url.split('?')[1] : '';
+        return new URLSearchParams(searchPart);
     }, [url]);
 
     const paramsObject = useMemo(() => {
-        return Object.fromEntries(queryParams.entries());
+        const entries = queryParams ? Array.from(queryParams.entries()) : [];
+        return Object.fromEntries(entries);
     }, [queryParams]);
 
     // ✅ Initialize state from URL (once)
@@ -42,7 +44,6 @@ export const useTableFilters = <T extends { id: number }>({
     // ✅ Centralized filter apply
     const applyFilters = useCallback(
         (newFilters: { search?: string; per_page?: string; page?: number }) => {
-
             const params: Record<string, any> = {
                 ...paramsObject, // preserve other filters
                 search: newFilters.search ?? search,
@@ -51,7 +52,12 @@ export const useTableFilters = <T extends { id: number }>({
             };
 
             // ✅ clean params
-            if (!params.search) delete params.search;
+            Object.keys(params).forEach(key => {
+                if (params[key] === undefined || params[key] === null || params[key] === '') {
+                    delete params[key];
+                }
+            });
+
             if (params.per_page === '10') delete params.per_page;
 
             router.get(route(routeName), params, {
@@ -61,7 +67,7 @@ export const useTableFilters = <T extends { id: number }>({
                 ...(dataKey && { only: [dataKey] }),
             });
         },
-        [routeName, paramsObject, dataKey]
+        [routeName, paramsObject, search, perPage, dataKey]
     );
 
     // ✅ Debounced search (fixed deps)

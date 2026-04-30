@@ -58,7 +58,7 @@ test('user cannot view someone else customer detail', function () {
 
     $this->actingAs($this->user)
         ->get(route('customers.show', $otherCustomer))
-        ->assertStatus(403);
+        ->assertStatus(404); // Global scope makes it 404
 });
 
 test('user can update their own customer', function () {

@@ -35,7 +35,7 @@ class FollowUpRepository
                 $query->latest();
             })
             ->paginate($perPage)
-            ->withQueryString($params);
+            ->withQueryString();
     }
 
     /**
