@@ -58,9 +58,11 @@ export default function Show({ requirement }: any) {
                     </div>
 
                     <div className="flex items-center gap-2 w-full md:w-auto">
-                        <Button variant="outline" size="sm" className="flex-1 md:flex-none">
-                            <Printer className="w-4 h-4 mr-2" /> Print
-                        </Button>
+                        <a href={route('requirements.download', requirement.id)} target="_blank">
+                            <Button variant="outline" size="sm" className="flex-1 md:flex-none">
+                                <Printer className="w-4 h-4 mr-2" /> Print
+                            </Button>
+                        </a>
                         <Link href={route("requirements.edit", requirement.id)} className="flex-1 md:flex-none">
                             <Button variant="outline" size="sm" className="w-full">Edit</Button>
                         </Link>

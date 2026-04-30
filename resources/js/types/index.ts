@@ -168,6 +168,8 @@ export interface UserType {
     role: string;
     created_at: string;
     is_active: boolean;
+    signature?: string | null;
+    signature_url?: string | null;
 }
 export interface UserTypeforForm {
     id: number;

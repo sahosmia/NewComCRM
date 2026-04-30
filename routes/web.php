@@ -94,6 +94,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('requirements')->name('requirements.')->group(function() {
         Route::get('export/excel', [RequirementController::class, 'export'])->name('export');
         Route::get('print', [RequirementController::class, 'print'])->name('print');
+        Route::get('{requirement}/download', [RequirementController::class, 'downloadPdf'])->name('download');
         Route::patch('{requirement}/status', [RequirementController::class, 'updateStatus'])->name('update-status');
     });
 
