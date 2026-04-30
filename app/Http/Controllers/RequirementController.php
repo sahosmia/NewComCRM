@@ -108,12 +108,10 @@ class RequirementController extends Controller
             ->with('success', 'Requirement deleted successfully');
     }
 
-     public function downloadPdf(Requirement $requirement)
+    public function downloadPdf(Requirement $requirement)
     {
-
         $path = $requirement->generatePDF();
-        return $path;
-        return Storage::download('public/' . $path);
+        return response()->download(storage_path('app/public/' . $path));
     }
 
     public function export(Request $request)

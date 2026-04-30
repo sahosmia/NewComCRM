@@ -12,7 +12,7 @@
         <strong>To,</strong><br>
         <strong>{{ $requirement->customer->name }}</strong><br>
         {{ $requirement->customer->designation }}<br>
-        <strong>{{ $requirement->customer->company_name }}</strong><br>
+        <strong>{{ $requirement->customer->company?->name }}</strong><br>
         {{ $requirement->customer->addresses[0] ?? '' }}
     </div>
 

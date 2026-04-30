@@ -6,9 +6,27 @@ use App\Models\Company;
 
 class CompanyRepository
 {
-    public function getAll()
+    public function getAll(array $params = [])
     {
-        return Company::latest()->paginate(10);
+        return Company::query()
+            ->when($params['search'] ?? null, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('phone', 'like', "%{$search}%")
+                        ->orWhere('website', 'like', "%{$search}%");
+                });
+            })
+            ->when($params['sort'] ?? null, function ($query, $sort) use ($params) {
+                $allowedSorts = ['name', 'email', 'phone', 'website', 'created_at'];
+                if (in_array($sort, $allowedSorts)) {
+                    $query->orderBy($sort, $params['direction'] ?? 'asc');
+                }
+            }, function ($query) {
+                $query->latest();
+            })
+            ->paginate($params['per_page'] ?? 10)
+            ->withQueryString();
     }
 
     public function all()
