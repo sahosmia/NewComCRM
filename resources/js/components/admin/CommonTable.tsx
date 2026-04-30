@@ -157,12 +157,14 @@ const CommonTable = <T extends { id: number }>({
                     )}
 
                     {/* Primary Action: Create */}
-                    <Button size="sm" asChild className="gap-2">
-                        <Link href={route(create_route)}>
-                            <Plus className="h-4 w-4" />
-                            <span>Add {entityName}</span>
-                        </Link>
-                    </Button>
+                    {create_route && (
+                        <Button size="sm" asChild className="gap-2">
+                            <Link href={route(create_route)}>
+                                <Plus className="h-4 w-4" />
+                                <span>Add {entityName}</span>
+                            </Link>
+                        </Button>
+                    )}
 
                     {/* Secondary Actions: Dropdown */}
                     <TableBulkActions

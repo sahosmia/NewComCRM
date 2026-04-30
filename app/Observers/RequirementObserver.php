@@ -8,6 +8,17 @@ use App\Models\Sale;
 class RequirementObserver
 {
     /**
+     * Handle the Requirement "created" event.
+     */
+    public function created(Requirement $requirement): void
+    {
+        if ($requirement->status === 'purchased') {
+            $this->decreaseStock($requirement);
+            $this->createSale($requirement);
+        }
+    }
+
+    /**
      * Handle the Requirement "updated" event.
      */
     public function updated(Requirement $requirement): void

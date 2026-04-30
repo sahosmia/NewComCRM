@@ -17,7 +17,11 @@ class AssignedDataScope implements Scope
         if (Auth::check() && !Auth::user()->isSuperAdmin()) {
             $column = $this->getAssignedColumn($model);
             if ($column) {
-                $builder->where($column, Auth::id());
+                if ($model instanceof \App\Models\Sale) {
+                    $builder->whereHas('customer');
+                } else {
+                    $builder->where($column, Auth::id());
+                }
             }
         }
     }
@@ -27,6 +31,7 @@ class AssignedDataScope implements Scope
         return match (get_class($model)) {
             \App\Models\Customer::class => 'assigned_to',
             \App\Models\Meeting::class, \App\Models\FollowUp::class, \App\Models\Quotation::class, \App\Models\Requirement::class => 'user_id',
+            \App\Models\Sale::class => 'customer_id',
             default => null,
         };
     }

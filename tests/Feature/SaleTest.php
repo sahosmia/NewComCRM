@@ -39,7 +39,20 @@ it('protects_sales_route_from_unauthorized_users', function () {
 });
 
 it('can_list_all_sales', function () {
-    Sale::factory()->count(3)->create();
+    // Clear existing sales to ensure predictable count
+    Sale::query()->forceDelete();
+
+    $customer = Customer::factory()->create(['assigned_to' => $this->user->id]);
+
+    // Create sales without using the factory for requirement_id to avoid creating extra sales via observer
+    for ($i = 0; $i < 3; $i++) {
+        Sale::create([
+            'requirement_id' => Requirement::factory()->create(['status' => 'pending'])->id,
+            'customer_id' => $customer->id,
+            'amount' => 1000,
+            'sale_date' => now(),
+        ]);
+    }
 
     $response = $this->actingAs($this->user)
         ->get(route('sales.index'));
