@@ -89,8 +89,8 @@
                 @endif
                 @if($requirement->has_ait)
                     <tr>
-                        <td colspan="4" class="text-right font-bold">AIT ({{ $requirement->ait_percentage }}%)</td>
-                        <td class="text-right">{{ number_format($subTotal * ($requirement->ait_percentage / 100), 2) }}</td>
+                        <td colspan="4" class="text-right font-bold">AIT Adjustment ({{ $requirement->ait_percentage }}%)</td>
+                        <td class="text-right">{{ number_format($subTotal * ($requirement->ait_percentage / (100 - $requirement->ait_percentage)), 2) }}</td>
                     </tr>
                 @endif
             @endif

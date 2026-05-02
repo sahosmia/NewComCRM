@@ -43,6 +43,9 @@ class RequirementService
 
             $requirement->items()->createMany($data['items']);
 
+            // Explicitly calculate to ensure taxes/accessories/installation are included
+            $requirement->calculateGrandTotal();
+
             return $requirement;
         });
     }
@@ -57,6 +60,9 @@ class RequirementService
             $requirement->items()->delete();
 
             $requirement->items()->createMany($data['items']);
+
+            // Explicitly calculate to ensure taxes/accessories/installation are included
+            $requirement->calculateGrandTotal();
         });
     }
 

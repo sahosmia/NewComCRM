@@ -85,10 +85,18 @@ class Requirement extends Model
 
         $subTotal = $itemsTotal + $accessoriesTotal + $installationTotal;
 
-        $vatAmount = $this->has_vat ? ($subTotal * ($this->vat_percentage / 100)) : 0;
-        $aitAmount = $this->has_ait ? ($subTotal * ($this->ait_percentage / 100)) : 0;
+        // AIT (Gross-up Logic): Total = (Subtotal * 100) / (100 - AIT_Percentage)
+        // AIT Amount = Total - Subtotal = Subtotal * (AIT_Percentage / (100 - AIT_Percentage))
+        $aitAmount = 0;
+        if ($this->has_ait && $this->ait_percentage < 100) {
+            $aitAmount = $subTotal * ($this->ait_percentage / (100 - $this->ait_percentage));
+        }
 
-        $grandTotal = $subTotal + $vatAmount + $aitAmount;
+        // VAT/Tax (Add-on Logic): Total = Subtotal + (Subtotal * VAT_Percentage / 100)
+        // VAT Amount = Subtotal * (VAT_Percentage / 100)
+        $vatAmount = $this->has_vat ? ($subTotal * ($this->vat_percentage / 100)) : 0;
+
+        $grandTotal = $subTotal + $aitAmount + $vatAmount;
 
         $this->updateQuietly(['grand_total' => $grandTotal]);
     }

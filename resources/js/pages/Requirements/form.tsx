@@ -90,10 +90,12 @@ export default function RequirementForm({ requirement, customers, products, unit
 
     const subTotal = itemsTotal + accessoriesTotal + installationTotal;
 
-    const vatAmount = data.has_vat ? (subTotal * (parseFloat(data.vat_percentage as string) || 0) / 100) : 0;
-    const aitAmount = data.has_ait ? (subTotal * (parseFloat(data.ait_percentage as string) || 0) / 100) : 0;
+    const aitPercentage = parseFloat(data.ait_percentage as string) || 0;
+    const aitAmount = (data.has_ait && aitPercentage < 100) ? (subTotal * (aitPercentage / (100 - aitPercentage))) : 0;
 
-    const grandTotal = subTotal + vatAmount + aitAmount;
+    const vatAmount = data.has_vat ? (subTotal * (parseFloat(data.vat_percentage as string) || 0) / 100) : 0;
+
+    const grandTotal = subTotal + aitAmount + vatAmount;
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -535,8 +537,8 @@ export default function RequirementForm({ requirement, customers, products, unit
                         )}
                         {data.has_ait && (
                             <div className="flex justify-end gap-4 text-xs text-muted-foreground font-medium">
-                                <span>AIT ({data.ait_percentage}%):</span>
-                                <span>{aitAmount.toLocaleString()}</span>
+                                <span>AIT Adjustment ({data.ait_percentage}%):</span>
+                                <span>{aitAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                             </div>
                         )}
                     </div>
@@ -546,7 +548,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                         <div className="flex items-baseline justify-end gap-2 text-primary">
                             <span className="text-sm font-medium">BDT</span>
                             <span className="text-4xl font-black tabular-nums tracking-tighter">
-                                {grandTotal.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                                {grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </span>
                         </div>
                     </div>

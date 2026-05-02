@@ -255,13 +255,13 @@ export default function Show({ requirement }: any) {
                                         )}
                                         {requirement.has_ait && (
                                             <tr>
-                                                <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">AIT ({requirement.ait_percentage}%)</td>
+                                                <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">AIT Adjustment ({requirement.ait_percentage}%)</td>
                                                 <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">
                                                     + {formatCurrency(
                                                         ((requirement.items?.reduce((sum: number, i: any) => sum + parseFloat(i.total_price), 0) || 0) +
                                                         (requirement.has_accessories ? (requirement.accessories_quantity * requirement.accessories_price) : 0) +
                                                         (requirement.has_installation ? (requirement.installation_quantity * requirement.installation_price) : 0)) *
-                                                        (requirement.ait_percentage / 100)
+                                                        (parseFloat(requirement.ait_percentage as string) / (100 - parseFloat(requirement.ait_percentage as string)))
                                                     )}
                                                 </td>
                                             </tr>
