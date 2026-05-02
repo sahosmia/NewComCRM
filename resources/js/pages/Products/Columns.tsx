@@ -19,25 +19,30 @@ const columns: Column<Product>[] = [
         className: "w-1/10"
 
     },
-  {
+    {
         header: 'Description',
         accessor: (item) => (
-            <div className="max-w-[250px] min-w-[150px]">
-                <p className="text-xs text-muted-foreground whitespace-normal break-words leading-relaxed">
+            <div className="max-w-62.5 min-w-37.5">
+                <p className="text-xs text-muted-foreground whitespace-normal wrap-break-word leading-relaxed">
                     {item.description || "No description."}
                 </p>
             </div>
         ),
-        className: "w-[25%]" 
+        className: "w-[25%]"
     },
     {
         header: 'Price',
         accessor: (item) => item.unit_price,
         className: "w-1/10"
     },
+
     {
         header: 'Stock',
-        accessor: (item) => item.stock_quantity,
+        accessor: (item) => (
+            <span>
+                {item.stock_quantity} {item.unit?.short_form}
+            </span>
+        ),
         className: "w-1/10"
     },
 

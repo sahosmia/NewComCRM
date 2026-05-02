@@ -62,7 +62,7 @@ export default function Show({ requirement }: any) {
                         <Link href={route("requirements.edit", requirement.id)} className="flex-1 md:flex-none">
                             <Button variant="outline" size="sm" className="w-full">Edit</Button>
                         </Link>
-                         <Link href={route('requirements.download', requirement.id)} target="_blank">
+                        <Link href={route('requirements.download', requirement.id)} target="_blank">
                             <Button variant="outline" size="sm" className="flex-1 md:flex-none">
                                 <Printer className="w-4 h-4 mr-2" /> Print
                             </Button>
@@ -117,7 +117,7 @@ export default function Show({ requirement }: any) {
                                     <thead className="bg-muted/30 text-muted-foreground uppercase text-[10px] font-bold tracking-wider border-b">
                                         <tr>
                                             <th className="px-6 py-4">Product Description</th>
-                                            <th className="px-6 py-4 text-center">Qty</th>
+                                            <th className="px-6 py-4 ">Qty</th>
                                             <th className="px-6 py-4 text-right whitespace-nowrap">Unit Price</th>
                                             <th className="px-6 py-4 text-right">Subtotal</th>
                                         </tr>
@@ -131,8 +131,8 @@ export default function Show({ requirement }: any) {
                                                         Brand: <span className="text-foreground/70">{item.product?.brand || 'N/A'}</span>
                                                     </p>
                                                 </td>
-                                                <td className="px-6 py-4 text-center font-mono font-medium">
-                                                    {item.quantity}
+                                                <td className="px-6 py-4  font-mono font-medium">
+                                                    {item.quantity} {item.product?.unit?.short_form}
                                                 </td>
                                                 <td className="px-6 py-4 text-right font-mono text-xs text-muted-foreground">
                                                     {formatCurrency(item.unit_price)}

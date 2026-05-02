@@ -6,3 +6,8 @@
 Pending Task
 1. Dashbord Card Desgin
 2. Get user wise total
+
+
+
+10500*100/95=11052.63
+10500*5/100 = 525=11025

@@ -18,13 +18,15 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             UserSeeder::class,
+            UnitSeeder::class,
+
             ProductSeeder::class,
             CustomerSeeder::class,
             FollowUpSeeder::class,
             MeetingSeeder::class,
         ]);
 
-       Customer::factory()->count(5)->state(['status' => 'inactive'])->create();
+        Customer::factory()->count(5)->state(['status' => 'inactive'])->create();
         Requirement::factory()
             ->hasItems(3)
             ->create();

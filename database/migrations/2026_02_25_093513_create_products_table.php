@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('stock_quantity')->default(0);
             $table->decimal('unit_price', 10, 2);
             $table->string('supplier_name')->nullable()->index();
+            $table->foreignId('unit_id')->nullable()->constrained('units')->onDelete('set null');
             $table->text('source')->nullable();
             $table->timestamps();
         });

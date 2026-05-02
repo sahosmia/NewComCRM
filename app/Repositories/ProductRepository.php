@@ -13,6 +13,7 @@ class ProductRepository
         $perPage = $params['per_page'] ?? 10;
 
         return Product::query()
+            ->with('unit')
             ->when($params['search'] ?? null, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
@@ -42,7 +43,8 @@ class ProductRepository
     public function forRequirementForm(): Collection
     {
         return Product::query()
-            ->select('id', 'name', 'unit_price', 'description')
+            ->with('unit')
+            ->select('id', 'name', 'unit_price', 'description', 'unit_id')
             ->get();
     }
 
