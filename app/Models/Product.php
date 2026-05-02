@@ -19,7 +19,8 @@ class Product extends Model
         'stock_quantity',
         'unit_price',
         'supplier_name',
-        'source'
+        'source',
+        'unit_id'
     ];
 
     protected $casts = [
@@ -28,6 +29,11 @@ class Product extends Model
     ];
 
     // Relationships
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
+
     public function requirements()
     {
         return $this->hasMany(Requirement::class);

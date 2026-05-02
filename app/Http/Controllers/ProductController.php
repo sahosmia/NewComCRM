@@ -9,6 +9,7 @@ use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Exports\GeneralExport;
+use App\Models\Unit;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
@@ -32,7 +33,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Products/Create');
+        return Inertia::render('Products/Create', [
+            'units' => Unit::all(),
+        ]);
     }
 
     /**
@@ -52,7 +55,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         return Inertia::render('Products/Show', [
-            'product' => $product,
+            'product' => $product->load('unit'),
         ]);
     }
 
@@ -63,6 +66,8 @@ class ProductController extends Controller
     {
         return Inertia::render('Products/Edit', [
             'product' => $product,
+            'units' => Unit::all(),
+
         ]);
     }
 
@@ -134,7 +139,7 @@ class ProductController extends Controller
         }
         $products = $query->get();
 
-        $data = $products->map(function($product) {
+        $data = $products->map(function ($product) {
             return [
                 $product->name,
                 $product->brand,

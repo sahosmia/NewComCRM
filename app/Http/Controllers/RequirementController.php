@@ -35,7 +35,8 @@ class RequirementController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {        $this->authorize('create', Requirement::class);
+    {
+        $this->authorize('create', Requirement::class);
 
 
         return Inertia::render('Requirements/Create', $this->requirementService->formOptions());
@@ -46,7 +47,7 @@ class RequirementController extends Controller
      */
     public function store(StoreRequirementRequest $request)
     {
-                $this->authorize('create', Requirement::class);
+        $this->authorize('create', Requirement::class);
 
         $this->requirementService->create($request->validated());
 
@@ -60,7 +61,9 @@ class RequirementController extends Controller
     public function show(Requirement $requirement)
     {
         return Inertia::render('Requirements/Show', [
-            'requirement' => $requirement->load(['customer', 'items.product']),
+            // 'requirement' => $requirement->load(['customer', 'items.product']),
+            'requirement' => $requirement->load(['customer', 'items.product.unit']),
+
         ]);
     }
 
@@ -110,7 +113,9 @@ class RequirementController extends Controller
 
     public function downloadPdf(Requirement $requirement)
     {
+
         $path = $requirement->generatePDF();
+        return $path;
         return response()->download(storage_path('app/public/' . $path));
     }
 
@@ -130,7 +135,7 @@ class RequirementController extends Controller
             $requirements,
             ['Customer', 'Items', 'Total Price', 'Status', 'Date'],
             function ($requirement) {
-                $items = $requirement->items->map(function($item) {
+                $items = $requirement->items->map(function ($item) {
                     return ($item->product ? $item->product->name : 'Unknown') . " (x{$item->quantity})";
                 })->implode(', ');
 
@@ -154,8 +159,8 @@ class RequirementController extends Controller
         }
         $requirements = $query->get();
 
-        $data = $requirements->map(function($requirement) {
-            $items = $requirement->items->map(function($item) {
+        $data = $requirements->map(function ($requirement) {
+            $items = $requirement->items->map(function ($item) {
                 return ($item->product ? $item->product->name : 'Unknown') . " (x{$item->quantity})";
             })->implode(', ');
 

@@ -3,25 +3,35 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { Product } from "@/types/product";
+import { Unit } from "@/types/unit";
 import { Loader2 } from "lucide-react";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
 
 interface Props {
     product?: Product;
+    units?: Unit[];
 }
 
-export default function ProductForm({ product }: Props) {
+export default function ProductForm({ product, units = [] }: Props) {
     const { data, setData, post, put, processing, errors } = useForm({
         name: product?.name || "",
         brand: product?.brand || "",
         model: product?.model || "",
         unit_price: product?.unit_price || "",
         category: product?.category || "",
-        stock_quantity: product?.stock_quantity || 0,
+        stock_quantity: product?.stock_quantity || "",
         supplier_name: product?.supplier_name || "",
         source: product?.source || "",
         description: product?.description || "",
+        unit_id: product?.unit_id || "",
     });
 
     const submit = (e: React.FormEvent) => {
@@ -100,7 +110,7 @@ export default function ProductForm({ product }: Props) {
                         type="number"
                         placeholder="0"
                         value={data.stock_quantity}
-                        onChange={(e) => setData("stock_quantity", parseInt(e.target.value) || 0)}
+                        onChange={(e) => setData("stock_quantity", parseInt(e.target.value) || "")}
                     />
                     <ErrorMessage message={errors.stock_quantity} />
 
@@ -130,6 +140,27 @@ export default function ProductForm({ product }: Props) {
                     />
                     <ErrorMessage message={errors.supplier_name} />
 
+                </div>
+
+                {/* Unit */}
+                <div className="space-y-2">
+                    <Label htmlFor="unit_id">Unit</Label>
+                    <Select
+                        onValueChange={(value) => setData("unit_id", value)}
+                        defaultValue={data.unit_id?.toString()}
+                    >
+                        <SelectTrigger className={errors.unit_id ? "border-red-500" : ""}>
+                            <SelectValue placeholder="Select a unit" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {units.map((unit) => (
+                                <SelectItem key={unit.id} value={unit.id.toString()}>
+                                    {unit.title} ({unit.short_form})
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    <ErrorMessage message={errors.unit_id} />
                 </div>
             </div>
 

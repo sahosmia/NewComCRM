@@ -15,7 +15,7 @@ class RequirementRepository
         return Requirement::query()
             ->with([
                 'customer',
-                'items.product'
+                'items.product.unit'
             ])
 
             ->when(!$user->isSuperAdmin(), function ($query) use ($user) {

@@ -1,3 +1,5 @@
+import { Unit } from "./unit";
+
 export interface Product {
     id: number;
     name: string;
@@ -12,4 +14,7 @@ export interface Product {
     created_at: string;
     updated_at: string;
     deleted_at?: string | null;
+    unit:Unit;
+    unit_id:number;
+
 }

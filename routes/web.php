@@ -12,10 +12,10 @@ use App\Http\Controllers\{
     UserController,
     ReportController,
     CompanyController,
-    SaleController
+    SaleController,
+    UnitController
 };
 use Illuminate\Support\Facades\Artisan;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -40,7 +40,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('print', 'print')->name('print');
             Route::post('import/excel', 'import')->name('import');
         });
-        Route::resource('/', CustomerController::class)->parameters(['' => 'customer']);
     });
     Route::resource('customers', CustomerController::class);
 
@@ -81,29 +80,32 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::resource('quotations', QuotationController::class);
 
-    // --- Reports ---
-    Route::prefix('reports')->name('reports.')->controller(ReportController::class)->group(function () {
-        Route::get('follow-ups', 'followUps')->name('follow-ups');
-        Route::get('sales', 'sales')->name('sales');
-        Route::get('customers', 'customers')->name('customers');
-    });
-
-    // --- Other Resources ---
-    Route::get('sales', [SaleController::class, 'index'])->name('sales.index');
-    Route::get('sales/export', [SaleController::class, 'export'])->name('sales.export');
-    Route::get('sales/print', [SaleController::class, 'print'])->name('sales.print');
-
+    // --- Requirements ---
     Route::prefix('requirements')->name('requirements.')->group(function () {
         Route::get('export/excel', [RequirementController::class, 'export'])->name('export');
         Route::get('print', [RequirementController::class, 'print'])->name('print');
         Route::get('{requirement}/download', [RequirementController::class, 'downloadPdf'])->name('download');
         Route::patch('{requirement}/status', [RequirementController::class, 'updateStatus'])->name('update-status');
     });
+    Route::resource('requirements', RequirementController::class);
 
-    Route::resources([
-        'requirements' => RequirementController::class,
-        'companies' => CompanyController::class,
-    ]);
+    // --- Sales & Reports ---
+    Route::prefix('reports')->name('reports.')->controller(ReportController::class)->group(function () {
+        Route::get('follow-ups', 'followUps')->name('follow-ups');
+        Route::get('sales', 'sales')->name('sales');
+        Route::get('customers', 'customers')->name('customers');
+    });
+
+    Route::prefix('sales')->name('sales.')->controller(SaleController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('export', 'export')->name('export');
+        Route::get('print', 'print')->name('print');
+    });
+
+    // --- Limited Resources ---
+    // Combined these as they use the same 'only' restriction
+    Route::resource('companies', CompanyController::class)->except(['show']);
+    Route::resource('units', UnitController::class)->except(['show']);
 
     // --- Administration ---
     Route::middleware(['role:super_admin'])->group(function () {
@@ -111,7 +113,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
-// dynamic command
+// Admin Command Utility (Use with caution!)
 Route::get('/run-command/{command}', function ($command) {
     Artisan::call($command);
     return Artisan::output();
