@@ -32,7 +32,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Products/Create');
+        return Inertia::render('Products/Create', [
+            'units' => \App\Models\Unit::all(),
+        ]);
     }
 
     /**
@@ -52,7 +54,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         return Inertia::render('Products/Show', [
-            'product' => $product,
+            'product' => $product->load('unit'),
         ]);
     }
 
@@ -63,6 +65,7 @@ class ProductController extends Controller
     {
         return Inertia::render('Products/Edit', [
             'product' => $product,
+            'units' => \App\Models\Unit::all(),
         ]);
     }
 

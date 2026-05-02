@@ -21,6 +21,7 @@ class ProductFactory extends Factory
             'unit_price'     => $this->faker->randomFloat(2, 10, 50000),
             'supplier_name'  => $this->faker->name(),
             'source'         => $this->faker->paragraph(),
+            'unit_id'        => \App\Models\Unit::factory(),
         ];
     }
 
