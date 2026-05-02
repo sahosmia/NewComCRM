@@ -16,3 +16,15 @@ Port 5173 is in use, trying another one...
 
   ➜  APP_URL: http://localhost
 10:28:59 AM [vite] (client) hmr update /resources/js/pages/Requirements/form.tsx, /resources/css/app.css
+10:41:58 AM [vite] (client) hmr update /resources/js/pages/Requirements/Create.tsx, /resources/css/app.css
+10:42:26 AM [vite] (client) hmr update /resources/css/app.css
+10:43:00 AM [vite] (client) hmr update /resources/js/pages/Requirements/form.tsx, /resources/css/app.css
+10:43:35 AM [vite] (client) hmr update /resources/js/pages/auth/login.tsx
+10:43:35 AM [vite] (client) page reload resources/js/routes/password/confirm/index.ts
+10:43:35 AM [vite] (client) hmr update /resources/js/layouts/auth/auth-simple-layout.tsx, /resources/js/pages/dashboard.tsx, /resources/js/components/user-menu-content.tsx
+10:43:35 AM [vite] (client) hmr update /resources/js/pages/auth/login.tsx
+10:43:35 AM [vite] (client) hmr update /resources/js/layouts/auth/auth-simple-layout.tsx, /resources/js/pages/dashboard.tsx, /resources/js/components/user-menu-content.tsx
+10:43:35 AM [vite] (client) hmr update /resources/js/pages/auth/login.tsx
+10:43:35 AM [vite] (client) hmr update /resources/js/pages/auth/login.tsx
+10:43:35 AM [vite] (client) page reload resources/js/wayfinder/index.ts
+10:43:35 AM [vite] (client) page reload resources/js/routes/password/confirm/index.ts

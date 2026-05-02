@@ -21,7 +21,7 @@ interface Props {
     units: Unit[];
 }
 
-export default function RequirementForm({ requirement, customers, products, units }: Props) {
+export default function RequirementForm({ requirement, customers, products, units = [] }: Props) {
     const urlParams = new URLSearchParams(window.location.search);
     const preSelectedCustomerId = urlParams.get('customer_id');
 
