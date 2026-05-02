@@ -60,7 +60,7 @@ class RequirementController extends Controller
     public function show(Requirement $requirement)
     {
         return Inertia::render('Requirements/Show', [
-            'requirement' => $requirement->load(['customer', 'items.product']),
+            'requirement' => $requirement->load(['customer', 'items.product.unit']),
         ]);
     }
 

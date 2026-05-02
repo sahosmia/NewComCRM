@@ -19,6 +19,7 @@ trait ValidatesProductAttributes
             'stock_quantity' => 'required|integer|min:0',
             'supplier_name'  => 'nullable|string|max:255',
             'source'         => 'nullable|string',
+            'unit_id'        => 'nullable|exists:units,id',
         ];
     }
 

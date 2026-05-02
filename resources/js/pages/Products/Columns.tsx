@@ -37,7 +37,11 @@ const columns: Column<Product>[] = [
     },
     {
         header: 'Stock',
-        accessor: (item) => item.stock_quantity,
+        accessor: (item) => (
+            <span>
+                {item.stock_quantity} {item.unit?.short_form}
+            </span>
+        ),
         className: "w-1/10"
     },
 

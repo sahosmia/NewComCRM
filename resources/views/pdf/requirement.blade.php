@@ -72,7 +72,7 @@
                     <strong>{{ $item->product->name }}</strong><br>
                     <span style="font-size: 10px;">{{ $item->product->brand }} | {{ $item->product->model }}</span>
                 </td>
-                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ $item->quantity }} {{ $item->product->unit?->short_form }}</td>
                 <td class="text-right">{{ number_format($item->unit_price, 2) }}</td>
                 <td class="text-right">{{ number_format($item->total_price, 2) }}</td>
             </tr>

@@ -28,7 +28,7 @@ const columns: Column<any>[] = [
                 {item.items?.map((row: any) => (
                     <span key={row.id} className="text-sm py-0  whitespace-nowrap truncate">
                         {row.product?.name}
-                        x {row.quantity}
+                        x {row.quantity} {row.product?.unit?.short_form}
                     </span>
                 ))}
 

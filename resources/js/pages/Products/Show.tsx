@@ -100,7 +100,7 @@ export default function Show({ product }: any) {
                                     <div className="text-right">
                                         <p className="text-xs font-medium text-muted-foreground uppercase">Stock Level</p>
                                         <p className={`text-2xl font-bold ${product.stock_quantity < 10 ? 'text-red-600' : 'text-slate-800'}`}>
-                                            {product.stock_quantity} <span className="text-sm font-normal text-muted-foreground italic">units</span>
+                                            {product.stock_quantity} <span className="text-sm font-normal text-muted-foreground italic">{product.unit?.short_form || 'units'}</span>
                                         </p>
                                     </div>
                                 </div>

@@ -132,7 +132,7 @@ export default function Show({ requirement }: any) {
                                                     </p>
                                                 </td>
                                                 <td className="px-6 py-4 text-center font-mono font-medium">
-                                                    {item.quantity}
+                                                    {item.quantity} {item.product?.unit?.short_form}
                                                 </td>
                                                 <td className="px-6 py-4 text-right font-mono text-xs text-muted-foreground">
                                                     {formatCurrency(item.unit_price)}

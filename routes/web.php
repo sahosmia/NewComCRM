@@ -12,7 +12,8 @@ use App\Http\Controllers\{
     UserController,
     ReportController,
     CompanyController,
-    SaleController
+    SaleController,
+    UnitController
 };
 use Illuminate\Support\Facades\Artisan;
 
@@ -103,6 +104,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resources([
         'requirements' => RequirementController::class,
         'companies' => CompanyController::class,
+        'units' => UnitController::class,
     ]);
 
     // --- Administration ---
