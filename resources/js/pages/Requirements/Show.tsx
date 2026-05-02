@@ -27,6 +27,11 @@ export default function Show({ requirement }: any) {
         }).format(amount);
     };
 
+    const subTotal = (parseFloat(requirement.grand_total as string) || 0);
+    // Note: The grand_total in database already includes VAT/AIT if they were calculated.
+    // However, for the show page we might want to reconstruct the view.
+    // Actually, it's better to just show the fields stored.
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Requirement: ${requirement.customer?.name}`} />
@@ -43,15 +48,24 @@ export default function Show({ requirement }: any) {
                         </Link>
                         <div>
                             <div className="flex items-center gap-2">
-                                <h1 className="text-2xl font-black tracking-tight">REQ-{requirement.id}</h1>
+                                <h1 className="text-2xl font-black tracking-tight">
+                                    {requirement.title || `REQ-${requirement.id}`}
+                                </h1>
 
 
                                 <StatusBadge status={requirement.status} />
                             </div>
-                            <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1 font-medium">
-                                <Calendar className="w-3 h-3 text-primary" />
-                                Created on {new Date(requirement.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
-                            </p>
+                            <div className="flex items-center gap-4 mt-1">
+                                <p className="text-xs text-muted-foreground flex items-center gap-1 font-medium">
+                                    <Calendar className="w-3 h-3 text-primary" />
+                                    Created on {new Date(requirement.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                </p>
+                                {requirement.title && (
+                                    <p className="text-xs text-muted-foreground font-mono">
+                                        ID: REQ-{requirement.id}
+                                    </p>
+                                )}
+                            </div>
                         </div>
                     </div>
 
@@ -75,6 +89,36 @@ export default function Show({ requirement }: any) {
                     {/* Left Side: Customer & Internal Info (4 Columns) */}
                     <div className="lg:col-span-4 space-y-6">
                         <CustomerInfoCard customer={requirement.customer} />
+
+                        {/* Terms & Delivery Section */}
+                        <div className="bg-card border rounded-xl p-5 shadow-sm space-y-4">
+                            <h2 className="font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
+                                <FileText className="w-3 h-3 text-primary" />
+                                Terms & Delivery
+                            </h2>
+                            <div className="grid grid-cols-2 gap-4 text-xs">
+                                <div>
+                                    <p className="text-muted-foreground mb-1">Price Validity</p>
+                                    <p className="font-bold">{requirement.price_validity_days || 'N/A'} Days</p>
+                                </div>
+                                <div>
+                                    <p className="text-muted-foreground mb-1">Delivery Time</p>
+                                    <p className="font-bold">{requirement.delivery_time_days || 'N/A'} Days</p>
+                                </div>
+                                <div>
+                                    <p className="text-muted-foreground mb-1">Advance Pay</p>
+                                    <p className="font-bold">{requirement.advance_payment}%</p>
+                                </div>
+                                <div>
+                                    <p className="text-muted-foreground mb-1">Before Delivery</p>
+                                    <p className="font-bold">{requirement.before_payment}%</p>
+                                </div>
+                                <div className="col-span-2">
+                                    <p className="text-muted-foreground mb-1">Delivery Location</p>
+                                    <p className="font-bold">{requirement.delivery_location || 'N/A'}</p>
+                                </div>
+                            </div>
+                        </div>
 
                         {/* Notes Section */}
                         {requirement.notes && (
@@ -142,8 +186,88 @@ export default function Show({ requirement }: any) {
                                                 </td>
                                             </tr>
                                         ))}
+
+                                {requirement.has_accessories && (
+                                    <tr className="bg-muted/5">
+                                        <td className="px-6 py-4">
+                                            <p className="font-semibold text-foreground leading-none">{requirement.accessories_title}</p>
+                                            <p className="text-[10px] text-muted-foreground mt-1.5 uppercase font-medium tracking-tighter">
+                                                Category: <span className="text-foreground/70">Accessories</span>
+                                            </p>
+                                        </td>
+                                        <td className="px-6 py-4 font-mono font-medium">
+                                            {requirement.accessories_quantity} {requirement.accessoriesUnit?.short_form}
+                                        </td>
+                                        <td className="px-6 py-4 text-right font-mono text-xs text-muted-foreground">
+                                            {formatCurrency(requirement.accessories_price)}
+                                        </td>
+                                        <td className="px-6 py-4 text-right font-bold text-primary">
+                                            {formatCurrency(requirement.accessories_quantity * requirement.accessories_price)}
+                                        </td>
+                                    </tr>
+                                )}
+
+                                {requirement.has_installation && (
+                                    <tr className="bg-muted/5">
+                                        <td className="px-6 py-4">
+                                            <p className="font-semibold text-foreground leading-none">{requirement.installation_title}</p>
+                                            <p className="text-[10px] text-muted-foreground mt-1.5 uppercase font-medium tracking-tighter">
+                                                Category: <span className="text-foreground/70">Installation</span>
+                                            </p>
+                                        </td>
+                                        <td className="px-6 py-4 font-mono font-medium">
+                                            {requirement.installation_quantity} {requirement.installationUnit?.short_form}
+                                        </td>
+                                        <td className="px-6 py-4 text-right font-mono text-xs text-muted-foreground">
+                                            {formatCurrency(requirement.installation_price)}
+                                        </td>
+                                        <td className="px-6 py-4 text-right font-bold text-primary">
+                                            {formatCurrency(requirement.installation_quantity * requirement.installation_price)}
+                                        </td>
+                                    </tr>
+                                )}
                                     </tbody>
                                     <tfoot className="bg-primary/[0.02] border-t-2 border-primary/10">
+                                {(requirement.has_vat || requirement.has_ait) && (
+                                    <>
+                                        <tr>
+                                            <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">Sub-Total</td>
+                                            <td className="px-6 py-2 text-right font-mono text-sm">
+                                                {formatCurrency(
+                                                    (requirement.items?.reduce((sum: number, i: any) => sum + parseFloat(i.total_price), 0) || 0) +
+                                                    (requirement.has_accessories ? (requirement.accessories_quantity * requirement.accessories_price) : 0) +
+                                                    (requirement.has_installation ? (requirement.installation_quantity * requirement.installation_price) : 0)
+                                                )}
+                                            </td>
+                                        </tr>
+                                        {requirement.has_vat && (
+                                            <tr>
+                                                <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">VAT ({requirement.vat_percentage}%)</td>
+                                                <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">
+                                                    + {formatCurrency(
+                                                        ((requirement.items?.reduce((sum: number, i: any) => sum + parseFloat(i.total_price), 0) || 0) +
+                                                        (requirement.has_accessories ? (requirement.accessories_quantity * requirement.accessories_price) : 0) +
+                                                        (requirement.has_installation ? (requirement.installation_quantity * requirement.installation_price) : 0)) *
+                                                        (requirement.vat_percentage / 100)
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        )}
+                                        {requirement.has_ait && (
+                                            <tr>
+                                                <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">AIT Adjustment ({requirement.ait_percentage}%)</td>
+                                                <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">
+                                                    + {formatCurrency(
+                                                        ((requirement.items?.reduce((sum: number, i: any) => sum + parseFloat(i.total_price), 0) || 0) +
+                                                        (requirement.has_accessories ? (requirement.accessories_quantity * requirement.accessories_price) : 0) +
+                                                        (requirement.has_installation ? (requirement.installation_quantity * requirement.installation_price) : 0)) *
+                                                        (parseFloat(requirement.ait_percentage as string) / (100 - parseFloat(requirement.ait_percentage as string)))
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </>
+                                )}
                                         <tr>
                                             <td colSpan={3} className="px-6 py-5 text-right uppercase text-[10px] font-black tracking-[0.2em] text-muted-foreground">Grand Total Amount</td>
                                             <td className="px-6 py-5 text-right">

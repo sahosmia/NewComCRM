@@ -61,9 +61,12 @@ class RequirementController extends Controller
     public function show(Requirement $requirement)
     {
         return Inertia::render('Requirements/Show', [
-            // 'requirement' => $requirement->load(['customer', 'items.product']),
-            'requirement' => $requirement->load(['customer', 'items.product.unit']),
-
+            'requirement' => $requirement->load([
+                'customer',
+                'items.product.unit',
+                'accessoriesUnit',
+                'installationUnit'
+            ]),
         ]);
     }
 
@@ -73,7 +76,7 @@ class RequirementController extends Controller
     public function edit(Requirement $requirement)
     {
         return Inertia::render('Requirements/Edit', array_merge(
-            ['requirement' => $requirement->load('items')],
+            ['requirement' => $requirement->load(['items', 'accessoriesUnit', 'installationUnit'])],
             $this->requirementService->formOptions()
         ));
     }
