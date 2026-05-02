@@ -6,6 +6,7 @@ use App\Models\Requirement;
 use App\Repositories\CustomerRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\RequirementRepository;
+use App\Repositories\UnitRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
@@ -15,6 +16,7 @@ class RequirementService
         private RequirementRepository $requirements,
         private CustomerRepository $customers,
         private ProductRepository $products,
+        private UnitRepository $units,
     ) {}
 
     public function paginateIndex(array $filters): LengthAwarePaginator
@@ -26,18 +28,18 @@ class RequirementService
     {
         return [
             'customers' => $this->customers->forRequirementForm(),
-            'products' => $this->products->forRequirementForm(),
+            'products'  => $this->products->forRequirementForm(),
+            'units'     => $this->units->all(),
         ];
     }
 
     public function create(array $data): Requirement
     {
         return DB::transaction(function () use ($data) {
-            $requirement = $this->requirements->create([
-                'customer_id' => $data['customer_id'],
-                'notes'       => $data['notes'] ?? null,
-                'status'      => 'pending'
-            ]);
+            $requirementData = collect($data)->except(['items'])->toArray();
+            $requirementData['status'] = 'pending';
+
+            $requirement = $this->requirements->create($requirementData);
 
             $requirement->items()->createMany($data['items']);
 
@@ -48,11 +50,9 @@ class RequirementService
     public function update(Requirement $requirement, array $data): void
     {
         DB::transaction(function () use ($requirement, $data) {
-            $this->requirements->update($requirement, [
-                'customer_id' => $data['customer_id'],
-                'notes'       => $data['notes'] ?? null,
-                'status'       => $data['status'] ?? 'pending',
-            ]);
+            $requirementData = collect($data)->except(['items'])->toArray();
+
+            $this->requirements->update($requirement, $requirementData);
 
             $requirement->items()->delete();
 
