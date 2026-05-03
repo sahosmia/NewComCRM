@@ -62,4 +62,22 @@ class ProductRepository
     {
         $product->delete();
     }
+
+    public function bulkDelete(array $ids): void
+    {
+        $query = Product::query();
+
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+
+        $query->delete();
+    }
+
+    public function getForExport(array $ids): Collection
+    {
+        return Product::query()
+            ->when(!empty($ids), fn($q) => $q->whereIn('id', $ids))
+            ->get();
+    }
 }

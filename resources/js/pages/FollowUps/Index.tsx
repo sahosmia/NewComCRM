@@ -63,6 +63,8 @@ export default function FollowUpIndex({ followUps, stats }: Props) {
                     sortOptions={sortOptions}
                     exportRoute="follow-ups.export"
                     printRoute="follow-ups.print"
+                    bulkDeleteRoute="follow-ups.bulkDestroy"
+                    entityName="Follow Up"
                 />
             </div>
         </AppLayout>

@@ -95,17 +95,17 @@ class MeetingController extends Controller
             ->with('success', 'Meeting deleted successfully');
     }
 
-    public function export(Request $request)
+    public function bulkDestroy(Request $request)
     {
         $ids = $request->input('ids', []);
+        $this->meetingService->bulkDelete($ids);
 
-        $query = Meeting::query()->with(['customer', 'user']);
+        return back()->with('success', 'Meetings deleted successfully');
+    }
 
-        if (!empty($ids)) {
-            $query->whereIn('id', $ids);
-        }
-
-        $meetings = $query->get();
+    public function export(Request $request)
+    {
+        $meetings = $this->meetingService->getForExport($request->input('ids', []));
 
         return Excel::download(new GeneralExport(
             $meetings,
@@ -124,14 +124,9 @@ class MeetingController extends Controller
 
     public function print(Request $request)
     {
-        $ids = $request->input('ids', []);
-        $query = Meeting::query()->with(['customer', 'user']);
-        if (!empty($ids)) {
-            $query->whereIn('id', $ids);
-        }
-        $meetings = $query->get();
+        $meetings = $this->meetingService->getForExport($request->input('ids', []));
 
-        $data = $meetings->map(function($meeting) {
+        $data = $meetings->map(function ($meeting) {
             return [
                 $meeting->customer ? $meeting->customer->name : 'N/A',
                 $meeting->title,

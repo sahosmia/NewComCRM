@@ -43,6 +43,16 @@ class FollowUpService
         $this->followUps->delete($followUp);
     }
 
+    public function bulkDelete(array $ids): void
+    {
+        $this->followUps->bulkDelete($ids);
+    }
+
+    public function getForExport(array $ids): \Illuminate\Support\Collection
+    {
+        return $this->followUps->getForExport($ids);
+    }
+
     public function complete(FollowUp $followUp, string $status): void
     {
         $this->followUps->markComplete($followUp, $status);
