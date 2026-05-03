@@ -1,6 +1,12 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-export default function SalesChart({ data }: { data: any[] }) {
+interface ChartDataItem {
+    name: string;
+    followups: number;
+    quotations: number;
+}
+
+export default function SalesChart({ data }: { data: ChartDataItem[] }) {
     return (
         <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">

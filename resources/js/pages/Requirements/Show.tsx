@@ -13,7 +13,7 @@ import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
 import StatusBadge from "@/components/shared/StatusBadge";
 import { Requirement } from "@/types/requirement";
 
-export default function Show({ requirement }: Requirement) {
+export default function Show({ requirement }: { requirement: Requirement }) {
     console.log(requirement);
 
     const breadcrumbs = [
@@ -165,7 +165,7 @@ export default function Show({ requirement }: Requirement) {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-border/50">
-                                        {requirement.items?.map((item: any) => (
+                                        {requirement.items?.map((item) => (
                                             <tr key={item.id} className="hover:bg-muted/5 transition-colors group">
                                                 <td className="px-6 py-4">
                                                     <p className="font-semibold text-foreground leading-none">{item.product?.name}</p>
@@ -177,10 +177,10 @@ export default function Show({ requirement }: Requirement) {
                                                     {item.quantity} {item.product?.unit?.short_form}
                                                 </td>
                                                 <td className="px-6 py-4 text-right font-mono text-xs text-muted-foreground">
-                                                    {formatCurrency(item.unit_price)}
+                                                    {formatCurrency(Number(item.unit_price))}
                                                 </td>
                                                 <td className="px-6 py-4 text-right font-bold text-primary">
-                                                    {formatCurrency(item.total_price)}
+                                                    {formatCurrency(Number(item.total_price))}
                                                 </td>
                                             </tr>
                                         ))}
@@ -197,10 +197,10 @@ export default function Show({ requirement }: Requirement) {
                                             {requirement.accessories_quantity} {requirement.accessoriesUnit?.short_form}
                                         </td>
                                         <td className="px-6 py-4 text-right font-mono text-xs text-muted-foreground">
-                                            {formatCurrency(requirement.accessories_price)}
+                                            {formatCurrency(Number(requirement.accessories_price))}
                                         </td>
                                         <td className="px-6 py-4 text-right font-bold text-primary">
-                                            {formatCurrency(requirement.accessories_quantity * requirement.accessories_price)}
+                                            {formatCurrency(Number(requirement.accessories_quantity) * Number(requirement.accessories_price))}
                                         </td>
                                     </tr>
                                 )}
@@ -217,10 +217,10 @@ export default function Show({ requirement }: Requirement) {
                                             {requirement.installation_quantity} {requirement.installationUnit?.short_form}
                                         </td>
                                         <td className="px-6 py-4 text-right font-mono text-xs text-muted-foreground">
-                                            {formatCurrency(requirement.installation_price)}
+                                            {formatCurrency(Number(requirement.installation_price))}
                                         </td>
                                         <td className="px-6 py-4 text-right font-bold text-primary">
-                                            {formatCurrency(requirement.installation_quantity * requirement.installation_price)}
+                                            {formatCurrency(Number(requirement.installation_quantity) * Number(requirement.installation_price))}
                                         </td>
                                     </tr>
                                 )}
@@ -232,9 +232,9 @@ export default function Show({ requirement }: Requirement) {
                                             <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">Sub-Total</td>
                                             <td className="px-6 py-2 text-right font-mono text-sm">
                                                 {formatCurrency(
-                                                    (requirement.items?.reduce((sum: number, i: any) => sum + parseFloat(i.total_price), 0) || 0) +
-                                                    (requirement.has_accessories ? (requirement.accessories_quantity * requirement.accessories_price) : 0) +
-                                                    (requirement.has_installation ? (requirement.installation_quantity * requirement.installation_price) : 0)
+                                                    (requirement.items?.reduce((sum: number, i) => sum + parseFloat(i.total_price as string), 0) || 0) +
+                                                    (requirement.has_accessories ? (Number(requirement.accessories_quantity) * Number(requirement.accessories_price)) : 0) +
+                                                    (requirement.has_installation ? (Number(requirement.installation_quantity) * Number(requirement.installation_price)) : 0)
                                                 )}
                                             </td>
                                         </tr>
@@ -243,10 +243,10 @@ export default function Show({ requirement }: Requirement) {
                                                 <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">VAT ({requirement.vat_percentage}%)</td>
                                                 <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">
                                                     + {formatCurrency(
-                                                        ((requirement.items?.reduce((sum: number, i: any) => sum + parseFloat(i.total_price), 0) || 0) +
-                                                        (requirement.has_accessories ? (requirement.accessories_quantity * requirement.accessories_price) : 0) +
-                                                        (requirement.has_installation ? (requirement.installation_quantity * requirement.installation_price) : 0)) *
-                                                        (requirement.vat_percentage / 100)
+                                                        ((requirement.items?.reduce((sum: number, i) => sum + parseFloat(i.total_price as string), 0) || 0) +
+                                                        (requirement.has_accessories ? (Number(requirement.accessories_quantity) * Number(requirement.accessories_price)) : 0) +
+                                                        (requirement.has_installation ? (Number(requirement.installation_quantity) * Number(requirement.installation_price)) : 0)) *
+                                                        (Number(requirement.vat_percentage) / 100)
                                                     )}
                                                 </td>
                                             </tr>
@@ -256,9 +256,9 @@ export default function Show({ requirement }: Requirement) {
                                                 <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">AIT Adjustment ({requirement.ait_percentage}%)</td>
                                                 <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">
                                                     + {formatCurrency(
-                                                        ((requirement.items?.reduce((sum: number, i: any) => sum + parseFloat(i.total_price), 0) || 0) +
-                                                        (requirement.has_accessories ? (requirement.accessories_quantity * requirement.accessories_price) : 0) +
-                                                        (requirement.has_installation ? (requirement.installation_quantity * requirement.installation_price) : 0)) *
+                                                        ((requirement.items?.reduce((sum: number, i) => sum + parseFloat(i.total_price as string), 0) || 0) +
+                                                        (requirement.has_accessories ? (Number(requirement.accessories_quantity) * Number(requirement.accessories_price)) : 0) +
+                                                        (requirement.has_installation ? (Number(requirement.installation_quantity) * Number(requirement.installation_price)) : 0)) *
                                                         (parseFloat(requirement.ait_percentage as string) / (100 - parseFloat(requirement.ait_percentage as string)))
                                                     )}
                                                 </td>
@@ -270,7 +270,7 @@ export default function Show({ requirement }: Requirement) {
                                             <td colSpan={3} className="px-6 py-5 text-right uppercase text-[10px] font-black tracking-[0.2em] text-muted-foreground">Grand Total Amount</td>
                                             <td className="px-6 py-5 text-right">
                                                 <span className="text-xl font-black text-primary tracking-tighter">
-                                                    {formatCurrency(requirement.grand_total)}
+                                                    {formatCurrency(Number(requirement.grand_total))}
                                                 </span>
                                             </td>
                                         </tr>

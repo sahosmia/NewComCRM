@@ -1,18 +1,19 @@
 import AppLayout from '@/layouts/app-layout';
-import { PaginationType, SortOption } from '@/types';
+import { Column, PaginationType, SortOption } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import { Badge } from '@/components/ui/badge';
+import { Sale } from '@/types/sale';
 
 interface Props {
-    sales: PaginationType<any>;
+    sales: PaginationType<Sale>;
 }
 
-const columns: any[] = [
+const columns: Column<Sale>[] = [
     {
         header: 'Customer',
-        accessor: (item: any) => (
+        accessor: (item) => (
             <div className="flex flex-col">
                 <span className="font-medium text-foreground">{item.customer?.name}</span>
                 <span className="text-xs text-muted-foreground">{item.customer?.company?.name}</span>
@@ -21,9 +22,9 @@ const columns: any[] = [
     },
     {
         header: 'Products',
-        accessor: (item: any) => (
+        accessor: (item) => (
             <div className="flex flex-wrap gap-1 max-w-62">
-                {item.requirement?.items?.map((row: any) => (
+                {item.requirement?.items?.map((row) => (
                     <Badge key={row.id} variant="secondary" className="text-[10px] font-normal">
                         {row.product?.name} x {row.quantity}
                     </Badge>
@@ -33,15 +34,15 @@ const columns: any[] = [
     },
     {
         header: 'Amount',
-        accessor: (item: any) => (
+        accessor: (item) => (
             <div className="font-bold">
-                BDT {parseFloat(item.amount).toLocaleString()}
+                BDT {parseFloat(item.amount as string).toLocaleString()}
             </div>
         ),
     },
     {
         header: 'Sale Date',
-        accessor: (item: any) => new Date(item.sale_date).toLocaleDateString(),
+        accessor: (item) => new Date(item.sale_date).toLocaleDateString(),
     },
 ];
 

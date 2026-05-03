@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export interface Customer {
     id: number;
     name: string;
@@ -15,6 +17,6 @@ export interface Customer {
     created_at: string;
     updated_at: string;
     deleted_at?: string | null;
-    assigned_user?: any;
+    assigned_user?: User;
     full_name_with_company:string
 }

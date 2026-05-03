@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface CreateProps {
     users: User[];
-    companies: any[];
+    companies: { id: number, name: string }[];
 }
 
 export default function Create({ users, companies }: CreateProps) {

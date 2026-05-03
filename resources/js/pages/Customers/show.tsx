@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare, LayoutList, Plus } from "lucide-react";
 import { Head, Link } from "@inertiajs/react";
-import type { CustomerType } from "@/types";
+import { Customer } from "@/types/customer";
+import { Requirement } from "@/types/requirement";
+import { FollowUp } from "@/types/follow-up";
 
-export default function Show({ customer }: { customer: any }) {
+export default function Show({ customer }: { customer: Customer & { requirements: Requirement[], follow_ups: FollowUp[] } }) {
     return (
         <AppLayout
             breadcrumbs={[
@@ -151,14 +153,14 @@ export default function Show({ customer }: { customer: any }) {
                                         </thead>
                                         <tbody className="divide-y">
                                             {customer.requirements?.length > 0 ? (
-                                                customer.requirements.map((req: any) => (
+                                                customer.requirements.map((req) => (
                                                     <tr key={req.id} className="hover:bg-muted/30 transition-colors">
                                                         <td className="px-4 py-3 font-medium">#{req.id}</td>
                                                         <td className="px-4 py-3 text-muted-foreground">
                                                             {new Date(req.created_at).toLocaleDateString()}
                                                         </td>
                                                         <td className="px-4 py-3 font-bold">
-                                                            ৳ {parseFloat(req.grand_total).toLocaleString()}
+                                                            ৳ {parseFloat(req.grand_total as string).toLocaleString()}
                                                         </td>
                                                         <td className="px-4 py-3">
                                                             <Badge variant="secondary" className={`
@@ -209,7 +211,7 @@ export default function Show({ customer }: { customer: any }) {
                             <CardContent>
                                 {customer.follow_ups?.length > 0 ? (
                                     <div className="relative space-y-6 before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-muted-foreground/20 before:to-transparent">
-                                        {customer.follow_ups.map((fu: any) => (
+                                        {customer.follow_ups.map((fu) => (
                                             <div key={fu.id} className="relative flex items-start gap-4 group">
                                                 {/* Timeline Dot */}
                                                 <div className={`mt-1.5 h-10 w-10 rounded-full border-4 border-background flex items-center justify-center shrink-0 z-10 shadow-sm

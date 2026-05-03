@@ -1,3 +1,6 @@
+import { Customer } from "./customer";
+import { User } from "./user";
+
 export interface Meeting {
     id: number;
     customer_id: number;
@@ -11,6 +14,6 @@ export interface Meeting {
     status: 'scheduled' | 'completed' | 'cancelled';
     created_at: string;
     updated_at: string;
-    customer?: any;
-    user?: any;
+    customer?: Customer;
+    user?: User;
 }

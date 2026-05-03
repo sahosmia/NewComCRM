@@ -2,11 +2,13 @@ import AppLayout from "@/layouts/app-layout";
 import RequirementForm from "./form";
 import { Head } from "@inertiajs/react";
 import { Product } from "@/types/product";
+import { Customer } from "@/types/customer";
+import { Unit } from "@/types/unit";
 
 interface Props {
-    customers: any[];
+    customers: Customer[];
     products: Product[];
-    units: any[];
+    units: Unit[];
 }
 
 export default function Create({ customers, products, units }: Props) {

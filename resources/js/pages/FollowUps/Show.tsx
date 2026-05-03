@@ -11,9 +11,10 @@ import { Head, Link } from "@inertiajs/react";
 import { cn } from "@/lib/utils";
 import { formatDateTime } from "@/utils/date-format";
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
+import { FollowUp } from "@/types/follow-up";
 
 
-export default function Show({ followUp }: { followUp: any }) {
+export default function Show({ followUp }: { followUp: FollowUp }) {
     return (
         <AppLayout
             breadcrumbs={[

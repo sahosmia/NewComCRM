@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { FollowUp } from "@/types/follow-up";
 
-function FollowUpList({ followups }: { followups: any[] }) {
+function FollowUpList({ followups }: { followups: FollowUp[] }) {
     if (followups.length === 0) return (
         <div className="flex h-32 items-center justify-center text-muted-foreground">
             No follow-ups for today!

@@ -1,3 +1,6 @@
+import { Customer } from "./customer";
+import { User } from "./user";
+
 export interface FollowUp {
     id: number;
     customer_id: number;
@@ -9,6 +12,6 @@ export interface FollowUp {
     completed_at: string | null;
     created_at: string;
     updated_at: string;
-    customer?: any;
-    user?: any;
+    customer?: Customer;
+    user?: User;
 }
