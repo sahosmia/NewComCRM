@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { TableRowActions } from '@/components/table/TableRowActions';
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
 import { formatDate } from '@/utils/date-format';
+import { FollowUp } from '@/types/follow-up';
 
 
 const FOLLOW_UP_OPTIONS = [
@@ -10,7 +11,7 @@ const FOLLOW_UP_OPTIONS = [
     { value: 'done', label: 'Done', colorClass: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' },
 ];
 
-const columns: Column<any>[] = [
+const columns: Column<FollowUp>[] = [
     {
         header: 'Customer',
         accessor: (item) => item.customer?.name,

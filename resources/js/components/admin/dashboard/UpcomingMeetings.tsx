@@ -1,6 +1,7 @@
 import { Calendar, Clock, MapPin } from 'lucide-react';
+import { Meeting } from '@/types/metting';
 
-function MeetingList({ meetings }: { meetings: any[] }) {
+function MeetingList({ meetings }: { meetings: Meeting[] }) {
     if (meetings.length === 0) {
         return (
             <div className="flex h-40 flex-col items-center justify-center text-muted-foreground">

@@ -1,13 +1,14 @@
 import AppLayout from "@/layouts/app-layout";
 import CustomerForm from "./form";
 import { Head } from "@inertiajs/react";
-import { CustomerType, User } from "@/types";
+import { User } from "@/types";
+import { Customer } from "@/types/customer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface Props {
-    customer: CustomerType;
+    customer: Customer;
     users: User[];
-    companies: any[];
+    companies: { id: number, name: string }[];
 }
 
 export default function Edit({ customer, users, companies }: Props) {

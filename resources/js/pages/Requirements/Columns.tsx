@@ -1,6 +1,7 @@
 import type { Column } from '@/types';
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
 import { TableRowActions } from '@/components/table/TableRowActions';
+import { Requirement } from '@/types/requirement';
 
 const RequirementOptions = [
     { value: 'pending', label: "Pending", colorClass: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20' },
@@ -11,7 +12,7 @@ const RequirementOptions = [
 ];
 
 
-const columns: Column<any>[] = [
+const columns: Column<Requirement>[] = [
     {
         header: 'Customer',
         accessor: (item) => (
@@ -25,7 +26,7 @@ const columns: Column<any>[] = [
         header: 'Requested Products',
         accessor: (item) => (
             <div className="flex flex-wrap gap-1 max-w-62">
-                {item.items?.map((row: any) => (
+                {item.items?.map((row) => (
                     <span key={row.id} className="text-sm py-0  whitespace-nowrap truncate">
                         {row.product?.name}
                         x {row.quantity} {row.product?.unit?.short_form}

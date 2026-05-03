@@ -9,8 +9,9 @@ import {
     MessageSquare, Clock
 } from "lucide-react";
 import StatusBadge from "@/components/shared/StatusBadge";
+import { Meeting } from "@/types/metting";
 
-export default function Show({ meeting }: any) {
+export default function Show({ meeting }: { meeting: Meeting }) {
     const breadcrumbs = [
         { title: "Meetings", href: route('meetings.index') },
         { title: "Detail View", href: "#" }

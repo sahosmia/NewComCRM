@@ -15,7 +15,7 @@ import { DatePickerSimple } from "../admin/DataPickerSimple";
 
 
 export function TableFilters({ filters, queryParams = {}, routeName }: {
-    filters: FilterOption[], queryParams: any, routeName: string
+    filters: FilterOption[], queryParams: Record<string, any>, routeName: string
 }) {
     const [openSelect, setOpenSelect] = useState<string | null>(null);
 

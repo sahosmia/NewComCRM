@@ -1,8 +1,9 @@
 import type { Column } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { TableRowActions } from '@/components/table/TableRowActions';
+import { Meeting } from '@/types/metting';
 
-const columns: Column<any>[] = [
+const columns: Column<Meeting>[] = [
     {
         header: 'Title',
         accessor: (item) => (

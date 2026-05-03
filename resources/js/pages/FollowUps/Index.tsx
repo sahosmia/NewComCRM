@@ -4,10 +4,11 @@ import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import { columns } from './Columns';
+import { FollowUp } from '@/types/follow-up';
 
 interface Props {
-    followUps: PaginationType<any>;
-    stats: any;
+    followUps: PaginationType<FollowUp>;
+    stats: Record<string, number>;
 }
 
 export default function FollowUpIndex({ followUps, stats }: Props) {

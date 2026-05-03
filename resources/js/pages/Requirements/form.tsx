@@ -64,11 +64,11 @@ export default function RequirementForm({ requirement, customers, products, unit
     };
 
     const removeItem = (index: number) => {
-        setData("items", data.items.filter((_: any, i: number) => i !== index));
+        setData("items", data.items.filter((_, i) => i !== index));
     };
 
-    const handleItemChange = (index: number, field: keyof RequirementItem | 'description', value: any) => {
-        const newItems = [...data.items] as any[];
+    const handleItemChange = (index: number, field: keyof RequirementItem | 'description', value: string | number) => {
+        const newItems = [...data.items] as (RequirementItem & { description: string })[];
 
         if (field === "product_id") {
             const product = products.find(p => p.id === parseInt(value));
@@ -81,8 +81,8 @@ export default function RequirementForm({ requirement, customers, products, unit
         setData("items", newItems);
     };
 
-    const itemsTotal = data.items.reduce((sum: number, item: any) => {
-        return sum + (parseFloat(item.unit_price) || 0) * (item.quantity || 0);
+    const itemsTotal = data.items.reduce((sum: number, item) => {
+        return sum + (parseFloat(item.unit_price as string) || 0) * (item.quantity || 0);
     }, 0);
 
     const accessoriesTotal = data.has_accessories ? (parseFloat(data.accessories_quantity as string) || 0) * (parseFloat(data.accessories_price as string) || 0) : 0;
@@ -160,7 +160,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                         <div className="col-span-1"></div>
                     </div>
 
-                    {data.items.map((item: any, index: number) => (
+                    {data.items.map((item, index) => (
                         <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 items-start bg-muted/10 md:bg-transparent p-4 md:p-0 rounded-lg border md:border-0 relative group">
 
                             {/* Product Selection */}

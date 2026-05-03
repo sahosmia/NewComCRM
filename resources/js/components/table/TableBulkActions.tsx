@@ -17,7 +17,7 @@ interface BulkActionsProps {
     bulkDeleteRoute?: string;
     handleExport?: () => void;
     handlePrint?: () => void;
-    handleBulkDelete: (ids: any[], route: string) => void;
+    handleBulkDelete: (ids: (number | string)[], route: string) => void;
 }
 
 export function TableBulkActions({
