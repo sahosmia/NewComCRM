@@ -71,7 +71,7 @@ export default function CustomerIndex({ customers, users, companies }: Props) {
         }
     ];
 
-    const customerSortOptions :SortOption [] = [
+    const customerSortOptions: SortOption[] = [
         { label: 'Newest First', sort: 'created_at', direction: 'desc' },
         { label: 'Name (A-Z)', sort: 'name', direction: 'asc' },
         { label: 'Email', sort: 'email', direction: 'asc' },
@@ -96,6 +96,8 @@ export default function CustomerIndex({ customers, users, companies }: Props) {
                     sortOptions={customerSortOptions}
                     exportRoute="customers.export"
                     printRoute="customers.print"
+                    bulkDeleteRoute="customers.bulkDestroy"
+                    entityName="Customer"
                 />
             </div>
         </AppLayout>

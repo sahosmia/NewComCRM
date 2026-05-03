@@ -32,4 +32,9 @@ class UserService
     {
         $this->users->update($user, $data);
     }
+
+    public function bulkDelete(array $ids): void
+    {
+        $this->users->bulkDelete($ids);
+    }
 }

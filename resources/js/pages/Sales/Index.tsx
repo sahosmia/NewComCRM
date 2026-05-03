@@ -72,6 +72,8 @@ export default function SaleIndex({ sales }: Props) {
                     exportRoute="sales.export"
                     printRoute="sales.print"
                     // sortOptions={salesSortOptions}
+                     bulkDeleteRoute="sales.bulkDestroy"
+                    entityName="Sale"
                 />
             </div>
         </AppLayout>

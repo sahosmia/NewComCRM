@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('requirements', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->nullable()->after('customer_id');
+            $table->string('title')->nullable();
             // Taxes
             $table->boolean('has_ait')->default(false);
             $table->decimal('ait_percentage', 5, 2)->default(0);

@@ -53,6 +53,8 @@ export default function UserIndex({ users }: Props) {
                     routeName="users.index"
                     filters={filters}
                     sortOptions={userSortOptions}
+                    bulkDeleteRoute="users.bulkDestroy"
+                    entityName="User"
                 />
             </div>
         </AppLayout>

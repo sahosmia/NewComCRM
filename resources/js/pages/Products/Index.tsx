@@ -46,6 +46,7 @@ export default function ProductIndex({ products }: Props) {
                     bulkDeleteRoute='products.bulkDestroy'
                     exportRoute="products.export"
                     printRoute="products.print"
+                    
                 />
             </div>
         </AppLayout>

@@ -106,15 +106,7 @@ class CustomerController extends Controller
 
     public function export(Request $request)
     {
-        $ids = $request->input('ids', []);
-
-        $query = Customer::query()->with('company', 'assignedUser');
-
-        if (!empty($ids)) {
-            $query->whereIn('id', $ids);
-        }
-
-        $customers = $query->get();
+        $customers = $this->customerService->getForExport($request->input('ids', []));
 
         return Excel::download(new GeneralExport(
             $customers,
@@ -135,14 +127,9 @@ class CustomerController extends Controller
 
     public function print(Request $request)
     {
-        $ids = $request->input('ids', []);
-        $query = Customer::query()->with('company', 'assignedUser');
-        if (!empty($ids)) {
-            $query->whereIn('id', $ids);
-        }
-        $customers = $query->get();
+        $customers = $this->customerService->getForExport($request->input('ids', []));
 
-        $data = $customers->map(function($customer) {
+        $data = $customers->map(function ($customer) {
             return [
                 $customer->name,
                 $customer->email,

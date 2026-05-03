@@ -63,6 +63,8 @@ export default function MeetingIndex({ meetings }: Props) {
                     sortOptions={sortOptions}
                     exportRoute="meetings.export"
                     printRoute="meetings.print"
+                    bulkDeleteRoute="meetings.bulkDestroy"
+                    entityName="Meeting"
                 />
             </div>
         </AppLayout>

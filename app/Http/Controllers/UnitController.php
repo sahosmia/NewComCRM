@@ -57,4 +57,12 @@ class UnitController extends Controller
         return redirect()->route('units.index')
             ->with('success', 'Unit deleted successfully');
     }
+
+    public function bulkDestroy(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        $this->unitService->bulkDelete($ids);
+
+        return back()->with('success', 'Units deleted successfully');
+    }
 }

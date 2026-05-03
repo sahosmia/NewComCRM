@@ -31,7 +31,7 @@ export function TableBulkActions({
     handleBulkDelete,
 }: BulkActionsProps) {
 
-    if (selectedItems.length === 0 && !exportRoute && !printRoute) return null;
+    if (selectedItems.length === 0 && !exportRoute && !printRoute && !bulkDeleteRoute) return null;
 
     return (
         <DropdownMenu>
@@ -57,12 +57,16 @@ export function TableBulkActions({
                     </DropdownMenuItem>
                 )}
 
-                {selectedItems.length > 0 && bulkDeleteRoute && (
+                {bulkDeleteRoute && (
                     <>
                         <DropdownMenuSeparator />
                         <AlertDialogDestructive
-                            title={`Delete ${selectedItems.length} ${entityName}${selectedItems.length > 1 ? 's' : ''}?`}
-                            description="This action cannot be undone. This will permanently delete the selected records."
+                            title={selectedItems.length > 0
+                                ? `Delete ${selectedItems.length} Selected ${entityName}${selectedItems.length > 1 ? 's' : ''}?`
+                                : `Delete All ${entityName}s?`}
+                            description={selectedItems.length > 0
+                                ? "This action cannot be undone. This will permanently delete the selected records."
+                                : `This action cannot be undone. This will permanently delete ALL ${entityName}s.`}
                             onConfirm={() => handleBulkDelete(selectedItems, bulkDeleteRoute)}
                         >
                             <DropdownMenuItem
@@ -70,7 +74,7 @@ export function TableBulkActions({
                                 className="text-red-600 focus:text-red-600 cursor-pointer"
                             >
                                 <Trash2 className="mr-2 h-4 w-4" />
-                                <span>Delete Selected</span>
+                                <span>{selectedItems.length > 0 ? `Delete Selected (${selectedItems.length})` : 'Delete All'}</span>
                             </DropdownMenuItem>
                         </AlertDialogDestructive>
                     </>

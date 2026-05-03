@@ -59,4 +59,17 @@ class QuotationRepository
     {
         $quotation->delete();
     }
+
+    public function bulkDelete(array $ids): void
+    {
+        $user = auth()->user();
+        $query = Quotation::query()
+            ->when(!$user->isSuperAdmin(), fn($q) => $q->where('user_id', $user->id));
+
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+
+        $query->delete();
+    }
 }

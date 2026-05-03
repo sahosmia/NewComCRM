@@ -70,4 +70,14 @@ class RequirementService
     {
         $this->requirements->delete($requirement);
     }
+
+    public function bulkDelete(array $ids): void
+    {
+        $this->requirements->bulkDelete($ids);
+    }
+
+    public function getForExport(array $ids): \Illuminate\Support\Collection
+    {
+        return $this->requirements->getForExport($ids);
+    }
 }

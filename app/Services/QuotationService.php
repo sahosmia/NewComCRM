@@ -91,6 +91,11 @@ class QuotationService
         $quotation->delete();
     }
 
+    public function bulkDelete(array $ids): void
+    {
+        $this->quotations->bulkDelete($ids);
+    }
+
     public function send(Quotation $quotation): void
     {
         if ($quotation->status === 'draft') {

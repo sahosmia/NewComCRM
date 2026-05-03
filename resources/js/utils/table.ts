@@ -36,7 +36,6 @@ export const handleBulkDelete = (
     routeName: string,
     options?: BulkDeleteOptions
 ) => {
-    if (!ids.length) return;
 
     router.delete(route(routeName), {
         data: { ids },

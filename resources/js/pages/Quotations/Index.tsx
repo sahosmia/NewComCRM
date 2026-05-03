@@ -54,6 +54,8 @@ export default function QuotationIndex({ quotations, stats }: Props) {
                     routeName="quotations.index"
                     filters={filters}
                     sortOptions={sortOptions}
+                    bulkDeleteRoute="quotations.bulkDestroy"
+                    entityName="Quotation"
                 />
             </div>
         </AppLayout>

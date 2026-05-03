@@ -76,27 +76,38 @@ class Requirement extends Model
     {
         return $this->belongsTo(Unit::class, 'installation_unit_id');
     }
+    protected $appends = ['ait_price'];
+
+    // append
+    public function getAitPriceAttribute(): float
+    {
+        if ($this->has_ait && $this->ait_percentage < 100) {
+            return round($this->grand_total * ($this->ait_percentage / 100), 2);
+        }
+        return 0.00;
+    }
 
     public function calculateGrandTotal(): void
     {
-        $itemsTotal = $this->items()->sum('total_price');
-        $accessoriesTotal = $this->has_accessories ? ($this->accessories_quantity * $this->accessories_price) : 0;
-        $installationTotal = $this->has_installation ? ($this->installation_quantity * $this->installation_price) : 0;
+        $aitFactor = 1;
+        if ($this->has_ait && $this->ait_percentage < 100) {
+            $aitFactor = 1 / (1 - ($this->ait_percentage / 100));
+        }
+
+        $itemsTotal = 0;
+        foreach ($this->items as $item) {
+            $itemsTotal += ($item->unit_price * $item->quantity) * $aitFactor;
+        }
+
+        $accessoriesTotal = $this->has_accessories ? ($this->accessories_quantity * $this->accessories_price * $aitFactor) : 0;
+        $installationTotal = $this->has_installation ? ($this->installation_quantity * $this->installation_price * $aitFactor) : 0;
 
         $subTotal = $itemsTotal + $accessoriesTotal + $installationTotal;
 
-        // AIT (Gross-up Logic): Total = (Subtotal * 100) / (100 - AIT_Percentage)
-        // AIT Amount = Total - Subtotal = Subtotal * (AIT_Percentage / (100 - AIT_Percentage))
-        $aitAmount = 0;
-        if ($this->has_ait && $this->ait_percentage < 100) {
-            $aitAmount = $subTotal * ($this->ait_percentage / (100 - $this->ait_percentage));
-        }
-
         // VAT/Tax (Add-on Logic): Total = Subtotal + (Subtotal * VAT_Percentage / 100)
-        // VAT Amount = Subtotal * (VAT_Percentage / 100)
         $vatAmount = $this->has_vat ? ($subTotal * ($this->vat_percentage / 100)) : 0;
 
-        $grandTotal = $subTotal + $aitAmount + $vatAmount;
+        $grandTotal = $subTotal + $vatAmount;
 
         $this->updateQuietly(['grand_total' => $grandTotal]);
     }

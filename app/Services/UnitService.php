@@ -37,4 +37,9 @@ class UnitService
     {
         $this->unitRepository->delete($unit);
     }
+
+    public function bulkDelete(array $ids): void
+    {
+        $this->unitRepository->bulkDelete($ids);
+    }
 }

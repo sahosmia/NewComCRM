@@ -39,4 +39,9 @@ class CompanyService
     {
         return $this->repository->delete($id);
     }
+
+    public function bulkDelete(array $ids): void
+    {
+        $this->repository->bulkDelete($ids);
+    }
 }

@@ -92,6 +92,14 @@ class FollowUpController extends Controller
             ->with('success', 'Follow up deleted successfully.');
     }
 
+    public function bulkDestroy(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        $this->followUpService->bulkDelete($ids);
+
+        return back()->with('success', 'Follow ups deleted successfully');
+    }
+
     public function complete(Request $request, FollowUp $followUp)
     {
         $this->followUpService->complete(
@@ -105,15 +113,7 @@ class FollowUpController extends Controller
 
     public function export(Request $request)
     {
-        $ids = $request->input('ids', []);
-
-        $query = FollowUp::query()->with(['customer', 'user']);
-
-        if (!empty($ids)) {
-            $query->whereIn('id', $ids);
-        }
-
-        $followUps = $query->get();
+        $followUps = $this->followUpService->getForExport($request->input('ids', []));
 
         return Excel::download(new GeneralExport(
             $followUps,
@@ -132,14 +132,9 @@ class FollowUpController extends Controller
 
     public function print(Request $request)
     {
-        $ids = $request->input('ids', []);
-        $query = FollowUp::query()->with(['customer', 'user']);
-        if (!empty($ids)) {
-            $query->whereIn('id', $ids);
-        }
-        $followUps = $query->get();
+        $followUps = $this->followUpService->getForExport($request->input('ids', []));
 
-        $data = $followUps->map(function($followUp) {
+        $data = $followUps->map(function ($followUp) {
             return [
                 $followUp->customer ? $followUp->customer->name : 'N/A',
                 $followUp->follow_up_date,

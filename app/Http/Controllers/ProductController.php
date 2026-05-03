@@ -103,15 +103,7 @@ class ProductController extends Controller
 
     public function export(Request $request)
     {
-        $ids = $request->input('ids', []);
-
-        $query = Product::query();
-
-        if (!empty($ids)) {
-            $query->whereIn('id', $ids);
-        }
-
-        $products = $query->get();
+        $products = $this->productService->getForExport($request->input('ids', []));
 
         return Excel::download(new GeneralExport(
             $products,
@@ -132,12 +124,7 @@ class ProductController extends Controller
 
     public function print(Request $request)
     {
-        $ids = $request->input('ids', []);
-        $query = Product::query();
-        if (!empty($ids)) {
-            $query->whereIn('id', $ids);
-        }
-        $products = $query->get();
+        $products = $this->productService->getForExport($request->input('ids', []));
 
         $data = $products->map(function ($product) {
             return [

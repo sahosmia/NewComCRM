@@ -114,6 +114,14 @@ class RequirementController extends Controller
             ->with('success', 'Requirement deleted successfully');
     }
 
+    public function bulkDestroy(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        $this->requirementService->bulkDelete($ids);
+
+        return back()->with('success', 'Requirements deleted successfully');
+    }
+
     public function downloadPdf(Requirement $requirement)
     {
 
@@ -124,15 +132,7 @@ class RequirementController extends Controller
 
     public function export(Request $request)
     {
-        $ids = $request->input('ids', []);
-
-        $query = Requirement::query()->with(['customer', 'items.product']);
-
-        if (!empty($ids)) {
-            $query->whereIn('id', $ids);
-        }
-
-        $requirements = $query->get();
+        $requirements = $this->requirementService->getForExport($request->input('ids', []));
 
         return Excel::download(new GeneralExport(
             $requirements,
@@ -155,12 +155,7 @@ class RequirementController extends Controller
 
     public function print(Request $request)
     {
-        $ids = $request->input('ids', []);
-        $query = Requirement::query()->with(['customer', 'items.product']);
-        if (!empty($ids)) {
-            $query->whereIn('id', $ids);
-        }
-        $requirements = $query->get();
+        $requirements = $this->requirementService->getForExport($request->input('ids', []));
 
         $data = $requirements->map(function ($requirement) {
             $items = $requirement->items->map(function ($item) {

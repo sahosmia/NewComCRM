@@ -47,4 +47,9 @@ class CustomerService
     {
         $this->customers->bulkDelete($ids);
     }
+
+    public function getForExport(array $ids): Collection
+    {
+        return $this->customers->getForExport($ids);
+    }
 }

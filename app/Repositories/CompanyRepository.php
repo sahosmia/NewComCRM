@@ -53,4 +53,15 @@ class CompanyRepository
         $company = $this->find($id);
         return $company->delete();
     }
+
+    public function bulkDelete(array $ids): void
+    {
+        $query = Company::query();
+
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+
+        $query->delete();
+    }
 }
