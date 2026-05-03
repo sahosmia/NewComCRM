@@ -30,7 +30,7 @@ export function FormSelect({
         <div className={`space-y-2 ${className}`}>
             <FormLabel>{label}</FormLabel>
             <Select value={value} onValueChange={onChange}>
-                <SelectTrigger className={`h-11 ${error ? "border-destructive" : ""}`}>
+                <SelectTrigger className={`h-9 ${error ? "border-destructive" : ""}`}>
                     <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
                 <SelectContent>

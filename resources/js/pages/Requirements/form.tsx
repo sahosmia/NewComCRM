@@ -118,7 +118,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                     <ErrorMessage message={errors.customer_id} />
                 </div>
 
-                <div className="space-y-1.5">
+                <div className="space-y-1">
                     <Label className="text-xs font-bold uppercase text-muted-foreground tracking-wider">Requirement Title</Label>
                     <Input
                         placeholder="Requirement Title"
@@ -243,7 +243,7 @@ export default function RequirementForm({ requirement, customers, products, unit
             </div>
 
             {/* Accessories & Installation Section */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6">
                 {/* Accessories Section */}
                 <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
                     <div className="p-4 bg-muted/40 flex justify-between items-center border-b">
@@ -261,45 +261,64 @@ export default function RequirementForm({ requirement, customers, products, unit
                     </div>
                     {data.has_accessories && (
                         <div className="p-4 space-y-4 animate-in fade-in slide-in-from-top-1">
-                            <div className="space-y-1.5">
-                                <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Accessories Title</Label>
-                                <Input
-                                    placeholder="Enter accessories title"
-                                    value={data.accessories_title}
-                                    onChange={(e) => setData("accessories_title", e.target.value)}
-                                />
-                                <ErrorMessage message={errors.accessories_title} />
-                            </div>
-                            <div className="grid grid-cols-3 gap-3">
-                                <div className="space-y-1.5">
-                                    <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Quantity</Label>
+                            <div className="grid grid-cols-12 gap-3 items-end">
+                                {/* Large Title Field */}
+                                <div className="col-span-12 md:col-span-5 space-y-1.5">
+                                    <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Accessories Title</Label>
+                                    <Input
+                                        placeholder="Enter accessories title"
+                                        value={data.accessories_title}
+                                        onChange={(e) => setData("accessories_title", e.target.value)}
+                                    />
+                                    <ErrorMessage message={errors.accessories_title} />
+                                </div>
+
+                                {/* Small Width Fields */}
+                                <div className="col-span-4 md:col-span-1 space-y-1.5">
+                                    <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest text-center block">Qty</Label>
                                     <Input
                                         type="number"
+                                        className="text-center"
                                         placeholder="Qty"
                                         value={data.accessories_quantity}
                                         onChange={(e) => setData("accessories_quantity", e.target.value)}
                                     />
-                                    <ErrorMessage message={errors.accessories_quantity} />
                                 </div>
-                                <div className="space-y-1.5">
+
+                                <div className="col-span-8 md:col-span-2 space-y-1">
                                     <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Unit</Label>
                                     <FormSelect
                                         label=""
                                         value={data.accessories_unit_id}
                                         onChange={(v) => setData("accessories_unit_id", v)}
-                                        options={units.map(u => ({ label: u.short_form, value: u.id }))}
+                                        options={units.map(u => ({ label: u.short_form, value: u.id.toString() }))}
                                     />
-                                    <ErrorMessage message={errors.accessories_unit_id} />
                                 </div>
-                                <div className="space-y-1.5">
+
+                                <div className="col-span-6 md:col-span-2 space-y-1.5">
                                     <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Price</Label>
-                                    <Input
-                                        type="number"
-                                        placeholder="Price"
-                                        value={data.accessories_price}
-                                        onChange={(e) => setData("accessories_price", e.target.value)}
-                                    />
-                                    <ErrorMessage message={errors.accessories_price} />
+                                    <div className="relative">
+                                        <Input
+                                            type="number"
+                                            className="pl-6"
+                                            placeholder="0.00"
+                                            value={data.accessories_price}
+                                            onChange={(e) => setData("accessories_price", e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Calculated Total Column */}
+                                <div className="col-span-6 md:col-span-2 space-y-1.5">
+                                    <Label className="text-[10px] font-black uppercase text-primary tracking-widest">Total</Label>
+                                    <div className="h-10 flex items-center px-3 bg-muted/30 rounded-md border border-dashed font-mono font-bold text-sm">
+                                        ৳{(Number(data.accessories_quantity || 0) * Number(data.accessories_price || 0)).toLocaleString()}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-12 gap-3">
+                                <div className="col-span-12">
+                                    <ErrorMessage message={errors.accessories_quantity || errors.accessories_unit_id || errors.accessories_price} />
                                 </div>
                             </div>
                         </div>
@@ -323,45 +342,59 @@ export default function RequirementForm({ requirement, customers, products, unit
                     </div>
                     {data.has_installation && (
                         <div className="p-4 space-y-4 animate-in fade-in slide-in-from-top-1">
-                            <div className="space-y-1.5">
-                                <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Installation Title</Label>
-                                <Input
-                                    placeholder="Enter installation title"
-                                    value={data.installation_title}
-                                    onChange={(e) => setData("installation_title", e.target.value)}
-                                />
-                                <ErrorMessage message={errors.installation_title} />
-                            </div>
-                            <div className="grid grid-cols-3 gap-3">
-                                <div className="space-y-1.5">
-                                    <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Quantity</Label>
+                            <div className="grid grid-cols-12 gap-3 items-end">
+                                {/* Large Title Field */}
+                                <div className="col-span-12 md:col-span-5 space-y-1.5">
+                                    <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Installation Title</Label>
+                                    <Input
+                                        placeholder="Enter installation title"
+                                        value={data.installation_title}
+                                        onChange={(e) => setData("installation_title", e.target.value)}
+                                    />
+                                    <ErrorMessage message={errors.installation_title} />
+                                </div>
+
+                                {/* Small Width Fields */}
+                                <div className="col-span-4 md:col-span-1 space-y-1.5">
+                                    <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest text-center block">Qty</Label>
                                     <Input
                                         type="number"
+                                        className="text-center"
                                         placeholder="Qty"
                                         value={data.installation_quantity}
                                         onChange={(e) => setData("installation_quantity", e.target.value)}
                                     />
-                                    <ErrorMessage message={errors.installation_quantity} />
                                 </div>
-                                <div className="space-y-1.5">
+
+                                <div className="col-span-8 md:col-span-2 space-y-1">
                                     <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Unit</Label>
                                     <FormSelect
                                         label=""
                                         value={data.installation_unit_id}
                                         onChange={(v) => setData("installation_unit_id", v)}
-                                        options={units.map(u => ({ label: u.short_form, value: u.id }))}
+                                        options={units.map(u => ({ label: u.short_form, value: u.id.toString() }))}
                                     />
-                                    <ErrorMessage message={errors.installation_unit_id} />
                                 </div>
-                                <div className="space-y-1.5">
+
+                                <div className="col-span-6 md:col-span-2 space-y-1.5">
                                     <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Price</Label>
-                                    <Input
-                                        type="number"
-                                        placeholder="Price"
-                                        value={data.installation_price}
-                                        onChange={(e) => setData("installation_price", e.target.value)}
-                                    />
-                                    <ErrorMessage message={errors.installation_price} />
+                                    <div className="relative">
+                                        <Input
+                                            type="number"
+                                            className="pl-6"
+                                            placeholder="0.00"
+                                            value={data.installation_price}
+                                            onChange={(e) => setData("installation_price", e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Calculated Total Column */}
+                                <div className="col-span-6 md:col-span-2 space-y-1.5">
+                                    <Label className="text-[10px] font-black uppercase text-primary tracking-widest">Total</Label>
+                                    <div className="h-10 flex items-center px-3 bg-muted/30 rounded-md border border-dashed font-mono font-bold text-sm">
+                                        ৳{(Number(data.installation_quantity || 0) * Number(data.installation_price || 0)).toLocaleString()}
+                                    </div>
                                 </div>
                             </div>
                         </div>

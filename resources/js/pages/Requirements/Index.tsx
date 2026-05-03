@@ -37,14 +37,16 @@ export default function RequirementIndex({ requirements }: Props) {
                 />
 
                 <CommonTable
-                    data={requirements}
+                    entityName='Requierment'
                     columns={columns}
-                    create_route="requirements.create"
-                    routeName="requirements.index"
                     filters={filters}
+                    data={requirements}
                     sortOptions={sortOptions}
-                    exportRoute="requirements.export"
+                    routeName="requirements.index"
                     printRoute="requirements.print"
+                    create_route="requirements.create"
+                    exportRoute="requirements.export"
+                    bulkDeleteRoute='requirements.bulkDestroy'
                 />
             </div>
         </AppLayout>

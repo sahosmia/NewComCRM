@@ -39,6 +39,8 @@ export default function UnitIndex({ units }: Props) {
                     sortOptions={sortOptions}
                     routeName="units.index"
                     create_route="units.create"
+                                        bulkDeleteRoute="units.bulkDestroy"
+
                 />
             </div>
         </AppLayout>

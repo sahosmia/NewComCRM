@@ -8,12 +8,14 @@ import {
     ArrowLeft,
     Package,
     Printer,
-    History
 } from "lucide-react";
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
 import StatusBadge from "@/components/shared/StatusBadge";
+import { Requirement } from "@/types/requirement";
 
-export default function Show({ requirement }: any) {
+export default function Show({ requirement }: Requirement) {
+    console.log(requirement);
+
     const breadcrumbs = [
         { title: "Requirements", href: route('requirements.index') },
         { title: `REQ-${requirement.id}`, href: "#" }
@@ -136,11 +138,7 @@ export default function Show({ requirement }: any) {
                             </div>
                         )}
 
-                        {/* Quick Logs/History Placeholder */}
-                        <div className="border border-dashed rounded-xl p-5 flex items-center justify-center text-muted-foreground italic text-xs gap-2">
-                            <History className="w-3 h-3" />
-                            No recent activity logs.
-                        </div>
+
                     </div>
 
                     {/* Right Side: Items Table (8 Columns) */}
