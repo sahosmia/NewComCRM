@@ -70,4 +70,12 @@ class CompanyController extends Controller
         return redirect()->route('companies.index')
             ->with('success', 'Company deleted successfully.');
     }
+
+    public function bulkDestroy(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        $this->service->bulkDelete($ids);
+
+        return back()->with('success', 'Companies deleted successfully');
+    }
 }

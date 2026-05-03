@@ -36,6 +36,8 @@ export default function CompanyIndex({ companies }: Props) {
                     create_route="companies.create"
                     routeName="companies.index"
                     sortOptions={sortOptions}
+                    bulkDeleteRoute="companies.bulkDestroy"
+                    entityName="Company"
                 />
             </div>
         </AppLayout>

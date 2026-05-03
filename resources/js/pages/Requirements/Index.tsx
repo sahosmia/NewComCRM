@@ -45,6 +45,8 @@ export default function RequirementIndex({ requirements }: Props) {
                     sortOptions={sortOptions}
                     exportRoute="requirements.export"
                     printRoute="requirements.print"
+                    bulkDeleteRoute="requirements.bulkDestroy"
+                    entityName="Requirement"
                 />
             </div>
         </AppLayout>

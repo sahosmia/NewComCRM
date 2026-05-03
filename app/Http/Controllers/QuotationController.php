@@ -89,6 +89,14 @@ class QuotationController extends Controller
             ->with('success', 'Quotation deleted successfully.');
     }
 
+    public function bulkDestroy(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        $this->quotationService->bulkDelete($ids);
+
+        return back()->with('success', 'Quotations deleted successfully');
+    }
+
      public function updateStatus(Request $request, Quotation $quotation)
     {
         $validated = $request->validate([

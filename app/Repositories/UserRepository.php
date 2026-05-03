@@ -68,4 +68,15 @@ class UserRepository
     {
         $user->delete();
     }
+
+    public function bulkDelete(array $ids): void
+    {
+        $query = User::query();
+
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+
+        $query->delete();
+    }
 }

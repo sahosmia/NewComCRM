@@ -98,6 +98,20 @@ class CustomerRepository
     public function bulkDelete(array $ids): void
     {
         // Use the query() to ensure users can only bulk delete THEIR customers
-        $this->query()->whereIn('id', $ids)->delete();
+        $query = $this->query();
+
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+
+        $query->delete();
+    }
+
+    public function getForExport(array $ids): Collection
+    {
+        return $this->query()
+            ->with(['company', 'assignedUser'])
+            ->when(!empty($ids), fn($q) => $q->whereIn('id', $ids))
+            ->get();
     }
 }

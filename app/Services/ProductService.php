@@ -31,4 +31,14 @@ class ProductService
     {
         $this->products->delete($product);
     }
+
+    public function bulkDelete(array $ids): void
+    {
+        $this->products->bulkDelete($ids);
+    }
+
+    public function getForExport(array $ids): \Illuminate\Support\Collection
+    {
+        return $this->products->getForExport($ids);
+    }
 }

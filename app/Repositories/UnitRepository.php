@@ -47,4 +47,15 @@ class UnitRepository
     {
         $unit->delete();
     }
+
+    public function bulkDelete(array $ids): void
+    {
+        $query = Unit::query();
+
+        if (!empty($ids)) {
+            $query->whereIn('id', $ids);
+        }
+
+        $query->delete();
+    }
 }

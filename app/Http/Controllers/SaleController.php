@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sale;
+use App\Services\SaleService;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Exports\GeneralExport;
@@ -10,28 +10,27 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class SaleController extends Controller
 {
-    public function index()
-    {
-        $sales = Sale::with(['customer', 'requirement.items.product'])
-            ->latest()
-            ->paginate(10);
+    public function __construct(
+        private SaleService $saleService
+    ) {}
 
+    public function index(Request $request)
+    {
         return Inertia::render('Sales/Index', [
-            'sales' => $sales
+            'sales' => $this->saleService->paginateIndex($request->all())
         ]);
+    }
+
+    public function bulkDestroy(Request $request)
+    {
+        $this->saleService->bulkDelete($request->input('ids', []));
+
+        return back()->with('success', 'Sales deleted successfully');
     }
 
     public function export(Request $request)
     {
-        $ids = $request->input('ids', []);
-
-        $query = Sale::query()->with(['customer', 'requirement.items.product']);
-
-        if (!empty($ids)) {
-            $query->whereIn('id', $ids);
-        }
-
-        $sales = $query->get();
+        $sales = $this->saleService->getForExport($request->input('ids', []));
 
         return Excel::download(new GeneralExport(
             $sales,
@@ -48,12 +47,7 @@ class SaleController extends Controller
 
     public function print(Request $request)
     {
-        $ids = $request->input('ids', []);
-        $query = Sale::query()->with(['customer']);
-        if (!empty($ids)) {
-            $query->whereIn('id', $ids);
-        }
-        $sales = $query->get();
+        $sales = $this->saleService->getForExport($request->input('ids', []));
 
         $data = $sales->map(function($sale) {
             return [
