@@ -19,9 +19,9 @@ export default function Show({ quotation }: Props) {
                         <p className="text-muted-foreground">Status: <span className="capitalize">{quotation.status}</span></p>
                     </div>
                     <div className="space-x-2">
-                        <Link href={route("quotations.download", quotation.id)}>
+                        <a href={route("quotations.download", quotation.id)} target="_blank">
                             <Button variant="outline">Download PDF</Button>
-                        </Link>
+                        </a>
                         {quotation.status === 'draft' && (
                             <Link href={route("quotations.edit", quotation.id)}>
                                 <Button>Edit</Button>

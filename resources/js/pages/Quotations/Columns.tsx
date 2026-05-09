@@ -1,6 +1,8 @@
 import type { Column, Quotation } from '@/types';
 import { TableRowActions } from '@/components/table/TableRowActions';
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { FileDown } from 'lucide-react';
 
 const QUOTATION_STATUS_OPTIONS = [
     { value: 'draft', label: 'Draft', colorClass: 'bg-gray-500/10 text-gray-600 border-gray-500/20' },
@@ -44,6 +46,13 @@ const columns: Column<Quotation>[] = [
                 item={item}
                 resource="quotations"
                 label="Quotation"
+                customActions={
+                    <DropdownMenuItem asChild>
+                        <a href={route('quotations.download', item.id)} target="_blank">
+                            <FileDown className="w-4 h-4 mr-2" /> Download PDF
+                        </a>
+                    </DropdownMenuItem>
+                }
             />
         ),
         className: 'w-[7%]',

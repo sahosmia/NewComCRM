@@ -105,16 +105,6 @@ class Quotation extends Model
     }
 
     // Methods
-    public function generatePDF()
-    {
-        $pdf = Pdf::loadView('pdf.quotation', ['quotation' => $this]);
-        $path = 'quotations/quotation-' . $this->quotation_number . '.pdf';
-        \Storage::put('public/' . $path, $pdf->output());
-
-        $this->update(['pdf_path' => $path]);
-
-        return $path;
-    }
 
     public function markAsSent()
     {

@@ -61,10 +61,6 @@ class QuotationService
                 $quotation->items()->create($item);
             }
 
-            if ($quotation->status === 'sent') {
-                $quotation->generatePDF();
-            }
-
             return $quotation;
         });
     }
@@ -78,10 +74,6 @@ class QuotationService
 
             foreach ($validated['items'] as $item) {
                 $quotation->items()->create($item);
-            }
-
-            if ($quotation->status === 'sent') {
-                $quotation->generatePDF();
             }
         });
     }
@@ -98,23 +90,19 @@ class QuotationService
 
     public function send(Quotation $quotation): void
     {
-        if ($quotation->status === 'draft') {
-            $quotation->generatePDF();
-        }
-
         // Mail logic would go here if Mailables exist
         // Mail::to($quotation->customer->email)->send(new QuotationMail($quotation));
 
         $quotation->update(['status' => 'sent']);
     }
 
-    public function downloadPdf(Quotation $quotation): StreamedResponse
+    public function downloadPdf(Quotation $quotation)
     {
-        if (! $quotation->pdf_path || ! Storage::exists('public/'.$quotation->pdf_path)) {
-            $quotation->generatePDF();
-        }
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.quotation', [
+            'quotation' => $quotation->load(['customer', 'user', 'items.product'])
+        ]);
 
-        return Storage::download('public/'.$quotation->pdf_path);
+        return $pdf->download('quotation-' . $quotation->quotation_number . '.pdf');
     }
 
     public function duplicate(Quotation $quotation): Quotation

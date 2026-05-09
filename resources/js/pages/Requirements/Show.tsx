@@ -83,11 +83,11 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                         <Link href={route("requirements.edit", requirement.id)} className="flex-1 md:flex-none">
                             <Button variant="outline" size="sm" className="w-full">Edit</Button>
                         </Link>
-                        <Link href={route('requirements.download', requirement.id)} target="_blank">
+                        <a href={route('requirements.download', requirement.id)} target="_blank">
                             <Button variant="outline" size="sm" className="flex-1 md:flex-none">
                                 <Printer className="w-4 h-4 mr-2" /> Print
                             </Button>
-                        </Link>
+                        </a>
                     </div>
                 </div>
 
