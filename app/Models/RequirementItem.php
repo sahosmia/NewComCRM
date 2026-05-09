@@ -18,7 +18,12 @@ class RequirementItem extends Model
         parent::boot();
 
         static::saving(function ($item) {
-            $item->total_price = $item->quantity * $item->unit_price;
+            $aitFactor = 1;
+            $requirement = $item->requirement;
+            if ($requirement && $requirement->ait_percentage > 0 && $requirement->ait_percentage < 100) {
+                $aitFactor = 1 / (1 - ($requirement->ait_percentage / 100));
+            }
+            $item->total_price = $item->quantity * ($item->unit_price * $aitFactor);
         });
 
         static::saved(function ($item) {

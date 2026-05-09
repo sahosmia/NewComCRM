@@ -8,6 +8,8 @@ use App\Models\Requirement;
 use App\Services\RequirementService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 use App\Exports\GeneralExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
@@ -122,11 +124,33 @@ class RequirementController extends Controller
         return back()->with('success', 'Requirements deleted successfully');
     }
 
+    // public function downloadPdf(Requirement $requirement)
+    // {
+
+    //     $path = $requirement->generatePDF();
+    //     // return $path;
+    //     return response()->download(storage_path('app/public/' . $path));
+    // }
     public function downloadPdf(Requirement $requirement)
     {
 
-        $path = $requirement->generatePDF();
-        return $path;
+        // $path = $requirement->generatePDF();
+        $pdf = Pdf::loadView('pdf.requirement', [
+            'requirement' => $requirement->load([
+                'customer',
+                'items.product.unit',
+                'accessoriesUnit',
+                'installationUnit'
+            ])
+        ]);
+
+            return $pdf->download();
+
+
+        $path = 'requirements/requirement-' . $requirement->id . '.pdf';
+        Storage::disk('public')->put($path, $pdf->output());
+
+        // return $path;
         return response()->download(storage_path('app/public/' . $path));
     }
 
