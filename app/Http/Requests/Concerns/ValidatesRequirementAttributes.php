@@ -15,9 +15,7 @@ trait ValidatesRequirementAttributes
             'notes'       => 'nullable|string',
             'status'      => 'nullable|string',
 
-            'has_ait'        => 'nullable|boolean',
             'ait_percentage' => 'nullable|numeric|min:0',
-            'has_vat'        => 'nullable|boolean',
             'vat_percentage' => 'nullable|numeric|min:0',
 
             'has_accessories'      => 'nullable|boolean',
@@ -38,10 +36,10 @@ trait ValidatesRequirementAttributes
             'before_payment'      => 'nullable|integer|min:0|max:100',
             'delivery_location'   => 'nullable|string|max:255',
 
-            'items'              => 'required|array|min:1',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity'   => 'required|integer|min:1',
-            'items.*.unit_price' => 'required|numeric|min:0',
+            'items'                 => 'required|array|min:1',
+            'items.*.product_id'    => 'required|exists:products,id',
+            'items.*.quantity'      => 'required|integer|min:1',
+            'items.*.unit_price'    => 'required|numeric|min:0',
         ];
     }
 

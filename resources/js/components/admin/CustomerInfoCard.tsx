@@ -1,22 +1,11 @@
 import { Link } from "@inertiajs/react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Mail, Phone, MapPin, MessageCircle } from "lucide-react";
+import { CustomerType } from "@/types";
 
-interface CustomerInfoProps {
-    customer: {
-        id: number;
-        name: string;
-        designation?: string;
-        company?: {
-            name: string;
-        };
-        email?: string;
-        phones?: string[];
-        addresses?: string[];
-    };
-}
 
-export default function CustomerInfoCard({ customer }: CustomerInfoProps) {
+
+export default function CustomerInfoCard({ customer }: {customer: CustomerType}) {
     return (
         <Card className="shadow-sm border-muted/60">
             <CardHeader className="bg-muted/10 border-b py-3">

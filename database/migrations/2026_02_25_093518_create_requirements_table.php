@@ -15,22 +15,20 @@ return new class extends Migration
             $table->id();
             $table->string('title')->nullable();
             // Taxes
-            $table->boolean('has_ait')->default(false);
-            $table->decimal('ait_percentage', 5, 2)->default(0);
-            $table->boolean('has_vat')->default(false);
+            $table->decimal('ait_percentage', 5, 2)->default(5);
             $table->decimal('vat_percentage', 5, 2)->default(0);
 
             // Accessories
             $table->boolean('has_accessories')->default(false);
             $table->string('accessories_title')->nullable();
-            $table->decimal('accessories_quantity', 12, 2)->nullable();
+            $table->integer('accessories_quantity')->nullable();
             $table->foreignId('accessories_unit_id')->nullable()->constrained('units')->onDelete('set null');
             $table->decimal('accessories_price', 12, 2)->nullable();
 
             // Installation
             $table->boolean('has_installation')->default(false);
             $table->string('installation_title')->nullable();
-            $table->decimal('installation_quantity', 12, 2)->nullable();
+            $table->integer('installation_quantity')->nullable();
             $table->foreignId('installation_unit_id')->nullable()->constrained('units')->onDelete('set null');
             $table->decimal('installation_price', 12, 2)->nullable();
 
