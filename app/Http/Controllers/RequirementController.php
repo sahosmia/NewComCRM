@@ -128,7 +128,7 @@ class RequirementController extends Controller
     {
         $pdf = Pdf::loadView('pdf.requirement', [
             'requirement' => $requirement->load([
-                'customer',
+                'customer.company',
                 'items.product.unit',
                 'accessoriesUnit',
                 'installationUnit'

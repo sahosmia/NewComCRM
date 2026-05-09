@@ -99,7 +99,7 @@ class QuotationService
     public function downloadPdf(Quotation $quotation)
     {
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.quotation', [
-            'quotation' => $quotation->load(['customer', 'user', 'items.product'])
+            'quotation' => $quotation->load(['customer.company', 'user', 'items.product'])
         ]);
 
         return $pdf->download('quotation-' . $quotation->quotation_number . '.pdf');
