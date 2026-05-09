@@ -48,6 +48,8 @@ export interface User {
     id: number;
     name: string;
     email: string;
+    mobile?: string | null;
+    designations?: string | null;
     email_verified_at: string | null;
     phone: string;
     created_at: string;
@@ -278,6 +280,8 @@ export interface UserType {
     id: number;
     name: string;
     email: string;
+    mobile?: string | null;
+    designations?: string | null;
     role: string;
     created_at: string;
     is_active: boolean;

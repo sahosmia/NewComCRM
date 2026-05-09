@@ -15,6 +15,8 @@ export default function UserForm({ user }: Props) {
     const { data, setData, post, processing, errors } = useForm({
         name: user?.name || "",
         email: user?.email || "",
+        mobile: user?.mobile || "",
+        designations: user?.designations || "",
         role: user?.role || "user",
         password: "",
         signature: null as File | null,
@@ -45,6 +47,18 @@ export default function UserForm({ user }: Props) {
                         <label className="text-sm font-medium">Full Name</label>
                         <Input value={data.name} onChange={e => setData("name", e.target.value)} placeholder="John Doe" />
                         <ErrorMessage message={errors.name} />
+                    </div>
+
+                    <div className="space-y-1">
+                        <label className="text-sm font-medium">Mobile</label>
+                        <Input value={data.mobile} onChange={e => setData("mobile", e.target.value)} placeholder="01XXXXXXXXX" />
+                        <ErrorMessage message={errors.mobile} />
+                    </div>
+
+                    <div className="space-y-1">
+                        <label className="text-sm font-medium">Designations</label>
+                        <Input value={data.designations} onChange={e => setData("designations", e.target.value)} placeholder="Software Engineer" />
+                        <ErrorMessage message={errors.designations} />
                     </div>
 
                     <div className="space-y-1">

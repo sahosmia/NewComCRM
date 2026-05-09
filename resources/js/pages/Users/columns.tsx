@@ -9,6 +9,7 @@ const columns: Column<UserType>[] = [
         accessor: (item: any) => (
             <div className="flex flex-col">
                 <span className="font-medium text-foreground">{item.name}</span>
+                <span className="text-xs text-muted-foreground">{item.designations}</span>
             </div>
         ),
     },
@@ -27,10 +28,11 @@ const columns: Column<UserType>[] = [
     },
 
     {
-        header: 'Email',
+        header: 'Contact',
         accessor: (item: any) => (
             <div className="flex flex-col text-sm">
-                {item.email}
+                <span>{item.email}</span>
+                <span className="text-xs text-muted-foreground">{item.mobile}</span>
             </div>
         ),
     },
