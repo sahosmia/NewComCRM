@@ -1,12 +1,12 @@
 import AppLayout from "@/layouts/app-layout";
 import QuotationForm from "./form";
-import { Quotation } from "@/types/quotation";
-import { Product } from "@/types/product";
+
 import { Head } from "@inertiajs/react";
+import { CustomerType, Product, Quotation } from "@/types";
 
 interface Props {
     quotation: Quotation;
-    customers: { id: number; name: string }[];
+    customers: CustomerType[];
     products: Product[];
 }
 

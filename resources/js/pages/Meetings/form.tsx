@@ -9,7 +9,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Meeting } from "@/types/metting";
+import { Meeting } from "@/types";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
 import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 
@@ -83,7 +83,7 @@ export default function MeetingForm({ meeting, customers }: Props) {
                 <label className="text-sm font-medium">Meeting Type</label>
                 <Select
                     value={data.meeting_type}
-                    onValueChange={(value: any) => setData("meeting_type", value)}
+                    onValueChange={(value) => setData("meeting_type", value as Meeting['meeting_type'])}
                 >
                     <SelectTrigger>
                         <SelectValue placeholder="Select Type" />
@@ -123,7 +123,7 @@ export default function MeetingForm({ meeting, customers }: Props) {
                 <label className="text-sm font-medium">Status</label>
                 <Select
                     value={data.status}
-                    onValueChange={(value: any) => setData("status", value)}
+                    onValueChange={(value) => setData("status", value as Meeting['status'])}
                 >
                     <SelectTrigger>
                         <SelectValue placeholder="Select Status" />

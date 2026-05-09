@@ -1,7 +1,7 @@
 import AppLayout from "@/layouts/app-layout";
 import { Head, Link } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
-import { Quotation } from "@/types/quotation";
+import { Quotation } from "@/types";
 
 interface Props {
     quotation: Quotation;

@@ -1,12 +1,12 @@
 import AppLayout from '@/layouts/app-layout';
-import { FilterOption, PaginationType, SortOption } from '@/types';
+import { FilterOption, PaginationType, Requirement, SortOption } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import { columns } from './Columns';
 
 interface Props {
-    requirements: PaginationType<any>;
+    requirements: PaginationType<Requirement>;
 }
 
 export default function RequirementIndex({ requirements }: Props) {
@@ -37,7 +37,7 @@ export default function RequirementIndex({ requirements }: Props) {
                 />
 
                 <CommonTable
-                    entityName='Requierment'
+                    entityName='Requirement'
                     columns={columns}
                     filters={filters}
                     data={requirements}

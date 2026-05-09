@@ -1,17 +1,17 @@
 import AppLayout from "@/layouts/app-layout";
 import MeetingForm from "./form";
-import { Meeting } from "@/types/metting";
 import { Head } from "@inertiajs/react";
+import { CustomerType, Meeting } from "@/types";
 
 interface Props {
     meeting: Meeting;
-    customers: { id: number; name: string }[];
+    customers: CustomerType[];
 }
 
 export default function Edit({ meeting, customers }: Props) {
     return (
-        <AppLayout breadcrumbs={[{ title: "Meetings", href: route('meetings.index') }, { title: "Edit", href:"" }]}>
-                        <Head title="Edit Meeting" />
+        <AppLayout breadcrumbs={[{ title: "Meetings", href: route('meetings.index') }, { title: "Edit", href: "" }]}>
+            <Head title="Edit Meeting" />
 
             <div className="p-6">
                 <h1 className="text-xl font-bold mb-4">Edit Meeting</h1>

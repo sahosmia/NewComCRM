@@ -48,64 +48,155 @@ export interface User {
     id: number;
     name: string;
     email: string;
-    avatar?: string;
     email_verified_at: string | null;
+    phone: string;
     created_at: string;
     updated_at: string;
+    deleted_at?: string | null;
+    signature?: string | null;
+    signature_url?: string | null;
     [key: string]: unknown;
 }
+
+export interface Sale {
+    id: number;
+    customer_id: number;
+    requirement_id: number;
+    amount: string | number;
+    sale_date: string;
+    created_at: string;
+    updated_at: string;
+    customer?: CustomerType;
+    requirement?: Requirement;
+}
+
 
 export interface CustomerType {
     id: number;
     name: string;
     designation: string;
     company_id: number;
-    company?: {
-        id: number;
-        name: string;
-    };    phones: string[];
+    company?: Company;
+    phones: string[];
     addresses: string[];
     email: string;
     type: 'corporate' | 'reseller' | 'personal';
     assigned_to?: number | string;
     status: 'active' | 'inactive';
     remarks?: string;
-    assigned_user?: {
-        id: number;
-        name: string;
-    };
+    assigned_user?: User;
     created_at: string;
     updated_at: string;
+    full_name_with_company: string
+    deleted_at?: string | null;
 }
 
-export interface ReviewType {
-    approved: boolean;
-    approved_at: string | null;
-    comment: string;
+export interface Meeting {
     id: number;
-    product_id: number;
-    rating: number;
+    customer_id: number;
     user_id: number;
+    title: string;
+    scheduled_at: string;
+    meeting_type: 'physical' | 'virtual' | 'phone';
+    location: string | null;
+    agenda: string | null;
+    notes: string | null;
+    status: 'scheduled' | 'completed' | 'cancelled';
     created_at: string;
+    updated_at: string;
+    customer?: CustomerType;
+    user?: User;
 }
 
-export interface ProductType {
+
+
+
+export interface Product {
     id: number;
     name: string;
-    slug: string;
-    description: string;
-    price: number;
-    discount_type: string | null;
-    discount_value: number | null;
-    category_id: number;
-    image: string;
-    is_active: boolean;
-    discounted_price: number;
-    image_url: string;
-    reviews: ReviewType[],
-    another_product_description?: string;
-    additional_information?: string | [];
+    brand: string | null;
+    model: string | null;
+    unit_price: string;
+    description: string | null;
+    category: string | null;
+    stock_quantity: number;
+    supplier_name: string | null;
+    source: string | null;
+    created_at: string;
+    updated_at: string;
+    deleted_at?: string | null;
+    unit:Unit;
+    unit_id:number;
 }
+
+export interface RequirementItem {
+    id?: number;
+    requirement_id?: number;
+    product_id: number;
+    quantity: number;
+    unit_price: string | number;
+    total_price?: string | number;
+    product?: Product;
+    created_at?: string;
+    updated_at?: string;
+    description?: string;
+}
+
+export interface Requirement {
+    id: number;
+    customer_id: number;
+    title: string | null;
+    grand_total: string | number;
+    status: 'pending' | 'approved' | 'processing' | 'purchased' | 'cancel';
+    notes: string | null;
+
+    has_ait: boolean;
+    ait_percentage: string | number;
+    has_vat: boolean;
+    vat_percentage: string | number;
+
+    has_accessories: boolean;
+    accessories_title: string | null;
+    accessories_quantity: string | number | null;
+    accessories_unit_id: number | null;
+    accessories_price: string | number | null;
+
+    has_installation: boolean;
+    installation_title: string | null;
+    installation_quantity: string | number | null;
+    installation_unit_id: number | null;
+    installation_price: string | number | null;
+
+    price_validity_days: number | null;
+    delivery_time_days: number | null;
+    advance_payment: number;
+    before_payment: number;
+    delivery_location: string | null;
+
+    created_at: string;
+    updated_at: string;
+
+    customer?: CustomerType;
+    items?: RequirementItem[];
+    accessoriesUnit?: Unit;
+    installationUnit?: Unit;
+}
+
+export interface FollowUp {
+    id: number;
+    customer_id: number;
+    user_id: number;
+    follow_up_date: string;
+    notes: string;
+    status: 'price_shared' | 'negotiation' | 'purchase' | 'lost' | 'pending' | 'follow_up';
+    priority: 'high' | 'medium' | 'low';
+    completed_at: string | null;
+    created_at: string;
+    updated_at: string;
+    customer?: CustomerType;
+    user?: User;
+}
+
 
 export interface PaginationLink {
     url: string | null;
@@ -139,28 +230,48 @@ export interface AuthType {
 }
 
 
-export interface TeamType {
-    id: number;
-    name: string;
-    image: string;
-    designation: string;
-    facebook_url: string;
-    instagram_url: string;
-    image_url: string;
-
-}
-
-export interface PortfolioType {
+export interface Unit {
     id: number;
     title: string;
-    category: string;
-    thumbnail: string;
-    thumbnail_url: string;
-    description: string;
-    project_url: string;
-    slug: string;
-
+    short_form: string;
+    created_at: string;
+    updated_at: string;
 }
+
+export interface QuotationItem {
+    id: number;
+    quotation_id: number;
+    product_id: number;
+    description: string;
+    quantity: number;
+    unit_price: string;
+    total: string;
+    product?: Product;
+}
+
+export interface Quotation {
+    id: number;
+    quotation_number: string;
+    customer_id: number;
+    user_id: number;
+    quotation_date: string;
+    valid_until: string;
+    subtotal: string;
+    tax: string;
+    discount: string;
+    total: string;
+    status: 'draft' | 'sent' | 'accepted' | 'rejected' | 'expired';
+    terms_conditions: string | null;
+    notes: string | null;
+    pdf_path: string | null;
+    created_at: string;
+    updated_at: string;
+    customer?: any;
+    user?: any;
+    items?: QuotationItem[];
+}
+
+
 
 
 export interface UserType {
@@ -170,7 +281,7 @@ export interface UserType {
     role: string;
     created_at: string;
     is_active: boolean;
-      signature?: string | null;
+    signature?: string | null;
     signature_url?: string | null;
 }
 export interface UserTypeforForm {
@@ -234,4 +345,9 @@ export interface CommonTableProps<T> {
     dataKey?: string;
     bulkDeleteRoute?: string;
     entityName?: string;
+}
+
+
+export interface Company {
+    id: number, name: string;
 }

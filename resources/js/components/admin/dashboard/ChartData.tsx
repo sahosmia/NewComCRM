@@ -1,8 +1,14 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-export default function SalesChart({ data }: { data: any[] }) {
+interface ChartDataItem {
+    name: string;
+    followups: number;
+    quotations: number;
+}
+
+export default function SalesChart({ data }: { data: ChartDataItem[] }) {
     return (
-        <div className="h-[300px] w-full">
+        <div className="h-75 w-full">
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />

@@ -2,11 +2,11 @@ import AppLayout from "@/layouts/app-layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2, Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare, LayoutList, Plus } from "lucide-react";
+import { Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare, LayoutList, Plus } from "lucide-react";
 import { Head, Link } from "@inertiajs/react";
-import type { CustomerType } from "@/types";
+import { CustomerType, FollowUp, Requirement } from "@/types";
 
-export default function Show({ customer }: { customer: any }) {
+export default function Show({ customer }: { customer: CustomerType & { requirements: Requirement[], follow_ups: FollowUp[] } }) {
     return (
         <AppLayout
             breadcrumbs={[

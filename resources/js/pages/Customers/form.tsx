@@ -8,15 +8,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import type { CustomerType, User } from "@/types";
+import type { Company, CustomerType, User } from "@/types";
 import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 import FormLabel from "@/components/admin/form/FormLabel";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
 
-interface Company {
-    id: number;
-    name: string;
-}
+
 
 interface Props {
     customer?: CustomerType;

@@ -1,5 +1,5 @@
 import { Building2, Phone, MapPin } from 'lucide-react';
-import type { CustomerType, Column } from '@/types';
+import type { Column, CustomerType } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { TableRowActions } from '@/components/table/TableRowActions';
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
@@ -12,7 +12,7 @@ const CUSTOMER_STATUS_OPTIONS = [
 const columns: Column<CustomerType>[] = [
     {
         header: 'Customer',
-        accessor: (item: any) => (
+        accessor: (item) => (
             <div className="flex flex-col">
                 <div className="flex items-center gap-2">
                     <span className="font-medium text-foreground">{item.name}</span>
@@ -25,7 +25,7 @@ const columns: Column<CustomerType>[] = [
     },
     {
         header: 'Company',
-        accessor: (item: any) => (
+        accessor: (item) => (
             <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2">
                     <Building2 className="w-3.5 h-3.5 text-muted-foreground" />
@@ -43,7 +43,7 @@ const columns: Column<CustomerType>[] = [
     },
     {
         header: 'Contact',
-        accessor: (item: any) => (
+        accessor: (item) => (
             <div className="flex flex-col text-sm">
                 <div className="flex items-center gap-1 font-medium">
                     <Phone className="w-3 h-3" />
@@ -61,7 +61,7 @@ const columns: Column<CustomerType>[] = [
     },
     {
         header: 'Assigned To',
-        accessor: (item: any) => (
+        accessor: (item) => (
             <div className="flex items-center gap-2">
                 {item.assigned_user ? (
                     <div className="flex items-center gap-2 ">
@@ -76,7 +76,7 @@ const columns: Column<CustomerType>[] = [
     },
     {
         header: 'Status',
-        accessor: (item: any) => (
+        accessor: (item) => (
             <div className='flex flex-col gap-2'>
                 <InlineStatusUpdate
                     id={item.id}

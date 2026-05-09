@@ -15,7 +15,7 @@ import { DatePickerSimple } from "../admin/DataPickerSimple";
 
 
 export function TableFilters({ filters, queryParams = {}, routeName }: {
-    filters: FilterOption[], queryParams: any, routeName: string
+    filters: FilterOption[], queryParams: Record<string, any>, routeName: string
 }) {
     const [openSelect, setOpenSelect] = useState<string | null>(null);
 
@@ -32,7 +32,7 @@ export function TableFilters({ filters, queryParams = {}, routeName }: {
     };
 
     const handleDateChange = (range: DateRange | undefined) => {
-        const newParams = { ...queryParams, page: 1 };
+        const newParams: Record<string, any> = { ...queryParams, page: 1 };
 
         if (range?.from) {
             newParams.start_date = formatDateForInput(range.from);
@@ -110,7 +110,7 @@ export function TableFilters({ filters, queryParams = {}, routeName }: {
                                                 <ChevronsUpDown className="ml-2 h-3 w-3 shrink-0 opacity-50" />
                                             </Button>
                                         </PopoverTrigger>
-                                        <PopoverContent className="w-[250px] p-0 shadow-lg border">
+                                        <PopoverContent className="w-62.5 p-0 shadow-lg border">
                                             <Command>
                                                 <CommandInput placeholder={`Search ${filter.label}...`} className="h-8 text-xs" />
                                                 <CommandEmpty>No results found.</CommandEmpty>

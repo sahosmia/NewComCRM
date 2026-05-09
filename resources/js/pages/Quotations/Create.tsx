@@ -1,17 +1,17 @@
 import AppLayout from "@/layouts/app-layout";
 import QuotationForm from "./form";
-import { Product } from "@/types/product";
+import { CustomerType, Product } from "@/types";
 import { Head } from "@inertiajs/react";
 
 interface Props {
-    customers: { id: number; name: string }[];
+    customers: CustomerType[];
     products: Product[];
 }
 
 export default function Create({ customers, products }: Props) {
     return (
-        <AppLayout breadcrumbs={[{ title: "Quotations", href: route('quotations.index') }, { title: "Create", href:"" }]}>
-                        <Head title="Create Quotation" />
+        <AppLayout breadcrumbs={[{ title: "Quotations", href: route('quotations.index') }, { title: "Create", href: "" }]}>
+            <Head title="Create Quotation" />
 
             <div className="p-6 max-w-4xl mx-auto">
                 <h1 className="text-xl font-bold mb-4">Create Quotation</h1>

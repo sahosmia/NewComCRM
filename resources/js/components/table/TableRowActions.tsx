@@ -11,8 +11,8 @@ import {
 import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
 import { handleDelete } from '@/utils/table';
 
-interface RowActionsProps {
-    item: any;
+interface RowActionsProps<T extends { id: number | string; name?: string }> {
+    item: T;
     resource: string; // e.g., 'customers'
     label?: string;    // Display name for delete dialog
     hideView?: boolean;
@@ -22,7 +22,7 @@ interface RowActionsProps {
     customActions?: React.ReactNode;
 }
 
-export function TableRowActions({
+export function TableRowActions<T extends { id: number | string; name?: string }>({
     item,
     resource,
     label = "Item",
@@ -30,7 +30,7 @@ export function TableRowActions({
     hideEdit = false,
     hideDelete = false,
     customActions,
-}: RowActionsProps) {
+}: RowActionsProps<T>) {
     return (
         <div className="flex justify-end">
             <DropdownMenu>
@@ -39,7 +39,7 @@ export function TableRowActions({
                         <MoreHorizontal className="w-4 h-4" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[180px]">
+                <DropdownMenuContent align="end" className="w-45">
 
                     {!hideView && (
                         <DropdownMenuItem asChild>

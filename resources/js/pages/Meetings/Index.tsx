@@ -1,12 +1,12 @@
 import AppLayout from '@/layouts/app-layout';
-import { FilterOption, PaginationType, SortOption } from '@/types';
+import { FilterOption, Meeting, PaginationType, SortOption } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import { columns } from './Columns';
 
 interface Props {
-    meetings: PaginationType<any>;
+    meetings: PaginationType<Meeting>;
 }
 
 export default function MeetingIndex({ meetings }: Props) {

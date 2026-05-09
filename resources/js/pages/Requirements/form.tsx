@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Trash2, Plus, LayoutList, Info, Percent, Settings, Drill, FileCheck } from "lucide-react";
-import { Requirement, RequirementItem } from "@/types/requirement";
-import { Customer } from "@/types/customer";
-import { Product } from "@/types/product";
-import { Unit } from "@/types/unit";
+import { Requirement, RequirementItem } from "@/types";
+import { CustomerType } from "@/types";
+import { Product } from "@/types";
+import { Unit } from "@/types";
 import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
 import { FormSelect } from "@/components/admin/form/FormSelect";
@@ -15,8 +15,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
 interface Props {
-    requirement: Requirement;
-    customers: Customer[];
+    requirement?: Requirement;
+    customers: CustomerType[];
     products: Product[];
     units: Unit[];
 }
@@ -67,16 +67,17 @@ export default function RequirementForm({ requirement, customers, products, unit
         setData("items", data.items.filter((_: any, i: number) => i !== index));
     };
 
-    const handleItemChange = (index: number, field: keyof RequirementItem | 'description', value: any) => {
-        const newItems = [...data.items] as any[];
+    const handleItemChange = (index: number, field: keyof RequirementItem | 'description', value: string | number) => {
+        const newItems = [...data.items] as (RequirementItem)[];
+
 
         if (field === "product_id") {
-            const product = products.find(p => p.id === parseInt(value));
-            newItems[index].product_id = parseInt(value);
+            const product = products.find(p => p.id === parseInt(String(value)));
+            newItems[index].product_id = parseInt(String(value));
             newItems[index].unit_price = product ? product.unit_price : "";
-            newItems[index].description = product ? product.description : "";
+            newItems[index].description = product ? (product.description || "") : "";
         } else {
-            newItems[index][field] = value;
+            (newItems[index] as any)[field] = value;
         }
         setData("items", newItems);
     };
@@ -182,7 +183,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                         placeholder="Product specs will appear automatically..."
                                         readOnly
                                         tabIndex={-1}
-                                        className="text-[11px] leading-relaxed min-h-[40px] md:min-h-[38px] py-2 px-3 resize-none bg-muted/40 border-dashed border-slate-200 cursor-not-allowed focus-visible:ring-0 text-muted-foreground italic"
+                                        className="text-[11px] leading-relaxed min-h-10 md:min-h-9.5 py-2 px-3 resize-none bg-muted/40 border-dashed border-slate-200 cursor-not-allowed focus-visible:ring-0 text-muted-foreground italic"
                                     />
                                     {!item.description && item.product_id !== 0 && (
                                         <span className="absolute right-2 top-2 text-slate-300">
@@ -289,7 +290,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                     <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Unit</Label>
                                     <FormSelect
                                         label=""
-                                        value={data.accessories_unit_id}
+                                        value={data.accessories_unit_id.toString()}
                                         onChange={(v) => setData("accessories_unit_id", v)}
                                         options={units.map(u => ({ label: u.short_form, value: u.id.toString() }))}
                                     />
@@ -370,7 +371,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                     <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Unit</Label>
                                     <FormSelect
                                         label=""
-                                        value={data.installation_unit_id}
+                                        value={data.installation_unit_id.toString()}
                                         onChange={(v) => setData("installation_unit_id", v)}
                                         options={units.map(u => ({ label: u.short_form, value: u.id.toString() }))}
                                     />
@@ -426,7 +427,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                             type="number"
                             placeholder="Days"
                             value={data.delivery_time_days}
-                            onChange={(e) => setData("delivery_time_days", e.target.value)}
+                            onChange={(e) => setData("delivery_time_days", Number(e.target.value))}
                         />
                         <ErrorMessage message={errors.delivery_time_days} />
                     </div>
@@ -436,7 +437,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                             type="number"
                             placeholder="%"
                             value={data.advance_payment}
-                            onChange={(e) => setData("advance_payment", e.target.value)}
+                            onChange={(e) => setData("advance_payment", Number(e.target.value))}
                         />
                         <ErrorMessage message={errors.advance_payment} />
                     </div>
@@ -446,7 +447,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                             type="number"
                             placeholder="%"
                             value={data.before_payment}
-                            onChange={(e) => setData("before_payment", e.target.value)}
+                            onChange={(e) => setData("before_payment", Number(e.target.value))}
                         />
                         <ErrorMessage message={errors.before_payment} />
                     </div>
