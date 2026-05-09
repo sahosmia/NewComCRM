@@ -1,6 +1,8 @@
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
 import { TableRowActions } from '@/components/table/TableRowActions';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Column, Requirement } from '@/types';
+import { FileDown } from 'lucide-react';
 
 const RequirementOptions = [
     { value: 'pending', label: "Pending", colorClass: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20' },
@@ -73,6 +75,13 @@ const columns: Column<Requirement>[] = [
                 item={item}
                 resource="requirements"
                 label="Requirement"
+                customActions={
+                    <DropdownMenuItem asChild>
+                        <a href={route('requirements.download', item.id)} target="_blank">
+                            <FileDown className="w-4 h-4 mr-2" /> Download PDF
+                        </a>
+                    </DropdownMenuItem>
+                }
             />
         ),
         className: 'w-[7%]',

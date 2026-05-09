@@ -116,7 +116,12 @@ class Requirement extends Model
             ])
         ]);
         $path = 'requirements/requirement-' . $this->id . '.pdf';
-        Storage::put('public/' . $path, $pdf->output());
+
+        if (!Storage::disk('public')->exists('requirements')) {
+            Storage::disk('public')->makeDirectory('requirements');
+        }
+
+        Storage::disk('public')->put($path, $pdf->output());
 
         return $path;
     }
