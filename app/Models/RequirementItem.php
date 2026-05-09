@@ -20,7 +20,7 @@ class RequirementItem extends Model
         static::saving(function ($item) {
             $aitFactor = 1;
             $requirement = $item->requirement;
-            if ($requirement && $requirement->has_ait && $requirement->ait_percentage > 0 && $requirement->ait_percentage < 100) {
+            if ($requirement && $requirement->ait_percentage > 0 && $requirement->ait_percentage < 100) {
                 $aitFactor = 1 / (1 - ($requirement->ait_percentage / 100));
             }
             $item->total_price = $item->quantity * ($item->unit_price * $aitFactor);

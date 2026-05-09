@@ -22,9 +22,7 @@ class Requirement extends Model
         'grand_total',
         'notes',
         'status',
-        'has_ait',
         'ait_percentage',
-        'has_vat',
         'vat_percentage',
         'has_accessories',
         'accessories_title',
@@ -45,8 +43,6 @@ class Requirement extends Model
 
     protected $casts = [
         'grand_total' => 'decimal:2',
-        'has_ait' => 'boolean',
-        'has_vat' => 'boolean',
         'has_accessories' => 'boolean',
         'has_installation' => 'boolean',
         'ait_percentage' => 'decimal:2',
@@ -81,7 +77,7 @@ class Requirement extends Model
     // append
     public function getAitPriceAttribute(): float
     {
-        if ($this->has_ait && $this->ait_percentage < 100) {
+        if ($this->ait_percentage > 0 && $this->ait_percentage < 100) {
             return round($this->grand_total * ($this->ait_percentage / 100), 2);
         }
         return 0.00;
@@ -90,7 +86,7 @@ class Requirement extends Model
     public function calculateGrandTotal(): void
     {
         $aitFactor = 1;
-        if ($this->has_ait && $this->ait_percentage > 0 && $this->ait_percentage < 100) {
+        if ($this->ait_percentage > 0 && $this->ait_percentage < 100) {
             $aitFactor = 1 / (1 - ($this->ait_percentage / 100));
         }
 
@@ -102,7 +98,7 @@ class Requirement extends Model
         $subTotal = $itemsTotal + $accessoriesTotal + $installationTotal;
 
         // VAT/Tax (Add-on Logic): Total = Subtotal + (Subtotal * VAT_Percentage / 100)
-        $vatAmount = ($this->has_vat && $this->vat_percentage > 0) ? ($subTotal * ($this->vat_percentage / 100)) : 0;
+        $vatAmount = ($this->vat_percentage > 0) ? ($subTotal * ($this->vat_percentage / 100)) : 0;
 
         $grandTotal = $subTotal + $vatAmount;
 

@@ -31,10 +31,8 @@ export default function RequirementForm({ requirement, customers, products, unit
         notes: requirement?.notes || "",
         status: requirement?.status || "pending",
 
-        has_ait: requirement?.has_ait ?? true,
         ait_percentage: requirement?.ait_percentage ?? (requirement ? 0 : 5),
-        has_vat: requirement?.has_vat ?? true,
-        vat_percentage: requirement?.vat_percentage ?? (requirement ? 10 : 10),
+        vat_percentage: requirement?.vat_percentage ?? (requirement ? 0 : 10),
 
         has_accessories: requirement?.has_accessories ?? false,
         accessories_title: requirement?.accessories_title || "",
@@ -83,7 +81,7 @@ export default function RequirementForm({ requirement, customers, products, unit
     };
 
     const aitPercentage = parseFloat(data.ait_percentage as string) || 0;
-    const aitFactor = (data.has_ait && aitPercentage > 0 && aitPercentage < 100) ? (1 / (1 - (aitPercentage / 100))) : 1;
+    const aitFactor = (aitPercentage > 0 && aitPercentage < 100) ? (1 / (1 - (aitPercentage / 100))) : 1;
 
     const itemsTotal = data.items.reduce((sum: number, item: any) => {
         return sum + (parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor;
@@ -95,11 +93,11 @@ export default function RequirementForm({ requirement, customers, products, unit
     const subTotal = itemsTotal + accessoriesTotal + installationTotal;
 
     const vatPercentage = parseFloat(data.vat_percentage as string) || 0;
-    const vatAmount = (data.has_vat && vatPercentage > 0) ? (subTotal * (vatPercentage / 100)) : 0;
+    const vatAmount = (vatPercentage > 0) ? (subTotal * (vatPercentage / 100)) : 0;
 
     const grandTotal = subTotal + vatAmount;
 
-    const aitAmount = (data.has_ait && aitPercentage > 0 && aitPercentage < 100) ? (subTotal - (subTotal / aitFactor)) : 0;
+    const aitAmount = (aitPercentage > 0 && aitPercentage < 100) ? (subTotal - (subTotal / aitFactor)) : 0;
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -492,18 +490,14 @@ export default function RequirementForm({ requirement, customers, products, unit
                             <div className="flex items-center space-x-2">
                                 <Checkbox
                                     id="has_vat"
-                                    checked={data.has_vat}
+                                    checked={vatPercentage > 0}
                                     onCheckedChange={(checked) => {
-                                        setData(d => ({
-                                            ...d,
-                                            has_vat: checked as boolean,
-                                            vat_percentage: checked ? 10 : 0
-                                        }))
+                                        setData("vat_percentage", checked ? 10 : 0)
                                     }}
                                 />
                                 <Label htmlFor="has_vat" className="text-xs font-bold uppercase text-muted-foreground tracking-tighter">Include VAT</Label>
                             </div>
-                            {data.has_vat && (
+                            {vatPercentage > 0 && (
                                 <div className="flex items-center gap-2 animate-in slide-in-from-left-1 fade-in">
                                     <div className="relative w-20">
                                         <Input
@@ -523,18 +517,14 @@ export default function RequirementForm({ requirement, customers, products, unit
                             <div className="flex items-center space-x-2">
                                 <Checkbox
                                     id="has_ait"
-                                    checked={data.has_ait}
+                                    checked={aitPercentage > 0}
                                     onCheckedChange={(checked) => {
-                                        setData(d => ({
-                                            ...d,
-                                            has_ait: checked as boolean,
-                                            ait_percentage: checked ? 5 : 0
-                                        }))
+                                        setData("ait_percentage", checked ? 5 : 0)
                                     }}
                                 />
                                 <Label htmlFor="has_ait" className="text-xs font-bold uppercase text-muted-foreground tracking-tighter">Include AIT</Label>
                             </div>
-                            {data.has_ait && (
+                            {aitPercentage > 0 && (
                                 <div className="flex items-center gap-2 animate-in slide-in-from-left-1 fade-in">
                                     <div className="relative w-20">
                                         <Input
@@ -566,19 +556,19 @@ export default function RequirementForm({ requirement, customers, products, unit
                                 <span>{installationTotal.toLocaleString()}</span>
                             </div>
                         )}
-                        {(data.has_vat || data.has_ait) && (
+                        {(vatPercentage > 0 || aitPercentage > 0) && (
                             <div className="flex justify-end gap-4 text-xs text-muted-foreground font-medium">
                                 <span>Sub-Total:</span>
                                 <span>{subTotal.toLocaleString()}</span>
                             </div>
                         )}
-                        {data.has_vat && (
+                        {vatPercentage > 0 && (
                             <div className="flex justify-end gap-4 text-xs text-muted-foreground font-medium">
                                 <span>VAT ({data.vat_percentage}%):</span>
                                 <span>{vatAmount.toLocaleString()}</span>
                             </div>
                         )}
-                        {data.has_ait && (
+                        {aitPercentage > 0 && (
                             <div className="flex justify-end gap-4 text-xs text-muted-foreground font-medium">
                                 <span>Total AIT ({data.ait_percentage}%):</span>
                                 <span>{aitAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>

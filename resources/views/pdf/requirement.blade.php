@@ -178,7 +178,7 @@
         <tbody>
             @php
                 $aitFactor = 1;
-                if ($requirement->has_ait && $requirement->ait_percentage > 0 && $requirement->ait_percentage < 100) {
+                if ($requirement->ait_percentage > 0 && $requirement->ait_percentage < 100) {
                     $aitFactor = 1 / (1 - ($requirement->ait_percentage / 100));
                 }
             @endphp
@@ -230,9 +230,9 @@
             $accessoriesTotal = $requirement->has_accessories ? ($requirement->accessories_quantity * $requirement->accessories_price * $aitFactor) : 0;
             $installationTotal = $requirement->has_installation ? ($requirement->installation_quantity * $requirement->installation_price * $aitFactor) : 0;
             $subTotal = (int)($itemsTotal + $accessoriesTotal + $installationTotal);
-            $vatAmount = ($requirement->has_vat && $requirement->vat_percentage > 0) ? (int)($subTotal * ($requirement->vat_percentage / 100)) : 0;
+            $vatAmount = ($requirement->vat_percentage > 0) ? (int)($subTotal * ($requirement->vat_percentage / 100)) : 0;
             $aitAmount = 0;
-            if ($requirement->has_ait && $requirement->ait_percentage > 0 && $requirement->ait_percentage < 100) {
+            if ($requirement->ait_percentage > 0 && $requirement->ait_percentage < 100) {
                 $aitAmount = (int)($subTotal - ($subTotal / $aitFactor));
             }
             $grandTotal = (int)$requirement->grand_total;
@@ -242,9 +242,9 @@
                 <td colspan="4" class="text-right font-bold">Total</td>
                 <td class="text-right font-bold">{{ formatSouthAsian($subTotal) }}/=</td>
             </tr>
-            @if($requirement->has_vat)
+            @if($requirement->vat_percentage > 0)
             <tr>
-                <td colspan="4" class="text-right font-bold">VAT</td>
+                <td colspan="4" class="text-right font-bold">VAT ({{ (int)$requirement->vat_percentage }}%)</td>
                 <td class="text-right">{{ formatSouthAsian($vatAmount) }}/=</td>
             </tr>
             @endif
