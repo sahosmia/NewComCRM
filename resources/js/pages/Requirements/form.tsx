@@ -33,8 +33,8 @@ export default function RequirementForm({ requirement, customers, products, unit
 
         has_ait: requirement?.has_ait ?? true,
         ait_percentage: requirement?.ait_percentage ?? (requirement ? 0 : 5),
-        has_vat: requirement?.has_vat ?? false,
-        vat_percentage: requirement?.vat_percentage ?? (requirement ? 0 : 0),
+        has_vat: requirement?.has_vat ?? true,
+        vat_percentage: requirement?.vat_percentage ?? (requirement ? 10 : 10),
 
         has_accessories: requirement?.has_accessories ?? false,
         accessories_title: requirement?.accessories_title || "",
@@ -83,7 +83,7 @@ export default function RequirementForm({ requirement, customers, products, unit
     };
 
     const aitPercentage = parseFloat(data.ait_percentage as string) || 0;
-    const aitFactor = (data.has_ait && aitPercentage < 100) ? (1 / (1 - (aitPercentage / 100))) : 1;
+    const aitFactor = (data.has_ait && aitPercentage > 0 && aitPercentage < 100) ? (1 / (1 - (aitPercentage / 100))) : 1;
 
     const itemsTotal = data.items.reduce((sum: number, item: any) => {
         return sum + (parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor;
@@ -94,11 +94,12 @@ export default function RequirementForm({ requirement, customers, products, unit
 
     const subTotal = itemsTotal + accessoriesTotal + installationTotal;
 
-    const vatAmount = data.has_vat ? (subTotal * (parseFloat(data.vat_percentage as string) || 0) / 100) : 0;
+    const vatPercentage = parseFloat(data.vat_percentage as string) || 0;
+    const vatAmount = (data.has_vat && vatPercentage > 0) ? (subTotal * (vatPercentage / 100)) : 0;
 
     const grandTotal = subTotal + vatAmount;
 
-    const aitAmount = (data.has_ait && aitPercentage < 100) ? (subTotal - (subTotal / aitFactor)) : 0;
+    const aitAmount = (data.has_ait && aitPercentage > 0 && aitPercentage < 100) ? (subTotal - (subTotal / aitFactor)) : 0;
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -496,7 +497,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                         setData(d => ({
                                             ...d,
                                             has_vat: checked as boolean,
-                                            vat_percentage: checked ? 5 : 0
+                                            vat_percentage: checked ? 10 : 0
                                         }))
                                     }}
                                 />

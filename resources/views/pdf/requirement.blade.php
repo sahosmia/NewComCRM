@@ -178,7 +178,7 @@
         <tbody>
             @php
                 $aitFactor = 1;
-                if ($requirement->has_ait && $requirement->ait_percentage < 100) {
+                if ($requirement->has_ait && $requirement->ait_percentage > 0 && $requirement->ait_percentage < 100) {
                     $aitFactor = 1 / (1 - ($requirement->ait_percentage / 100));
                 }
             @endphp
@@ -230,9 +230,9 @@
             $accessoriesTotal = $requirement->has_accessories ? ($requirement->accessories_quantity * $requirement->accessories_price * $aitFactor) : 0;
             $installationTotal = $requirement->has_installation ? ($requirement->installation_quantity * $requirement->installation_price * $aitFactor) : 0;
             $subTotal = (int)($itemsTotal + $accessoriesTotal + $installationTotal);
-            $vatAmount = $requirement->has_vat ? (int)($subTotal * ($requirement->vat_percentage / 100)) : 0;
+            $vatAmount = ($requirement->has_vat && $requirement->vat_percentage > 0) ? (int)($subTotal * ($requirement->vat_percentage / 100)) : 0;
             $aitAmount = 0;
-            if ($requirement->has_ait && $requirement->ait_percentage < 100) {
+            if ($requirement->has_ait && $requirement->ait_percentage > 0 && $requirement->ait_percentage < 100) {
                 $aitAmount = (int)($subTotal - ($subTotal / $aitFactor));
             }
             $grandTotal = (int)$requirement->grand_total;

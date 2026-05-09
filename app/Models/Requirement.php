@@ -90,7 +90,7 @@ class Requirement extends Model
     public function calculateGrandTotal(): void
     {
         $aitFactor = 1;
-        if ($this->has_ait && $this->ait_percentage < 100) {
+        if ($this->has_ait && $this->ait_percentage > 0 && $this->ait_percentage < 100) {
             $aitFactor = 1 / (1 - ($this->ait_percentage / 100));
         }
 
@@ -102,7 +102,7 @@ class Requirement extends Model
         $subTotal = $itemsTotal + $accessoriesTotal + $installationTotal;
 
         // VAT/Tax (Add-on Logic): Total = Subtotal + (Subtotal * VAT_Percentage / 100)
-        $vatAmount = $this->has_vat ? ($subTotal * ($this->vat_percentage / 100)) : 0;
+        $vatAmount = ($this->has_vat && $this->vat_percentage > 0) ? ($subTotal * ($this->vat_percentage / 100)) : 0;
 
         $grandTotal = $subTotal + $vatAmount;
 
