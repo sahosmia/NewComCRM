@@ -192,7 +192,7 @@
                     @endif
                 </td>
                 <td class="text-center">{{ (int)$item->quantity }} {{ $item->product->unit?->short_form ?? 'Units' }}</td>
-                <td class="text-right">{{ number_format($item->calculated_price, 0) }}</td>
+                <td class="text-right">{{ number_format($item->unit_price * $aitFactor, 0) }}</td>
                 <td class="text-right">{{ number_format($item->total_price, 0) }}/=</td>
             </tr>
             @endforeach
