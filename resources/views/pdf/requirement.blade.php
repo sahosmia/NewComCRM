@@ -176,6 +176,12 @@
             </tr>
         </thead>
         <tbody>
+            @php
+                $aitFactor = 1;
+                if ($requirement->has_ait && $requirement->ait_percentage < 100) {
+                    $aitFactor = 1 / (1 - ($requirement->ait_percentage / 100));
+                }
+            @endphp
             @foreach($requirement->items as $index => $item)
             <tr>
                 <td class="text-center">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</td>
@@ -186,7 +192,7 @@
                     @endif
                 </td>
                 <td class="text-center">{{ (int)$item->quantity }} {{ $item->product->unit?->short_form ?? 'Units' }}</td>
-                <td class="text-right">{{ number_format($item->unit_price, 0) }}</td>
+                <td class="text-right">{{ number_format($item->calculated_price, 0) }}</td>
                 <td class="text-right">{{ number_format($item->total_price, 0) }}/=</td>
             </tr>
             @endforeach
@@ -201,8 +207,8 @@
                     <strong>{{ $requirement->accessories_title }}</strong>
                 </td>
                 <td class="text-center">{{ (int)$requirement->accessories_quantity }} {{ $requirement->accessoriesUnit?->short_form ?? 'Lot' }}</td>
-                <td class="text-right">{{ number_format($requirement->accessories_price, 0) }}</td>
-                <td class="text-right">{{ number_format($requirement->accessories_quantity * $requirement->accessories_price, 0) }}/=</td>
+                <td class="text-right">{{ number_format($requirement->accessories_price * $aitFactor, 0) }}</td>
+                <td class="text-right">{{ number_format($requirement->accessories_quantity * $requirement->accessories_price * $aitFactor, 0) }}/=</td>
             </tr>
             @endif
 
@@ -214,20 +220,20 @@
                     <strong>{{ $requirement->installation_title }}</strong>
                 </td>
                 <td class="text-center">{{ (int)$requirement->installation_quantity }} {{ $requirement->installationUnit?->short_form ?? 'Units' }}</td>
-                <td class="text-right">{{ number_format($requirement->installation_price, 0) }}</td>
-                <td class="text-right">{{ number_format($requirement->installation_quantity * $requirement->installation_price, 0) }}/=</td>
+                <td class="text-right">{{ number_format($requirement->installation_price * $aitFactor, 0) }}</td>
+                <td class="text-right">{{ number_format($requirement->installation_quantity * $requirement->installation_price * $aitFactor, 0) }}/=</td>
             </tr>
             @endif
         </tbody>
         @php
             $itemsTotal = $requirement->items->sum('total_price');
-            $accessoriesTotal = $requirement->has_accessories ? ($requirement->accessories_quantity * $requirement->accessories_price) : 0;
-            $installationTotal = $requirement->has_installation ? ($requirement->installation_quantity * $requirement->installation_price) : 0;
+            $accessoriesTotal = $requirement->has_accessories ? ($requirement->accessories_quantity * $requirement->accessories_price * $aitFactor) : 0;
+            $installationTotal = $requirement->has_installation ? ($requirement->installation_quantity * $requirement->installation_price * $aitFactor) : 0;
             $subTotal = (int)($itemsTotal + $accessoriesTotal + $installationTotal);
             $vatAmount = $requirement->has_vat ? (int)($subTotal * ($requirement->vat_percentage / 100)) : 0;
             $aitAmount = 0;
             if ($requirement->has_ait && $requirement->ait_percentage < 100) {
-                $aitAmount = (int)($subTotal * ($requirement->ait_percentage / (100 - $requirement->ait_percentage)));
+                $aitAmount = (int)($subTotal - ($subTotal / $aitFactor));
             }
             $grandTotal = (int)$requirement->grand_total;
         @endphp
@@ -240,12 +246,6 @@
             <tr>
                 <td colspan="4" class="text-right font-bold">VAT</td>
                 <td class="text-right">{{ formatSouthAsian($vatAmount) }}/=</td>
-            </tr>
-            @endif
-            @if($requirement->has_ait)
-            <tr>
-                <td colspan="4" class="text-right font-bold">AIT</td>
-                <td class="text-right">{{ formatSouthAsian($aitAmount) }}/=</td>
             </tr>
             @endif
             <tr>

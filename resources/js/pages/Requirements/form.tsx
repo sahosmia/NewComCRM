@@ -31,8 +31,8 @@ export default function RequirementForm({ requirement, customers, products, unit
         notes: requirement?.notes || "",
         status: requirement?.status || "pending",
 
-        has_ait: requirement?.has_ait ?? false,
-        ait_percentage: requirement?.ait_percentage ?? (requirement ? 0 : 0),
+        has_ait: requirement?.has_ait ?? true,
+        ait_percentage: requirement?.ait_percentage ?? (requirement ? 0 : 5),
         has_vat: requirement?.has_vat ?? false,
         vat_percentage: requirement?.vat_percentage ?? (requirement ? 0 : 0),
 
@@ -82,21 +82,23 @@ export default function RequirementForm({ requirement, customers, products, unit
         setData("items", newItems);
     };
 
+    const aitPercentage = parseFloat(data.ait_percentage as string) || 0;
+    const aitFactor = (data.has_ait && aitPercentage < 100) ? (1 / (1 - (aitPercentage / 100))) : 1;
+
     const itemsTotal = data.items.reduce((sum: number, item: any) => {
-        return sum + (parseFloat(item.unit_price) || 0) * (item.quantity || 0);
+        return sum + (parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor;
     }, 0);
 
-    const accessoriesTotal = data.has_accessories ? (parseFloat(data.accessories_quantity as string) || 0) * (parseFloat(data.accessories_price as string) || 0) : 0;
-    const installationTotal = data.has_installation ? (parseFloat(data.installation_quantity as string) || 0) * (parseFloat(data.installation_price as string) || 0) : 0;
+    const accessoriesTotal = data.has_accessories ? (parseFloat(data.accessories_quantity as string) || 0) * (parseFloat(data.accessories_price as string) || 0) * aitFactor : 0;
+    const installationTotal = data.has_installation ? (parseFloat(data.installation_quantity as string) || 0) * (parseFloat(data.installation_price as string) || 0) * aitFactor : 0;
 
     const subTotal = itemsTotal + accessoriesTotal + installationTotal;
 
-    const aitPercentage = parseFloat(data.ait_percentage as string) || 0;
-    const aitAmount = (data.has_ait && aitPercentage < 100) ? (subTotal * (aitPercentage / (100 - aitPercentage))) : 0;
-
     const vatAmount = data.has_vat ? (subTotal * (parseFloat(data.vat_percentage as string) || 0) / 100) : 0;
 
-    const grandTotal = subTotal + aitAmount + vatAmount;
+    const grandTotal = subTotal + vatAmount;
+
+    const aitAmount = (data.has_ait && aitPercentage < 100) ? (subTotal - (subTotal / aitFactor)) : 0;
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -217,9 +219,15 @@ export default function RequirementForm({ requirement, customers, products, unit
                                         />
                                     </div>
                                     <div className="flex justify-between items-center px-1">
+                                        <span className="text-[9px] uppercase font-bold text-muted-foreground">Unit Price (Gross):</span>
+                                        <span className="text-[10px] font-mono font-bold text-primary">
+                                            {((parseFloat(item.unit_price) || 0) * aitFactor).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between items-center px-1">
                                         <span className="text-[9px] uppercase font-bold text-muted-foreground">Line Total:</span>
                                         <span className="text-xs font-mono font-bold text-primary">
-                                            {((parseFloat(item.unit_price) || 0) * (item.quantity || 0)).toLocaleString()}
+                                            {((parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </span>
                                     </div>
                                 </div>
@@ -313,7 +321,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                 <div className="col-span-6 md:col-span-2 space-y-1.5">
                                     <Label className="text-[10px] font-black uppercase text-primary tracking-widest">Total</Label>
                                     <div className="h-10 flex items-center px-3 bg-muted/30 rounded-md border border-dashed font-mono font-bold text-sm">
-                                        ৳{(Number(data.accessories_quantity || 0) * Number(data.accessories_price || 0)).toLocaleString()}
+                                        ৳{(Number(data.accessories_quantity || 0) * Number(data.accessories_price || 0) * aitFactor).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </div>
                                 </div>
                             </div>
@@ -394,7 +402,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                 <div className="col-span-6 md:col-span-2 space-y-1.5">
                                     <Label className="text-[10px] font-black uppercase text-primary tracking-widest">Total</Label>
                                     <div className="h-10 flex items-center px-3 bg-muted/30 rounded-md border border-dashed font-mono font-bold text-sm">
-                                        ৳{(Number(data.installation_quantity || 0) * Number(data.installation_price || 0)).toLocaleString()}
+                                        ৳{(Number(data.installation_quantity || 0) * Number(data.installation_price || 0) * aitFactor).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </div>
                                 </div>
                             </div>
@@ -571,7 +579,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                         )}
                         {data.has_ait && (
                             <div className="flex justify-end gap-4 text-xs text-muted-foreground font-medium">
-                                <span>AIT Adjustment ({data.ait_percentage}%):</span>
+                                <span>Total AIT ({data.ait_percentage}%):</span>
                                 <span>{aitAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                             </div>
                         )}

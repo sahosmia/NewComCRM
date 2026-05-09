@@ -94,10 +94,7 @@ class Requirement extends Model
             $aitFactor = 1 / (1 - ($this->ait_percentage / 100));
         }
 
-        $itemsTotal = 0;
-        foreach ($this->items as $item) {
-            $itemsTotal += ($item->unit_price * $item->quantity) * $aitFactor;
-        }
+        $itemsTotal = $this->items->sum('total_price');
 
         $accessoriesTotal = $this->has_accessories ? ($this->accessories_quantity * $this->accessories_price * $aitFactor) : 0;
         $installationTotal = $this->has_installation ? ($this->installation_quantity * $this->installation_price * $aitFactor) : 0;
