@@ -105,24 +105,4 @@ class Requirement extends Model
         $this->updateQuietly(['grand_total' => $grandTotal]);
     }
 
-    public function generatePDF(): string
-    {
-        $pdf = Pdf::loadView('pdf.requirement', [
-            'requirement' => $this->load([
-                'customer',
-                'items.product.unit',
-                'accessoriesUnit',
-                'installationUnit'
-            ])
-        ]);
-        $path = 'requirements/requirement-' . $this->id . '.pdf';
-
-        if (!Storage::disk('public')->exists('requirements')) {
-            Storage::disk('public')->makeDirectory('requirements');
-        }
-
-        Storage::disk('public')->put($path, $pdf->output());
-
-        return $path;
-    }
 }

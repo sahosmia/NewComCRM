@@ -133,9 +133,16 @@ class RequirementController extends Controller
     // }
     public function downloadPdf(Requirement $requirement)
     {
-        $path = $requirement->generatePDF();
+        $pdf = Pdf::loadView('pdf.requirement', [
+            'requirement' => $requirement->load([
+                'customer',
+                'items.product.unit',
+                'accessoriesUnit',
+                'installationUnit'
+            ])
+        ]);
 
-        return Storage::disk('public')->download($path);
+        return $pdf->download('requirement-' . $requirement->id . '.pdf');
     }
 
     public function export(Request $request)
