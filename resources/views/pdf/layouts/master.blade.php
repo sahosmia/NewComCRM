@@ -5,115 +5,148 @@
     <title>@yield('title')</title>
     <style>
         @page {
-            margin: 100px 50px;
+            margin: 160px 35px 130px 35px;
+        }
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+        body{
+            font-family: 'DejaVu Sans', sans-serif;
+            color:#000;
+            font-size:12px;
+            line-height:1.5;
         }
         header {
             position: fixed;
-            top: -80px;
+            top: -135px;
             left: 0px;
             right: 0px;
-            height: 80px;
-            text-align: center;
-            border-bottom: 2px solid #ed1c24;
+            height: 120px;
+            border-bottom: 2px solid #a31c1c;
+            padding-bottom: 10px;
         }
         footer {
             position: fixed;
-            bottom: -80px;
+            bottom: -110px;
             left: 0px;
             right: 0px;
-            height: 60px;
-            text-align: center;
-            border-top: 2px solid #ed1c24;
-            font-size: 10px;
-            color: #555;
-            padding-top: 10px;
+            height: 110px;
+            background: #a31c1c;
+            color: #fff;
+            padding: 15px;
         }
-        body {
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            font-size: 12px;
-            color: #333;
-            line-height: 1.4;
+        .content {
+            width: 100%;
         }
         .page-break {
             page-break-after: always;
         }
-        .logo {
-            height: 40px;
+
+        /* Header Styles from user template */
+        .header-table{
+            width:100%;
         }
-        .company-info {
-            font-size: 10px;
-            color: #555;
+        .header-table td{
+            vertical-align:middle;
         }
-        .content {
-            margin-top: 20px;
+        .logo{
+            width:130px;
         }
-        .signature-section {
-            margin-top: 30px;
+        .company-name{
+            text-align:center;
+            font-size:26px;
+            font-weight:bold;
+            color:#a31c1c;
         }
-        .signature-box {
-            width: 200px;
-            text-align: center;
+        .header-right{
+            text-align:right;
+            font-size:10px;
         }
-        .signature-img {
-            max-height: 60px;
-            max-width: 150px;
-            display: block;
-            margin: 0 auto 5px auto;
+        .header-right span{
+            color:#a31c1c;
+            font-weight:bold;
         }
-        .signature-line {
-            border-top: 1px solid #000;
-            padding-top: 5px;
-            font-size: 11px;
-            font-weight: bold;
+        .service-bar{
+            border-top:1px solid #a31c1c;
+            border-bottom:1px solid #a31c1c;
+            padding:5px 0;
+            margin-top:8px;
+            text-align:center;
+            font-size:9px;
+            font-weight:bold;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+
+        /* Footer Styles from user template */
+        .footer-table{
+            width:100%;
+            border-collapse:collapse;
         }
-        table, th, td {
-            border: 1px solid #333;
+        .footer-table td{
+            width:33%;
+            vertical-align:top;
+            text-align:center;
+            padding:0 10px;
         }
-        th, td {
-            padding: 5px;
-            text-align: left;
+        .footer-title{
+            font-size:12px;
+            font-weight:bold;
+            margin-bottom:4px;
         }
-        th {
-            background-color: #f2f2f2;
+        .footer-text{
+            font-size:9px;
+            line-height:1.3;
         }
-        .text-center { text-align: center; }
-        .text-right { text-align: right; }
-        .font-bold { font-weight: bold; }
-        .text-red { color: #ed1c24; }
+        .footer-contact{
+            margin-top:10px;
+            text-align:center;
+            font-size:10px;
+            border-top:1px solid rgba(255,255,255,0.4);
+            padding-top:8px;
+        }
     </style>
 </head>
 <body>
     <header>
-        <div style="float: left;">
-            <h2 style="margin: 0; color: #ed1c24;">Crystal Vision Solutions</h2>
-            <div class="company-info">Security Equipment | Networking Equipment | Audio & Video Systems | Smart Devices | Interactive Display</div>
+        <table class="header-table">
+            <tr>
+                <td width="20%">
+                    <img src="{{ public_path('logo.png') }}" class="logo">
+                </td>
+                <td width="50%" class="company-name">
+                    Crystal Vision Solutions
+                </td>
+                <td width="30%" class="header-right">
+                    <strong>www.crystalcomputers.com.bd</strong><br>
+                    <span>Leading ICT and Security Services Provider</span>
+                </td>
+            </tr>
+        </table>
+        <div class="service-bar">
+            Server | Server Spare Parts | Networking Equipment | Security Equipment | Sound Equipment | Smart Device | Interactive Display
         </div>
-        <div style="float: right;">
-            <div class="company-info">
-                www.crystalvisionbd.com<br>
-                Sales: +8801730-493600<br>
-                Service Center: +8801730-493601
-            </div>
-        </div>
-        <div style="clear: both;"></div>
     </header>
 
     <footer>
-        <div style="float: left; text-align: left; width: 33%;">
-            <strong>Elephant Road Branch:</strong><br>
-            Multiplan Center, Level-2, Shop-201
-        </div>
-        <div style="float: left; text-align: center; width: 34%;">
-            <strong>Corporate Office:</strong><br>
-            Tower-71, Level-11, West Agargaon
-        </div>
-        <div style="float: left; text-align: right; width: 33%;">
-            <strong>Service Center:</strong><br>
-            Multiplan Center, Level-6, Shop-611
+        <table class="footer-table">
+            <tr>
+                <td>
+                    <div class="footer-title">Elephant Road Branch</div>
+                    <div class="footer-text">Tabas Building (Level-5),<br>53/2 New Elephant Road<br>Dhaka-1205</div>
+                </td>
+                <td>
+                    <div class="footer-title">Corporate Office</div>
+                    <div class="footer-text">Tower 71 (Level-8)<br>Near ECB Circle<br>Dhaka Cantonment</div>
+                </td>
+                <td>
+                    <div class="footer-title">Service Centre</div>
+                    <div class="footer-text">Tabas Building (Level-5),<br>53/2 New Elephant Road<br>Dhaka-1205</div>
+                </td>
+            </tr>
+        </table>
+        <div class="footer-contact">
+            E-mail: info@crystalcomputers.com.bd | Mobile: 01730-495650
         </div>
     </footer>
 

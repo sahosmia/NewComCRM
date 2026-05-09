@@ -132,174 +132,312 @@
         }
     @endphp
 
-    {{-- Page 1: Introduction --}}
-    <div class="page">
-        <div style="text-align: right; margin-bottom: 30px;">
-            <strong>Date:</strong> {{ $quotation->quotation_date->format('d M, Y') }}
-        </div>
+    <style>
+        .section{
+            margin-bottom: 18px;
+        }
 
-        <div style="margin-bottom: 30px;">
-            <strong>To,</strong><br>
-            <strong>{{ $quotation->customer->name }}</strong><br>
-            @if($quotation->customer->designation)
-                {{ $quotation->customer->designation }}<br>
-            @endif
-            @if($quotation->customer->company)
-                <strong>{{ $quotation->customer->company->name }}</strong><br>
-            @endif
-            @if($quotation->customer->addresses && count($quotation->customer->addresses) > 0)
-                {{ $quotation->customer->addresses[0] }}<br>
-            @endif
-            {{ $quotation->customer->phones[0] ?? '' }}
-        </div>
+        .subject{
+            margin: 20px 0;
+            font-weight: bold;
+        }
 
-        <div style="margin-bottom: 30px;">
-            <strong>Subject: Quotation for Supply and Installation of Security Systems.</strong>
-        </div>
+        .paragraph{
+            margin-bottom: 15px;
+            text-align: justify;
+        }
 
-        <div style="margin-bottom: 30px; line-height: 1.6;">
-            Dear Sir,<br><br>
-            With reference to your inquiry, we are pleased to submit our best technical and financial offer for your kind consideration. Crystal Vision Solutions specializes in providing comprehensive security equipment, networking hardware, and smart devices for corporate and residential sectors.<br><br>
-            We take pride in our service quality and technical support, ensuring that our clients receive the best possible solutions for their requirements. Our proposed systems are selected to ensure longevity, ease of use, and integration with modern technologies.<br><br>
-            Detailed specifications of our offer and the commercial terms are provided in the following pages.
-        </div>
+        .signature{
+            margin-top: 40px;
+        }
+
+        .signature-img {
+            max-height: 60px;
+            max-width: 150px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .product-title{
+            text-align: center;
+            font-size: 18px;
+            color: #a31c1c;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-decoration: underline;
+        }
+
+        .info-table{
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .info-table td{
+            padding: 5px 0;
+        }
+
+        .product-table{
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .product-table th{
+            background: #666;
+            color: #fff;
+            border: 1px solid #000;
+            padding: 8px;
+            font-size: 11px;
+        }
+
+        .product-table td{
+            border: 1px solid #000;
+            padding: 8px;
+            vertical-align: top;
+            font-size: 11px;
+        }
+
+        .summary-table{
+            width: 250px;
+            border-collapse: collapse;
+            margin-left: auto;
+            margin-bottom: 20px;
+        }
+
+        .summary-table td{
+            border: 1px solid #000;
+            padding: 6px;
+            font-size: 11px;
+        }
+
+        .summary-label{
+            font-weight: bold;
+            background: #f2f2f2;
+        }
+
+        .amount-word{
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+
+        .terms-title{
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: underline;
+            margin-bottom: 15px;
+        }
+
+        .terms-list{
+            margin-left: 20px;
+        }
+
+        .terms-list li{
+            margin-bottom: 10px;
+            text-align: justify;
+            font-size: 11px;
+        }
+
+        .thanks{
+            text-align: center;
+            margin-top: 50px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .page-number{
+            text-align: right;
+            margin-top: 10px;
+            font-size: 10px;
+        }
+    </style>
+
+    <!-- PAGE 1 -->
+    <div class="section">
+        Date: {{ $quotation->quotation_date->format('d F Y') }}
+    </div>
+
+    <div class="section">
+        To,<br><br>
+
+        <strong>{{ $quotation->customer->name }}</strong><br>
+        @if($quotation->customer->designation)
+            {{ $quotation->customer->designation }}<br>
+        @endif
+        @if($quotation->customer->company)
+            {{ $quotation->customer->company->name }}<br>
+        @endif
+        @if($quotation->customer->addresses && count($quotation->customer->addresses) > 0)
+            {{ $quotation->customer->addresses[0] }}<br>
+        @endif
+        Cell: {{ $quotation->customer->phones[0] ?? '' }}
+    </div>
+
+    <div class="subject">
+        Subject: Quotation for Supply and Installation of Security Systems.
+    </div>
+
+    <div class="paragraph">
+        Dear Sir,
+    </div>
+
+    <div class="paragraph">
+        With due respect and reference to your recent inquiry,
+        we are pleased to submit our Technical and Financial Offer
+        for the above-mentioned items to your esteemed organization.
+    </div>
+
+    <div class="paragraph">
+        We are committed to delivering genuine branded products,
+        ensuring quality, reliability, and comprehensive after-sales service support.
+    </div>
+
+    <div class="paragraph">
+        Thanking you and assuring you of our best cooperation at all times.
+    </div>
+
+    <div class="signature">
+        <strong>With Thanks and Best Regards,</strong><br><br><br>
+
+        @if($quotation->user && $quotation->user->signature)
+            <img src="{{ public_path('storage/' . $quotation->user->signature) }}" class="signature-img">
+        @endif
+
+        <strong>{{ $quotation->user->name ?? 'Authorized Signature' }}</strong><br>
+        {{ $quotation->user->role == 'super_admin' ? 'Super Admin' : 'Sales Executive' }}<br>
+        Crystal Vision Solutions
+    </div>
+
+    <div class="page-number">
+        Page 1 of 3
     </div>
 
     <div class="page-break"></div>
 
-    {{-- Page 2: Financial Offer --}}
-    <div class="page">
-        <div style="margin-bottom: 20px; font-weight: bold; font-size: 14px; color: #ed1c24; border-bottom: 1px solid #ed1c24; padding-bottom: 5px;">
-            Financial Offer
-        </div>
+    <!-- PAGE 2 -->
+    <div class="product-title">
+        Product Details & Pricing
+    </div>
 
-        <style>
-            .goods-table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-bottom: 20px;
-            }
-            .goods-table thead th {
-                background-color: #4a4a4a;
-                color: white;
-                text-align: center;
-                padding: 8px;
-                border: 1px solid #333;
-                font-size: 11px;
-            }
-            .goods-table td {
-                padding: 8px;
-                border: 1px solid #333;
-                vertical-align: middle;
-                font-size: 11px;
-            }
-            .text-center { text-align: center; }
-            .text-right { text-align: right; }
-            .font-bold { font-weight: bold; }
-        </style>
+    <table class="info-table">
+        <tr>
+            <td>
+                <strong>Quotation No:</strong>
+                {{ $quotation->quotation_number }}
+            </td>
 
-        <table class="goods-table">
-            <thead>
-                <tr>
-                    <th style="width: 30px;">SL</th>
-                    <th>Description of Goods</th>
-                    <th style="width: 70px;">Quantity</th>
-                    <th style="width: 80px;">Unit Price (BDT)</th>
-                    <th style="width: 90px;">Total (BDT)</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($quotation->items as $index => $item)
-                <tr>
-                    <td class="text-center">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</td>
-                    <td>
-                        <strong>{{ $item->product_name ?? ($item->product ? $item->product->name : 'N/A') }}</strong>
-                        @if($item->product)
-                            <br><span style="font-size: 10px; color: #555;">{{ $item->product->description }}</span>
-                        @endif
-                    </td>
-                    <td class="text-center">{{ $item->quantity }}</td>
-                    <td class="text-right">{{ formatSouthAsian($item->unit_price) }}</td>
-                    <td class="text-right">{{ formatSouthAsian($item->total) }}/=</td>
-                </tr>
-                @endforeach
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="4" class="text-right font-bold">Subtotal</td>
-                    <td class="text-right font-bold">{{ formatSouthAsian($quotation->subtotal) }}/=</td>
-                </tr>
-                @if($quotation->tax > 0)
-                <tr>
-                    <td colspan="4" class="text-right font-bold">VAT/Tax</td>
-                    <td class="text-right">{{ formatSouthAsian($quotation->tax) }}/=</td>
-                </tr>
-                @endif
-                @if($quotation->discount > 0)
-                <tr>
-                    <td colspan="4" class="text-right font-bold">Discount</td>
-                    <td class="text-right">- {{ formatSouthAsian($quotation->discount) }}/=</td>
-                </tr>
-                @endif
-                <tr style="background-color: #f9f9f9;">
-                    <td colspan="4" class="text-right font-bold" style="font-size: 13px;">Grand Total</td>
-                    <td class="text-right font-bold" style="font-size: 13px; color: #ed1c24;">{{ formatSouthAsian($quotation->total) }}/=</td>
-                </tr>
-            </tfoot>
-        </table>
+            <td class="text-right">
+                <strong>Date:</strong>
+                {{ $quotation->quotation_date->format('d F Y') }}
+            </td>
+        </tr>
+    </table>
 
-        <div style="margin-top: 10px;">
-            <strong>Amount in word:</strong> {{ ucfirst(numberToWords($quotation->total)) }} only.
-        </div>
+    <table class="product-table">
+        <thead>
+            <tr>
+                <th width="5%">SL</th>
+                <th width="55%">Description</th>
+                <th width="10%">Qty</th>
+                <th width="15%">Unit Price</th>
+                <th width="15%">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($quotation->items as $index => $item)
+            <tr>
+                <td class="text-center">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</td>
+                <td>
+                    <strong>{{ $item->product_name ?? ($item->product ? $item->product->name : 'N/A') }}</strong>
+                    @if($item->product)
+                        <br><span style="font-size: 9px; color: #555;">{{ $item->product->description }}</span>
+                    @endif
+                </td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ formatSouthAsian($item->unit_price) }}</td>
+                <td class="text-right">{{ formatSouthAsian($item->total) }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    <table class="summary-table">
+        <tr>
+            <td class="summary-label">Total</td>
+            <td class="text-right">{{ formatSouthAsian($quotation->subtotal) }}</td>
+        </tr>
+        @if($quotation->tax > 0)
+        <tr>
+            <td class="summary-label">VAT/Tax</td>
+            <td class="text-right">{{ formatSouthAsian($quotation->tax) }}</td>
+        </tr>
+        @endif
+        @if($quotation->discount > 0)
+        <tr>
+            <td class="summary-label">Discount</td>
+            <td class="text-right">- {{ formatSouthAsian($quotation->discount) }}</td>
+        </tr>
+        @endif
+        <tr>
+            <td class="summary-label">Grand Total</td>
+            <td class="text-right">{{ formatSouthAsian($quotation->total) }}</td>
+        </tr>
+    </table>
+
+    <div class="amount-word">
+        Amount in words: {{ ucfirst(numberToWords($quotation->total)) }} Taka Only.
+    </div>
+
+    <strong>Thanks & Regards,</strong><br><br><br>
+
+    @if($quotation->user && $quotation->user->signature)
+        <img src="{{ public_path('storage/' . $quotation->user->signature) }}" class="signature-img">
+    @endif
+
+    <strong>{{ $quotation->user->name ?? 'Authorized Signature' }}</strong><br>
+    {{ $quotation->user->role == 'super_admin' ? 'Super Admin' : 'Sales Executive' }}<br>
+    Crystal Vision Solutions
+
+    <div class="page-number">
+        Page 2 of 3
     </div>
 
     <div class="page-break"></div>
 
-    {{-- Page 3: Terms & Signature --}}
-    <div class="page">
-        <div style="margin-bottom: 20px; font-weight: bold; font-size: 14px; color: #ed1c24; border-bottom: 1px solid #ed1c24; padding-bottom: 5px;">
-            Terms & Conditions
+    <!-- PAGE 3 -->
+    <div class="terms-title">
+        Terms & Conditions
+    </div>
+
+    @if($quotation->terms_conditions)
+        <div style="font-size: 11px; line-height: 1.8;">
+            {!! nl2br(e($quotation->terms_conditions)) !!}
         </div>
+    @else
+        <ol class="terms-list">
+            <li>Price validity is valid for 7 days from the date of issue.</li>
+            <li>Price may change based on currency conversion rate.</li>
+            <li>Delivery within agreed time after confirmed PO.</li>
+            <li>Payment terms will be discussed mutually.</li>
+            <li>Standard manufacturer warranty applicable.</li>
+            <li>VAT & Tax applicable as per government rules.</li>
+        </ol>
+    @endif
 
-        @if($quotation->terms_conditions)
-            <div style="font-size: 11px; line-height: 1.8;">
-                {!! nl2br(e($quotation->terms_conditions)) !!}
-            </div>
-        @else
-            <div style="font-size: 11px; line-height: 1.8;">
-                1. <strong>Validity:</strong> This quotation is valid for 15 days from the date of issuance.<br>
-                2. <strong>Delivery:</strong> Within 3-5 working days after receipt of confirmed work order.<br>
-                3. <strong>Payment:</strong> 50% advance with work order, 50% before delivery.<br>
-                4. <strong>Warranty:</strong> As per manufacturer standard warranty policy.
-            </div>
-        @endif
-
-        @if($quotation->notes)
-        <div style="margin-top: 30px;">
-            <h4 style="margin-bottom: 10px; text-decoration: underline;">Additional Notes:</h4>
-            <div style="font-size: 11px; background-color: #f5f5f5; padding: 15px; border-radius: 5px;">
-                {!! nl2br(e($quotation->notes)) !!}
-            </div>
-        </div>
-        @endif
-
-        <div style="margin-top: 50px; line-height: 1.6;">
-            We hope our offer will meet your requirements. Should you need any further information or clarification, please do not hesitate to contact us.<br><br>
-            Sincerely yours,
-        </div>
-
-        <div class="signature-section" style="margin-top: 40px;">
-            <div class="signature-box">
-                @if($quotation->user && $quotation->user->signature)
-                    <img src="{{ public_path('storage/' . $quotation->user->signature) }}" class="signature-img" alt="Signature">
-                @else
-                    <div style="height: 60px;"></div>
-                @endif
-                <div class="signature-line">
-                    {{ $quotation->user->name ?? 'Authorized Signature' }}<br>
-                    <span style="font-size: 10px; font-weight: normal;">{{ $quotation->user->role == 'super_admin' ? 'Super Admin' : 'Sales Executive' }}</span>
-                </div>
-            </div>
+    @if($quotation->notes)
+    <div style="margin-top: 30px;">
+        <h4 style="margin-bottom: 10px; text-decoration: underline;">Additional Notes:</h4>
+        <div style="font-size: 11px; background-color: #f5f5f5; padding: 15px; border-radius: 5px;">
+            {!! nl2br(e($quotation->notes)) !!}
         </div>
     </div>
+    @endif
+
+    <div class="thanks">
+        Thanks for getting in touch with Crystal Vision Solutions
+    </div>
+
+    <div class="page-number">
+        Page 3 of 3
+    </div>
+
 @endsection

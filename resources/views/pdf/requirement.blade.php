@@ -132,235 +132,351 @@
         }
     @endphp
 
-    {{-- Page 1: Introduction --}}
-    <div class="page">
-        <div style="text-align: right; margin-bottom: 30px;">
-            <strong>Date:</strong> {{ $requirement->created_at->format('d M, Y') }}
-        </div>
+    <style>
+        .section{
+            margin-bottom: 18px;
+        }
 
-        <div style="margin-bottom: 30px;">
-            <strong>To,</strong><br>
-            <strong>{{ $requirement->customer->name }}</strong><br>
-            @if($requirement->customer->designation)
-                {{ $requirement->customer->designation }}<br>
-            @endif
-            @if($requirement->customer->company)
-                <strong>{{ $requirement->customer->company->name }}</strong><br>
-            @endif
-            @if($requirement->customer->addresses && count($requirement->customer->addresses) > 0)
-                {{ $requirement->customer->addresses[0] }}<br>
-            @endif
-            {{ $requirement->customer->phones[0] ?? '' }}
-        </div>
+        .subject{
+            margin: 20px 0;
+            font-weight: bold;
+        }
 
-        <div style="margin-bottom: 30px;">
-            <strong>Subject: {{ $requirement->title ?? 'Requirement Specification for Security Systems' }}</strong>
-        </div>
+        .paragraph{
+            margin-bottom: 15px;
+            text-align: justify;
+        }
 
-        <div style="margin-bottom: 30px; line-height: 1.6;">
-            Dear Sir,<br><br>
-            With reference to our recent discussion, we are pleased to submit our technical and financial requirement specification for your kind consideration. Crystal Vision Solutions is committed to providing state-of-the-art security and networking solutions tailored to your specific needs.<br><br>
-            Our proposed solution has been designed keeping in view the highest standards of reliability, scalability, and performance. We believe that our expertise in the field of security systems, interactive displays, and smart devices will provide significant value to your organization.<br><br>
-            Please find the detailed specifications and commercial terms in the following pages.
-        </div>
+        .signature{
+            margin-top: 40px;
+        }
+
+        .signature-img {
+            max-height: 60px;
+            max-width: 150px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .product-title{
+            text-align: center;
+            font-size: 18px;
+            color: #a31c1c;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-decoration: underline;
+        }
+
+        .info-table{
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .info-table td{
+            padding: 5px 0;
+        }
+
+        .product-table{
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .product-table th{
+            background: #666;
+            color: #fff;
+            border: 1px solid #000;
+            padding: 8px;
+            font-size: 11px;
+        }
+
+        .product-table td{
+            border: 1px solid #000;
+            padding: 8px;
+            vertical-align: top;
+            font-size: 11px;
+        }
+
+        .summary-table{
+            width: 250px;
+            border-collapse: collapse;
+            margin-left: auto;
+            margin-bottom: 20px;
+        }
+
+        .summary-table td{
+            border: 1px solid #000;
+            padding: 6px;
+            font-size: 11px;
+        }
+
+        .summary-label{
+            font-weight: bold;
+            background: #f2f2f2;
+        }
+
+        .amount-word{
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+
+        .terms-title{
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: underline;
+            margin-bottom: 15px;
+        }
+
+        .terms-list{
+            margin-left: 20px;
+        }
+
+        .terms-list li{
+            margin-bottom: 10px;
+            text-align: justify;
+            font-size: 11px;
+        }
+
+        .thanks{
+            text-align: center;
+            margin-top: 50px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .page-number{
+            text-align: right;
+            margin-top: 10px;
+            font-size: 10px;
+        }
+    </style>
+
+    <!-- PAGE 1 -->
+    <div class="section">
+        Date: {{ $requirement->created_at->format('d F Y') }}
     </div>
 
-    <div class="page-break"></div>
+    <div class="section">
+        To,<br><br>
 
-    {{-- Page 2: Specifications & Table --}}
-    <div class="page">
-        <div style="margin-bottom: 20px; font-weight: bold; font-size: 14px; color: #ed1c24; border-bottom: 1px solid #ed1c24; padding-bottom: 5px;">
-            Technical & Financial Specifications
-        </div>
-
-        <style>
-            .goods-table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-bottom: 20px;
-            }
-            .goods-table thead th {
-                background-color: #4a4a4a;
-                color: white;
-                text-align: center;
-                padding: 8px;
-                border: 1px solid #333;
-                font-size: 11px;
-            }
-            .goods-table td {
-                padding: 8px;
-                border: 1px solid #333;
-                vertical-align: middle;
-                font-size: 11px;
-            }
-            .text-center { text-align: center; }
-            .text-right { text-align: right; }
-            .font-bold { font-weight: bold; }
-        </style>
-
-        <table class="goods-table">
-            <thead>
-                <tr>
-                    <th style="width: 30px;">SL</th>
-                    <th>Description of Goods & Specifications</th>
-                    <th style="width: 70px;">Quantity</th>
-                    <th style="width: 80px;">Unit Price (BDT)</th>
-                    <th style="width: 90px;">Total (BDT)</th>
-                </tr>
-            </thead>
-            <tbody>
-                @php
-                    $aitFactor = 1;
-                    if ($requirement->ait_percentage > 0 && $requirement->ait_percentage < 100) {
-                        $aitFactor = 1 / (1 - ($requirement->ait_percentage / 100));
-                    }
-                @endphp
-                @foreach($requirement->items as $index => $item)
-                <tr>
-                    <td class="text-center">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</td>
-                    <td>
-                        <strong>{{ $item->product->name }}</strong>
-                        @if($item->product->description)
-                            <br><span style="font-size: 10px; color: #555;">{{ $item->product->description }}</span>
-                        @endif
-                    </td>
-                    <td class="text-center">{{ $item->quantity }} {{ $item->product->unit?->short_form ?? 'Units' }}</td>
-                    <td class="text-right">{{ formatSouthAsian($item->unit_price * $aitFactor) }}</td>
-                    <td class="text-right">{{ formatSouthAsian($item->total_price) }}/=</td>
-                </tr>
-                @endforeach
-
-                @php $sl = count($requirement->items); @endphp
-
-                @if($requirement->has_accessories)
-                @php $sl++; @endphp
-                <tr>
-                    <td class="text-center">{{ str_pad($sl, 2, '0', STR_PAD_LEFT) }}</td>
-                    <td>
-                        <strong>{{ $requirement->accessories_title }}</strong>
-                        <br><span style="font-size: 10px; color: #555;">Required cables, connectors, and mounting accessories.</span>
-                    </td>
-                    <td class="text-center">{{ $requirement->accessories_quantity }} {{ $requirement->accessoriesUnit?->short_form ?? 'Lot' }}</td>
-                    <td class="text-right">{{ formatSouthAsian($requirement->accessories_price * $aitFactor) }}</td>
-                    <td class="text-right">{{ formatSouthAsian($requirement->accessories_quantity * $requirement->accessories_price * $aitFactor) }}/=</td>
-                </tr>
-                @endif
-
-                @if($requirement->has_installation)
-                @php $sl++; @endphp
-                <tr>
-                    <td class="text-center">{{ str_pad($sl, 2, '0', STR_PAD_LEFT) }}</td>
-                    <td>
-                        <strong>{{ $requirement->installation_title }}</strong>
-                        <br><span style="font-size: 10px; color: #555;">Professional installation, configuration, and testing service.</span>
-                    </td>
-                    <td class="text-center">{{ $requirement->installation_quantity }} {{ $requirement->installationUnit?->short_form ?? 'Units' }}</td>
-                    <td class="text-right">{{ formatSouthAsian($requirement->installation_price * $aitFactor) }}</td>
-                    <td class="text-right">{{ formatSouthAsian($requirement->installation_quantity * $requirement->installation_price * $aitFactor) }}/=</td>
-                </tr>
-                @endif
-            </tbody>
-            @php
-                $itemsTotal = $requirement->items->sum('total_price');
-                $accessoriesTotal = $requirement->has_accessories ? ($requirement->accessories_quantity * $requirement->accessories_price * $aitFactor) : 0;
-                $installationTotal = $requirement->has_installation ? ($requirement->installation_quantity * $requirement->installation_price * $aitFactor) : 0;
-                $subTotal = $itemsTotal + $accessoriesTotal + $installationTotal;
-                $vatAmount = $requirement->vat_percentage > 0 ? ($subTotal * ($requirement->vat_percentage / 100)) : 0;
-                $aitAmount = 0;
-                if ($requirement->ait_percentage > 0 && $requirement->ait_percentage < 100) {
-                    $aitAmount = $subTotal - ($subTotal / $aitFactor);
-                }
-                $grandTotal = $requirement->grand_total;
-            @endphp
-            <tfoot>
-                <tr>
-                    <td colspan="4" class="text-right font-bold">Total (Excl. VAT)</td>
-                    <td class="text-right font-bold">{{ formatSouthAsian($subTotal) }}/=</td>
-                </tr>
-                @if($requirement->vat_percentage > 0)
-                <tr>
-                    <td colspan="4" class="text-right font-bold">VAT ({{ $requirement->vat_percentage }}%)</td>
-                    <td class="text-right">{{ formatSouthAsian($vatAmount) }}/=</td>
-                </tr>
-                @endif
-                @if($requirement->ait_percentage > 0)
-                <tr>
-                    <td colspan="4" class="text-right font-bold">AIT ({{ $requirement->ait_percentage }}%)</td>
-                    <td class="text-right">{{ formatSouthAsian($aitAmount) }}/=</td>
-                </tr>
-                @endif
-                <tr style="background-color: #f9f9f9;">
-                    <td colspan="4" class="text-right font-bold" style="font-size: 13px;">Grand Total</td>
-                    <td class="text-right font-bold" style="font-size: 13px; color: #ed1c24;">{{ formatSouthAsian($grandTotal) }}/=</td>
-                </tr>
-            </tfoot>
-        </table>
-
-        <div style="margin-top: 10px;">
-            <strong>Amount in word:</strong> {{ ucfirst(numberToWords($grandTotal)) }} only.
-        </div>
+        <strong>{{ $requirement->customer->name }}</strong><br>
+        @if($requirement->customer->designation)
+            {{ $requirement->customer->designation }}<br>
+        @endif
+        @if($requirement->customer->company)
+            {{ $requirement->customer->company->name }}<br>
+        @endif
+        @if($requirement->customer->addresses && count($requirement->customer->addresses) > 0)
+            {{ $requirement->customer->addresses[0] }}<br>
+        @endif
+        Cell: {{ $requirement->customer->phones[0] ?? '' }}
     </div>
 
-    <div class="page-break"></div>
+    <div class="subject">
+        Subject: {{ $requirement->title ?? 'Technical & Financial Offer for Supply and Installation of Security Systems.' }}
+    </div>
 
-    {{-- Page 3: Terms & Signature --}}
-    <div class="page">
-        <div style="margin-bottom: 20px; font-weight: bold; font-size: 14px; color: #ed1c24; border-bottom: 1px solid #ed1c24; padding-bottom: 5px;">
-            Terms & Conditions
-        </div>
+    <div class="paragraph">
+        Dear Sir,
+    </div>
 
-        <div style="font-size: 11px; line-height: 1.8;">
-            <table style="border: none; width: 100%;">
-                <tr style="border: none;">
-                    <td style="border: none; width: 150px; font-weight: bold; vertical-align: top;">Price Validity:</td>
-                    <td style="border: none; vertical-align: top;">This proposal is valid for {{ $requirement->price_validity_days ?? '07' }} days from the date of issuance.</td>
-                </tr>
-                <tr style="border: none;">
-                    <td style="border: none; font-weight: bold; vertical-align: top;">Delivery Time:</td>
-                    <td style="border: none; vertical-align: top;">{{ $requirement->delivery_time_days ?? '03-05' }} working days after receiving the formal work order.</td>
-                </tr>
-                <tr style="border: none;">
-                    <td style="border: none; font-weight: bold; vertical-align: top;">Payment Terms:</td>
-                    <td style="border: none; vertical-align: top;">{{ $requirement->advance_payment ?? '50' }}% advance with work order, and the remaining {{ $requirement->before_payment ?? '50' }}% before delivery/installation.</td>
-                </tr>
-                <tr style="border: none;">
-                    <td style="border: none; font-weight: bold; vertical-align: top;">Warranty:</td>
-                    <td style="border: none; vertical-align: top;">Standard manufacturer warranty applies to all hardware. Service warranty provided for 01 year.</td>
-                </tr>
-                <tr style="border: none;">
-                    <td style="border: none; font-weight: bold; vertical-align: top;">Delivery Location:</td>
-                    <td style="border: none; vertical-align: top;">{{ $requirement->delivery_location ?? 'As per discussion' }}</td>
-                </tr>
-            </table>
-        </div>
+    <div class="paragraph">
+        With due respect and reference to your recent inquiry,
+        we are pleased to submit our Technical and Financial Offer
+        for the above-mentioned items to your esteemed organization.
+    </div>
 
-        @if($requirement->notes)
-        <div style="margin-top: 30px;">
-            <h4 style="margin-bottom: 10px; text-decoration: underline;">Additional Notes:</h4>
-            <div style="font-size: 11px; background-color: #f5f5f5; padding: 15px; border-radius: 5px;">
-                {!! nl2br(e($requirement->notes)) !!}
-            </div>
-        </div>
+    <div class="paragraph">
+        We are committed to delivering genuine branded products,
+        ensuring quality, reliability, and comprehensive after-sales service support.
+    </div>
+
+    <div class="paragraph">
+        Thanking you and assuring you of our best cooperation at all times.
+    </div>
+
+    <div class="signature">
+        <strong>With Thanks and Best Regards,</strong><br><br><br>
+
+        @if(Auth::user() && Auth::user()->signature)
+            <img src="{{ public_path('storage/' . Auth::user()->signature) }}" class="signature-img">
         @endif
 
-        <div style="margin-top: 50px; line-height: 1.6;">
-            We look forward to your positive response and hope to build a long-term business relationship with your esteemed organization.<br><br>
-            Sincerely yours,
-        </div>
+        <strong>{{ Auth::user()->name ?? 'Authorized Signature' }}</strong><br>
+        {{ Auth::user()->role == 'super_admin' ? 'Super Admin' : 'Sales Executive' }}<br>
+        Crystal Vision Solutions
+    </div>
 
-        <div class="signature-section" style="margin-top: 40px;">
-            <div class="signature-box">
-                @if(Auth::user() && Auth::user()->signature)
-                    <img src="{{ public_path('storage/' . Auth::user()->signature) }}" class="signature-img" alt="Signature">
-                @else
-                    <div style="height: 60px;"></div>
-                @endif
-                <div class="signature-line">
-                    {{ Auth::user()->name ?? 'Authorized Signature' }}<br>
-                    <span style="font-size: 10px; font-weight: normal;">{{ Auth::user()->role == 'super_admin' ? 'Super Admin' : 'Sales Executive' }}</span>
-                </div>
-            </div>
+    <div class="page-number">
+        Page 1 of 3
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- PAGE 2 -->
+    <div class="product-title">
+        Product Details & Pricing
+    </div>
+
+    <table class="info-table">
+        <tr>
+            <td>
+                <strong>Requirement No:</strong>
+                REQ-{{ str_pad($requirement->id, 4, '0', STR_PAD_LEFT) }}
+            </td>
+
+            <td class="text-right">
+                <strong>Date:</strong>
+                {{ $requirement->created_at->format('d F Y') }}
+            </td>
+        </tr>
+    </table>
+
+    <table class="product-table">
+        <thead>
+            <tr>
+                <th width="5%">SL</th>
+                <th width="55%">Description</th>
+                <th width="10%">Qty</th>
+                <th width="15%">Unit Price</th>
+                <th width="15%">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php
+                $aitFactor = 1;
+                if ($requirement->ait_percentage > 0 && $requirement->ait_percentage < 100) {
+                    $aitFactor = 1 / (1 - ($requirement->ait_percentage / 100));
+                }
+            @endphp
+            @foreach($requirement->items as $index => $item)
+            <tr>
+                <td class="text-center">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</td>
+                <td>
+                    <strong>{{ $item->product->name }}</strong>
+                    @if($item->product->description)
+                        <br><span style="font-size: 9px; color: #555;">{{ $item->product->description }}</span>
+                    @endif
+                </td>
+                <td class="text-center">{{ (int)$item->quantity }} {{ $item->product->unit?->short_form ?? 'Units' }}</td>
+                <td class="text-center">{{ formatSouthAsian($item->unit_price * $aitFactor) }}</td>
+                <td class="text-right">{{ formatSouthAsian($item->total_price) }}</td>
+            </tr>
+            @endforeach
+
+            @php $sl = count($requirement->items); @endphp
+
+            @if($requirement->has_accessories)
+            @php $sl++; @endphp
+            <tr>
+                <td class="text-center">{{ str_pad($sl, 2, '0', STR_PAD_LEFT) }}</td>
+                <td><strong>{{ $requirement->accessories_title }}</strong></td>
+                <td class="text-center">{{ (int)$requirement->accessories_quantity }} {{ $requirement->accessoriesUnit?->short_form ?? 'Lot' }}</td>
+                <td class="text-center">{{ formatSouthAsian($requirement->accessories_price * $aitFactor) }}</td>
+                <td class="text-right">{{ formatSouthAsian($requirement->accessories_quantity * $requirement->accessories_price * $aitFactor) }}</td>
+            </tr>
+            @endif
+
+            @if($requirement->has_installation)
+            @php $sl++; @endphp
+            <tr>
+                <td class="text-center">{{ str_pad($sl, 2, '0', STR_PAD_LEFT) }}</td>
+                <td><strong>{{ $requirement->installation_title }}</strong></td>
+                <td class="text-center">{{ (int)$requirement->installation_quantity }} {{ $requirement->installationUnit?->short_form ?? 'Units' }}</td>
+                <td class="text-center">{{ formatSouthAsian($requirement->installation_price * $aitFactor) }}</td>
+                <td class="text-right">{{ formatSouthAsian($requirement->installation_quantity * $requirement->installation_price * $aitFactor) }}</td>
+            </tr>
+            @endif
+        </tbody>
+    </table>
+
+    @php
+        $itemsTotal = $requirement->items->sum('total_price');
+        $accessoriesTotal = $requirement->has_accessories ? ($requirement->accessories_quantity * $requirement->accessories_price * $aitFactor) : 0;
+        $installationTotal = $requirement->has_installation ? ($requirement->installation_quantity * $requirement->installation_price * $aitFactor) : 0;
+        $subTotal = $itemsTotal + $accessoriesTotal + $installationTotal;
+        $vatAmount = $requirement->vat_percentage > 0 ? ($subTotal * ($requirement->vat_percentage / 100)) : 0;
+        $aitAmount = 0;
+        if ($requirement->ait_percentage > 0 && $requirement->ait_percentage < 100) {
+            $aitAmount = $subTotal - ($subTotal / $aitFactor);
+        }
+        $grandTotal = $requirement->grand_total;
+    @endphp
+
+    <table class="summary-table">
+        <tr>
+            <td class="summary-label">Total</td>
+            <td class="text-right">{{ formatSouthAsian($subTotal) }}</td>
+        </tr>
+        @if($requirement->vat_percentage > 0)
+        <tr>
+            <td class="summary-label">VAT ({{ (int)$requirement->vat_percentage }}%)</td>
+            <td class="text-right">{{ formatSouthAsian($vatAmount) }}</td>
+        </tr>
+        @endif
+        @if($requirement->ait_percentage > 0)
+        <tr>
+            <td class="summary-label">AIT ({{ (int)$requirement->ait_percentage }}%)</td>
+            <td class="text-right">{{ formatSouthAsian($aitAmount) }}</td>
+        </tr>
+        @endif
+        <tr>
+            <td class="summary-label">Grand Total</td>
+            <td class="text-right">{{ formatSouthAsian($grandTotal) }}</td>
+        </tr>
+    </table>
+
+    <div class="amount-word">
+        Amount in words: {{ ucfirst(numberToWords($grandTotal)) }} Taka Only.
+    </div>
+
+    <strong>Thanks & Regards,</strong><br><br><br>
+
+    @if(Auth::user() && Auth::user()->signature)
+        <img src="{{ public_path('storage/' . Auth::user()->signature) }}" class="signature-img">
+    @endif
+
+    <strong>{{ Auth::user()->name ?? 'Authorized Signature' }}</strong><br>
+    {{ Auth::user()->role == 'super_admin' ? 'Super Admin' : 'Sales Executive' }}<br>
+    Crystal Vision Solutions
+
+    <div class="page-number">
+        Page 2 of 3
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- PAGE 3 -->
+    <div class="terms-title">
+        Terms & Conditions
+    </div>
+
+    <ol class="terms-list">
+        <li>Price validity is valid for {{ $requirement->price_validity_days ?? '7' }} days from the date of issue.</li>
+        <li>Delivery within {{ $requirement->delivery_time_days ?? '03-05' }} working days after confirmed PO.</li>
+        <li>Payment terms: {{ $requirement->advance_payment ?? '50' }}% advance, {{ $requirement->before_payment ?? '50' }}% before delivery.</li>
+        <li>Standard manufacturer warranty applicable.</li>
+        <li>VAT & Tax applicable as per government rules.</li>
+        @if($requirement->delivery_location)
+            <li>Delivery Location: {{ $requirement->delivery_location }}</li>
+        @endif
+    </ol>
+
+    @if($requirement->notes)
+    <div style="margin-top: 30px;">
+        <h4 style="margin-bottom: 10px; text-decoration: underline;">Additional Notes:</h4>
+        <div style="font-size: 11px; background-color: #f5f5f5; padding: 15px; border-radius: 5px;">
+            {!! nl2br(e($requirement->notes)) !!}
         </div>
+    </div>
+    @endif
+
+    <div class="thanks">
+        Thanks for getting in touch with Crystal Vision Solutions
+    </div>
+
+    <div class="page-number">
+        Page 3 of 3
     </div>
 
 @endsection
