@@ -1,12 +1,12 @@
 import AppLayout from '@/layouts/app-layout';
-import { FilterOption, PaginationType, SortOption } from '@/types';
+import { FilterOption, PaginationType, Quotation, SortOption } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import { columns } from './Columns';
 
 interface Props {
-    quotations: PaginationType<any>;
+    quotations: PaginationType<Quotation>;
     stats: any;
 }
 

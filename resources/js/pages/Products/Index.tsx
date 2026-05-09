@@ -4,7 +4,7 @@ import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import { columns } from './Columns';
-import { Product } from '@/types/product';
+import { Product } from '@/types';
 
 interface Props {
     products: PaginationType<Product>;
@@ -46,7 +46,7 @@ export default function ProductIndex({ products }: Props) {
                     bulkDeleteRoute='products.bulkDestroy'
                     exportRoute="products.export"
                     printRoute="products.print"
-                    
+
                 />
             </div>
         </AppLayout>

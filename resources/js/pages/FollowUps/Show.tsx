@@ -3,17 +3,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-    User, Calendar, Edit, ArrowLeft, MessageSquare,
-    Clock, CheckCircle2, AlertCircle, ExternalLink, Phone, Mail,
-    MapPin
+    User, Calendar, ArrowLeft, MessageSquare,
+    Clock, CheckCircle2
 } from "lucide-react";
 import { Head, Link } from "@inertiajs/react";
 import { cn } from "@/lib/utils";
 import { formatDateTime } from "@/utils/date-format";
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
+import { FollowUp } from "@/types";
 
 
-export default function Show({ followUp }: { followUp: any }) {
+export default function Show({ followUp }: { followUp: FollowUp }) {
     return (
         <AppLayout
             breadcrumbs={[
@@ -53,7 +53,7 @@ export default function Show({ followUp }: { followUp: any }) {
                     {/* Left Column: Summary & Participants (Like Contact Details) */}
                     <div className="lg:col-span-1 space-y-6">
 
-                       <CustomerInfoCard customer={followUp.customer} />
+                        {followUp.customer && <CustomerInfoCard customer={followUp.customer} />}
 
                         <Card>
                             <CardHeader>
@@ -68,7 +68,7 @@ export default function Show({ followUp }: { followUp: any }) {
                                         <p className="text-sm font-medium">Customer Contact</p>
                                         <p className="text-sm text-muted-foreground">{followUp.customer?.name}</p>
                                         <div className="flex gap-2 mt-1">
-                                            {followUp.customer?.phone && <span className="text-[10px] text-primary bg-primary/5 px-1.5 rounded uppercase font-bold">Call Enabled</span>}
+                                            {Array.isArray(followUp.customer?.phones) && followUp.customer.phones.length > 0 && <span className="text-[10px] text-primary bg-primary/5 px-1.5 rounded uppercase font-bold">Call Enabled</span>}
                                         </div>
                                     </div>
                                 </div>
@@ -114,12 +114,12 @@ export default function Show({ followUp }: { followUp: any }) {
                                     <Badge
                                         className={cn(
                                             "h-7 px-3 flex items-center gap-1.5 border-none shadow-sm transition-all",
-                                            followUp.status === 'done'
+                                            followUp.status === 'purchase'
                                                 ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100/80"
                                                 : "bg-amber-100 text-amber-700 hover:bg-amber-100/80"
                                         )}
                                     >
-                                        {followUp.status === 'done' ? (
+                                        {followUp.status === 'purchase' ? (
                                             <CheckCircle2 className="w-3.5 h-3.5" />
                                         ) : (
                                             <Clock className="w-3.5 h-3.5" />
@@ -160,7 +160,7 @@ export default function Show({ followUp }: { followUp: any }) {
                         </Card>
 
                         {/* Discussion/Notes Section */}
-                        <Card className="min-h-[250px] flex flex-col">
+                        <Card className="min-h-62.5 flex flex-col">
                             <CardHeader className="bg-muted/20 border-b">
                                 <CardTitle className="flex items-center gap-2 text-lg">
                                     <MessageSquare className="w-5 h-5 text-primary" />

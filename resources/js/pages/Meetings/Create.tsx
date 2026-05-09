@@ -1,9 +1,10 @@
 import AppLayout from "@/layouts/app-layout";
 import MeetingForm from "./form";
 import { Head } from "@inertiajs/react";
+import { CustomerType } from "@/types";
 
 interface Props {
-    customers: { id: number; name: string }[];
+    customers: CustomerType[];
 }
 
 export default function Create({ customers }: Props) {

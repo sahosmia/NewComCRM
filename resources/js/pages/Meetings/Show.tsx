@@ -1,16 +1,15 @@
 import { Link, Head } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/layouts/app-layout";
-import { Badge } from "@/components/ui/badge";
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-    Calendar, MapPin, ClipboardList,
-    MessageSquare, Clock
+    Calendar, MapPin, ClipboardList
 } from "lucide-react";
 import StatusBadge from "@/components/shared/StatusBadge";
+import { Meeting } from "@/types";
 
-export default function Show({ meeting }: any) {
+export default function Show({ meeting }: { meeting: Meeting }) {
     const breadcrumbs = [
         { title: "Meetings", href: route('meetings.index') },
         { title: "Detail View", href: "#" }
@@ -62,7 +61,7 @@ export default function Show({ meeting }: any) {
 
                     {/* Left Column: Customer & Contact */}
                     <div className="lg:col-span-1 space-y-6">
-                        <CustomerInfoCard customer={meeting.customer} />
+                      {meeting.customer && <CustomerInfoCard customer={meeting.customer} />}
 
                         {/* Quick Stats or Meta (Optional) */}
                         <Card className="bg-muted/20 border-dashed">
@@ -90,16 +89,13 @@ export default function Show({ meeting }: any) {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="bg-amber-50/30 p-4 rounded-lg border border-amber-100/50 min-h-[100px]">
+                                <div className="bg-amber-50/30 p-4 rounded-lg border border-amber-100/50 min-h-25">
                                     <p className="text-sm leading-relaxed text-foreground/80 whitespace-pre-wrap">
                                         {meeting.agenda || "No agenda specified for this meeting."}
                                     </p>
                                 </div>
                             </CardContent>
                         </Card>
-
-                        
-
                     </div>
                 </div>
             </div>

@@ -1,16 +1,15 @@
 import AppLayout from "@/layouts/app-layout";
 import CustomerForm from "./form";
 import { Head } from "@inertiajs/react";
-import { User } from "@/types";
+import { Company, User } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface CreateProps {
     users: User[];
-    companies: any[];
+    companies: Company[];
 }
 
 export default function Create({ users, companies }: CreateProps) {
-    // Breadcrumbs definition for better readability
     const breadcrumbs = [
         { title: "Customers", href: route("customers.index") },
         { title: "Create Customer", href: route("customers.create") }

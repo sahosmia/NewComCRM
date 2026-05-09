@@ -10,8 +10,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Product } from "@/types/product";
-import { Unit } from "@/types/unit";
+import { Product, Unit } from "@/types";
 import { Loader2 } from "lucide-react";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
 

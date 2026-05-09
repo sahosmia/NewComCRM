@@ -1,6 +1,6 @@
-import type { Column } from '@/types';
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
 import { TableRowActions } from '@/components/table/TableRowActions';
+import { Column, Requirement } from '@/types';
 
 const RequirementOptions = [
     { value: 'pending', label: "Pending", colorClass: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20' },
@@ -11,7 +11,7 @@ const RequirementOptions = [
 ];
 
 
-const columns: Column<any>[] = [
+const columns: Column<Requirement>[] = [
     {
         header: 'Customer',
         accessor: (item) => (
@@ -25,7 +25,7 @@ const columns: Column<any>[] = [
         header: 'Requested Products',
         accessor: (item) => (
             <div className="flex flex-wrap gap-1 max-w-62">
-                {item.items?.map((row: any) => (
+                {item.items?.map((row) => (
                     <span key={row.id} className="text-sm py-0  whitespace-nowrap truncate">
                         {row.product?.name}
                         x {row.quantity} {row.product?.unit?.short_form}
@@ -60,7 +60,7 @@ const columns: Column<any>[] = [
         header: 'Notes',
         accessor: (item) => (
             <div className="max-w-50">
-                <p className="text-xs text-muted-foreground truncate" title={item.notes}>
+                <p className="text-xs text-muted-foreground truncate" title={item.notes ?? undefined}>
                     {item.notes || '---'}
                 </p>
             </div>

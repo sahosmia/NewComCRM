@@ -1,11 +1,11 @@
 import AppLayout from "@/layouts/app-layout";
 import FollowUpForm from "./form";
-import type { FollowUp } from "@/types/follow-up";
 import { Head } from "@inertiajs/react";
+import { CustomerType, FollowUp } from "@/types";
 
 interface Props {
     followUp: FollowUp;
-    customers: { id: number; name: string }[];
+    customers: CustomerType[];
 }
 
 export default function Edit({ followUp, customers }: Props) {

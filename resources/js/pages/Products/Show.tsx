@@ -1,7 +1,6 @@
 import { Head, Link } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import AppLayout from "@/layouts/app-layout";
 import {
@@ -15,8 +14,9 @@ import {
     FileText,
     ExternalLink
 } from "lucide-react";
+import { Product } from "@/types";
 
-export default function Show({ product }: any) {
+export default function Show({ product }: { product: Product }) {
     return (
         <AppLayout
             breadcrumbs={[

@@ -11,13 +11,13 @@ import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructiv
 
 interface BulkActionsProps {
     selectedItems: number[] | string[];
-    entityName?: string; // e.g., 'Customer' or 'Order'
+    entityName?: string;
     exportRoute?: string;
     printRoute?: string;
     bulkDeleteRoute?: string;
     handleExport?: () => void;
     handlePrint?: () => void;
-    handleBulkDelete: (ids: any[], route: string) => void;
+    handleBulkDelete: (ids: (number | string)[], route: string) => void;
 }
 
 export function TableBulkActions({

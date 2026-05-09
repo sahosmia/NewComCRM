@@ -9,13 +9,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import type { FollowUp } from "@/types/follow-up";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
 import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
+import { CustomerType, FollowUp } from "@/types";
 
 interface Props {
     followUp?: FollowUp;
-    customers: { id: number; name: string; full_name_with_company?: string }[];
+    customers: CustomerType[];
 }
 
 export default function FollowUpForm({ followUp, customers }: Props) {

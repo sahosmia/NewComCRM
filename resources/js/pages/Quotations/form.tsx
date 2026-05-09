@@ -9,13 +9,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Quotation, QuotationItem } from "@/types/quotation";
-import { Product } from "@/types/product";
 import { Plus, Trash } from "lucide-react";
+import { CustomerType, Product, Quotation } from "@/types";
 
 interface Props {
     quotation?: Quotation;
-    customers: { id: number; name: string }[];
+    customers: CustomerType[];
     products: Product[];
 }
 
@@ -32,17 +31,17 @@ export default function QuotationForm({ quotation, customers, products }: Props)
     });
 
     const addItem = () => {
-        setData("items", [...data.items, { product_id: "", quantity: 1, unit_price: "0", description: "" }]);
+        setData("items", [...(data.items as any[]), { product_id: "", quantity: 1, unit_price: "0", description: "" }] as any);
     };
 
     const removeItem = (index: number) => {
-        const newItems = [...data.items];
+        const newItems = [...(data.items as any[])];
         newItems.splice(index, 1);
-        setData("items", newItems);
+        setData("items", newItems as any);
     };
 
     const updateItem = (index: number, field: string, value: any) => {
-        const newItems = [...data.items] as any[];
+        const newItems = [...(data.items as any[])];
         newItems[index][field] = value;
 
         if (field === 'product_id') {

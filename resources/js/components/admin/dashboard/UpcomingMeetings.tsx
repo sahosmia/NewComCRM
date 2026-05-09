@@ -1,6 +1,7 @@
 import { Calendar, Clock, MapPin } from 'lucide-react';
+import { Meeting } from '@/types/metting';
 
-function MeetingList({ meetings }: { meetings: any[] }) {
+function MeetingList({ meetings }: { meetings: Meeting[] }) {
     if (meetings.length === 0) {
         return (
             <div className="flex h-40 flex-col items-center justify-center text-muted-foreground">
@@ -29,7 +30,7 @@ function MeetingList({ meetings }: { meetings: any[] }) {
             {meetings.map((meeting) => (
                 <div key={meeting.id} className="group flex gap-4">
                     {/* Date Box */}
-                    <div className="flex h-14 w-14 flex-shrink-0 flex-col items-center justify-center rounded-xl bg-primary/5 text-primary border border-primary/10 transition-colors group-hover:bg-primary group-hover:text-white">
+                    <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-primary/5 text-primary border border-primary/10 transition-colors group-hover:bg-primary group-hover:text-white">
                         <span className="text-[10px] font-bold uppercase leading-none">
                             {new Date(meeting.scheduled_at).toLocaleDateString('en-GB', { month: 'short' })}
                         </span>

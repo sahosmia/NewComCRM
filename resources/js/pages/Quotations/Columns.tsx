@@ -1,4 +1,4 @@
-import type { Column } from '@/types';
+import type { Column, Quotation } from '@/types';
 import { TableRowActions } from '@/components/table/TableRowActions';
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
 
@@ -9,7 +9,7 @@ const QUOTATION_STATUS_OPTIONS = [
     { value: 'declined', label: 'Declined', colorClass: 'bg-red-500/10 text-red-600 border-red-500/20' },
 ];
 
-const columns: Column<any>[] = [
+const columns: Column<Quotation>[] = [
     {
         header: 'Quotation #',
         accessor: (item) => item.quotation_number,
