@@ -47,9 +47,9 @@ class Requirement extends Model
         'has_installation' => 'boolean',
         'ait_percentage' => 'decimal:2',
         'vat_percentage' => 'decimal:2',
-        'accessories_quantity' => 'decimal:2',
+        'accessories_quantity' => 'integer',
         'accessories_price' => 'decimal:2',
-        'installation_quantity' => 'decimal:2',
+        'installation_quantity' => 'integer',
         'installation_price' => 'decimal:2',
     ];
 

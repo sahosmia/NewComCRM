@@ -24,6 +24,7 @@ export default function ProductForm({ product, units = [] }: Props) {
         name: product?.name || "",
         brand: product?.brand || "",
         model: product?.model || "",
+        warranty: product?.warranty || "",
         unit_price: product?.unit_price || "",
         category: product?.category || "",
         stock_quantity: product?.stock_quantity || "",
@@ -83,6 +84,19 @@ export default function ProductForm({ product, units = [] }: Props) {
                         onChange={(e) => setData("model", e.target.value)}
                     />
                     <ErrorMessage message={errors.model} />
+
+                </div>
+
+                {/* Warranty */}
+                <div className="space-y-2">
+                    <Label htmlFor="warranty">Warranty</Label>
+                    <Input
+                        id="warranty"
+                        placeholder="e.g. 1 Year"
+                        value={data.warranty}
+                        onChange={(e) => setData("warranty", e.target.value)}
+                    />
+                    <ErrorMessage message={errors.warranty} />
 
                 </div>
 

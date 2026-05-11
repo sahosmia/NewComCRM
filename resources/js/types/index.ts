@@ -116,6 +116,7 @@ export interface Product {
     name: string;
     brand: string | null;
     model: string | null;
+    warranty: string | null;
     unit_price: string;
     description: string | null;
     category: string | null;
