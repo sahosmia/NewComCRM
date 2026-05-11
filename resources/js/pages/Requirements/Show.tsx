@@ -83,11 +83,11 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                         <Link href={route("requirements.edit", requirement.id)} className="flex-1 md:flex-none">
                             <Button variant="outline" size="sm" className="w-full">Edit</Button>
                         </Link>
-                        <Link href={route('requirements.download', requirement.id)} target="_blank">
+                        <a href={route('requirements.download', requirement.id)} target="_blank">
                             <Button variant="outline" size="sm" className="flex-1 md:flex-none">
                                 <Printer className="w-4 h-4 mr-2" /> Print
                             </Button>
-                        </Link>
+                        </a>
                     </div>
                 </div>
 
@@ -163,7 +163,7 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                         )}
                                     </tbody>
 
-                                    <tfoot className="bg-primary/[0.02] border-t-2 border-primary/10">
+                                    <tfoot className="bg-primary/2 border-t-2 border-primary/10">
                                         {(requirement.has_vat || requirement.has_ait) && (
                                             <>
                                                 <tr>
@@ -176,12 +176,12 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                                         <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">+ {formatCurrency(totals.vatAmount)}</td>
                                                     </tr>
                                                 )}
-                                                {requirement.has_ait && (
+                                                {/* {requirement.has_ait && (
                                                     <tr>
                                                         <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">AIT Adjustment ({requirement.ait_percentage}%)</td>
                                                         <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">+ {formatCurrency(totals.aitAmount)}</td>
                                                     </tr>
-                                                )}
+                                                )} */}
                                             </>
                                         )}
                                         <tr>

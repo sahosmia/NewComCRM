@@ -47,16 +47,18 @@ class Requirement extends Model
         'has_installation' => 'boolean',
         'ait_percentage' => 'decimal:2',
         'vat_percentage' => 'decimal:2',
-        'accessories_quantity' => 'decimal:2',
         'accessories_price' => 'decimal:2',
-        'installation_quantity' => 'decimal:2',
         'installation_price' => 'decimal:2',
+                'accessories_quantity' => 'integer',
+        'installation_quantity' => 'integer',
+
     ];
 
     public function items(): HasMany
     {
         return $this->hasMany(RequirementItem::class);
     }
+
 
     public function customer(): BelongsTo
     {
@@ -100,24 +102,8 @@ class Requirement extends Model
         // VAT/Tax (Add-on Logic): Total = Subtotal + (Subtotal * VAT_Percentage / 100)
         $vatAmount = $this->vat_percentage > 0 ? ($subTotal * ($this->vat_percentage / 100)) : 0;
 
-        $grandTotal = $subTotal + $vatAmount;
-
-        $this->updateQuietly(['grand_total' => $grandTotal]);
+     
     }
 
-    public function generatePDF(): string
-    {
-        $pdf = Pdf::loadView('pdf.requirement', [
-            'requirement' => $this->load([
-                'customer',
-                'items.product.unit',
-                'accessoriesUnit',
-                'installationUnit'
-            ])
-        ]);
-        $path = 'requirements/requirement-' . $this->id . '.pdf';
-        Storage::put('public/' . $path, $pdf->output());
 
-        return $path;
-    }
 }

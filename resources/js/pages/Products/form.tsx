@@ -24,6 +24,8 @@ export default function ProductForm({ product, units = [] }: Props) {
         name: product?.name || "",
         brand: product?.brand || "",
         model: product?.model || "",
+        warranty: product?.warranty || "",
+        warranty_duration_unit: product?.warranty_duration_unit || "years",
         unit_price: product?.unit_price || "",
         category: product?.category || "",
         stock_quantity: product?.stock_quantity || "",
@@ -139,6 +141,35 @@ export default function ProductForm({ product, units = [] }: Props) {
                     />
                     <ErrorMessage message={errors.supplier_name} />
 
+                </div>
+
+                {/* Warranty */}
+                <div className="space-y-2">
+                    <Label htmlFor="warranty">Warranty</Label>
+                    <div className="flex gap-2">
+                        <Input
+                            id="warranty"
+                            type="number"
+                            placeholder="Duration"
+                            value={data.warranty}
+                            onChange={(e) => setData("warranty", parseInt(e.target.value, 10) || "")}
+                            className="flex-1"
+                        />
+                        <Select
+                            onValueChange={(value) => setData("warranty_duration_unit", value)}
+                            defaultValue={data.warranty_duration_unit}
+                        >
+                            <SelectTrigger className="w-32">
+                                <SelectValue placeholder="Unit" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="months">Months</SelectItem>
+                                <SelectItem value="years">Years</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <ErrorMessage message={errors.warranty} />
+                    <ErrorMessage message={errors.warranty_duration_unit} />
                 </div>
 
                 {/* Unit */}

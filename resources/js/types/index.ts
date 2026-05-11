@@ -49,7 +49,8 @@ export interface User {
     name: string;
     email: string;
     email_verified_at: string | null;
-    phone: string;
+    phone?: string | null;
+    designation?: string | null;
     created_at: string;
     updated_at: string;
     deleted_at?: string | null;
@@ -122,11 +123,13 @@ export interface Product {
     stock_quantity: number;
     supplier_name: string | null;
     source: string | null;
+    warranty: number | null;
+    warranty_duration_unit: 'months' | 'years' | null;
     created_at: string;
     updated_at: string;
     deleted_at?: string | null;
-    unit:Unit;
-    unit_id:number;
+    unit: Unit;
+    unit_id: number;
 }
 
 export interface RequirementItem {

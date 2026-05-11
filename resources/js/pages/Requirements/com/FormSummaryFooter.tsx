@@ -18,7 +18,7 @@ export const FormSummaryFooter = ({ subTotal, vatAmount, aitAmount, grandTotal, 
                 <div className="flex flex-col gap-1 text-right text-xs text-muted-foreground font-medium">
                     <div>Sub-Total: {subTotal.toLocaleString()}</div>
                     {vatPercentage > 0 && <div>VAT ({vatPercentage}%): {vatAmount.toLocaleString()}</div>}
-                    {aitPercentage > 0 && <div>Total AIT ({aitPercentage}%): {aitAmount.toLocaleString()}</div>}
+                    {/* {aitPercentage > 0 && <div>Total AIT ({aitPercentage}%): {aitAmount.toLocaleString()}</div>} */}
                 </div>
                 <div className="text-right mt-2">
                     <p className="text-[10px] font-black uppercase text-muted-foreground">Grand Total</p>
