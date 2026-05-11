@@ -136,7 +136,14 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                             <tr key={item.id} className="hover:bg-muted/5 transition-colors">
                                                 <td className="px-6 py-4">
                                                     <p className="font-semibold">{item.product?.name}</p>
-                                                    <p className="text-[10px] text-muted-foreground mt-1 uppercase">Brand: {item.product?.brand || 'N/A'}</p>
+                                                    <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1">
+                                                        <p className="text-[10px] text-muted-foreground uppercase">Brand: {item.product?.brand || 'N/A'}</p>
+                                                        {item.product?.warranty && (
+                                                            <p className="text-[10px] text-muted-foreground uppercase font-bold text-blue-600">
+                                                                Warranty: {item.product.warranty} {item.product.warranty_duration_unit}
+                                                            </p>
+                                                        )}
+                                                    </div>
                                                 </td>
                                                 <td className="px-6 py-4 font-mono">{item.quantity} {item.product?.unit?.short_form}</td>
                                                 <td className="px-6 py-4 text-right font-mono text-xs text-muted-foreground">{formatCurrency(item.unit_price)}</td>

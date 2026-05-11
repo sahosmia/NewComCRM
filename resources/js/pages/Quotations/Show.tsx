@@ -58,7 +58,14 @@ export default function Show({ quotation }: Props) {
                         <tbody>
                             {quotation.items?.map((item) => (
                                 <tr key={item.id} className="border-t">
-                                    <td className="p-3">{item.description}</td>
+                                    <td className="p-3">
+                                        <p className="font-medium">{item.description}</p>
+                                        {item.product?.warranty && (
+                                            <p className="text-[10px] text-blue-600 font-bold uppercase mt-1">
+                                                Warranty: {item.product.warranty} {item.product.warranty_duration_unit}
+                                            </p>
+                                        )}
+                                    </td>
                                     <td className="p-3 text-right">{item.quantity}</td>
                                     <td className="p-3 text-right">${item.unit_price}</td>
                                     <td className="p-3 text-right">${item.total}</td>

@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('supplier_name')->nullable()->index();
             $table->foreignId('unit_id')->nullable()->constrained('units')->onDelete('set null');
             $table->text('source')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
