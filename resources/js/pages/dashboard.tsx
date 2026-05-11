@@ -110,7 +110,7 @@ export default function Dashboard({ stats, todayFollowups, upcomingMeetings, cha
                         value={stats.upcomingMeetings}
                         icon="calendar"
                         color="green"
-                        link="/meetings?status=upcoming"
+                        link="/meetings?status=scheduled"
                     />
                     <StatCard
                         title="Pending Follow-ups"
