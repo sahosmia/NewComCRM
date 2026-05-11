@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\FollowUp;
 use App\Models\Meeting;
 use App\Models\Quotation;
+use App\Models\Sale;
 use App\Models\User;
 
 class DashboardService
@@ -35,6 +36,7 @@ class DashboardService
             'upcomingMeetings' => Meeting::query()->upcoming()->count(),
             'monthlyQuotations' => Quotation::query()->whereMonth('created_at', now()->month)->count(),
             'totalRevenue' => Quotation::query()->accepted()->sum('total'),
+            'totalSalesAmount' => Sale::query()->sum('amount'),
             'pendingFollowups' => FollowUp::query()->pending()->count(),
         ];
     }

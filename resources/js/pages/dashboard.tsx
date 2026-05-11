@@ -14,6 +14,7 @@ interface DashboardProps {
         todayFollowups: number;
         upcomingMeetings: number;
         pendingFollowups: number;
+        totalSalesAmount?: number;
     };
     todayFollowups: any[];
     upcomingMeetings: any[];
@@ -46,7 +47,7 @@ export default function Dashboard({ stats, todayFollowups, upcomingMeetings, cha
                 </div>
 
                 {/* Stats Cards - Improved Gap and Responsive Grid */}
-                <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div className={`mb-10 grid grid-cols-1 gap-4 sm:grid-cols-2 ${stats.totalSalesAmount !== undefined ? 'lg:grid-cols-5' : 'lg:grid-cols-4'}`}>
                     <StatCard
                         title="Total Customers"
                         value={stats.totalCustomers}
@@ -75,6 +76,15 @@ export default function Dashboard({ stats, todayFollowups, upcomingMeetings, cha
                         color="red"
                         link="/follow-ups?status=pending"
                     />
+                    {stats.totalSalesAmount !== undefined && (
+                        <StatCard
+                            title="Total Sales"
+                            value={stats.totalSalesAmount}
+                            icon="dollar"
+                            color="blue"
+                            link="/sales"
+                        />
+                    )}
                 </div>
 
                 {/* Charts & Lists Section - Refined Grid Spacing */}
