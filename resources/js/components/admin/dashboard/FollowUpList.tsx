@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FollowUp } from "@/types/follow-up";
+import { InlineStatusUpdate } from "@/components/table/InlineStatusUpdate";
+import { FOLLOW_UP_OPTIONS } from "@/pages/FollowUps/Columns";
+import { Link } from "@inertiajs/react";
 
 function FollowUpList({ followups }: { followups: FollowUp[] }) {
     if (followups.length === 0) return (
@@ -50,8 +53,16 @@ function FollowUpList({ followups }: { followups: FollowUp[] }) {
                     </div>
 
                     <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm" className="h-8 text-xs">
-                            Details
+                        <InlineStatusUpdate
+                            id={item.id}
+                            currentStatus={item.status}
+                            routeName="follow-ups.update-status"
+                            options={FOLLOW_UP_OPTIONS}
+                        />
+                        <Button variant="ghost" size="sm" className="h-8 text-xs" asChild>
+                            <Link href={route('follow-ups.show', item.id)}>
+                                Details
+                            </Link>
                         </Button>
                     </div>
                 </div>

@@ -1,5 +1,7 @@
 import { Calendar, Clock, MapPin } from 'lucide-react';
-import { Meeting } from '@/types/metting';
+import { Meeting } from '@/types/index';
+import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
+import { MEETING_STATUS_OPTIONS } from '@/pages/Meetings/Columns';
 
 function MeetingList({ meetings }: { meetings: Meeting[] }) {
     if (meetings.length === 0) {
@@ -40,10 +42,18 @@ function MeetingList({ meetings }: { meetings: Meeting[] }) {
                     </div>
 
                     {/* Meeting Info */}
-                    <div className="flex flex-col gap-1 overflow-hidden">
-                        <h4 className="truncate text-sm font-semibold text-foreground">
-                            {meeting.title}
-                        </h4>
+                    <div className="flex-1 flex flex-col gap-1 overflow-hidden">
+                        <div className='flex items-center justify-between gap-2'>
+                            <h4 className="truncate text-sm font-semibold text-foreground">
+                                {meeting.title}
+                            </h4>
+                            <InlineStatusUpdate
+                                id={meeting.id}
+                                currentStatus={meeting.status}
+                                routeName="meetings.update-status"
+                                options={MEETING_STATUS_OPTIONS}
+                            />
+                        </div>
                         <div className="flex flex-col gap-0.5">
                             <span className="flex items-center text-[11px] text-muted-foreground">
                                 <Clock className="mr-1 h-3 w-3" />
