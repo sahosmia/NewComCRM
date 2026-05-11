@@ -30,23 +30,32 @@ export default function Show({ requirement }: { requirement: Requirement }) {
 
     // --- Calculation Logic ---
     const totals = useMemo(() => {
-        const itemsTotal = requirement.items?.reduce((sum: number, i: any) => sum + parseFloat(i.total_price), 0) || 0;
-        const accessoriesTotal = requirement.has_accessories ? (requirement.accessories_quantity * requirement.accessories_price) : 0;
-        const installationTotal = requirement.has_installation ? (requirement.installation_quantity * requirement.installation_price) : 0;
+        const aitPercentage = parseFloat(requirement.ait_percentage as string) || 0;
+        const vatPercentage = parseFloat(requirement.vat_percentage as string) || 0;
+
+        const aitFactor = (aitPercentage > 0 && aitPercentage < 100) ? (1 / (1 - (aitPercentage / 100))) : 1;
+
+        const itemsTotal = requirement.items?.reduce((sum: number, item: any) => {
+            return sum + (parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor;
+        }, 0) || 0;
+
+        const accessoriesTotal = requirement.has_accessories ? (Number(requirement.accessories_quantity) * Number(requirement.accessories_price) * aitFactor) : 0;
+        const installationTotal = requirement.has_installation ? (Number(requirement.installation_quantity) * Number(requirement.installation_price) * aitFactor) : 0;
 
         const subTotal = itemsTotal + accessoriesTotal + installationTotal;
+        const vatAmount = vatPercentage > 0 ? (subTotal * vatPercentage / 100) : 0;
 
-        const vatAmount = requirement.has_vat ? subTotal * (requirement.vat_percentage / 100) : 0;
-
-        // AIT calculation: Gross-up formula
-        const aitPercentage = parseFloat(requirement.ait_percentage as string) || 0;
-        const aitAmount = requirement.has_ait ? subTotal * (aitPercentage / (100 - aitPercentage)) : 0;
+        const baseSubtotal = subTotal / aitFactor;
+        const aitAmount = subTotal - baseSubtotal;
 
         return {
+            baseSubtotal,
             subTotal,
             vatAmount,
             aitAmount,
-            grandTotal: requirement.grand_total // Or subTotal + vatAmount + aitAmount if dynamic
+            aitPercentage,
+            vatPercentage,
+            grandTotal: subTotal + vatAmount
         };
     }, [requirement]);
 
@@ -164,24 +173,24 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                     </tbody>
 
                                     <tfoot className="bg-primary/2 border-t-2 border-primary/10">
-                                        {(requirement.has_vat || requirement.has_ait) && (
+                                        {(totals.vatPercentage > 0 || totals.aitPercentage > 0) && (
                                             <>
                                                 <tr>
                                                     <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">Sub-Total</td>
-                                                    <td className="px-6 py-2 text-right font-mono text-sm">{formatCurrency(totals.subTotal)}</td>
+                                                    <td className="px-6 py-2 text-right font-mono text-sm">{formatCurrency(totals.baseSubtotal)}</td>
                                                 </tr>
-                                                {requirement.has_vat && (
+                                                {totals.aitPercentage > 0 && (
                                                     <tr>
-                                                        <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">VAT ({requirement.vat_percentage}%)</td>
+                                                        <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">AIT Adjustment ({totals.aitPercentage}%)</td>
+                                                        <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">+ {formatCurrency(totals.aitAmount)}</td>
+                                                    </tr>
+                                                )}
+                                                {totals.vatPercentage > 0 && (
+                                                    <tr>
+                                                        <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">VAT ({totals.vatPercentage}%)</td>
                                                         <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">+ {formatCurrency(totals.vatAmount)}</td>
                                                     </tr>
                                                 )}
-                                                {/* {requirement.has_ait && (
-                                                    <tr>
-                                                        <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">AIT Adjustment ({requirement.ait_percentage}%)</td>
-                                                        <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">+ {formatCurrency(totals.aitAmount)}</td>
-                                                    </tr>
-                                                )} */}
                                             </>
                                         )}
                                         <tr>

@@ -102,7 +102,8 @@ class Requirement extends Model
         // VAT/Tax (Add-on Logic): Total = Subtotal + (Subtotal * VAT_Percentage / 100)
         $vatAmount = $this->vat_percentage > 0 ? ($subTotal * ($this->vat_percentage / 100)) : 0;
 
-     
+        $this->grand_total = $subTotal + $vatAmount;
+        $this->save();
     }
 
 

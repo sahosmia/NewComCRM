@@ -570,59 +570,69 @@
                     @endphp
                     @php
                         $currentSl = count($requirement->items);
+                        $aitFactor = ($requirement->ait_percentage > 0 && $requirement->ait_percentage < 100) ? (1 / (1 - ($requirement->ait_percentage / 100))) : 1;
                     @endphp
                     @if ($requirement->has_accessories)
                         <tr>
-                            <td class="text-center">{{ str_pad($currentSl, 2, '0', STR_PAD_LEFT) }}</td>
+                            <td class="text-center">{{ str_pad(++$currentSl, 2, '0', STR_PAD_LEFT) }}</td>
                             <td><strong>Accessories Charge</strong> ({{ $requirement->accessories_title }})</td>
                             <td class="text-center">{{ $requirement->accessories_quantity }}
-                                {{ $requirement->accessories_unit_id }}</td>
+                                {{ $requirement->accessoriesUnit->short_form ?? '' }}</td>
                             <td class="text-right">{{ number_format($requirement->accessories_price, 0) }}</td>
                             <td class="text-right">
-                                {{ number_format(($requirement->accessories_price * $requirement->accessories_quantity * 100) / (100 - $requirement->ait_percentage), 0) }}/=
+                                {{ number_format($requirement->accessories_price * $requirement->accessories_quantity * $aitFactor, 0) }}/=
                             </td>
 
                         </tr>
-                        @php $grandTotal += ($requirement->accessories_price * $requirement->accessories_quantity *100) / (100 - $requirement->ait_percentage); @endphp
+                        @php $grandTotal += ($requirement->accessories_price * $requirement->accessories_quantity * $aitFactor); @endphp
                     @endif
                     @if ($requirement->has_installation)
                         <tr>
-                            <td class="text-center">{{ str_pad($currentSl, 2, '0', STR_PAD_LEFT) }}</td>
+                            <td class="text-center">{{ str_pad(++$currentSl, 2, '0', STR_PAD_LEFT) }}</td>
                             <td><strong>Installation Charge</strong> ({{ $requirement->installation_title }})</td>
                             <td class="text-center">{{ $requirement->installation_quantity }}
-                                {{ $requirement->installation_unit_id }}</td>
+                                {{ $requirement->installationUnit->short_form ?? '' }}</td>
                             <td class="text-right">{{ number_format($requirement->installation_price, 0) }}</td>
                             <td class="text-right">
-                                {{ number_format(($requirement->installation_price * $requirement->installation_quantity * 100) / (100 - $requirement->ait_percentage), 0) }}/=
+                                {{ number_format($requirement->installation_price * $requirement->installation_quantity * $aitFactor, 0) }}/=
                             </td>
 
                         </tr>
-                        @php $grandTotal += ($requirement->installation_price * $requirement->installation_quantity *100) / (100 - $requirement->ait_percentage); @endphp
+                        @php $grandTotal += ($requirement->installation_price * $requirement->installation_quantity * $aitFactor); @endphp
                     @endif
 
-                    <tr class="total-row">
-                        <td colspan="3" rowspan="3" style="border: none; background: white; vertical-align: top;">
-                            <div class="amount-in-word">
+                    @php
+                        $baseSubtotal = $grandTotal / $aitFactor;
+                        $aitAmount = $grandTotal - $baseSubtotal;
+                        $vatAmount = ($requirement->vat_percentage > 0) ? ($grandTotal * ($requirement->vat_percentage / 100)) : 0;
+                        $finalTotal = $grandTotal + $vatAmount;
+                    @endphp
 
-                                @php
-                                    $finalAmount = round(
-                                        $grandTotal + $grandTotal * ($requirement->vat_percentage / 100),
-                                    );
-                                @endphp
-                                Amount in word: {{ ucfirst(numberToWords($finalAmount)) }} only.
+                    <tr class="total-row">
+                        <td colspan="3" rowspan="{{ 1 + ($requirement->ait_percentage > 0 ? 1 : 0) + ($requirement->vat_percentage > 0 ? 1 : 0) + 1 }}" style="border: none; background: white; vertical-align: top;">
+                            <div class="amount-in-word">
+                                Amount in word: {{ ucfirst(numberToWords(round($finalTotal))) }} only.
                             </div>
                         </td>
-                        <td class="text-right">Total</td>
-                        <td class="text-right">{{ number_format($grandTotal, 0) }}/=</td>
+                        <td class="text-right">Sub-Total</td>
+                        <td class="text-right">{{ number_format($baseSubtotal, 0) }}/=</td>
                     </tr>
+                    @if($requirement->ait_percentage > 0)
                     <tr class="total-row">
-                        <td class="text-right">VAT</td>
-                        <td class="text-right">{{ $requirement->vat_percentage }}%</td>
+                        <td class="text-right">AIT ({{ number_format($requirement->ait_percentage, 0) }}%)</td>
+                        <td class="text-right">{{ number_format($aitAmount, 0) }}/=</td>
                     </tr>
+                    @endif
+                    @if($requirement->vat_percentage > 0)
+                    <tr class="total-row">
+                        <td class="text-right">VAT ({{ number_format($requirement->vat_percentage, 0) }}%)</td>
+                        <td class="text-right">{{ number_format($vatAmount, 0) }}/=</td>
+                    </tr>
+                    @endif
                     <tr class="total-row">
                         <td class="text-right">Grand Total</td>
                         <td class="text-right">
-                            {{ number_format($grandTotal + $grandTotal * ($requirement->vat_percentage / 100), 0) }}/=
+                            {{ number_format($finalTotal, 0) }}/=
                         </td>
                     </tr>
                 </tbody>
