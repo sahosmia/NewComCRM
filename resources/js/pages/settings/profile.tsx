@@ -40,7 +40,7 @@ export default function Profile({
                     <Heading
                         variant="small"
                         title="Profile information"
-                        description="Update your name and email address"
+                        description="Update your profile information"
                     />
 
                     <Form
@@ -88,6 +88,69 @@ export default function Profile({
                                     <InputError
                                         className="mt-2"
                                         message={errors.email}
+                                    />
+                                </div>
+
+                                <div className="grid gap-2">
+                                    <Label htmlFor="phone">Phone</Label>
+
+                                    <Input
+                                        id="phone"
+                                        className="mt-1 block w-full"
+                                        defaultValue={auth.user.phone}
+                                        name="phone"
+                                        placeholder="Phone number"
+                                    />
+
+                                    <InputError
+                                        className="mt-2"
+                                        message={errors.phone}
+                                    />
+                                </div>
+
+                                <div className="grid gap-2">
+                                    <Label htmlFor="designation">
+                                        Designation
+                                    </Label>
+
+                                    <Input
+                                        id="designation"
+                                        className="mt-1 block w-full"
+                                        defaultValue={auth.user.designation}
+                                        name="designation"
+                                        placeholder="Designation"
+                                    />
+
+                                    <InputError
+                                        className="mt-2"
+                                        message={errors.designation}
+                                    />
+                                </div>
+
+                                <div className="grid gap-2">
+                                    <Label htmlFor="signature">Signature</Label>
+
+                                    {auth.user.signature_url && (
+                                        <div className="mt-2">
+                                            <img
+                                                src={auth.user.signature_url}
+                                                alt="Current signature"
+                                                className="h-20 w-auto rounded border bg-white object-contain"
+                                            />
+                                        </div>
+                                    )}
+
+                                    <Input
+                                        id="signature"
+                                        type="file"
+                                        className="mt-1 block w-full"
+                                        name="signature"
+                                        accept="image/*"
+                                    />
+
+                                    <InputError
+                                        className="mt-2"
+                                        message={errors.signature}
                                     />
                                 </div>
 

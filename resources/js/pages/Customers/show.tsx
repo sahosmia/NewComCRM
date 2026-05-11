@@ -2,11 +2,11 @@ import AppLayout from "@/layouts/app-layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare, LayoutList, Plus } from "lucide-react";
+import { Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare, LayoutList, Plus, Video } from "lucide-react";
 import { Head, Link } from "@inertiajs/react";
-import { CustomerType, FollowUp, Requirement } from "@/types";
+import { CustomerType, FollowUp, Meeting, Requirement } from "@/types";
 
-export default function Show({ customer }: { customer: CustomerType & { requirements: Requirement[], follow_ups: FollowUp[] } }) {
+export default function Show({ customer }: { customer: CustomerType & { requirements: Requirement[], follow_ups: FollowUp[], meetings: Meeting[] } }) {
     return (
         <AppLayout
             breadcrumbs={[
@@ -26,7 +26,6 @@ export default function Show({ customer }: { customer: CustomerType & { requirem
                             <Badge className="capitalize">{customer.status}</Badge>
                             <Badge variant="outline" className="capitalize">{customer.type}</Badge>
                         </div>
-                        <p className="text-muted-foreground mt-1">{customer.designation} at <span className="font-semibold text-foreground">{customer.company?.name || 'N/A'}</span></p>
                     </div>
                     <div className="flex gap-2">
                         <Button variant="outline" asChild>
@@ -51,6 +50,14 @@ export default function Show({ customer }: { customer: CustomerType & { requirem
                                 <CardTitle className="text-sm font-medium uppercase text-muted-foreground tracking-wider">Contact Information</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
+                                <div className="flex items-start gap-3">
+                                    <Mail className="w-4 h-4 mt-1 text-primary" />
+                                    <div>
+                                        <p className="text-sm font-medium">Company</p>
+                                        <p className="text-sm text-muted-foreground">{customer.designation} at <span className="font-semibold text-foreground">{customer.company?.name || 'N/A'}</span></p>
+                                    </div>
+                                </div>
+
                                 <div className="flex items-start gap-3">
                                     <Mail className="w-4 h-4 mt-1 text-primary" />
                                     <div>
@@ -139,19 +146,19 @@ export default function Show({ customer }: { customer: CustomerType & { requirem
                             </CardHeader>
                             <CardContent className="p-0">
                                 <div className="overflow-x-auto">
-                                    <table className="w-full text-sm text-left">
-                                        <thead className="bg-muted/50 text-muted-foreground uppercase text-[10px] font-bold">
-                                            <tr>
-                                                <th className="px-4 py-3">ID</th>
-                                                <th className="px-4 py-3">Date</th>
-                                                <th className="px-4 py-3">Total Amount</th>
-                                                <th className="px-4 py-3">Status</th>
-                                                <th className="px-4 py-3 text-right">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y">
-                                            {customer.requirements?.length > 0 ? (
-                                                customer.requirements.map((req: any) => (
+                                    {customer.requirements?.length > 0 ? (
+                                        <table className="w-full text-sm text-left">
+                                            <thead className="bg-muted/50 text-muted-foreground uppercase text-[10px] font-bold">
+                                                <tr>
+                                                    <th className="px-4 py-3">ID</th>
+                                                    <th className="px-4 py-3">Date</th>
+                                                    <th className="px-4 py-3">Total Amount</th>
+                                                    <th className="px-4 py-3">Status</th>
+                                                    <th className="px-4 py-3 text-right">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y">
+                                                {customer.requirements.map((req: any) => (
                                                     <tr key={req.id} className="hover:bg-muted/30 transition-colors">
                                                         <td className="px-4 py-3 font-medium">#{req.id}</td>
                                                         <td className="px-4 py-3 text-muted-foreground">
@@ -161,12 +168,11 @@ export default function Show({ customer }: { customer: CustomerType & { requirem
                                                             ৳ {parseFloat(req.grand_total).toLocaleString()}
                                                         </td>
                                                         <td className="px-4 py-3">
-                                                            <Badge variant="secondary" className={`
-                                        capitalize font-normal
-                                        ${req.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : ''}
-                                        ${req.status === 'completed' ? 'bg-green-100 text-green-700' : ''}
-                                        ${req.status === 'cancelled' ? 'bg-red-100 text-red-700' : ''}
-                                    `}>
+                                                            <Badge variant="secondary" className={` capitalize font-normal
+                                                                ${req.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : ''}
+                                                                ${req.status === 'completed' ? 'bg-green-100 text-green-700' : ''}
+                                                                ${req.status === 'cancelled' ? 'bg-red-100 text-red-700' : ''}
+                                                            `}>
                                                                 {req.status}
                                                             </Badge>
                                                         </td>
@@ -176,16 +182,14 @@ export default function Show({ customer }: { customer: CustomerType & { requirem
                                                             </Button>
                                                         </td>
                                                     </tr>
-                                                ))
-                                            ) : (
-                                                <tr>
-                                                    <td colSpan={5} className="text-center py-10 text-muted-foreground">
-                                                        No requirements found for this customer.
-                                                    </td>
-                                                </tr>
-                                            )}
-                                        </tbody>
-                                    </table>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    ) : (
+                                        <div className="text-center py-10 text-muted-foreground">
+                                            No requirements found for this customer.
+                                        </div>
+                                    )}
                                 </div>
                             </CardContent>
                         </Card>
@@ -252,6 +256,72 @@ export default function Show({ customer }: { customer: CustomerType & { requirem
                                         </div>
                                         <p className="text-sm text-muted-foreground font-medium">No follow-ups recorded yet.</p>
                                         <p className="text-xs text-muted-foreground/70 mt-1">Start tracking interactions with this customer.</p>
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+
+                        {/* Meetings Section */}
+                        <Card>
+                            <CardHeader className="flex flex-row justify-between items-center py-4">
+                                <CardTitle className="text-lg flex items-center gap-2">
+                                    <Video className="w-5 h-5 text-primary" />
+                                    Meeting History
+                                </CardTitle>
+                                <Button size="sm" variant="outline" asChild>
+                                    <Link href={route("meetings.create", { customer_id: customer.id })}>
+                                        <Plus className="w-4 h-4 mr-1" /> Schedule Meeting
+                                    </Link>
+                                </Button>
+                            </CardHeader>
+                            <CardContent>
+                                {customer.meetings?.length > 0 ? (
+                                    <div className="relative space-y-6 before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-muted-foreground/20 before:to-transparent">
+                                        {customer.meetings.map((m: any) => (
+                                            <div key={m.id} className="relative flex items-start gap-4 group">
+                                                {/* Timeline Dot */}
+                                                <div className={`mt-1.5 h-10 w-10 rounded-full border-4 border-background flex items-center justify-center shrink-0 z-10 shadow-sm
+                            ${m.status === 'completed' ? 'bg-emerald-500 text-white' : m.status === 'cancelled' ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'}`}>
+                                                    <Video className="w-4 h-4" />
+                                                </div>
+
+                                                {/* Content Card */}
+                                                <div className="flex-1 bg-muted/20 p-4 rounded-xl border border-transparent group-hover:border-primary/20 transition-all">
+                                                    <div className="flex justify-between items-start mb-1">
+                                                        <h4 className="font-semibold text-sm capitalize">{m.title}</h4>
+                                                        <time className="text-[10px] text-muted-foreground font-medium uppercase tracking-tighter">
+                                                            {new Date(m.scheduled_at).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                                        </time>
+                                                    </div>
+                                                    <p className="text-sm text-muted-foreground line-clamp-2 italic">
+                                                        "{m.agenda || "No agenda provided."}"
+                                                    </p>
+
+                                                    <div className="mt-3 flex items-center gap-4">
+                                                        <Badge variant="secondary" className="text-[10px] h-5">
+                                                            Type: {m.meeting_type}
+                                                        </Badge>
+                                                        <Badge variant="outline" className="text-[10px] h-5 capitalize">
+                                                            {m.status}
+                                                        </Badge>
+                                                        <Link
+                                                            href={route('meetings.show', m.id)}
+                                                            className="text-[11px] text-primary hover:underline font-medium"
+                                                        >
+                                                            Details →
+                                                        </Link>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-12">
+                                        <div className="bg-muted/50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+                                            <Video className="w-6 h-6 text-muted-foreground/50" />
+                                        </div>
+                                        <p className="text-sm text-muted-foreground font-medium">No meetings scheduled yet.</p>
+                                        <p className="text-xs text-muted-foreground/70 mt-1">Keep track of physical or virtual meetings.</p>
                                     </div>
                                 )}
                             </CardContent>

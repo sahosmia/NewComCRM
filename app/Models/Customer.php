@@ -74,10 +74,7 @@ class Customer extends Model
         return $this->hasMany(Meeting::class);
     }
 
-    public function quotations()
-    {
-        return $this->hasMany(Quotation::class);
-    }
+    
 
 
 

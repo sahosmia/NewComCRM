@@ -3,103 +3,60 @@
 namespace Database\Seeders;
 
 use App\Models\Customer;
-use App\Models\Product;
-use App\Models\User;
 use App\Models\Company;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class CustomerSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
-        $users = User::all();
+        $companies = Company::all();
+        $users = User::where('role', 'user')->get();
 
-        if ($users->isEmpty()) {
-            $this->command->warn("No users found. Please seed users first.");
+        if ($companies->isEmpty() || $users->isEmpty()) {
+            $this->command->warn('Companies or Users not found. Skipping CustomerSeeder.');
             return;
         }
 
-        $customers = [
+        $realCustomers = [
             [
-                'name' => 'Musabbir',
-                'designation' => 'Manager',
-                'company_name' => 'Samuda Chemical Com',
-                'phones' => ['01799-992813', '01800-000000'],
-                'email' => 'contact@samuda.com',
-                'addresses' => ['T.K Bhaban (8th & 9th F), Dhaka'],
-                'type' => 'corporate',
-                'status' => 'active',
-                'remarks' => 'Key account for chemical supplies.',
-            ],
-            [
-                'name' => 'Rahman Ahmed',
-                'designation' => 'Director',
-                'company_name' => 'Tech Solutions Ltd',
-                'phones' => ['01811-223344'],
-                'email' => 'rahman@techsolutions.com',
-                'addresses' => ['Gulshan-2, Dhaka', 'Banani, Dhaka'],
-                'type' => 'corporate',
-                'status' => 'active'
-            ],
-            [
-                'name' => 'Fatema Begum',
+                'name' => 'Md. Rahim Ullah',
                 'designation' => 'Procurement Officer',
-                'company_name' => 'Global Electronics',
-                'phones' => ['01922-334455'],
-                'email' => 'fatema@globalelec.com',
-                'addresses' => ['Sector 4, Uttara, Dhaka'],
-                'type' => 'reseller',
-                'status' => 'active'
+                'company_id' => $companies->where('name', 'Square Pharmaceuticals Ltd.')->first()?->id,
+                'email' => 'rahim@squarepharma.com.bd',
+                'type' => 'corporate',
+                'phones' => ['01711223344', '01811223344'],
+                'addresses' => ['Dhaka, Bangladesh'],
+                'assigned_to' => $users->random()->id,
             ],
             [
-                'name' => 'Kamal Hossain',
+                'name' => 'Fatima Tuz Zohra',
+                'designation' => 'IT Manager',
+                'company_id' => $companies->where('name', 'Grameenphone Ltd.')->first()?->id,
+                'email' => 'fatima@grameenphone.com',
+                'type' => 'corporate',
+                'phones' => ['01700000001'],
+                'addresses' => ['Bashundhara R/A, Dhaka'],
+                'assigned_to' => $users->random()->id,
+            ],
+            [
+                'name' => 'Abdul Karim',
                 'designation' => 'Owner',
-                'company_name' => 'Kamal Enterprise',
-                'phones' => ['01533-445566'],
-                'email' => 'kamal@enterprise.com',
-                'addresses' => ['Motijheel C/A, Dhaka'],
+                'company_id' => null,
+                'email' => 'karim@example.com',
                 'type' => 'personal',
-                'status' => 'active'
+                'phones' => ['01911998877'],
+                'addresses' => ['Mirpur, Dhaka'],
+                'assigned_to' => $users->random()->id,
             ],
         ];
 
-        foreach ($customers as $customerData) {
-            $company = Company::firstOrCreate([
-                'name' => $customerData['company_name']
-            ]);
-
-            unset($customerData['company_name']);
-
-            $customer = Customer::create(array_merge($customerData, [
-                'company_id' => $company->id,
-                'assigned_to' => $users->random()->id
-            ]));
-
-            $this->createRequirementWithItems($customer);
+        foreach ($realCustomers as $customerData) {
+            Customer::create($customerData);
         }
 
-        Customer::factory()->count(10)->create()->each(function ($customer) {
-            $this->createRequirementWithItems($customer);
-        });
-    }
-
-    private function createRequirementWithItems($customer)
-    {
-        $requirement = $customer->requirements()->create([
-            'notes' => 'Generated via Seeder',
-            'status' => 'pending'
-        ]);
-
-        $products = Product::inRandomOrder()->take(rand(1, 4))->get();
-
-        foreach ($products as $product) {
-            $quantity = rand(1, 10);
-
-            $requirement->items()->create([
-                'product_id' => $product->id,
-                'quantity'   => $quantity,
-                'unit_price' => $product->unit_price,
-            ]);
-        }
+        // Create additional 10 customers using factory
+        Customer::factory()->count(10)->create();
     }
 }

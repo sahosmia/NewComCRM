@@ -42,10 +42,7 @@ class Product extends Model
         return $this->hasMany(Requirement::class);
     }
 
-    public function quotationItems()
-    {
-        return $this->hasMany(QuotationItem::class);
-    }
+    
 
     // Scopes
     public function scopeByBrand($query, $brand)

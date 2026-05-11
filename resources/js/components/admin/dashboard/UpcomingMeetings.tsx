@@ -1,5 +1,5 @@
 import { Calendar, Clock, MapPin } from 'lucide-react';
-import { Meeting } from '@/types/metting';
+import { Meeting } from '@/types';
 
 function MeetingList({ meetings }: { meetings: Meeting[] }) {
     if (meetings.length === 0) {

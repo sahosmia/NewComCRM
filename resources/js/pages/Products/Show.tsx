@@ -12,7 +12,8 @@ import {
     CircleDollarSign,
     Box,
     FileText,
-    ExternalLink
+    ExternalLink,
+    ShieldCheck
 } from "lucide-react";
 import { Product } from "@/types";
 
@@ -55,6 +56,11 @@ export default function Show({ product }: { product: Product }) {
                             <div className="space-y-4">
                                 <InfoItem icon={<Tag className="w-4 h-4" />} label="Brand" value={product.brand} />
                                 <InfoItem icon={<Package className="w-4 h-4" />} label="Model" value={product.model} />
+                                <InfoItem
+                                    icon={<ShieldCheck className="w-4 h-4" />}
+                                    label="Warranty"
+                                    value={product.warranty ? `${product.warranty} ${product.warranty_duration_unit}` : "No warranty"}
+                                />
                             </div>
                             <div className="space-y-4">
                                 <InfoItem icon={<Layers className="w-4 h-4" />} label="Category" value={product.category} />

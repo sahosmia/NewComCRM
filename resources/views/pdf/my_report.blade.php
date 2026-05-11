@@ -447,9 +447,9 @@
                                 <strong>{{ $item->product->name }}</strong> -
                                 Brand & Model: {{ $item->product->brand }} {{ $item->product->model }}<br>
                                 {{ $item->product->description }}
-                                {{-- @if ($item->warranty)
-                                    <strong>Warranty:</strong> {{ $item->warranty }}
-                                @endif --}}
+                                @if ($item->product->warranty)
+                                    <br><strong>Warranty:</strong> {{ $item->product->warranty }} {{ $item->product->warranty_duration_unit }}
+                                @endif
                             </td>
                             <td class="text-center">{{ $item->quantity }} {{ $item->product->unit->title ?? 'Unit' }}
                             </td>

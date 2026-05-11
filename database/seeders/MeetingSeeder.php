@@ -2,69 +2,25 @@
 
 namespace Database\Seeders;
 
-use App\Models\Customer;
 use App\Models\Meeting;
+use App\Models\Customer;
 use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class MeetingSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-          $customers = Customer::all();
-        $users = User::where('role', 'user')->get();
+        $customers = Customer::all();
 
-        $types = ['physical', 'virtual', 'phone'];
-        $statuses = ['scheduled', 'completed', 'cancelled'];
-
-        // Today's meetings
-        foreach (range(1, 3) as $i) {
-            $scheduledAt = Carbon::today()->setTime(rand(10, 16), 0);
-            Meeting::create([
-                'customer_id' => $customers->random()->id,
-                'user_id' => $users->random()->id,
-                'title' => 'Product Demo Meeting',
-                'scheduled_at' => $scheduledAt,
-                'meeting_type' => $types[array_rand($types)],
-                'location' => 'Conference Room / Zoom',
-                'agenda' => 'Discuss requirements and demonstrate products',
-                'status' => 'scheduled'
-            ]);
+        if ($customers->isEmpty()) {
+            return;
         }
 
-        // Upcoming meetings
-        foreach (range(1, 8) as $i) {
-            $scheduledAt = Carbon::today()->addDays(rand(1, 7))->setTime(rand(10, 16), 0);
-            Meeting::create([
-                'customer_id' => $customers->random()->id,
-                'user_id' => $users->random()->id,
-                'title' => 'Follow-up Meeting',
-                'scheduled_at' => $scheduledAt,
-                'meeting_type' => $types[array_rand($types)],
-                'location' => 'Customer Office / Online',
-                'agenda' => 'Review quotation and finalize order',
-                'status' => 'scheduled'
-            ]);
-        }
-
-        // Past meetings
-        foreach (range(1, 20) as $i) {
-            $scheduledAt = Carbon::today()->subDays(rand(1, 30))->setTime(rand(10, 16), 0);
-            Meeting::create([
-                'customer_id' => $customers->random()->id,
-                'user_id' => $users->random()->id,
-                'title' => 'Initial Meeting',
-                'scheduled_at' => $scheduledAt,
-                'meeting_type' => $types[array_rand($types)],
-                'location' => 'Various',
-                'agenda' => 'Introduction and requirement gathering',
-                'status' => $statuses[array_rand(['completed', 'cancelled'])],
-                'notes' => 'Customer showed interest in our products'
+        foreach ($customers->random(min(5, $customers->count())) as $customer) {
+            Meeting::factory()->count(2)->create([
+                'customer_id' => $customer->id,
+                'user_id' => $customer->assigned_to,
             ]);
         }
     }

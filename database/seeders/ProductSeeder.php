@@ -1,47 +1,57 @@
 <?php
+
 namespace Database\Seeders;
 
 use App\Models\Product;
+use App\Models\Unit;
 use Illuminate\Database\Seeder;
 
 class ProductSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
-        $piece = \App\Models\Unit::where('short_form', 'Pcs')->first();
-        $roll = \App\Models\Unit::where('short_form', 'Roll')->first();
+        $units = Unit::all();
 
-        $products = [
+        if ($units->isEmpty()) {
+            $this->command->warn('Units not found. Skipping ProductSeeder.');
+            return;
+        }
+
+        $realProducts = [
             [
-                'name' => 'Cat 6 UTP Cable',
+                'name' => 'Cat6 Network Cable',
                 'brand' => 'Rosenberger',
                 'model' => 'CP1104',
-                'unit_price' => 20000,
                 'category' => 'Cable',
-                'description' => '305 meter box',
+                'unit_price' => 15000,
+                'unit_id' => $units->where('short_form', 'Roll')->first()?->id ?? $units->random()->id,
                 'stock_quantity' => 50,
-                'supplier_name' => 'Global Tech',
-                'source' => 'Imported from Singapore',
-                'unit_id' => $roll?->id,
             ],
             [
-                'name' => 'PoE Switch 8 Port',
-                'brand' => 'UNV',
-                'model' => 'NSW2010-12P',
-                'unit_price' => 4500,
+                'name' => '24 Port Gigabit Switch',
+                'brand' => 'Cisco',
+                'model' => 'CBS250-24T-4G',
                 'category' => 'Switch',
-                'description' => 'High speed PoE',
-                'stock_quantity' => 25,
-                'supplier_name' => 'Star Tech',
-                'source' => 'Local Market',
-                'unit_id' => $piece?->id,
+                'unit_price' => 35000,
+                'unit_id' => $units->where('short_form', 'Pcs')->first()?->id ?? $units->random()->id,
+                'stock_quantity' => 20,
+            ],
+            [
+                'name' => 'Optical Fiber Patch Cord',
+                'brand' => 'CommScope',
+                'model' => 'LC-SC Duplex',
+                'category' => 'Accessories',
+                'unit_price' => 1200,
+                'unit_id' => $units->where('short_form', 'Pcs')->first()?->id ?? $units->random()->id,
+                'stock_quantity' => 100,
             ],
         ];
 
-        foreach ($products as $product) {
-            Product::create($product);
+        foreach ($realProducts as $productData) {
+            Product::create($productData);
         }
 
-        Product::factory()->count(10)->create();
+        // Create 20 more products using factory
+        Product::factory()->count(20)->create();
     }
 }

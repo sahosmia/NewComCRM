@@ -39,7 +39,6 @@ export function AppSidebar() {
         { title: 'Requirements', href: route('requirements.index'), icon: ClipboardList },
         { title: 'Follow-ups', href: route('follow-ups.index'), icon: PhoneCall },
         { title: 'Meetings', href: route('meetings.index'), icon: CalendarDays },
-        { title: 'Quotations', href: route('quotations.index'), icon: FileText },
         { title: 'Sales', href: route('sales.index'), icon: BadgeDollarSign },
         { title: 'Products', href: route('products.index'), icon: Package },
         { title: 'Units', href: route('units.index'), icon: Ruler },

@@ -21,7 +21,7 @@ class RequirementObserver
                 $this->createSale($requirement);
             }
 
-            if ($newStatus === 'cancel' && $oldStatus === 'purchased') {
+            if ($oldStatus === 'purchased' && $newStatus !== 'purchased') {
                 $this->increaseStock($requirement);
                 $this->cancelSale($requirement);
             }

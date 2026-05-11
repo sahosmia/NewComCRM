@@ -32,7 +32,7 @@ export default function CustomerForm({ customer, users, companies }: Props) {
         designation: customer?.designation ?? "",
         company_id: customer?.company_id ?? "",
         email: customer?.email ?? "",
-        assigned_to: customer?.assigned_to ?? "",
+        assigned_to: customer?.assigned_to ?? (users.length === 1 ? users[0].id : ""),
         status: customer?.status ?? "active",
         type: customer?.type ?? "corporate",
         phones: customer?.phones?.length ? customer.phones : [""],
@@ -81,7 +81,6 @@ export default function CustomerForm({ customer, users, companies }: Props) {
                             <ErrorMessage message={errors.email} />
                         </div>
 
-                        <div className="grid sm:grid-cols-2 gap-4">
                             <div className="grid gap-2">
                                 <GenericCombobox
                                     label="Company"
@@ -98,7 +97,6 @@ export default function CustomerForm({ customer, users, companies }: Props) {
                                 <FormLabel>Designation</FormLabel>
                                 <Input value={data.designation} onChange={e => setData("designation", e.target.value)} placeholder="Manager" />
                             </div>
-                        </div>
 
                         {/* Phone Numbers - Dynamic List */}
                         <div className="space-y-3">

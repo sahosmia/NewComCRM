@@ -13,12 +13,12 @@ const columns: Column<CustomerType>[] = [
     {
         header: 'Customer',
         accessor: (item) => (
-            <div className="flex flex-col">
+            <div className="flex flex-col min-w-0 max-w-48">
                 <div className="flex items-center gap-2">
                     <span className="font-medium text-foreground">{item.name}</span>
 
                 </div>
-                <span className="text-xs text-muted-foreground">{item.designation || 'No Designation'}</span>
+                <span className="text-xs text-muted-foreground truncate">{item.designation || 'No Designation'}</span>
             </div>
         ),
         className: 'w-[25%]',
@@ -26,7 +26,7 @@ const columns: Column<CustomerType>[] = [
     {
         header: 'Company',
         accessor: (item) => (
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 min-w-0 max-w-45">
                 <div className="flex items-center gap-2">
                     <Building2 className="w-3.5 h-3.5 text-muted-foreground" />
                     <span className="text-sm font-medium truncate">{item.company?.name || 'N/A'}</span>
@@ -44,7 +44,7 @@ const columns: Column<CustomerType>[] = [
     {
         header: 'Contact',
         accessor: (item) => (
-            <div className="flex flex-col text-sm">
+            <div className="flex flex-col text-sm min-w-0 max-w-50">
                 <div className="flex items-center gap-1 font-medium">
                     <Phone className="w-3 h-3" />
                     {item.phones && item.phones[0] ? item.phones[0] : 'N/A'}

@@ -5,9 +5,12 @@ const columns: Column<Product>[] = [
     {
         header: 'Product Details',
         accessor: (item) => (
-            <div className="flex flex-col">
+            <div className="flex flex-col min-w-0 max-w-48">
                 <span className="font-medium text-foreground">{item.name}</span>
-                <span className="text-xs text-muted-foreground truncate">{item.brand} {item.model ? `| ${item.model}` : ''}</span>
+                <span className="text-xs text-muted-foreground truncate">{item.brand} {item.model ? `| ${item.model}` : ''}
+                </span>
+                <span className="text-xs text-muted-foreground truncate">{item.warranty ? `  Warranty: ${item.warranty} ${item.warranty_duration_unit}` : ''}
+                </span>
             </div>
         ),
     },
@@ -22,7 +25,7 @@ const columns: Column<Product>[] = [
         header: 'Description',
         accessor: (item) => (
             <div className="max-w-62.5 min-w-37.5">
-                <p className="text-xs text-muted-foreground whitespace-normal wrap-break-word leading-relaxed">
+                <p className="text-xs text-muted-foreground whitespace-normal wrap-break-word leading-relaxed line-clamp-2">
                     {item.description || "No description."}
                 </p>
             </div>

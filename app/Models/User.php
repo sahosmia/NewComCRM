@@ -79,10 +79,7 @@ class User extends Authenticatable
         return $this->hasMany(Meeting::class);
     }
 
-    public function quotations()
-    {
-        return $this->hasMany(Quotation::class);
-    }
+  
 
     // Scopes
     public function scopeSuperAdmin($query)

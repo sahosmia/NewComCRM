@@ -49,7 +49,7 @@ class Requirement extends Model
         'vat_percentage' => 'decimal:2',
         'accessories_price' => 'decimal:2',
         'installation_price' => 'decimal:2',
-                'accessories_quantity' => 'integer',
+        'accessories_quantity' => 'integer',
         'installation_quantity' => 'integer',
 
     ];
@@ -102,8 +102,7 @@ class Requirement extends Model
         // VAT/Tax (Add-on Logic): Total = Subtotal + (Subtotal * VAT_Percentage / 100)
         $vatAmount = $this->vat_percentage > 0 ? ($subTotal * ($this->vat_percentage / 100)) : 0;
 
-     
+        $this->grand_total = round($subTotal + $vatAmount, 2);
+        $this->save();
     }
-
-
 }

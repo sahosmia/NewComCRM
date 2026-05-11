@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Customer;
-use App\Models\Requirement;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,20 +11,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-
         $this->call([
-            UserSeeder::class,
             UnitSeeder::class,
-
-            ProductSeeder::class,
+            CompanySeeder::class,
+            UserSeeder::class,
             CustomerSeeder::class,
+            ProductSeeder::class,
+            RequirementSeeder::class,
             FollowUpSeeder::class,
             MeetingSeeder::class,
-            RequirementSeeder::class,
-        ]);
-
-        Customer::factory()->count(5)->state(['status' => 'inactive'])->create();
+            SaleSeeder::class,]);
     }
 }
