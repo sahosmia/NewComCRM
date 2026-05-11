@@ -3,7 +3,6 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 interface ChartDataItem {
     name: string;
     followups: number;
-    quotations: number;
 }
 
 export default function SalesChart({ data }: { data: ChartDataItem[] }) {
@@ -33,8 +32,6 @@ export default function SalesChart({ data }: { data: ChartDataItem[] }) {
                     {/* Followups Bar */}
                     <Bar dataKey="followups" name="Follow-ups" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={30} />
 
-                    {/* Quotations Bar */}
-                    <Bar dataKey="quotations" name="Quotations" fill="#10b981" radius={[4, 4, 0, 0]} barSize={30} />
                 </BarChart>
             </ResponsiveContainer>
         </div>

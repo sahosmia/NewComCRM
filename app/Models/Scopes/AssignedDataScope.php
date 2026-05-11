@@ -32,7 +32,7 @@ class AssignedDataScope implements Scope
     {
         return match (get_class($model)) {
             \App\Models\Customer::class => 'assigned_to',
-            \App\Models\Meeting::class, \App\Models\FollowUp::class, \App\Models\Quotation::class => 'user_id',
+            \App\Models\Meeting::class, \App\Models\FollowUp::class => 'user_id',
 
             default => null,
         };

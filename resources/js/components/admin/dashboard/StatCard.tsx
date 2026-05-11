@@ -10,7 +10,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 
-type IconType = 'users' | 'clock' | 'calendar' | 'bell' | 'document' | 'dollar' | 'check' | 'exclamation';
+type IconType = 'users' | 'clock' | 'calendar' | 'bell' | 'document' | 'dollar' | 'check' | 'exclamation' | 'dollar';
 
 interface StatCardProps {
   title: string;
@@ -33,7 +33,8 @@ const iconMap = {
   document: FileText,
   dollar: DollarSign,
   check: CheckCircle,
-  exclamation: AlertCircle
+  exclamation: AlertCircle,
+  dollar: DollarSign
 };
 
 const colorClasses = {

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { FollowUp } from "@/types/follow-up";
+import { FollowUp } from "@/types";
 
 function FollowUpList({ followups }: { followups: FollowUp[] }) {
     if (followups.length === 0) return (

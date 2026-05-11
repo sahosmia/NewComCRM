@@ -137,8 +137,11 @@ class RequirementController extends Controller
             return 'data:' . $type . ';base64,' . base64_encode($data);
         };
         $assignedUser = $requirement->customer->assignedUser;
-        $customerSignaturePath = storage_path('app/public/' . $assignedUser->signature);
-        // return $requirement;
+
+        $customerSignaturePath = null;
+        if ($assignedUser && $assignedUser->signature) {
+            $customerSignaturePath = storage_path('app/public/' . $assignedUser->signature);
+        }
         $data = [
             'header_logo_1' => $getImage(public_path('pdf-logo1.png')),
             'header_logo_2' => $getImage(public_path('crystal-logo-png.png')),

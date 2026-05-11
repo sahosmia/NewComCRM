@@ -13,11 +13,11 @@ class MeetingFactory extends Factory
 
     public function definition(): array
     {
-        $scheduledAt = $this->faker->dateTimeBetween('now', '+1 month');
+        $scheduledAt = $this->faker->dateTimeBetween('-1 month', '+1 month');
 
         return [
-            'customer_id'  => Customer::factory(),
-            'user_id'      => User::factory(),
+            'customer_id'  => Customer::inRandomOrder()->first()?->id ?? Customer::factory(),
+            'user_id'      => User::where('role', 'user')->inRandomOrder()->first()?->id ?? User::factory(),
             'title'        => $this->faker->sentence(3),
             'scheduled_at' => $scheduledAt,
             'meeting_type' => $this->faker->randomElement(['physical', 'virtual', 'phone']),

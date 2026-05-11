@@ -7,7 +7,6 @@ use App\Http\Controllers\{
     ProductController,
     FollowUpController,
     MeetingController,
-    QuotationController,
     RequirementController,
     UserController,
     ReportController,
@@ -69,6 +68,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('meetings')->name('meetings.')->group(function () {
         Route::controller(MeetingController::class)->group(function () {
             Route::get('calendar', 'calendar')->name('calendar');
+            Route::patch('{meeting}/status', 'updateStatus')->name('update-status');
             Route::get('export/excel', 'export')->name('export');
             Route::get('print', 'print')->name('print');
             Route::delete('bulk-destroy', 'bulkDestroy')->name('bulkDestroy');
@@ -76,15 +76,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::resource('meetings', MeetingController::class);
 
-    // --- Quotations ---
-    Route::prefix('quotations')->name('quotations.')->controller(QuotationController::class)->group(function () {
-        Route::patch('{quotation}/status', 'updateStatus')->name('update-status');
-        Route::post('{quotation}/send', 'send')->name('send');
-        Route::get('{quotation}/download', 'download')->name('download');
-        Route::post('{quotation}/duplicate', 'duplicate')->name('duplicate');
-        Route::delete('bulk-destroy', 'bulkDestroy')->name('bulkDestroy');
-    });
-    Route::resource('quotations', QuotationController::class);
+
 
     // --- Requirements ---
     Route::prefix('requirements')->name('requirements.')->group(function () {

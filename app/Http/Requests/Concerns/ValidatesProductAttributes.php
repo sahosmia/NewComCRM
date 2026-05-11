@@ -15,7 +15,7 @@ trait ValidatesProductAttributes
             'model'          => 'nullable|string|max:255',
             'unit_price'     => 'required|numeric|min:0',
             'description'    => 'nullable|string',
-            'warranty'       => 'nullable|string|max:255',
+            'warranty'       => 'nullable|integer',
             'warranty_duration_unit' => 'nullable|in:months,years',
             'category'       => 'nullable|string|max:255',
             'stock_quantity' => 'required|integer|min:0',

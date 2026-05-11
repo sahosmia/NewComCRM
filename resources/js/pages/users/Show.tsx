@@ -77,7 +77,7 @@ export default function Show({ user }: { user: any }) {
                                     <Building2 className="w-4 h-4 mt-1 text-primary" />
                                     <div>
                                         <p className="text-sm font-medium">Designation</p>
-                                        <p className="text-sm text-muted-foreground">{user.designation || 'N/A'}</p>
+                                        <p className="text-sm text-muted-foreground">{user.designations || 'N/A'}</p>
                                     </div>
                                 </div>
                             </CardContent>

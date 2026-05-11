@@ -2,7 +2,7 @@ import { useForm } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {  Plus, LayoutList,  Percent, Settings, Drill, } from "lucide-react";
+import { Plus, LayoutList, Percent, Settings, Drill, } from "lucide-react";
 import { Requirement, RequirementItem } from "@/types";
 import { CustomerType } from "@/types";
 import { Product } from "@/types";
@@ -11,11 +11,11 @@ import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
 import { FormSelect } from "@/components/admin/form/FormSelect";
 import { RequirementOptions } from "./Columns";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { RequirementItemRow } from "./com/RequirementItemRow";
 import { FormSummaryFooter } from "./com/FormSummaryFooter";
 import { ServiceSection } from "./com/ServiceSection";
+import FormLabel from "@/components/admin/form/FormLabel";
 
 interface Props {
     requirement?: Requirement;
@@ -126,7 +126,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                         </div>
 
                         <div className="space-y-2">
-                            <Label className="text-xs font-bold uppercase text-muted-foreground tracking-wider">Requirement Title</Label>
+                            <FormLabel>Requirement Title</FormLabel>
                             <Input
                                 placeholder="Requirement Title"
                                 value={data.title}
@@ -136,6 +136,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                         </div>
 
                         <div className="space-y-1.5">
+                            <FormLabel>Delivery Location</FormLabel>
                             <Input
                                 placeholder="Location"
                                 value={data.delivery_location}
@@ -151,29 +152,32 @@ export default function RequirementForm({ requirement, customers, products, unit
 
                         {/* --- Section 1: Terms & Delivery  */}
                         <div className="space-y-2">
-                            <Label>Advance Payment (%)</Label>
+                            <FormLabel>Advance Payment (%)</FormLabel>
                             <Input
                                 type="number"
                                 value={data.advance_payment === 0 ? "" : data.advance_payment}
                                 onChange={(e) => setData("advance_payment", e.target.value === "" ? 0 : Number(e.target.value))}
+                                placeholder="Advance Payment"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Before Delivery Payment (%)</Label>
+                            <FormLabel>Before Delivery Payment (%)</FormLabel>
                             <Input
                                 type="number"
                                 value={data.before_payment === 0 ? "" : data.before_payment}
                                 onChange={(e) => setData("before_payment", e.target.value === "" ? 0 : Number(e.target.value))}
+                                placeholder="Before Delivery Payment"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Delivery Timeline (Days)</Label>
+                            <FormLabel>Delivery Timeline (Days)</FormLabel>
                             <Input
                                 type="number"
                                 value={data.delivery_time_days}
                                 onChange={(e) => setData("delivery_time_days", e.target.value)}
+                                placeholder="Delivery Timeline"
                             />
                         </div>
 
@@ -188,7 +192,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                         </div>
 
                         <div className="space-y-1.5">
-                            <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Price Validity (Days)</Label>
+                            <FormLabel>Price Validity (Days)</FormLabel>
                             <Input
                                 type="number"
                                 placeholder="Days"
@@ -200,7 +204,7 @@ export default function RequirementForm({ requirement, customers, products, unit
 
                         <div className="space-y-2">
 
-                            <Label htmlFor="has_vat" className="text-xs font-bold uppercase text-muted-foreground tracking-tighter">Include VAT</Label>
+                            <FormLabel>Include VAT</FormLabel>
                             <div className="relative ">
                                 <Input
                                     type="number"
@@ -208,6 +212,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                     className=" text-xs pr-6"
                                     value={data.vat_percentage}
                                     onChange={(e) => setData("vat_percentage", e.target.value)}
+                                    placeholder="VAT Percentage"
                                 />
                                 <Percent className="w-3 absolute right-2 top-2 text-muted-foreground" />
                             </div>
@@ -215,7 +220,7 @@ export default function RequirementForm({ requirement, customers, products, unit
 
                         <div className="space-y-2">
 
-                            <Label htmlFor="has_ait" className="text-xs font-bold uppercase text-muted-foreground tracking-tighter">Include AIT</Label>
+                            <FormLabel>Include AIT</FormLabel>
                             <div className="relative ">
                                 <Input
                                     type="number"
@@ -223,6 +228,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                     className="text-xs pr-6"
                                     value={data.ait_percentage}
                                     onChange={(e) => setData("ait_percentage", e.target.value)}
+                                    placeholder="AIT Percentage"
                                 />
                                 <Percent className="w-3 absolute right-2 top-2 text-muted-foreground" />
                             </div>
@@ -230,7 +236,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                         </div>
 
                         <div className="space-y-2 col-span-2">
-                            <label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest ml-1">Internal Remarks</label>
+                            <FormLabel>Internal Remarks</FormLabel>
                             <Textarea
                                 className="bg-background resize-none text-xs border-slate-200 focus:border-primary/50"
                                 rows={2}
@@ -260,7 +266,7 @@ export default function RequirementForm({ requirement, customers, products, unit
 
                 <div className="p-4 space-y-4">
                     {/* Table Header for Desktop */}
-                   {data.items.map((item, index) => (
+                    {data.items.map((item, index) => (
                         <RequirementItemRow
                             key={index}
                             index={index}
@@ -305,7 +311,7 @@ export default function RequirementForm({ requirement, customers, products, unit
 
 
             {/* Grand Total Footer */}
-          {/* Footer Summary */}
+            {/* Footer Summary */}
             <FormSummaryFooter
                 subTotal={subTotal}
                 vatAmount={vatAmount}

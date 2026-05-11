@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Product;
+use App\Models\Unit;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProductFactory extends Factory
@@ -17,31 +18,13 @@ class ProductFactory extends Factory
             'model'          => $this->faker->bothify('MODEL-####??'),
             'description'    => $this->faker->sentence(),
             'category'       => $this->faker->randomElement(['Electronics', 'Cable', 'Switch', 'Accessories']),
-            'stock_quantity' => $this->faker->numberBetween(0, 100),
-            'unit_price'     => $this->faker->randomFloat(2, 10, 50000),
-            'supplier_name'  => $this->faker->name(),
+            'stock_quantity' => $this->faker->numberBetween(10, 100),
+            'unit_price'     => $this->faker->randomFloat(2, 100, 10000),
+            'supplier_name'  => $this->faker->company(),
             'source'         => $this->faker->paragraph(),
-            'unit_id'        => \App\Models\Unit::factory(),
+            'unit_id'        => Unit::inRandomOrder()->first()?->id ?? Unit::factory(),
+            'warranty'       => $this->faker->numberBetween(1, 3),
+            'warranty_duration_unit' => $this->faker->randomElement(['months', 'years']),
         ];
-    }
-
-    /**
-     * State for out of stock products
-     */
-    public function outOfStock(): static
-    {
-        return $this->state(fn(array $attributes) => [
-            'stock_quantity' => 0,
-        ]);
-    }
-
-    /**
-     * State for in stock products
-     */
-    public function inStock(): static
-    {
-        return $this->state(fn(array $attributes) => [
-            'stock_quantity' => $this->faker->numberBetween(1, 100),
-        ]);
     }
 }

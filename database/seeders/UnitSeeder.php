@@ -12,16 +12,19 @@ class UnitSeeder extends Seeder
         $units = [
             ['title' => 'Piece', 'short_form' => 'Pcs'],
             ['title' => 'Kilogram', 'short_form' => 'KG'],
+            ['title' => 'Meter', 'short_form' => 'Mtr'],
             ['title' => 'Gram', 'short_form' => 'G'],
-            ['title' => 'Meter', 'short_form' => 'M'],
             ['title' => 'Box', 'short_form' => 'Box'],
             ['title' => 'Pack', 'short_form' => 'Pack'],
             ['title' => 'Set', 'short_form' => 'Set'],
             ['title' => 'Roll', 'short_form' => 'Roll'],
+            ['title' => 'Litre', 'short_form' => 'Ltr'],
+            ['title' => 'Inch', 'short_form' => 'Inch'],
+            ['title' => 'Feet', 'short_form' => 'Ft'],
         ];
 
         foreach ($units as $unit) {
-            Unit::updateOrCreate(['title' => $unit['title']], $unit);
+            Unit::updateOrCreate(['short_form' => $unit['short_form']], $unit);
         }
     }
 }

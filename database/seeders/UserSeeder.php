@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use App\Models\User;
@@ -7,37 +8,38 @@ use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
-        // Create Super Admin
-        User::create([
-            'name' => 'Super Admin',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password'),
-            'role' => 'super_admin',
-            'email_verified_at' => now()
-        ]);
+        // Create 1 Super Admin
+        User::updateOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Super Admin',
+                'password' => Hash::make('password'),
+                'role' => 'super_admin',
+                'email_verified_at' => now(),
+            ]
+        );
 
-        // Create Regular Users
+        // Create 5 regular Users
         $users = [
-            ['name' => 'John Doe', 'email' => 'john@example.com'],
-            ['name' => 'Jane Smith', 'email' => 'jane@example.com'],
-            ['name' => 'Bob Wilson', 'email' => 'bob@example.com'],
+            ['name' => 'Arif Rahman', 'email' => 'arif@example.com'],
+            ['name' => 'Sultana Ahmed', 'email' => 'sultana@example.com'],
+            ['name' => 'Kamal Hossain', 'email' => 'kamal@example.com'],
+            ['name' => 'Meherun Nesa', 'email' => 'meherun@example.com'],
+            ['name' => 'Tanvir Islam', 'email' => 'tanvir@example.com'],
         ];
 
         foreach ($users as $user) {
-            User::create([
-                'name' => $user['name'],
-                'email' => $user['email'],
-                'password' => Hash::make('password'),
-                'role' => 'user',
-                'email_verified_at' => now()
-            ]);
+            User::updateOrCreate(
+                ['email' => $user['email']],
+                [
+                    'name' => $user['name'],
+                    'password' => Hash::make('password'),
+                    'role' => 'user',
+                    'email_verified_at' => now(),
+                ]
+            );
         }
-
-        // Create 5 random users using factory
-        User::factory()->count(5)->create([
-            'role' => 'user'
-        ]);
     }
 }
