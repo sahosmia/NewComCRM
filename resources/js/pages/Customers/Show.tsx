@@ -2,11 +2,11 @@ import AppLayout from "@/layouts/app-layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare, LayoutList, Plus } from "lucide-react";
+import { Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare, LayoutList, Plus, Video } from "lucide-react";
 import { Head, Link } from "@inertiajs/react";
-import { CustomerType, FollowUp, Requirement } from "@/types";
+import { CustomerType, FollowUp, Requirement, Meeting } from "@/types";
 
-export default function Show({ customer }: { customer: CustomerType & { requirements: Requirement[], follow_ups: FollowUp[] } }) {
+export default function Show({ customer }: { customer: CustomerType & { requirements: Requirement[], follow_ups: FollowUp[], meetings: Meeting[] } }) {
     return (
         <AppLayout
             breadcrumbs={[
@@ -252,6 +252,72 @@ export default function Show({ customer }: { customer: CustomerType & { requirem
                                         </div>
                                         <p className="text-sm text-muted-foreground font-medium">No follow-ups recorded yet.</p>
                                         <p className="text-xs text-muted-foreground/70 mt-1">Start tracking interactions with this customer.</p>
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+
+                        {/* Meetings Section */}
+                        <Card>
+                            <CardHeader className="flex flex-row justify-between items-center py-4">
+                                <CardTitle className="text-lg flex items-center gap-2">
+                                    <Video className="w-5 h-5 text-primary" />
+                                    Meeting History
+                                </CardTitle>
+                                <Button size="sm" variant="outline" asChild>
+                                    <Link href={route("meetings.create", { customer_id: customer.id })}>
+                                        <Plus className="w-4 h-4 mr-1" /> Schedule Meeting
+                                    </Link>
+                                </Button>
+                            </CardHeader>
+                            <CardContent>
+                                {customer.meetings?.length > 0 ? (
+                                    <div className="relative space-y-6 before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-muted-foreground/20 before:to-transparent">
+                                        {customer.meetings.map((m: any) => (
+                                            <div key={m.id} className="relative flex items-start gap-4 group">
+                                                {/* Timeline Dot */}
+                                                <div className={`mt-1.5 h-10 w-10 rounded-full border-4 border-background flex items-center justify-center shrink-0 z-10 shadow-sm
+                            ${m.status === 'completed' ? 'bg-emerald-500 text-white' : m.status === 'cancelled' ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'}`}>
+                                                    <Video className="w-4 h-4" />
+                                                </div>
+
+                                                {/* Content Card */}
+                                                <div className="flex-1 bg-muted/20 p-4 rounded-xl border border-transparent group-hover:border-primary/20 transition-all">
+                                                    <div className="flex justify-between items-start mb-1">
+                                                        <h4 className="font-semibold text-sm capitalize">{m.title}</h4>
+                                                        <time className="text-[10px] text-muted-foreground font-medium uppercase tracking-tighter">
+                                                            {new Date(m.scheduled_at).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                                        </time>
+                                                    </div>
+                                                    <p className="text-sm text-muted-foreground line-clamp-2 italic">
+                                                        "{m.agenda || "No agenda provided."}"
+                                                    </p>
+
+                                                    <div className="mt-3 flex items-center gap-4">
+                                                        <Badge variant="secondary" className="text-[10px] h-5">
+                                                            Type: {m.meeting_type}
+                                                        </Badge>
+                                                        <Badge variant="outline" className="text-[10px] h-5 capitalize">
+                                                            {m.status}
+                                                        </Badge>
+                                                        <Link
+                                                            href={route('meetings.show', m.id)}
+                                                            className="text-[11px] text-primary hover:underline font-medium"
+                                                        >
+                                                            Details →
+                                                        </Link>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-12">
+                                        <div className="bg-muted/50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+                                            <Video className="w-6 h-6 text-muted-foreground/50" />
+                                        </div>
+                                        <p className="text-sm text-muted-foreground font-medium">No meetings scheduled yet.</p>
+                                        <p className="text-xs text-muted-foreground/70 mt-1">Keep track of physical or virtual meetings.</p>
                                     </div>
                                 )}
                             </CardContent>
