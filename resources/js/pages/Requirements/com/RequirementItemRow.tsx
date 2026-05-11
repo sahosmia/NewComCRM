@@ -24,7 +24,6 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
 
     return (
         <div className="group relative bg-card border rounded-xl p-4 md:p-5 transition-all hover:border-primary/30 hover:shadow-md mb-4">
-            {/* ডিলিট বাটন - টপ রাইট পজিশন */}
             <div className="absolute -top-3 -right-3 z-10">
                 <Button
                     type="button"
@@ -73,7 +72,8 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                         min="1"
                         className="text-center font-bold h-10 border-slate-200"
                         value={item.quantity}
-                        onChange={(e) => onItemChange(index, "quantity", parseInt(e.target.value) || 0)}
+                        onChange={(e) => onItemChange(index, "quantity", parseInt(e.target.value, 10) || 0)}
+
                     />
                 </div>
 

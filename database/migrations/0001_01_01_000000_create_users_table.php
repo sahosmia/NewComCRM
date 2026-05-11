@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('password');
             $table->enum('role', ['super_admin', 'user'])->default('user');
             $table->string('signature')->nullable();
+             $table->string('phone')->nullable();
+            $table->string('designation')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

@@ -15,6 +15,8 @@ class Product extends Model
         'brand',
         'model',
         'description',
+        'warranty',
+        'warranty_duration_unit',
         'category',
         'stock_quantity',
         'unit_price',
@@ -25,7 +27,8 @@ class Product extends Model
 
     protected $casts = [
         'unit_price' => 'decimal:2',
-        'stock_quantity' => 'integer'
+        'stock_quantity' => 'integer',
+        'warranty' =>'integer',
     ];
 
     // Relationships

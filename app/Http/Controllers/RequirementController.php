@@ -124,34 +124,37 @@ class RequirementController extends Controller
         return back()->with('success', 'Requirements deleted successfully');
     }
 
-    // public function downloadPdf(Requirement $requirement)
-    // {
 
-    //     $path = $requirement->generatePDF();
-    //     // return $path;
-    //     return response()->download(storage_path('app/public/' . $path));
-    // }
     public function downloadPdf(Requirement $requirement)
     {
 
-        // $path = $requirement->generatePDF();
-        $pdf = Pdf::loadView('pdf.requirement', [
-            'requirement' => $requirement->load([
-                'customer',
-                'items.product.unit',
-                'accessoriesUnit',
-                'installationUnit'
-            ])
-        ]);
+        $requirement->load(['customer.assignedUser', 'items.product.unit', 'accessoriesUnit', 'installationUnit']);
 
-            return $pdf->download();
+        $getImage = function ($path) {
+            if (!file_exists($path)) return "";
+            $data = file_get_contents($path);
+            $type = pathinfo($path, PATHINFO_EXTENSION);
+            return 'data:' . $type . ';base64,' . base64_encode($data);
+        };
+        $assignedUser = $requirement->customer->assignedUser;
+        $customerSignaturePath = storage_path('app/public/' . $assignedUser->signature);
+        // return $requirement;
+        $data = [
+            'header_logo_1' => $getImage(public_path('pdf-logo1.png')),
+            'header_logo_2' => $getImage(public_path('crystal-logo-png.png')),
+            'seal'    => $getImage(public_path('seal.png')),
+            'signature' => $getImage($customerSignaturePath),
+            'title' => 'Project Report',
+            'date' => date('d F Y'),
+            'requirement' => $requirement,
 
+        ];
 
-        $path = 'requirements/requirement-' . $requirement->id . '.pdf';
-        Storage::disk('public')->put($path, $pdf->output());
+        ini_set('memory_limit', '256M');
 
-        // return $path;
-        return response()->download(storage_path('app/public/' . $path));
+        $pdf = Pdf::loadView('pdf.my_report', $data)->setPaper('a4', 'portrait')->setOption(['isPhpEnabled' => true]);
+
+        return $pdf->stream('Quotation_' . $requirement->id . '.pdf');
     }
 
     public function export(Request $request)

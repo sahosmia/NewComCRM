@@ -48,7 +48,7 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                                 type="number"
                                 className="text-center"
                                 value={data[`${prefix}_quantity`]}
-                                onChange={(e) => setData(`${prefix}_quantity`, e.target.value)}
+                                onChange={(e) => setData(`${prefix}_quantity`, parseInt(e.target.value) || 0)}
                             />
                         </div>
                         <div className="col-span-8 md:col-span-2 space-y-1">
