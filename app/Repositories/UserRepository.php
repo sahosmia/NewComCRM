@@ -13,6 +13,9 @@ class UserRepository
     {
         return User::query()
             ->select('id', 'name')
+            ->when(!auth()->user()?->isSuperAdmin(), function ($query) {
+                $query->where('id', auth()->id());
+            })
             ->get();
     }
 

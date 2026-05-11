@@ -32,7 +32,7 @@ export default function CustomerForm({ customer, users, companies }: Props) {
         designation: customer?.designation ?? "",
         company_id: customer?.company_id ?? "",
         email: customer?.email ?? "",
-        assigned_to: customer?.assigned_to ?? "",
+        assigned_to: customer?.assigned_to ?? (users.length === 1 ? users[0].id : ""),
         status: customer?.status ?? "active",
         type: customer?.type ?? "corporate",
         phones: customer?.phones?.length ? customer.phones : [""],
