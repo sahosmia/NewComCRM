@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\FollowUp;
 use App\Models\Meeting;
 use App\Models\Quotation;
+use App\Models\Sale;
 use App\Models\User;
 
 class DashboardService
@@ -36,6 +37,9 @@ class DashboardService
             'monthlyQuotations' => Quotation::query()->whereMonth('created_at', now()->month)->count(),
             'totalRevenue' => Quotation::query()->accepted()->sum('total'),
             'pendingFollowups' => FollowUp::query()->pending()->count(),
+            'todayFollowupsDone' => FollowUp::query()->whereDate('completed_at', today())->count(),
+            'todayMeetingsDone' => Meeting::query()->where('status', 'completed')->whereDate('updated_at', today())->count(),
+            'todaySalesCount' => Sale::query()->whereDate('sale_date', today())->count(),
         ];
     }
 
@@ -51,6 +55,11 @@ class DashboardService
                 ->where('user_id', $userId)
                 ->whereMonth('created_at', now()->month)
                 ->count(),
+            'todayFollowupsDone' => FollowUp::query()->byUser($userId)->whereDate('completed_at', today())->count(),
+            'todayMeetingsDone' => Meeting::query()->byUser($userId)->where('status', 'completed')->whereDate('updated_at', today())->count(),
+            'todaySalesCount' => Sale::query()->whereHas('customer', function($q) use ($userId) {
+                $q->where('assigned_to', $userId);
+            })->whereDate('sale_date', today())->count(),
         ];
     }
 

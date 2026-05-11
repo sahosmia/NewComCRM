@@ -2,7 +2,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Head } from '@inertiajs/react';
 import type { BreadcrumbItem } from '@/types';
 import { dashboard } from '@/routes';
-import { Users, Clock, Calendar, Bell } from 'lucide-react';
+import { Users, Clock, Calendar, Bell, CheckCircle2, Video, ShoppingCart } from 'lucide-react';
 import StatCard from '@/components/admin/dashboard/StatCard';
 import FollowUpList from '@/components/admin/dashboard/FollowUpList';
 import MeetingList from '@/components/admin/dashboard/UpcomingMeetings';
@@ -14,6 +14,9 @@ interface DashboardProps {
         todayFollowups: number;
         upcomingMeetings: number;
         pendingFollowups: number;
+        todayFollowupsDone: number;
+        todayMeetingsDone: number;
+        todaySalesCount: number;
     };
     todayFollowups: any[];
     upcomingMeetings: any[];
@@ -43,6 +46,47 @@ export default function Dashboard({ stats, todayFollowups, upcomingMeetings, cha
                         </p>
                     </div>
                     {/* Optional: Add a "Quick Action" button here */}
+                </div>
+
+                {/* Results Section */}
+                <div className="mb-8">
+                    <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                        Today's Results
+                    </h2>
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                        <div className="flex items-center gap-4 rounded-xl border bg-card p-4 shadow-sm">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                                <CheckCircle2 className="h-6 w-6" />
+                            </div>
+                            <div>
+                                <p className="text-sm font-medium text-muted-foreground">Follow-ups Done</p>
+                                <p className="text-2xl font-bold">{stats.todayFollowupsDone}</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-4 rounded-xl border bg-card p-4 shadow-sm">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                                <Video className="h-6 w-6" />
+                            </div>
+                            <div>
+                                <p className="text-sm font-medium text-muted-foreground">Meetings Done</p>
+                                <p className="text-2xl font-bold">{stats.todayMeetingsDone}</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-4 rounded-xl border bg-card p-4 shadow-sm">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 text-purple-600">
+                                <ShoppingCart className="h-6 w-6" />
+                            </div>
+                            <div>
+                                <p className="text-sm font-medium text-muted-foreground">Sales Completed</p>
+                                <p className="text-2xl font-bold">{stats.todaySalesCount}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mb-6">
+                    <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4">Pipeline Overview</h2>
                 </div>
 
                 {/* Stats Cards - Improved Gap and Responsive Grid */}
