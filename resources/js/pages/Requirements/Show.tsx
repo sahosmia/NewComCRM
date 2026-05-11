@@ -2,7 +2,7 @@ import { Link, Head } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/layouts/app-layout";
 import { Badge } from "@/components/ui/badge";
-import { useMemo } from "react"; // Added useMemo
+import { useMemo } from "react";
 import {
     Calendar,
     FileText,
@@ -30,23 +30,36 @@ export default function Show({ requirement }: { requirement: Requirement }) {
 
     // --- Calculation Logic ---
     const totals = useMemo(() => {
-        const itemsTotal = requirement.items?.reduce((sum: number, i: any) => sum + parseFloat(i.total_price), 0) || 0;
-        const accessoriesTotal = requirement.has_accessories ? (requirement.accessories_quantity * requirement.accessories_price) : 0;
-        const installationTotal = requirement.has_installation ? (requirement.installation_quantity * requirement.installation_price) : 0;
-
-        const subTotal = itemsTotal + accessoriesTotal + installationTotal;
-
-        const vatAmount = requirement.has_vat ? subTotal * (requirement.vat_percentage / 100) : 0;
-
-        // AIT calculation: Gross-up formula
         const aitPercentage = parseFloat(requirement.ait_percentage as string) || 0;
-        const aitAmount = requirement.has_ait ? subTotal * (aitPercentage / (100 - aitPercentage)) : 0;
+        const vatPercentage = parseFloat(requirement.vat_percentage as string) || 0;
+
+        // Base values (before AIT gross-up)
+        const itemsBaseTotal = requirement.items?.reduce((sum: number, i: any) => sum + (parseFloat(i.unit_price) * i.quantity), 0) || 0;
+        const accessoriesBaseTotal = requirement.has_accessories ? (requirement.accessories_quantity * requirement.accessories_price) : 0;
+        const installationBaseTotal = requirement.has_installation ? (requirement.installation_quantity * requirement.installation_price) : 0;
+
+        const baseTotal = itemsBaseTotal + accessoriesBaseTotal + installationBaseTotal;
+
+        // Gross-up for AIT: Gross = Base / (1 - AIT/100)
+        let grossSubTotal = baseTotal;
+        if (aitPercentage > 0 && aitPercentage < 100) {
+            grossSubTotal = baseTotal / (1 - (aitPercentage / 100));
+        }
+
+        const aitAmount = grossSubTotal - baseTotal;
+        const vatAmount = grossSubTotal * (vatPercentage / 100);
+
+        // Final total should match requirement.grand_total from DB
+        const grandTotal = parseFloat(requirement.grand_total as string);
 
         return {
-            subTotal,
-            vatAmount,
+            baseTotal,
             aitAmount,
-            grandTotal: requirement.grand_total // Or subTotal + vatAmount + aitAmount if dynamic
+            grossSubTotal,
+            vatAmount,
+            grandTotal,
+            aitPercentage,
+            vatPercentage
         };
     }, [requirement]);
 
@@ -55,7 +68,6 @@ export default function Show({ requirement }: { requirement: Requirement }) {
             <Head title={`Requirement: ${requirement.customer?.name}`} />
 
             <div className="p-6 max-w-6xl mx-auto space-y-6">
-                {/* Top Action Bar (Remains same) */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-background">
                     <div className="flex items-center gap-3">
                         <Link href={route('requirements.index')}>
@@ -92,7 +104,6 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    {/* Left Side: Customer & Terms (Remains same) */}
                     <div className="lg:col-span-4 space-y-6">
                         {requirement.customer && <CustomerInfoCard customer={requirement.customer} />}
                         <div className="bg-card border rounded-xl p-5 shadow-sm space-y-4">
@@ -108,7 +119,6 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                         </div>
                     </div>
 
-                    {/* Right Side: Items Table */}
                     <div className="lg:col-span-8">
                         <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
                             <div className="p-5 border-b bg-muted/20 flex justify-between items-center">
@@ -140,7 +150,7 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                                 </td>
                                                 <td className="px-6 py-4 font-mono">{item.quantity} {item.product?.unit?.short_form}</td>
                                                 <td className="px-6 py-4 text-right font-mono text-xs text-muted-foreground">{formatCurrency(item.unit_price)}</td>
-                                                <td className="px-6 py-4 text-right font-bold text-primary">{formatCurrency(item.total_price)}</td>
+                                                <td className="px-6 py-4 text-right font-bold text-primary">{formatCurrency(item.unit_price * item.quantity)}</td>
                                             </tr>
                                         ))}
 
@@ -164,25 +174,27 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                     </tbody>
 
                                     <tfoot className="bg-primary/2 border-t-2 border-primary/10">
-                                        {(requirement.has_vat || requirement.has_ait) && (
+                                        <tr>
+                                            <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">Base Total</td>
+                                            <td className="px-6 py-2 text-right font-mono text-sm">{formatCurrency(totals.baseTotal)}</td>
+                                        </tr>
+                                        {totals.aitPercentage > 0 && (
                                             <>
                                                 <tr>
-                                                    <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">Sub-Total</td>
-                                                    <td className="px-6 py-2 text-right font-mono text-sm">{formatCurrency(totals.subTotal)}</td>
+                                                    <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">AIT Adjustment ({totals.aitPercentage}%)</td>
+                                                    <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">+ {formatCurrency(totals.aitAmount)}</td>
                                                 </tr>
-                                                {requirement.has_vat && (
-                                                    <tr>
-                                                        <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">VAT ({requirement.vat_percentage}%)</td>
-                                                        <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">+ {formatCurrency(totals.vatAmount)}</td>
-                                                    </tr>
-                                                )}
-                                                {/* {requirement.has_ait && (
-                                                    <tr>
-                                                        <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">AIT Adjustment ({requirement.ait_percentage}%)</td>
-                                                        <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">+ {formatCurrency(totals.aitAmount)}</td>
-                                                    </tr>
-                                                )} */}
+                                                <tr className="border-t border-dashed">
+                                                    <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">Sub-Total (Gross)</td>
+                                                    <td className="px-6 py-2 text-right font-mono text-sm font-semibold">{formatCurrency(totals.grossSubTotal)}</td>
+                                                </tr>
                                             </>
+                                        )}
+                                        {totals.vatPercentage > 0 && (
+                                            <tr>
+                                                <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">VAT ({totals.vatPercentage}%)</td>
+                                                <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">+ {formatCurrency(totals.vatAmount)}</td>
+                                            </tr>
                                         )}
                                         <tr>
                                             <td colSpan={3} className="px-6 py-5 text-right uppercase text-[10px] font-black tracking-[0.2em] text-muted-foreground">Grand Total Amount</td>
