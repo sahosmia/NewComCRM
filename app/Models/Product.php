@@ -4,17 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
         'brand',
         'model',
         'warranty',
+        'warranty_duration_unit',
         'description',
         'category',
         'stock_quantity',
@@ -26,7 +28,8 @@ class Product extends Model
 
     protected $casts = [
         'unit_price' => 'decimal:2',
-        'stock_quantity' => 'integer'
+        'stock_quantity' => 'integer',
+        'warranty' => 'integer'
     ];
 
     // Relationships
