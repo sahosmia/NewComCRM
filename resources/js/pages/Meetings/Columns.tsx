@@ -1,7 +1,14 @@
 import type { Column } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { TableRowActions } from '@/components/table/TableRowActions';
+import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
 import { Meeting } from '@/types';
+
+const MEETING_STATUS_OPTIONS = [
+    { value: 'scheduled', label: 'Scheduled', colorClass: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
+    { value: 'completed', label: 'Completed', colorClass: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' },
+    { value: 'cancelled', label: 'Cancelled', colorClass: 'bg-red-500/10 text-red-600 border-red-500/20' },
+];
 
 const columns: Column<Meeting>[] = [
     {
@@ -31,9 +38,12 @@ const columns: Column<Meeting>[] = [
     {
         header: 'Status',
         accessor: (item) => (
-            <Badge variant={item.status === 'scheduled' ? 'default' : item.status === 'completed' ? 'secondary' : 'destructive'} className="capitalize">
-                {item.status}
-            </Badge>
+            <InlineStatusUpdate
+                id={item.id}
+                currentStatus={item.status}
+                routeName="meetings.update-status"
+                options={MEETING_STATUS_OPTIONS}
+            />
         ),
     },
     {

@@ -5,6 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare, LayoutList, Plus } from "lucide-react";
 import { Head, Link } from "@inertiajs/react";
 import { CustomerType, FollowUp, Requirement } from "@/types";
+import { InlineStatusUpdate } from "@/components/table/InlineStatusUpdate";
+import { RequirementOptions } from "../Requirements/Columns";
+import { FOLLOW_UP_OPTIONS } from "../FollowUps/Columns";
 
 export default function Show({ customer }: { customer: CustomerType & { requirements: Requirement[], follow_ups: FollowUp[] } }) {
     return (
@@ -161,14 +164,12 @@ export default function Show({ customer }: { customer: CustomerType & { requirem
                                                             ৳ {parseFloat(req.grand_total).toLocaleString()}
                                                         </td>
                                                         <td className="px-4 py-3">
-                                                            <Badge variant="secondary" className={`
-                                        capitalize font-normal
-                                        ${req.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : ''}
-                                        ${req.status === 'completed' ? 'bg-green-100 text-green-700' : ''}
-                                        ${req.status === 'cancelled' ? 'bg-red-100 text-red-700' : ''}
-                                    `}>
-                                                                {req.status}
-                                                            </Badge>
+                                                            <InlineStatusUpdate
+                                                                id={req.id}
+                                                                currentStatus={req.status}
+                                                                routeName="requirements.update-status"
+                                                                options={RequirementOptions}
+                                                            />
                                                         </td>
                                                         <td className="px-4 py-3 text-right">
                                                             <Button variant="ghost" size="sm" asChild>
@@ -213,14 +214,19 @@ export default function Show({ customer }: { customer: CustomerType & { requirem
                                             <div key={fu.id} className="relative flex items-start gap-4 group">
                                                 {/* Timeline Dot */}
                                                 <div className={`mt-1.5 h-10 w-10 rounded-full border-4 border-background flex items-center justify-center shrink-0 z-10 shadow-sm
-                            ${fu.status === 'completed' ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white'}`}>
+                            ${(fu.status === 'done' || fu.status === 'purchase') ? 'bg-emerald-500 text-white' : fu.status === 'lost' ? 'bg-red-500 text-white' : 'bg-amber-500 text-white'}`}>
                                                     <MessageSquare className="w-4 h-4" />
                                                 </div>
 
                                                 {/* Content Card */}
                                                 <div className="flex-1 bg-muted/20 p-4 rounded-xl border border-transparent group-hover:border-primary/20 transition-all">
                                                     <div className="flex justify-between items-start mb-1">
-                                                        <h4 className="font-semibold text-sm capitalize">{fu.status.replace('_', ' ')}</h4>
+                                                        <InlineStatusUpdate
+                                                            id={fu.id}
+                                                            currentStatus={fu.status}
+                                                            routeName="follow-ups.update-status"
+                                                            options={FOLLOW_UP_OPTIONS}
+                                                        />
                                                         <time className="text-[10px] text-muted-foreground font-medium uppercase tracking-tighter">
                                                             {new Date(fu.follow_up_date).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}
                                                         </time>

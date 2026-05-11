@@ -71,6 +71,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('calendar', 'calendar')->name('calendar');
             Route::get('export/excel', 'export')->name('export');
             Route::get('print', 'print')->name('print');
+            Route::patch('{meeting}/status', 'updateStatus')->name('update-status');
             Route::delete('bulk-destroy', 'bulkDestroy')->name('bulkDestroy');
         });
     });

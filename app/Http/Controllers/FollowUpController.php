@@ -76,7 +76,7 @@ class FollowUpController extends Controller
     public function updateStatus(Request $request, FollowUp $followUp)
     {
         $data = $request->validate([
-            'status' => 'required|in:pending,done'
+            'status' => 'required|in:pending,done,price_shared,negotiation,purchase,lost,follow_up'
         ]);
 
         $followUp->update(['status' => $data['status']]);

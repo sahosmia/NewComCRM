@@ -103,6 +103,17 @@ class MeetingController extends Controller
         return back()->with('success', 'Meetings deleted successfully');
     }
 
+    public function updateStatus(Request $request, Meeting $meeting)
+    {
+        $data = $request->validate([
+            'status' => 'required|in:scheduled,completed,cancelled'
+        ]);
+
+        $meeting->update(['status' => $data['status']]);
+
+        return back()->with('success', 'Status updated successfully');
+    }
+
     public function export(Request $request)
     {
         $meetings = $this->meetingService->getForExport($request->input('ids', []));

@@ -92,3 +92,37 @@ it('can_delete_a_follow_up', function () {
         'id' => $followUp->id,
     ]);
 });
+
+it('can_update_follow_up_status', function () {
+    $followUp = FollowUp::factory()->create(['user_id' => $this->user->id, 'status' => 'pending']);
+
+    $response = $this->actingAs($this->user)
+        ->patch(route('follow-ups.update-status', $followUp), [
+            'status' => 'done',
+        ]);
+
+    $response->assertRedirect();
+    $this->assertDatabaseHas('follow_ups', [
+        'id' => $followUp->id,
+        'status' => 'done',
+    ]);
+});
+
+it('can_update_follow_up_status_to_extended_statuses', function () {
+    $followUp = FollowUp::factory()->create(['user_id' => $this->user->id, 'status' => 'pending']);
+
+    $statuses = ['price_shared', 'negotiation', 'purchase', 'lost', 'follow_up'];
+
+    foreach ($statuses as $status) {
+        $response = $this->actingAs($this->user)
+            ->patch(route('follow-ups.update-status', $followUp), [
+                'status' => $status,
+            ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('follow_ups', [
+            'id' => $followUp->id,
+            'status' => $status,
+        ]);
+    }
+});

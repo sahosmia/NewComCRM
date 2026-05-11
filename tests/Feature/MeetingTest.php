@@ -93,3 +93,18 @@ it('can_delete_a_meeting', function () {
         'id' => $meeting->id,
     ]);
 });
+
+it('can_update_meeting_status', function () {
+    $meeting = Meeting::factory()->create(['user_id' => $this->user->id, 'status' => 'scheduled']);
+
+    $response = $this->actingAs($this->user)
+        ->patch(route('meetings.update-status', $meeting), [
+            'status' => 'completed',
+        ]);
+
+    $response->assertRedirect();
+    $this->assertDatabaseHas('meetings', [
+        'id' => $meeting->id,
+        'status' => 'completed',
+    ]);
+});
