@@ -451,7 +451,7 @@
                                     <br><strong>Warranty:</strong> {{ $item->product->warranty }} {{ $item->product->warranty_duration_unit }}
                                 @endif
                             </td>
-                            <td class="text-center">{{ $item->quantity }} {{ $item->product->unit->title ?? 'Unit' }}
+                            <td class="text-center">{{ $item->quantity }} {{ $item->product->unit->short_form ?? ($item->product->unit->title ?? 'Unit') }}
                             </td>
                             <td class="text-right">{{ number_format($item->unit_price, 0) }}</td>
                             <td class="text-right">{{ number_format($item->total_price, 0) }}/=</td>
@@ -576,7 +576,7 @@
                             <td class="text-center">{{ str_pad($currentSl, 2, '0', STR_PAD_LEFT) }}</td>
                             <td><strong>Accessories Charge</strong> ({{ $requirement->accessories_title }})</td>
                             <td class="text-center">{{ $requirement->accessories_quantity }}
-                                {{ $requirement->accessories_unit_id }}</td>
+                                {{ $requirement->accessoriesUnit->short_form ?? ($requirement->accessoriesUnit->title ?? '') }}</td>
                             <td class="text-right">{{ number_format($requirement->accessories_price, 0) }}</td>
                             <td class="text-right">
                                 {{ number_format(($requirement->accessories_price * $requirement->accessories_quantity * 100) / (100 - $requirement->ait_percentage), 0) }}/=
@@ -590,7 +590,7 @@
                             <td class="text-center">{{ str_pad($currentSl, 2, '0', STR_PAD_LEFT) }}</td>
                             <td><strong>Installation Charge</strong> ({{ $requirement->installation_title }})</td>
                             <td class="text-center">{{ $requirement->installation_quantity }}
-                                {{ $requirement->installation_unit_id }}</td>
+                                {{ $requirement->installationUnit->short_form ?? ($requirement->installationUnit->title ?? '') }}</td>
                             <td class="text-right">{{ number_format($requirement->installation_price, 0) }}</td>
                             <td class="text-right">
                                 {{ number_format(($requirement->installation_price * $requirement->installation_quantity * 100) / (100 - $requirement->ait_percentage), 0) }}/=
@@ -609,7 +609,7 @@
                                         $grandTotal + $grandTotal * ($requirement->vat_percentage / 100),
                                     );
                                 @endphp
-                                Amount in word: {{ ucfirst(numberToWords($finalAmount)) }} only.
+                                Amount in word: {{ ucwords(numberToWords($finalAmount)) }} only.
                             </div>
                         </td>
                         <td class="text-right">Total</td>
@@ -617,7 +617,7 @@
                     </tr>
                     <tr class="total-row">
                         <td class="text-right">VAT</td>
-                        <td class="text-right">{{ $requirement->vat_percentage }}%</td>
+                        <td class="text-right">{{ number_format($grandTotal * ($requirement->vat_percentage / 100), 0) }}/=</td>
                     </tr>
                     <tr class="total-row">
                         <td class="text-right">Grand Total</td>

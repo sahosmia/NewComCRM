@@ -36,6 +36,11 @@ export default function FollowUpIndex({ followUps, stats }: Props) {
                 { label: 'Low', value: 'low' },
             ]
         },
+        {
+            name: 'date_range',
+            label: 'Date Range',
+            type: 'date_range',
+        },
     ];
 
     const sortOptions: SortOption[] = [

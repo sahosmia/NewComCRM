@@ -38,6 +38,9 @@ class RequirementRepository
                 $query->where('customer_id', $customer_id);
             })
 
+            ->when($params['start_date'] ?? null, fn ($query, $startDate) => $query->whereDate('created_at', '>=', $startDate))
+            ->when($params['end_date'] ?? null, fn ($query, $endDate) => $query->whereDate('created_at', '<=', $endDate))
+
             ->when(isset($params['sort']), function ($query) use ($params) {
                 $query->orderBy($params['sort'], $params['direction'] ?? 'desc');
             }, function ($query) {
