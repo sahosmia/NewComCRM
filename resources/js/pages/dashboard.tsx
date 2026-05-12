@@ -153,6 +153,8 @@ export default function Dashboard({ stats, todayFollowups, upcomingMeetings, cha
                             </div>
                         </div>
 
+                        
+
                         {/* Tasks/Follow-up List Card */}
                         <div className="flex flex-col rounded-xl border bg-card text-card-foreground shadow-sm">
                             <div className="border-b p-6 py-4">
