@@ -36,6 +36,11 @@ export default function MeetingIndex({ meetings }: Props) {
                 { label: 'Cancelled', value: 'cancelled' },
             ]
         },
+        {
+            name: 'date_range',
+            label: 'Date Range',
+            type: 'date_range',
+        },
     ];
 
     const sortOptions: SortOption[] = [

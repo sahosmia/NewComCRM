@@ -451,7 +451,7 @@
                                     <br><strong>Warranty:</strong> {{ $item->product->warranty }} {{ $item->product->warranty_duration_unit }}
                                 @endif
                             </td>
-                            <td class="text-center">{{ $item->quantity }} {{ $item->product->unit->title ?? 'Unit' }}
+                            <td class="text-center">{{ $item->quantity }} {{ $item->product->unit->short_form ?? ($item->product->unit->title ?? 'Unit') }}
                             </td>
                             <td class="text-right">{{ number_format($item->unit_price, 0) }}</td>
                             <td class="text-right">{{ number_format($item->total_price, 0) }}/=</td>

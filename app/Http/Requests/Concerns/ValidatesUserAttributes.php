@@ -20,8 +20,8 @@ trait ValidatesUserAttributes
             'designation' => 'nullable|string|max:255',
             'role'         => 'required|in:super_admin,user',
             'password'     => $this->isMethod('post')
-                ? ['required', Password::defaults()]
-                : ['nullable', Password::defaults()],
+                   ? 'required|string|min:6'
+                : 'nullable|string|min:6',
             'signature'    => 'nullable|image|max:2048',
         ];
     }

@@ -17,7 +17,11 @@ export default function RequirementIndex({ requirements }: Props) {
 
 
     const filters: FilterOption[] = [
-        // Add filters if needed
+        {
+            name: 'date_range',
+            label: 'Date Range',
+            type: 'date_range',
+        },
     ];
 
     const sortOptions: SortOption[] = [
