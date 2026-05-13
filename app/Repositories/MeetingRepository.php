@@ -30,6 +30,8 @@ class MeetingRepository
             ->when($params['meeting_type'] ?? null, function ($query, $type) {
                 $query->where('meeting_type', $type);
             })
+            ->when($params['start_date'] ?? null, fn ($query, $startDate) => $query->whereDate('scheduled_at', '>=', $startDate))
+            ->when($params['end_date'] ?? null, fn ($query, $endDate) => $query->whereDate('scheduled_at', '<=', $endDate))
             ->when($params['sort'] ?? null, function ($query, $sort) use ($params) {
                 $allowedSorts = ['title', 'scheduled_at', 'meeting_type', 'status', 'created_at'];
                 if (in_array($sort, $allowedSorts)) {

@@ -6,7 +6,7 @@ import Heading from '@/components/admin/heading';
 import { columns } from './Columns';
 
 interface Props {
-       followUps: PaginationType<FollowUp>;
+    followUps: PaginationType<FollowUp>;
     stats: Record<string, number>;
 }
 
@@ -35,6 +35,11 @@ export default function FollowUpIndex({ followUps, stats }: Props) {
                 { label: 'Medium', value: 'medium' },
                 { label: 'Low', value: 'low' },
             ]
+        },
+        {
+            name: 'date_range',
+            label: 'Date Range',
+            type: 'date_range',
         },
     ];
 
