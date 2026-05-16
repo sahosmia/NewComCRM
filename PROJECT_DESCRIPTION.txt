@@ -1,0 +1,75 @@
+# Project Overview: Sales and Customer Management System
+
+## Features
+
+### 1. Customer & Company Management
+*   Full CRUD for customers and companies.
+*   Track customer details, company associations, and assigned representatives.
+*   Interaction history timeline showing all follow-ups and meetings for each customer.
+
+### 2. Product & Inventory Management
+*   Product catalog with warranty tracking and pricing.
+*   Flexible unit management (e.g., Pcs, Set, Box) with short-form support.
+*   Stock adjustment logic triggered by sales transactions.
+
+### 3. Interaction Tracking (Follow-ups & Meetings)
+*   **Follow-ups:** Track lead progression through various statuses (Pending, Price Shared, Negotiation, Purchased, etc.).
+*   **Meetings:** Schedule and manage customer meetings with a dedicated calendar view.
+*   **Automation:** Automatic timestamping (completed_at) and date rescheduling based on status changes.
+
+### 4. Requirement & Quotation System
+*   Create detailed customer requirements with multiple items.
+*   **Financial Logic:** Mandatory Advance Income Tax (AIT) calculation at item level, VAT calculation, and automated grand totals.
+*   **PDF Generation:** Professional PDF report generation for requirements and quotations.
+*   **Sales Integration:** Marking a requirement as "Purchased" automatically generates a Sale record and reduces product stock.
+
+### 5. Dashboard & Analytics
+*   Role-based dashboards (Super Admin vs. Regular User).
+*   "Today's Results" summary (Follow-ups, Meetings, Sales).
+*   Upcoming meetings list and sales performance metrics.
+*   Interactive charts for visual data representation.
+
+### 6. Role-Based Access Control (RBAC) & Security
+*   Strict data isolation: Non-admin users only see data assigned to them via global scopes.
+*   Super Admin role for full system oversight and user management.
+*   Secure authentication powered by Laravel Fortify.
+
+### 7. Data Utilities
+*   **Bulk Actions:** Standardized bulk delete across all major modules.
+*   **Exports/Imports:** Export data to Excel/Print and import customers/products from Excel files.
+
+---
+
+## Technology Stack
+
+### Backend
+*   **Framework:** Laravel 12 (PHP 8.2+)
+*   **Authentication:** Laravel Fortify
+*   **Routing:** Laravel Wayfinder (TypeScript route generation)
+*   **PDF/Excel:** DomPDF & Laravel Excel
+*   **Testing:** Pest (PHP Testing Framework)
+
+### Frontend
+*   **Framework:** React 19 with TypeScript
+*   **Bridge:** Inertia.js 2.0 (Classic SPA feel with Server-Side Routing)
+*   **Styling:** Tailwind CSS 4
+*   **UI Components:** Radix UI primitives, Lucide React icons, and Shadcn-inspired components.
+*   **Charts:** Recharts
+*   **State Management:** Inertia Form helpers and React hooks.
+
+---
+
+## Architecture
+
+### 1. Design Patterns
+*   **Service-Repository Pattern:** Controllers remain thin by delegating business logic to Services and data access to Repositories.
+*   **Observer Pattern:** Decoupled handling of model side-effects (e.g., creating sales from requirements, updating timestamps).
+*   **Global Scopes:** Automatic enforcement of data ownership and visibility across the application.
+
+### 2. Frontend-Backend Communication
+*   The application uses **Inertia.js**, eliminating the need for a separate REST/GraphQL API. Data is passed directly from Laravel controllers to React props.
+*   **TypeScript Integration:** Shared types between backend and frontend ensure type safety across the stack.
+
+### 3. Data Integrity
+*   Soft deletes are implemented for critical resources (Users, Customers).
+*   Database transactions and model observers ensure consistency between requirements, sales, and inventory.
