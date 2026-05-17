@@ -48,7 +48,7 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                                 type="number"
                                 className="text-center"
                                 value={data[`${prefix}_quantity`]}
-                                onChange={(e) => setData(`${prefix}_quantity`, parseInt(e.target.value) || 0)}
+                                onChange={(e) => setData(`${prefix}_quantity`, e.target.value)}
                             />
                             <ErrorMessage message={errors[`${prefix}_quantity`]} />
                         </div>

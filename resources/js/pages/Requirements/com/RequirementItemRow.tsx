@@ -75,8 +75,7 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                         min="1"
                         className="text-center font-bold h-10 border-slate-200"
                         value={item.quantity}
-                        onChange={(e) => onItemChange(index, "quantity", parseInt(e.target.value, 10) || 0)}
-
+                        onChange={(e) => onItemChange(index, "quantity", e.target.value)}
                     />
                     <ErrorMessage message={errors[`items.${index}.quantity`]} />
                 </div>

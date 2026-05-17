@@ -43,6 +43,12 @@ it('can_store_a_new_requirement', function () {
             ]
         ],
         'notes' => 'Some notes',
+        'ait_percentage' => 5,
+        'vat_percentage' => 10,
+        'price_validity_days' => 30,
+        'delivery_time_days' => 7,
+        'advance_payment' => 10,
+        'before_payment' => 90,
     ];
 
     $response = $this->actingAs($this->user)
@@ -79,6 +85,12 @@ it('can_update_an_existing_requirement', function () {
                 'unit_price' => 150.00,
             ]
         ],
+        'ait_percentage' => 5,
+        'vat_percentage' => 10,
+        'price_validity_days' => 30,
+        'delivery_time_days' => 7,
+        'advance_payment' => 10,
+        'before_payment' => 90,
     ];
 
     $response = $this->actingAs($this->user)
