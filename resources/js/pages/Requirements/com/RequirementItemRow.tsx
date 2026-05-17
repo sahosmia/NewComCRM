@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
+import ErrorMessage from "@/components/admin/form/ErrorMessage";
 import { Product } from "@/types";
 import { Label } from "@/components/ui/label";
 import FormLabel from "@/components/admin/form/FormLabel";
@@ -15,9 +16,10 @@ interface ItemRowProps {
     onItemChange: (index: number, field: any, value: any) => void;
     onRemove: (index: number) => void;
     isRemoveDisabled: boolean;
+    errors: any;
 }
 
-export const RequirementItemRow = ({ index, item, products, aitFactor, onItemChange, onRemove, isRemoveDisabled }: ItemRowProps) => {
+export const RequirementItemRow = ({ index, item, products, aitFactor, onItemChange, onRemove, isRemoveDisabled, errors }: ItemRowProps) => {
 
     const calculateGross = () => (parseFloat(item.unit_price) || 0) * aitFactor;
     const calculateTotal = () => (parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor;
@@ -50,6 +52,7 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                         placeholder="Select a product..."
                         searchPlaceholder="Search product..."
                     />
+                    <ErrorMessage message={errors[`items.${index}.product_id`]} />
                 </div>
 
                 {/* Description/Specifications */}
@@ -72,9 +75,9 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                         min="1"
                         className="text-center font-bold h-10 border-slate-200"
                         value={item.quantity}
-                        onChange={(e) => onItemChange(index, "quantity", parseInt(e.target.value, 10) || 0)}
-
+                        onChange={(e) => onItemChange(index, "quantity", e.target.value)}
                     />
+                    <ErrorMessage message={errors[`items.${index}.quantity`]} />
                 </div>
 
                 {/* Unit Price Input */}
@@ -90,6 +93,7 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                             onChange={(e) => onItemChange(index, "unit_price", e.target.value)}
                         />
                     </div>
+                    <ErrorMessage message={errors[`items.${index}.unit_price`]} />
                 </div>
 
                 {/* Total Calculation Display */}
