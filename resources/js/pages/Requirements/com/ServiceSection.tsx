@@ -50,6 +50,7 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                                 value={data[`${prefix}_quantity`]}
                                 onChange={(e) => setData(`${prefix}_quantity`, parseInt(e.target.value) || 0)}
                             />
+                            <ErrorMessage message={errors[`${prefix}_quantity`]} />
                         </div>
                         <div className="col-span-8 md:col-span-2 space-y-1">
                             <FormSelect
@@ -67,6 +68,7 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                                 value={data[`${prefix}_price`]}
                                 onChange={(e) => setData(`${prefix}_price`, e.target.value)}
                             />
+                            <ErrorMessage message={errors[`${prefix}_price`]} />
                         </div>
                         <div className="col-span-6 md:col-span-2 space-y-1.5">
                             <FormLabel>Total</FormLabel>

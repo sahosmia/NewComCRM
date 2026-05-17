@@ -155,20 +155,22 @@ export default function RequirementForm({ requirement, customers, products, unit
                             <FormLabel>Advance Payment (%)</FormLabel>
                             <Input
                                 type="number"
-                                value={data.advance_payment === 0 ? "" : data.advance_payment}
-                                onChange={(e) => setData("advance_payment", e.target.value === "" ? 0 : Number(e.target.value))}
+                                value={data.advance_payment}
+                                onChange={(e) => setData("advance_payment", e.target.value)}
                                 placeholder="Advance Payment"
                             />
+                            <ErrorMessage message={errors.advance_payment} />
                         </div>
 
                         <div className="space-y-2">
                             <FormLabel>Before Delivery Payment (%)</FormLabel>
                             <Input
                                 type="number"
-                                value={data.before_payment === 0 ? "" : data.before_payment}
-                                onChange={(e) => setData("before_payment", e.target.value === "" ? 0 : Number(e.target.value))}
+                                value={data.before_payment}
+                                onChange={(e) => setData("before_payment", e.target.value)}
                                 placeholder="Before Delivery Payment"
                             />
+                            <ErrorMessage message={errors.before_payment} />
                         </div>
 
                         <div className="space-y-2">
@@ -179,6 +181,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                 onChange={(e) => setData("delivery_time_days", e.target.value)}
                                 placeholder="Delivery Timeline"
                             />
+                            <ErrorMessage message={errors.delivery_time_days} />
                         </div>
 
                         <div className="space-y-2">
@@ -216,6 +219,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                 />
                                 <Percent className="w-3 absolute right-2 top-2 text-muted-foreground" />
                             </div>
+                            <ErrorMessage message={errors.vat_percentage} />
                         </div>
 
                         <div className="space-y-2">
@@ -232,6 +236,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                 />
                                 <Percent className="w-3 absolute right-2 top-2 text-muted-foreground" />
                             </div>
+                            <ErrorMessage message={errors.ait_percentage} />
 
                         </div>
 
@@ -276,6 +281,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                             onItemChange={handleItemChange}
                             onRemove={removeItem}
                             isRemoveDisabled={data.items.length === 1}
+                            errors={errors}
                         />
                     ))}
                 </div>
