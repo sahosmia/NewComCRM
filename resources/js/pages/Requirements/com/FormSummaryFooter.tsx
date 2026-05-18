@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { memo } from "react";
 
 interface SummaryProps {
     subTotal: number;
@@ -11,7 +12,7 @@ interface SummaryProps {
     isEdit: boolean;
 }
 
-export const FormSummaryFooter = ({ subTotal, vatAmount, aitAmount, grandTotal, vatPercentage, aitPercentage, processing, isEdit }: SummaryProps) => {
+export const FormSummaryFooter = memo(({ subTotal, vatAmount, aitAmount, grandTotal, vatPercentage, aitPercentage, processing, isEdit }: SummaryProps) => {
     return (
         <div className="bg-muted/40 p-6 border rounded-xl border-slate-200 flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex flex-col items-end gap-2 w-full md:w-auto">
@@ -32,4 +33,4 @@ export const FormSummaryFooter = ({ subTotal, vatAmount, aitAmount, grandTotal, 
             </Button>
         </div>
     );
-};
+});

@@ -6,7 +6,7 @@ import { Building2, Mail, Phone, User, Calendar, ArrowLeft } from "lucide-react"
 import { Head, Link } from "@inertiajs/react";
 import { DeleteResourceButton, EditResourceButton } from "@/components/shared/resource-actions";
 
-export default function Show({ user }: { user: any }) {
+export default function Show({ user }: { user: User }) {
     return (
         <AppLayout
             breadcrumbs={[

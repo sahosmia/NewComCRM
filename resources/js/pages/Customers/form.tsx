@@ -134,7 +134,7 @@ export default function CustomerForm({ customer, users, companies }: Props) {
                         <div className="grid sm:grid-cols-2 gap-4">
                             <div className="grid gap-2">
                                 <FormLabel>Customer Type</FormLabel>
-                                <Select value={data.type} onValueChange={val => setData("type", val as any)}>
+                                <Select value={data.type} onValueChange={val => setData("type", val as CustomerType["type"])}>
                                     <SelectTrigger><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="corporate">Corporate</SelectItem>
@@ -145,7 +145,7 @@ export default function CustomerForm({ customer, users, companies }: Props) {
                             </div>
                             <div className="grid gap-2">
                                 <FormLabel>Status</FormLabel>
-                                <Select value={data.status} onValueChange={val => setData("status", val as any)}>
+                                <Select value={data.status} onValueChange={val => setData("status", val as CustomerType["status"])}>
                                     <SelectTrigger><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="active">Active</SelectItem>

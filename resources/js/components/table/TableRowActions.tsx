@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
 import { handleDelete } from '@/utils/table';
+import { memo } from 'react';
 
 interface RowActionsProps<T extends { id: number | string; name?: string }> {
     item: T;
@@ -22,7 +23,7 @@ interface RowActionsProps<T extends { id: number | string; name?: string }> {
     customActions?: React.ReactNode;
 }
 
-export function TableRowActions<T extends { id: number | string; name?: string }>({
+export const TableRowActions = memo(<T extends { id: number | string; name?: string }>({
     item,
     resource,
     label = "Item",
@@ -30,7 +31,7 @@ export function TableRowActions<T extends { id: number | string; name?: string }
     hideEdit = false,
     hideDelete = false,
     customActions,
-}: RowActionsProps<T>) {
+}: RowActionsProps<T>) => {
     return (
         <div className="flex justify-end">
             <DropdownMenu>
@@ -84,4 +85,4 @@ export function TableRowActions<T extends { id: number | string; name?: string }
             </DropdownMenu>
         </div>
     );
-}
+});

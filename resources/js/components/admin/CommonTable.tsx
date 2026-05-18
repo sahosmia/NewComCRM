@@ -61,7 +61,7 @@ const CommonTable = <T extends { id: number }>({
         dataKey: dataKey
     });
 
-    const handleExport = () => {
+    const handleExport = React.useCallback(() => {
         if (!exportRoute) return;
 
         // Use a hidden form or window.location to trigger download with selected IDs
@@ -69,18 +69,18 @@ const CommonTable = <T extends { id: number }>({
         selectedItems.forEach(id => url.searchParams.append('ids[]', id.toString()));
 
         window.location.href = url.toString();
-    };
+    }, [exportRoute, selectedItems]);
 
-    const handlePrint = () => {
+    const handlePrint = React.useCallback(() => {
         if (!printRoute) return;
 
         const url = new URL(route(printRoute), window.location.origin);
         selectedItems.forEach(id => url.searchParams.append('ids[]', id.toString()));
 
         window.open(url.toString(), '_blank');
-    };
+    }, [printRoute, selectedItems]);
 
-    const handleSortChange = (value: string) => {
+    const handleSortChange = React.useCallback((value: string) => {
         const option = sortOptions.find(opt => opt.label === value);
         if (!option) return;
 
@@ -95,7 +95,7 @@ const CommonTable = <T extends { id: number }>({
             preserveScroll: true,
             ...(dataKey && { only: [dataKey] }),
         });
-    };
+    }, [sortOptions, routeName, queryParams, dataKey]);
 
     const currentSort = React.useMemo(() => {
         return sortOptions.find(

@@ -5,39 +5,39 @@ import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import { columns } from './columns';
 
+
 interface Props {
     users: PaginationType<UserType>;
 }
 
 
 
+const BREADCRUMBS = [
+    { title: 'Dashboard', href: route('dashboard') },
+    { title: 'Users', href: route('users.index') },
+];
+
+const FILTERS: FilterOption[] = [
+    {
+        name: 'role',
+        label: 'User Role',
+        type: 'select',
+        options: [
+            { label: 'Super Admin', value: 'super_admin' },
+            { label: 'User', value: 'user' },
+        ]
+    },
+];
+
+const SORT_OPTIONS: SortOption[] = [
+    { label: 'Newest First', sort: 'created_at', direction: 'desc' },
+    { label: 'Name (A-Z)', sort: 'name', direction: 'asc' },
+    { label: 'Email', sort: 'email', direction: 'asc' },
+];
+
 export default function UserIndex({ users }: Props) {
-    const breadcrumbs = [
-        { title: 'Dashboard', href: route('dashboard') },
-        { title: 'Users', href: route('users.index') },
-    ];
-
-    const filters: FilterOption[] = [
-        {
-            name: 'role',
-            label: 'User Role',
-            type: 'select',
-            options: [
-                { label: 'Super Admin', value: 'super_admin' },
-                { label: 'User', value: 'user' },
-            ]
-        },
-
-    ];
-
-    const userSortOptions :SortOption [] = [
-        { label: 'Newest First', sort: 'created_at', direction: 'desc' },
-        { label: 'Name (A-Z)', sort: 'name', direction: 'asc' },
-        { label: 'Email', sort: 'email', direction: 'asc' },
-    ];
-
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <AppLayout breadcrumbs={BREADCRUMBS}>
             <Head title="Users" />
 
             <div className="flex flex-col flex-1 h-full gap-4 p-4 overflow-x-auto rounded-xl">
@@ -51,8 +51,8 @@ export default function UserIndex({ users }: Props) {
                     columns={columns}
                     create_route="users.create"
                     routeName="users.index"
-                    filters={filters}
-                    sortOptions={userSortOptions}
+                    filters={FILTERS}
+                    sortOptions={SORT_OPTIONS}
                     bulkDeleteRoute="users.bulkDestroy"
                     entityName="User"
                 />

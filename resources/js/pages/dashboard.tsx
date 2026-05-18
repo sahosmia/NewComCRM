@@ -19,9 +19,9 @@ interface DashboardProps {
         todaySalesCount: number;
         totalSalesAmount?: number;
     };
-    todayFollowups: any[];
-    upcomingMeetings: any[];
-    chartData: any[];
+    todayFollowups: FollowUp[];
+    upcomingMeetings: Meeting[];
+    chartData: { name: string; followups: number }[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [

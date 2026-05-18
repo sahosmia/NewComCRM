@@ -1,23 +1,23 @@
-import { Trash2, ShoppingCart, DollarSign, List } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
-import { Product } from "@/types";
-import { Label } from "@/components/ui/label";
+import { Product, RequirementItem } from "@/types";
 import FormLabel from "@/components/admin/form/FormLabel";
+import { memo } from "react";
 
 interface ItemRowProps {
     index: number;
-    item: any;
+    item: RequirementItem;
     products: Product[];
     aitFactor: number;
-    onItemChange: (index: number, field: any, value: any) => void;
+    onItemChange: (index: number, field: keyof RequirementItem | 'description', value: string | number) => void;
     onRemove: (index: number) => void;
     isRemoveDisabled: boolean;
 }
 
-export const RequirementItemRow = ({ index, item, products, aitFactor, onItemChange, onRemove, isRemoveDisabled }: ItemRowProps) => {
+export const RequirementItemRow = memo(({ index, item, products, aitFactor, onItemChange, onRemove, isRemoveDisabled }: ItemRowProps) => {
 
     const calculateGross = () => (parseFloat(item.unit_price) || 0) * aitFactor;
     const calculateTotal = () => (parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor;
@@ -110,4 +110,4 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
             </div>
         </div>
     );
-};
+});

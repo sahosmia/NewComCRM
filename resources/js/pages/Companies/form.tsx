@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
 
 interface Props {
-    company?: any;
+    company?: Company;
 }
 
 const FormLabel = ({ children }: { children: React.ReactNode }) => (

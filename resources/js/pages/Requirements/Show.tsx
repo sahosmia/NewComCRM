@@ -30,7 +30,7 @@ export default function Show({ requirement }: { requirement: Requirement }) {
 
     // --- Calculation Logic ---
     const totals = useMemo(() => {
-        const itemsTotal = requirement.items?.reduce((sum: number, i: any) => sum + parseFloat(i.total_price), 0) || 0;
+        const itemsTotal = requirement.items?.reduce((sum: number, i) => sum + parseFloat(i.total_price as string), 0) || 0;
         const accessoriesTotal = requirement.has_accessories ? (requirement.accessories_quantity * requirement.accessories_price) : 0;
         const installationTotal = requirement.has_installation ? (requirement.installation_quantity * requirement.installation_price) : 0;
 
@@ -132,7 +132,7 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-border/50">
-                                        {requirement.items?.map((item: any) => (
+                                        {requirement.items?.map((item) => (
                                             <tr key={item.id} className="hover:bg-muted/5 transition-colors">
                                                 <td className="px-6 py-4">
                                                     <p className="font-semibold">{item.product?.name}</p>

@@ -4,7 +4,7 @@ import { Head } from '@inertiajs/react';
 import CompanyForm from './form';
 
 interface Props {
-    company: any;
+    company: Company;
 }
 
 export default function Edit({ company }: Props) {

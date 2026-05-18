@@ -2,13 +2,13 @@ import { router } from "@inertiajs/react";
 
 interface ActionOptions {
     onSuccess?: () => void;
-    onError?: (errors: any) => void;
+    onError?: (errors: Record<string, string>) => void;
     redirectTo?: string;
 }
 
 interface BulkDeleteOptions {
     onSuccess?: () => void;
-    onError?: (errors: any) => void;
+    onError?: (errors: Record<string, string>) => void;
 }
 
 export const handleDelete = (
@@ -32,7 +32,7 @@ export const handleDelete = (
 
 
 export const handleBulkDelete = (
-    ids: number[],
+    ids: (number | string)[],
     routeName: string,
     options?: BulkDeleteOptions
 ) => {
@@ -73,7 +73,3 @@ export const handleToggleStatus = (id: number, newStatus: boolean, url: string) 
         }
     );
 }
-
-
-
-

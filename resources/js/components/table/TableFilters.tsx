@@ -11,12 +11,13 @@ import { cn } from "@/lib/utils";
 import { FilterOption } from "@/types";
 import { DatePickerWithRange } from "../admin/DatePickerWithRange";
 import { DatePickerSimple } from "../admin/DataPickerSimple";
+import { memo } from "react";
 
 
 
-export function TableFilters({ filters, queryParams = {}, routeName }: {
-    filters: FilterOption[], queryParams: Record<string, any>, routeName: string
-}) {
+export const TableFilters = memo(({ filters, queryParams = {}, routeName }: {
+    filters: FilterOption[], queryParams: Record<string, string | number>, routeName: string
+}) => {
     const [openSelect, setOpenSelect] = useState<string | null>(null);
 
     const handleFilterChange = (name: string, value: string | number) => {
@@ -32,7 +33,7 @@ export function TableFilters({ filters, queryParams = {}, routeName }: {
     };
 
     const handleDateChange = (range: DateRange | undefined) => {
-        const newParams: Record<string, any> = { ...queryParams, page: 1 };
+        const newParams: Record<string, string | number> = { ...queryParams, page: 1 };
 
         if (range?.from) {
             newParams.start_date = formatDateForInput(range.from);
@@ -174,4 +175,4 @@ export function TableFilters({ filters, queryParams = {}, routeName }: {
             </PopoverContent>
         </Popover>
     );
-}
+});

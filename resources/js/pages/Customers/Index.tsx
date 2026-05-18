@@ -4,6 +4,7 @@ import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import { columns } from './columns';
+import { useMemo } from 'react';
 
 interface Props {
     customers: PaginationType<CustomerType>;
@@ -13,13 +14,19 @@ interface Props {
 
 
 
-export default function CustomerIndex({ customers, users, companies }: Props) {
-    const breadcrumbs = [
-        { title: 'Dashboard', href: route('dashboard') },
-        { title: 'Customers', href: route('customers.index') },
-    ];
+const BREADCRUMBS = [
+    { title: 'Dashboard', href: route('dashboard') },
+    { title: 'Customers', href: route('customers.index') },
+];
 
-    const filters: FilterOption[] = [
+const SORT_OPTIONS: SortOption[] = [
+    { label: 'Newest First', sort: 'created_at', direction: 'desc' },
+    { label: 'Name (A-Z)', sort: 'name', direction: 'asc' },
+    { label: 'Email', sort: 'email', direction: 'asc' },
+];
+
+export default function CustomerIndex({ customers, users, companies }: Props) {
+    const filters: FilterOption[] = useMemo(() => [
         {
             name: 'company_id',
             label: 'Company',
@@ -69,16 +76,10 @@ export default function CustomerIndex({ customers, users, companies }: Props) {
             label: 'Created Date',
             type: 'date_range',
         }
-    ];
-
-    const customerSortOptions: SortOption[] = [
-        { label: 'Newest First', sort: 'created_at', direction: 'desc' },
-        { label: 'Name (A-Z)', sort: 'name', direction: 'asc' },
-        { label: 'Email', sort: 'email', direction: 'asc' },
-    ];
+    ], [companies, users]);
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <AppLayout breadcrumbs={BREADCRUMBS}>
             <Head title="Customers" />
 
             <div className="flex flex-col flex-1 h-full gap-4 p-4 overflow-x-auto rounded-xl">
@@ -93,7 +94,7 @@ export default function CustomerIndex({ customers, users, companies }: Props) {
                     create_route="customers.create"
                     routeName="customers.index"
                     filters={filters}
-                    sortOptions={customerSortOptions}
+                    sortOptions={SORT_OPTIONS}
                     exportRoute="customers.export"
                     printRoute="customers.print"
                     bulkDeleteRoute="customers.bulkDestroy"

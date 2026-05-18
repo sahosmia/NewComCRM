@@ -1,18 +1,27 @@
 import AppLayout from '@/layouts/app-layout';
-import { PaginationType, SortOption } from '@/types';
+import { PaginationType, SortOption, Sale, Column } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import { Badge } from '@/components/ui/badge';
 
 interface Props {
-    sales: PaginationType<any>;
+    sales: PaginationType<Sale>;
 }
 
-const columns: any[] = [
+const BREADCRUMBS = [
+    { title: 'Dashboard', href: route('dashboard') },
+    { title: 'Sales', href: route('sales.index') },
+];
+
+const SORT_OPTIONS: SortOption[] = [
+    { label: 'Newest First', sort: 'created_at', direction: 'desc' },
+];
+
+const COLUMNS: Column<Sale>[] = [
     {
         header: 'Customer',
-        accessor: (item: any) => (
+        accessor: (item) => (
             <div className="flex flex-col">
                 <span className="font-medium text-foreground">{item.customer?.name}</span>
                 <span className="text-xs text-muted-foreground">{item.customer?.company?.name}</span>
@@ -21,9 +30,9 @@ const columns: any[] = [
     },
     {
         header: 'Products',
-        accessor: (item: any) => (
+        accessor: (item) => (
             <div className="flex flex-wrap gap-1 max-w-62">
-                {item.requirement?.items?.map((row: any) => (
+                {item.requirement?.items?.map((row) => (
                     <Badge key={row.id} variant="secondary" className="text-[10px] font-normal">
                         {row.product?.name} x {row.quantity}
                     </Badge>
@@ -33,30 +42,21 @@ const columns: any[] = [
     },
     {
         header: 'Amount',
-        accessor: (item: any) => (
+        accessor: (item) => (
             <div className="font-bold">
-                BDT {parseFloat(item.amount).toLocaleString()}
+                BDT {parseFloat(item.amount as string).toLocaleString()}
             </div>
         ),
     },
     {
         header: 'Sale Date',
-        accessor: (item: any) => new Date(item.sale_date).toLocaleDateString(),
+        accessor: (item) => new Date(item.sale_date).toLocaleDateString(),
     },
 ];
 
 export default function SaleIndex({ sales }: Props) {
-    const breadcrumbs = [
-        { title: 'Dashboard', href: route('dashboard') },
-        { title: 'Sales', href: route('sales.index') },
-    ];
-
-     const salesSortOptions :SortOption [] = [
-            { label: 'Newest First', sort: 'created_at', direction: 'desc' },
-        ];
-
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <AppLayout breadcrumbs={BREADCRUMBS}>
             <Head title="Sales" />
 
             <div className="flex flex-col flex-1 h-full gap-4 p-4 overflow-x-auto rounded-xl">
@@ -67,12 +67,12 @@ export default function SaleIndex({ sales }: Props) {
 
                 <CommonTable
                     data={sales}
-                    columns={columns}
+                    columns={COLUMNS}
                     routeName="sales.index"
                     exportRoute="sales.export"
                     printRoute="sales.print"
-                    // sortOptions={salesSortOptions}
-                     bulkDeleteRoute="sales.bulkDestroy"
+                    sortOptions={SORT_OPTIONS}
+                    bulkDeleteRoute="sales.bulkDestroy"
                     entityName="Sale"
                 />
             </div>

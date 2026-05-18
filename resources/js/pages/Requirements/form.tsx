@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, LayoutList, Percent, Settings, Drill, } from "lucide-react";
+import { useCallback, useMemo } from "react";
 import { Requirement, RequirementItem } from "@/types";
 import { CustomerType } from "@/types";
 import { Product } from "@/types";
@@ -60,15 +61,15 @@ export default function RequirementForm({ requirement, customers, products, unit
         ],
     });
 
-    const addItem = () => {
+    const addItem = useCallback(() => {
         setData("items", [...data.items, { product_id: 0, quantity: 1, unit_price: "", description: "" }]);
-    };
+    }, [data.items, setData]);
 
-    const removeItem = (index: number) => {
-        setData("items", data.items.filter((_: any, i: number) => i !== index));
-    };
+    const removeItem = useCallback((index: number) => {
+        setData("items", data.items.filter((_, i: number) => i !== index));
+    }, [data.items, setData]);
 
-    const handleItemChange = (index: number, field: keyof RequirementItem | 'description', value: string | number) => {
+    const handleItemChange = useCallback((index: number, field: keyof RequirementItem | 'description', value: string | number) => {
         const newItems = [...data.items] as (RequirementItem)[];
 
 
@@ -78,34 +79,37 @@ export default function RequirementForm({ requirement, customers, products, unit
             newItems[index].unit_price = product ? product.unit_price : "";
             newItems[index].description = product ? (product.description || "") : "";
         } else {
-            (newItems[index] as any)[field] = value;
+            newItems[index][field as keyof RequirementItem] = value;
         }
         setData("items", newItems);
-    };
+    }, [data.items, products, setData]);
 
     const aitPercentage = parseFloat(data.ait_percentage as string) || 0;
     const vatPercentage = parseFloat(data.vat_percentage as string) || 0;
-    const aitFactor = (aitPercentage > 0 && aitPercentage < 100) ? (1 / (1 - (aitPercentage / 100))) : 1;
+    const aitFactor = useMemo(() => (aitPercentage > 0 && aitPercentage < 100) ? (1 / (1 - (aitPercentage / 100))) : 1, [aitPercentage]);
 
-    const itemsTotal = data.items.reduce((sum: number, item: any) => {
-        return sum + (parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor;
-    }, 0);
+    const calculations = useMemo(() => {
+        const itemsTotal = data.items.reduce((sum: number, item: RequirementItem) => {
+            return sum + (parseFloat(item.unit_price as string) || 0) * (item.quantity || 0) * aitFactor;
+        }, 0);
 
-    const accessoriesTotal = data.has_accessories ? (parseFloat(data.accessories_quantity as string) || 0) * (parseFloat(data.accessories_price as string) || 0) * aitFactor : 0;
-    const installationTotal = data.has_installation ? (parseFloat(data.installation_quantity as string) || 0) * (parseFloat(data.installation_price as string) || 0) * aitFactor : 0;
+        const accessoriesTotal = data.has_accessories ? (parseFloat(data.accessories_quantity as string) || 0) * (parseFloat(data.accessories_price as string) || 0) * aitFactor : 0;
+        const installationTotal = data.has_installation ? (parseFloat(data.installation_quantity as string) || 0) * (parseFloat(data.installation_price as string) || 0) * aitFactor : 0;
 
-    const subTotal = itemsTotal + accessoriesTotal + installationTotal;
+        const subTotal = itemsTotal + accessoriesTotal + installationTotal;
+        const vatAmount = vatPercentage > 0 ? (subTotal * vatPercentage / 100) : 0;
+        const grandTotal = subTotal + vatAmount;
+        const aitAmount = (aitPercentage > 0 && aitPercentage < 100) ? (subTotal - (subTotal / aitFactor)) : 0;
 
-    const vatAmount = vatPercentage > 0 ? (subTotal * vatPercentage / 100) : 0;
+        return { subTotal, vatAmount, grandTotal, aitAmount };
+    }, [data.items, data.has_accessories, data.accessories_quantity, data.accessories_price, data.has_installation, data.installation_quantity, data.installation_price, aitFactor, vatPercentage, aitPercentage]);
 
-    const grandTotal = subTotal + vatAmount;
+    const { subTotal, vatAmount, grandTotal, aitAmount } = calculations;
 
-    const aitAmount = (aitPercentage > 0 && aitPercentage < 100) ? (subTotal - (subTotal / aitFactor)) : 0;
-
-    const submit = (e: React.FormEvent) => {
+    const submit = useCallback((e: React.FormEvent) => {
         e.preventDefault();
         requirement ? put(route("requirements.update", requirement.id)) : post(route("requirements.store"));
-    };
+    }, [requirement, put, post]);
 
     return (
         <form onSubmit={submit} className="max-w-6xl mx-auto space-y-8 pb-10">

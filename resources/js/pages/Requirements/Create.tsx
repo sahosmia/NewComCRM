@@ -8,7 +8,7 @@ interface Props {
     customers: CustomerType[];
     products: Product[];
     units: Unit[];
-    requirement?: any;
+    requirement?: Requirement;
 }
 
 export default function Create({ customers, products, units }: Props) {
