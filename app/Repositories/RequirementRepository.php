@@ -14,7 +14,7 @@ class RequirementRepository
 
         return Requirement::query()
             ->with([
-                'customer',
+                'customer.assignedUser',
                 'items.product.unit'
             ])
 

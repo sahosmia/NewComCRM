@@ -13,7 +13,7 @@ class SaleRepository
         $perPage = $params['per_page'] ?? 10;
 
         return Sale::query()
-            ->with(['customer', 'requirement.items.product'])
+            ->with(['customer.assignedUser', 'requirement.items.product'])
             ->latest()
             ->paginate($perPage)
             ->withQueryString();
