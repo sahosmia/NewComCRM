@@ -74,11 +74,8 @@ class ReportService
             }
         }
 
-        if ($customerId && property_exists($query->getModel(), 'customer_id') || $query->getModel() instanceof Sale || $query->getModel() instanceof Meeting || $query->getModel() instanceof FollowUp) {
-             // Basic check for customer_id column or model type
-             if (!($query->getModel() instanceof Customer)) {
-                $query->where('customer_id', $customerId);
-             }
+        if ($customerId && !($query->getModel() instanceof Customer)) {
+            $query->where('customer_id', $customerId);
         }
 
         return $query;

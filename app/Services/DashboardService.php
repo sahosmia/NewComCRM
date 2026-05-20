@@ -16,77 +16,66 @@ class DashboardService
     public function dashboardData(User $user): array
     {
         return [
-            'stats' => $user->isSuperAdmin()
-                ? $this->superAdminStats()
-                : $this->userStats($user->id),
-            'todayFollowups' => $this->todayFollowups($user),
-            'upcomingMeetings' => $this->upcomingMeetings($user),
+            'meetings' => $this->getMeetingMetrics($user),
+            'followUps' => $this->getFollowUpMetrics($user),
+            'sales' => $this->getSalesMetrics($user),
+            'customers' => $this->getCustomerMetrics($user),
             'chartData' => $this->chartData($user),
         ];
     }
 
-    private function superAdminStats(): array
+    private function getMeetingMetrics(User $user): array
     {
-        return [
-            'totalCustomers' => Customer::query()->count(),
-            'totalUsers' => User::query()->where('role', 'user')->count(),
-            'todayFollowups' => FollowUp::query()->today()->count(),
-            'overdueFollowups' => FollowUp::query()->overdue()->count(),
-            'upcomingMeetings' => Meeting::query()->upcoming()->count(),
-            'pendingFollowups' => FollowUp::query()->pending()->count(),
-            'todayFollowupsDone' => FollowUp::query()->whereDate('completed_at', today())->count(),
-            'todayMeetingsDone' => Meeting::query()->where('status', 'completed')->whereDate('updated_at', today())->count(),
-            'todaySalesCount' => Sale::query()->whereDate('sale_date', today())->count(),
-            'totalSalesAmount' => Sale::query()->sum('amount'),
+        $baseQuery = Meeting::query()
+            ->with(['customer.company', 'requirement'])
+            ->when(!$user->isSuperAdmin(), fn($q) => $q->where('user_id', $user->id));
 
+        return [
+            'today' => (clone $baseQuery)->whereDate('scheduled_at', today())->orderBy('scheduled_at')->get(),
+            'upcoming' => (clone $baseQuery)->whereDate('scheduled_at', '>', today())->orderBy('scheduled_at')->limit(5)->get(),
+            'today_count' => (clone $baseQuery)->whereDate('scheduled_at', today())->count(),
+            'upcoming_count' => (clone $baseQuery)->whereDate('scheduled_at', '>', today())->count(),
         ];
     }
 
-    private function userStats(int $userId): array
+    private function getFollowUpMetrics(User $user): array
     {
-        return [
-            'totalCustomers' => Customer::query()->assignedTo($userId)->count(),
-            'todayFollowups' => FollowUp::query()->byUser($userId)->today()->count(),
-            'overdueFollowups' => FollowUp::query()->byUser($userId)->overdue()->count(),
-            'upcomingMeetings' => Meeting::query()->byUser($userId)->upcoming()->count(),
-            'pendingFollowups' => FollowUp::query()->byUser($userId)->pending()->count(),
+        $baseQuery = FollowUp::query()
+            ->with(['customer.company', 'requirement'])
+            ->when(!$user->isSuperAdmin(), fn($q) => $q->where('user_id', $user->id));
 
-            'todayFollowupsDone' => FollowUp::query()->byUser($userId)->whereDate('completed_at', today())->count(),
-            'todayMeetingsDone' => Meeting::query()->byUser($userId)->where('status', 'completed')->whereDate('updated_at', today())->count(),
-            'todaySalesCount' => Sale::query()->whereHas('customer', function ($q) use ($userId) {
-                $q->where('assigned_to', $userId);
-            })->whereDate('sale_date', today())->count(),
+        return [
+            'today' => (clone $baseQuery)->whereDate('follow_up_date', today())->pending()->orderBy('follow_up_date')->get(),
+            'upcoming' => (clone $baseQuery)->whereDate('follow_up_date', '>', today())->pending()->orderBy('follow_up_date')->limit(5)->get(),
+            'today_count' => (clone $baseQuery)->whereDate('follow_up_date', today())->pending()->count(),
+            'upcoming_count' => (clone $baseQuery)->whereDate('follow_up_date', '>', today())->pending()->count(),
         ];
     }
 
-    private function todayFollowups(User $user)
+    private function getSalesMetrics(User $user): array
     {
-        $query = FollowUp::query()
-            ->with(['customer', 'requirement'])
-            ->today()
-            ->pending()
-            ->orderBy('follow_up_date');
+        $baseQuery = Sale::query()
+            ->when(!$user->isSuperAdmin(), function ($query) use ($user) {
+                $query->whereHas('customer', fn($q) => $q->where('assigned_to', $user->id));
+            });
 
-        if (! $user->isSuperAdmin()) {
-            $query->where('user_id', $user->id);
-        }
-
-        return $query->get();
+        return [
+            'today_count' => (clone $baseQuery)->whereDate('sale_date', today())->count(),
+            'today_amount' => (clone $baseQuery)->whereDate('sale_date', today())->sum('amount'),
+            'total_count' => (clone $baseQuery)->count(),
+            'total_amount' => (clone $baseQuery)->sum('amount'),
+        ];
     }
 
-    private function upcomingMeetings(User $user)
+    private function getCustomerMetrics(User $user): array
     {
-        $query = Meeting::query()
-            ->with(['customer', 'requirement'])
-            ->upcoming()
-            ->orderBy('scheduled_at')
-            ->limit(5);
+        $baseQuery = Customer::query()
+            ->when(!$user->isSuperAdmin(), fn($q) => $q->where('assigned_to', $user->id));
 
-        if (! $user->isSuperAdmin()) {
-            $query->where('user_id', $user->id);
-        }
-
-        return $query->get();
+        return [
+            'today_count' => (clone $baseQuery)->whereDate('created_at', today())->count(),
+            'total_count' => (clone $baseQuery)->count(),
+        ];
     }
 
     private function chartData(User $user): array
