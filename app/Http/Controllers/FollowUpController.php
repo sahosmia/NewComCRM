@@ -54,7 +54,7 @@ class FollowUpController extends Controller
     public function show(FollowUp $followUp)
     {
         return Inertia::render('FollowUps/Show', [
-            'followUp' => $followUp->load(['customer', 'user', 'requirement']),
+            'followUp' => $followUp->load(['customer.company', 'user', 'requirement.items.product.unit']),
         ]);
     }
 

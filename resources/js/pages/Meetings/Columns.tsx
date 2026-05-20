@@ -21,7 +21,12 @@ const columns: Column<Meeting>[] = [
     },
     {
         header: 'Customer',
-        accessor: (item) => item.customer?.name,
+        accessor: (item) => (
+            <div className="flex flex-col">
+                <span className="font-medium text-foreground">{item.customer?.name}</span>
+                <span className="text-[10px] text-muted-foreground truncate">{item.customer?.company?.name || 'N/A'}</span>
+            </div>
+        ),
     },
     {
         header: 'Requirement',

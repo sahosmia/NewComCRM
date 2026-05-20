@@ -59,7 +59,7 @@ class MeetingController extends Controller
     public function show(Meeting $meeting)
     {
         return Inertia::render('Meetings/Show', [
-            'meeting' => $meeting->load(['customer', 'user', 'requirement']),
+            'meeting' => $meeting->load(['customer.company', 'user', 'requirement.items.product.unit']),
         ]);
     }
 

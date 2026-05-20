@@ -89,7 +89,7 @@ export default function Show({ meeting }: { meeting: Meeting }) {
                                         Linked Requirement
                                     </CardTitle>
                                 </CardHeader>
-                                <CardContent>
+                                <CardContent className="space-y-4">
                                     <div className="flex justify-between items-center bg-blue-50/30 p-4 rounded-lg border border-blue-100/50">
                                         <div>
                                             <p className="text-sm font-bold text-foreground">
@@ -101,10 +101,52 @@ export default function Show({ meeting }: { meeting: Meeting }) {
                                         </div>
                                         <Button variant="outline" size="sm" asChild>
                                             <Link href={route('requirements.show', meeting.requirement.id)}>
-                                                View Requirement
+                                                View Details
                                             </Link>
                                         </Button>
                                     </div>
+
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+                                        <div className="p-3 bg-muted/30 rounded-lg">
+                                            <p className="text-muted-foreground mb-1 uppercase font-bold text-[9px]">Grand Total</p>
+                                            <p className="font-bold">BDT {Number(meeting.requirement.grand_total).toLocaleString()}</p>
+                                        </div>
+                                        <div className="p-3 bg-muted/30 rounded-lg">
+                                            <p className="text-muted-foreground mb-1 uppercase font-bold text-[9px]">AIT %</p>
+                                            <p className="font-bold">{meeting.requirement.ait_percentage}%</p>
+                                        </div>
+                                        <div className="p-3 bg-muted/30 rounded-lg">
+                                            <p className="text-muted-foreground mb-1 uppercase font-bold text-[9px]">VAT %</p>
+                                            <p className="font-bold">{meeting.requirement.vat_percentage}%</p>
+                                        </div>
+                                        <div className="p-3 bg-muted/30 rounded-lg">
+                                            <p className="text-muted-foreground mb-1 uppercase font-bold text-[9px]">Validity</p>
+                                            <p className="font-bold">{meeting.requirement.price_validity_days} Days</p>
+                                        </div>
+                                    </div>
+
+                                    {meeting.requirement.items && meeting.requirement.items.length > 0 && (
+                                        <div className="border rounded-lg overflow-hidden">
+                                            <table className="w-full text-[11px]">
+                                                <thead className="bg-muted/50 border-b">
+                                                    <tr>
+                                                        <th className="px-3 py-2 text-left">Product</th>
+                                                        <th className="px-3 py-2 text-center">Qty</th>
+                                                        <th className="px-3 py-2 text-right">Price</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y">
+                                                    {meeting.requirement.items.map(item => (
+                                                        <tr key={item.id}>
+                                                            <td className="px-3 py-2 font-medium">{item.product?.name}</td>
+                                                            <td className="px-3 py-2 text-center">{item.quantity} {item.product?.unit?.short_form}</td>
+                                                            <td className="px-3 py-2 text-right font-mono">{Number(item.unit_price).toLocaleString()}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    )}
                                 </CardContent>
                             </Card>
                         )}
