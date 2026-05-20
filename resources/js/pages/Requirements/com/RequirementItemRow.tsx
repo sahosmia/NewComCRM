@@ -22,7 +22,7 @@ interface ItemRowProps {
 export const RequirementItemRow = ({ index, item, products, aitFactor, onItemChange, onRemove, isRemoveDisabled, errors }: ItemRowProps) => {
 
     const calculateGross = () => (parseFloat(item.unit_price) || 0) * aitFactor;
-    const calculateTotal = () => (parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor;
+    const calculateTotal = () => ((parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor) + (parseFloat(item.costing_price) || 0);
 
     return (
         <div className="group relative bg-card border rounded-xl p-4 md:p-5 transition-all hover:border-primary/30 hover:shadow-md mb-4">
@@ -52,7 +52,7 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                         placeholder="Select a product..."
                         searchPlaceholder="Search product..."
                     />
-                    <ErrorMessage message={errors[`items.${index}.product_id`]} />
+                    <ErrorMessage message={errors && errors[`items.${index}.product_id`]} />
                 </div>
 
                 {/* Description/Specifications */}
@@ -61,10 +61,11 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
 
                     <Textarea
                         value={item.description || ""}
-                        placeholder="Automatic specs..."
-                        readOnly
-                        className="text-[11px] min-h-10.5 h-auto leading-snug resize-none bg-muted/20 border-dashed border-slate-200 cursor-not-allowed italic text-muted-foreground"
+                        onChange={(e) => onItemChange(index, "description", e.target.value)}
+                        placeholder="Product Description..."
+                        className="text-[11px] min-h-10.5 h-auto leading-snug resize-none border-dashed border-slate-200 italic text-muted-foreground"
                     />
+                    <ErrorMessage message={errors && errors[`items.${index}.description`]} />
                 </div>
 
                 {/* Quantity */}
@@ -77,23 +78,39 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                         value={item.quantity}
                         onChange={(e) => onItemChange(index, "quantity", e.target.value)}
                     />
-                    <ErrorMessage message={errors[`items.${index}.quantity`]} />
+                    <ErrorMessage message={errors && errors[`items.${index}.quantity`]} />
                 </div>
 
                 {/* Unit Price Input */}
-                <div className="col-span-1 md:col-span-2 space-y-2">
+                <div className="col-span-1 md:col-span-1 space-y-2">
                     <FormLabel>Unit Price</FormLabel>
 
                     <div className="relative group/price">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold text-muted-foreground group-focus-within/price:text-primary transition-colors">৳</span>
+                        <span className="absolute left-1.5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-muted-foreground group-focus-within/price:text-primary transition-colors">৳</span>
                         <Input
                             type="number"
-                            className="pl-7 font-bold h-10 border-slate-200 focus:ring-2 focus:ring-primary/20"
+                            className="pl-5 font-bold h-10 border-slate-200 focus:ring-2 focus:ring-primary/20 text-xs"
                             value={item.unit_price}
                             onChange={(e) => onItemChange(index, "unit_price", e.target.value)}
                         />
                     </div>
-                    <ErrorMessage message={errors[`items.${index}.unit_price`]} />
+                    <ErrorMessage message={errors && errors[`items.${index}.unit_price`]} />
+                </div>
+
+                {/* Costing Price Input */}
+                <div className="col-span-1 md:col-span-1 space-y-2">
+                    <FormLabel>Costing</FormLabel>
+
+                    <div className="relative group/cost">
+                        <span className="absolute left-1.5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-muted-foreground group-focus-within/cost:text-primary transition-colors">৳</span>
+                        <Input
+                            type="number"
+                            className="pl-5 font-bold h-10 border-slate-200 focus:ring-2 focus:ring-primary/20 text-xs"
+                            value={item.costing_price}
+                            onChange={(e) => onItemChange(index, "costing_price", e.target.value)}
+                        />
+                    </div>
+                    <ErrorMessage message={errors && errors[`items.${index}.costing_price`]} />
                 </div>
 
                 {/* Total Calculation Display */}

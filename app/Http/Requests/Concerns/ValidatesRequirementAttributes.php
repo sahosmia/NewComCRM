@@ -42,6 +42,8 @@ trait ValidatesRequirementAttributes
             'items.*.product_id'    => 'required|exists:products,id',
             'items.*.quantity'      => 'required|integer|min:1',
             'items.*.unit_price'    => 'required|numeric|min:0',
+            'items.*.costing_price' => 'nullable|numeric|min:0',
+            'items.*.description'   => 'nullable|string',
         ];
     }
 

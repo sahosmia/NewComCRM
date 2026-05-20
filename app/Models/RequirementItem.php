@@ -10,7 +10,7 @@ class RequirementItem extends Model
     use HasFactory;
 
     protected $fillable = [
-        'requirement_id', 'product_id', 'quantity', 'unit_price', 'total_price'
+        'requirement_id', 'product_id', 'quantity', 'unit_price', 'total_price', 'costing_price', 'description'
     ];
 
     protected static function boot()
@@ -23,7 +23,7 @@ class RequirementItem extends Model
             if ($requirement && $requirement->ait_percentage > 0 && $requirement->ait_percentage < 100) {
                 $aitFactor = 1 / (1 - ($requirement->ait_percentage / 100));
             }
-            $item->total_price = $item->quantity * ($item->unit_price * $aitFactor);
+            $item->total_price = ($item->quantity * ($item->unit_price * $aitFactor)) + ($item->costing_price ?? 0);
         });
 
         static::saved(function ($item) {

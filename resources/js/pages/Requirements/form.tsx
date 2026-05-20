@@ -60,19 +60,19 @@ export default function RequirementForm({ requirement, customers, products, unit
         qutation_send_by: requirement?.qutation_send_by || "",
 
         items: requirement?.items || [
-            { product_id: 0, quantity: 1, unit_price: "", description: "" }
+            { product_id: 0, quantity: 1, unit_price: "", costing_price: "", description: "" }
         ],
     });
 
     const addItem = () => {
-        setData("items", [...data.items, { product_id: 0, quantity: 1, unit_price: "", description: "" }]);
+        setData("items", [...data.items, { product_id: 0, quantity: 1, unit_price: "", costing_price: "", description: "" }]);
     };
 
     const removeItem = (index: number) => {
         setData("items", data.items.filter((_: any, i: number) => i !== index));
     };
 
-    const handleItemChange = (index: number, field: keyof RequirementItem | 'description', value: string | number) => {
+    const handleItemChange = (index: number, field: keyof RequirementItem | 'description' | 'costing_price', value: string | number) => {
         const newItems = [...data.items] as (RequirementItem)[];
 
 
@@ -92,7 +92,11 @@ export default function RequirementForm({ requirement, customers, products, unit
     const aitFactor = (aitPercentage > 0 && aitPercentage < 100) ? (1 / (1 - (aitPercentage / 100))) : 1;
 
     const itemsTotal = data.items.reduce((sum: number, item: any) => {
-        return sum + (parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor;
+        return sum + ((parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor) + (parseFloat(item.costing_price) || 0);
+    }, 0);
+
+    const itemsCostingTotal = data.items.reduce((sum: number, item: any) => {
+        return sum + (parseFloat(item.costing_price) || 0);
     }, 0);
 
     const accessoriesTotal = data.has_accessories ? (parseFloat(data.accessories_quantity as string) || 0) * (parseFloat(data.accessories_price as string) || 0) * aitFactor : 0;
@@ -100,7 +104,9 @@ export default function RequirementForm({ requirement, customers, products, unit
 
     const subTotal = itemsTotal + accessoriesTotal + installationTotal;
 
-    const vatAmount = vatPercentage > 0 ? (subTotal * vatPercentage / 100) : 0;
+    const taxableAmount = (itemsTotal - itemsCostingTotal) + accessoriesTotal + installationTotal;
+
+    const vatAmount = vatPercentage > 0 ? (taxableAmount * vatPercentage / 100) : 0;
 
     const grandTotal = subTotal + vatAmount;
 
@@ -330,6 +336,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                             onItemChange={handleItemChange}
                             onRemove={removeItem}
                             isRemoveDisabled={data.items.length === 1}
+                            errors={errors}
                         />
                     ))}
                 </div>
