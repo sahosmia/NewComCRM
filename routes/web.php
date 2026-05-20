@@ -92,6 +92,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // --- Sales & Reports ---
     Route::prefix('reports')->name('reports.')->controller(ReportController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
         Route::get('follow-ups', 'followUps')->name('follow-ups');
         Route::get('sales', 'sales')->name('sales');
         Route::get('customers', 'customers')->name('customers');
