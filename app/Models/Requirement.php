@@ -39,6 +39,8 @@ class Requirement extends Model
         'advance_payment',
         'before_payment',
         'delivery_location',
+        'send_qutation_to',
+        'qutation_send_by',
     ];
 
     protected $casts = [
@@ -63,6 +65,16 @@ class Requirement extends Model
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function quotationRecipient(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class, 'send_qutation_to');
+    }
+
+    public function quotationSender(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'qutation_send_by');
     }
 
     public function accessoriesUnit(): BelongsTo

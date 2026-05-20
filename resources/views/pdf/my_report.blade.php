@@ -346,14 +346,17 @@
     <main>
         <div style="margin: -20px 28px 0; text-align: justify; font-size: 15px;">
             <div class="recipient-info">
+                @php
+                    $recipient = $requirement->quotationRecipient ?? $requirement->customer;
+                @endphp
                 Date: {{ date('d F Y', strtotime($date)) }}<br><br>
 
                 To,<br>
-                <strong>{{ $requirement->customer->name }}</strong><br>
-                {{ $requirement->customer->designation }}<br>
-                {{ $requirement->customer->company->name ?? 'N/A' }}<br>
-                {{ $requirement->customer->company->address ?? 'N/A' }}<br>
-                Cell: +88{{ $requirement->customer->phones[0] ?? '' }} | E-mail: {{ $requirement->customer->email }}
+                <strong>{{ $recipient->name }}</strong><br>
+                {{ $recipient->designation }}<br>
+                {{ $recipient->company->name ?? 'N/A' }}<br>
+                {{ $recipient->company->address ?? 'N/A' }}<br>
+                Cell: +88{{ $recipient->phones[0] ?? '' }} | E-mail: {{ $recipient->email }}
             </div>
 
             <div class="subject-line">
@@ -403,12 +406,15 @@
                 </div>
 
                 <div class="info-text">
-                    <strong>{{ $requirement->customer->assignedUser->name }}</strong><br>
-                    {{ $requirement->customer->assignedUser->designation }}<br>
+                    @php
+                        $sender = $requirement->quotationSender ?? $requirement->customer->assignedUser;
+                    @endphp
+                    <strong>{{ $sender->name }}</strong><br>
+                    {{ $sender->designation }}<br>
                     <strong>Crystal Vision Solutions</strong><br>
-                    M: +88{{ $requirement->customer->assignedUser->phone }} | +8801911-561554
+                    M: +88{{ $sender->phone }} | +8801911-561554
                     (WhatsApp);<br>
-                    E-mail: {{ $requirement->customer->assignedUser->email }} |
+                    E-mail: {{ $sender->email }} |
                     crystalsolutionsbd@gmail.com
 
                     <div class="office-info">
@@ -641,8 +647,11 @@
                 </div>
 
                 <div class="info-text">
-                    <strong>{{ $requirement->customer->assignedUser->name }}</strong><br>
-                    {{ $requirement->customer->assignedUser->designation }}<br>
+                    @php
+                        $sender = $requirement->quotationSender ?? $requirement->customer->assignedUser;
+                    @endphp
+                    <strong>{{ $sender->name }}</strong><br>
+                    {{ $sender->designation }}<br>
                     <strong>Crystal Vision Solutions</strong><br>
 
                 </div>

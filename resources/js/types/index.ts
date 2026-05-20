@@ -177,6 +177,8 @@ export interface Requirement {
     advance_payment: number;
     before_payment: number;
     delivery_location: string | null;
+    send_qutation_to: number | null;
+    qutation_send_by: number | null;
 
     created_at: string;
     updated_at: string;
@@ -187,6 +189,8 @@ export interface Requirement {
     installationUnit?: Unit;
     meetings?: Meeting[];
     follow_ups?: FollowUp[];
+    quotationRecipient?: CustomerType;
+    quotationSender?: User;
 }
 
 export interface FollowUp {

@@ -69,7 +69,9 @@ class RequirementController extends Controller
                 'accessoriesUnit',
                 'installationUnit',
                 'meetings',
-                'followUps'
+                'followUps',
+                'quotationRecipient.company',
+                'quotationSender'
             ]),
         ]);
     }
@@ -130,7 +132,14 @@ class RequirementController extends Controller
     public function downloadPdf(Requirement $requirement)
     {
 
-        $requirement->load(['customer.assignedUser', 'items.product.unit', 'accessoriesUnit', 'installationUnit']);
+        $requirement->load([
+            'customer.assignedUser',
+            'items.product.unit',
+            'accessoriesUnit',
+            'installationUnit',
+            'quotationRecipient.company',
+            'quotationSender'
+        ]);
 
         $getImage = function ($path) {
             if (!file_exists($path)) return "";
