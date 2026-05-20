@@ -34,6 +34,7 @@ trait ValidatesRequirementAttributes
             'delivery_time_days'  => 'nullable|integer|min:0',
             'advance_payment'     => 'nullable|integer|min:0|max:100',
             'before_payment'      => 'nullable|integer|min:0|max:100',
+            'after_payment'       => 'nullable|integer|min:0|max:100',
             'delivery_location'   => 'nullable|string|max:255',
             'send_qutation_to'    => 'nullable|exists:customers,id',
             'qutation_send_by'    => 'nullable|exists:users,id',

@@ -38,6 +38,7 @@ class Requirement extends Model
         'delivery_time_days',
         'advance_payment',
         'before_payment',
+        'after_payment',
         'delivery_location',
         'send_qutation_to',
         'qutation_send_by',

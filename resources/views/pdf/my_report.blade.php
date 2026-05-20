@@ -682,9 +682,14 @@
                     </li>
                     <li>
                         <span class="term-head">4. Payment Terms:</span>
-                        {{ $requirement->advance_payment ?? '______' }}%
-                        Advance with Purchase Order {{ $requirement->before_payment ?? '______' }}% Before
-                        Delivery / After Installation (Or as mutually agreed).
+                        {{ $requirement->advance_payment ?? '______' }}% Advance with Purchase Order
+                        @if($requirement->before_payment > 0)
+                            {{ $requirement->before_payment }}% Before Delivery.
+                        @elseif($requirement->after_payment > 0)
+                            {{ $requirement->after_payment }}% After Installation / Delivery.
+                        @else
+                            ______% Before Delivery / After Installation (Or as mutually agreed).
+                        @endif
                     </li>
                     <li>
                         <span class="term-head">5. Payment Method:</span> Cash / Bank transfer / Cheque to be made

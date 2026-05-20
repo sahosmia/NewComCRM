@@ -53,7 +53,8 @@ export default function RequirementForm({ requirement, customers, products, unit
         price_validity_days: requirement?.price_validity_days || "",
         delivery_time_days: requirement?.delivery_time_days || "",
         advance_payment: requirement?.advance_payment ?? 0,
-        before_payment: requirement?.before_payment ?? 100,
+        before_payment: requirement?.before_payment ?? 0,
+        after_payment: requirement?.after_payment ?? 0,
         delivery_location: requirement?.delivery_location || "",
         send_qutation_to: requirement?.send_qutation_to || "",
         qutation_send_by: requirement?.qutation_send_by || "",
@@ -193,8 +194,34 @@ export default function RequirementForm({ requirement, customers, products, unit
                             <Input
                                 type="number"
                                 value={data.before_payment === 0 ? "" : data.before_payment}
-                                onChange={(e) => setData("before_payment", e.target.value === "" ? 0 : Number(e.target.value))}
+                                onChange={(e) => {
+                                    const val = e.target.value === "" ? 0 : Number(e.target.value);
+                                    setData(d => ({
+                                        ...d,
+                                        before_payment: val,
+                                        after_payment: val > 0 ? 0 : d.after_payment
+                                    }));
+                                }}
                                 placeholder="Before Delivery Payment"
+                                disabled={Number(data.after_payment) > 0}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <FormLabel>After Delivery Payment (%)</FormLabel>
+                            <Input
+                                type="number"
+                                value={data.after_payment === 0 ? "" : data.after_payment}
+                                onChange={(e) => {
+                                    const val = e.target.value === "" ? 0 : Number(e.target.value);
+                                    setData(d => ({
+                                        ...d,
+                                        after_payment: val,
+                                        before_payment: val > 0 ? 0 : d.before_payment
+                                    }));
+                                }}
+                                placeholder="After Delivery Payment"
+                                disabled={Number(data.before_payment) > 0}
                             />
                         </div>
 

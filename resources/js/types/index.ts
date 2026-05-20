@@ -176,6 +176,7 @@ export interface Requirement {
     delivery_time_days: number | null;
     advance_payment: number;
     before_payment: number;
+    after_payment: number;
     delivery_location: string | null;
     send_qutation_to: number | null;
     qutation_send_by: number | null;
