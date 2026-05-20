@@ -34,8 +34,10 @@ trait ValidatesRequirementAttributes
             'delivery_time_days'  => 'required|integer|min:0',
             'advance_payment'     => 'required|integer|min:0|max:100',
             'before_payment'      => 'required|integer|min:0|max:100',
+            'after_payment'       => 'nullable|integer|min:0|max:100',
             'delivery_location'   => 'nullable|string|max:255',
-
+            'send_qutation_to'    => 'nullable|exists:customers,id',
+            'qutation_send_by'    => 'nullable|exists:users,id',
             'items'                 => 'required|array|min:1',
             'items.*.product_id'    => 'required|exists:products,id',
             'items.*.quantity'      => 'required|integer|min:1',

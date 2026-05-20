@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     User, Calendar, ArrowLeft, MessageSquare,
-    Clock, CheckCircle2
+    Clock, CheckCircle2, Briefcase, Video
 } from "lucide-react";
 import { Head, Link } from "@inertiajs/react";
 import { cn } from "@/lib/utils";
@@ -35,6 +35,11 @@ export default function Show({ followUp }: { followUp: FollowUp }) {
 
                     </div>
                     <div className="flex gap-2">
+                        <Button variant="outline" size="sm" asChild>
+                            <Link href={route('meetings.create', { customer_id: followUp.customer_id, requirement_id: followUp.requirement_id })}>
+                                <Video className="w-4 h-4 mr-2" /> Add Meeting
+                            </Link>
+                        </Button>
                         <Button variant="outline" asChild>
                             <Link href={route("follow-ups.index")}>
                                 <ArrowLeft className="w-4 h-4 mr-2" /> Back
@@ -90,6 +95,77 @@ export default function Show({ followUp }: { followUp: FollowUp }) {
 
                     {/* Right Column: Content & Next Steps (Like History/Remarks) */}
                     <div className="lg:col-span-2 space-y-6">
+
+                        {/* Linked Requirement Card */}
+                        {followUp.requirement && (
+                            <Card className="border-l-4 border-l-blue-500">
+                                <CardHeader>
+                                    <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 text-blue-600">
+                                        <Briefcase className="w-4 h-4" />
+                                        Linked Requirement
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <div className="flex justify-between items-center bg-blue-50/30 p-4 rounded-lg border border-blue-100/50">
+                                        <div>
+                                            <p className="text-sm font-bold text-foreground">
+                                                {followUp.requirement.title || `Requirement #${followUp.requirement.id}`}
+                                            </p>
+                                            <p className="text-xs text-muted-foreground mt-1">
+                                                Status: <span className="capitalize">{followUp.requirement.status}</span>
+                                            </p>
+                                        </div>
+                                        <Button variant="outline" size="sm" asChild>
+                                            <Link href={route('requirements.show', followUp.requirement.id)}>
+                                                View Details
+                                            </Link>
+                                        </Button>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+                                        <div className="p-3 bg-muted/30 rounded-lg">
+                                            <p className="text-muted-foreground mb-1 uppercase font-bold text-[9px]">Grand Total</p>
+                                            <p className="font-bold">BDT {Number(followUp.requirement.grand_total).toLocaleString()}</p>
+                                        </div>
+                                        <div className="p-3 bg-muted/30 rounded-lg">
+                                            <p className="text-muted-foreground mb-1 uppercase font-bold text-[9px]">AIT %</p>
+                                            <p className="font-bold">{followUp.requirement.ait_percentage}%</p>
+                                        </div>
+                                        <div className="p-3 bg-muted/30 rounded-lg">
+                                            <p className="text-muted-foreground mb-1 uppercase font-bold text-[9px]">VAT %</p>
+                                            <p className="font-bold">{followUp.requirement.vat_percentage}%</p>
+                                        </div>
+                                        <div className="p-3 bg-muted/30 rounded-lg">
+                                            <p className="text-muted-foreground mb-1 uppercase font-bold text-[9px]">Validity</p>
+                                            <p className="font-bold">{followUp.requirement.price_validity_days} Days</p>
+                                        </div>
+                                    </div>
+
+                                    {followUp.requirement.items && followUp.requirement.items.length > 0 && (
+                                        <div className="border rounded-lg overflow-hidden">
+                                            <table className="w-full text-[11px]">
+                                                <thead className="bg-muted/50 border-b">
+                                                    <tr>
+                                                        <th className="px-3 py-2 text-left">Product</th>
+                                                        <th className="px-3 py-2 text-center">Qty</th>
+                                                        <th className="px-3 py-2 text-right">Price</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y">
+                                                    {followUp.requirement.items.map(item => (
+                                                        <tr key={item.id}>
+                                                            <td className="px-3 py-2 font-medium">{item.product?.name}</td>
+                                                            <td className="px-3 py-2 text-center">{item.quantity} {item.product?.unit?.short_form}</td>
+                                                            <td className="px-3 py-2 text-right font-mono">{Number(item.unit_price).toLocaleString()}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        )}
 
                         <Card className="overflow-hidden">
                             <CardHeader className="pb-3">

@@ -96,6 +96,7 @@ export interface Meeting {
     id: number;
     customer_id: number;
     user_id: number;
+    requirement_id: number | null;
     title: string;
     scheduled_at: string;
     meeting_type: 'physical' | 'virtual' | 'phone';
@@ -107,6 +108,7 @@ export interface Meeting {
     updated_at: string;
     customer?: CustomerType;
     user?: User;
+    requirement?: Requirement;
 }
 
 
@@ -174,7 +176,10 @@ export interface Requirement {
     delivery_time_days: number | null;
     advance_payment: number;
     before_payment: number;
+    after_payment: number;
     delivery_location: string | null;
+    send_qutation_to: number | null;
+    qutation_send_by: number | null;
 
     created_at: string;
     updated_at: string;
@@ -183,12 +188,17 @@ export interface Requirement {
     items?: RequirementItem[];
     accessoriesUnit?: Unit;
     installationUnit?: Unit;
+    meetings?: Meeting[];
+    follow_ups?: FollowUp[];
+    quotationRecipient?: CustomerType;
+    quotationSender?: User;
 }
 
 export interface FollowUp {
     id: number;
     customer_id: number;
     user_id: number;
+    requirement_id: number | null;
     follow_up_date: string;
     notes: string;
     status: 'price_shared' | 'negotiation' | 'purchase' | 'lost' | 'pending' | 'follow_up';
@@ -198,6 +208,7 @@ export interface FollowUp {
     updated_at: string;
     customer?: CustomerType;
     user?: User;
+    requirement?: Requirement;
 }
 
 

@@ -16,15 +16,18 @@ import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 interface Props {
     meeting?: Meeting;
     customers: { id: number; name: string; full_name_with_company?: string }[];
+    requirements: { id: number; title: string | null; customer_id: number }[];
 }
 
-export default function MeetingForm({ meeting, customers }: Props) {
+export default function MeetingForm({ meeting, customers, requirements }: Props) {
     const urlParams = new URLSearchParams(window.location.search);
     const preSelectedCustomerId = urlParams.get('customer_id');
+    const preSelectedRequirementId = urlParams.get('requirement_id');
 
 
     const { data, setData, post, put, processing, errors } = useForm({
         customer_id: meeting?.customer_id || (preSelectedCustomerId ? parseInt(preSelectedCustomerId) : ""),
+        requirement_id: meeting?.requirement_id || (preSelectedRequirementId ? parseInt(preSelectedRequirementId) : ""),
         title: meeting?.title || "",
         scheduled_at: meeting?.scheduled_at ? new Date(meeting.scheduled_at).toISOString().slice(0, 16) : "",
         meeting_type: meeting?.meeting_type || "virtual",
@@ -44,6 +47,10 @@ export default function MeetingForm({ meeting, customers }: Props) {
         }
     };
 
+    const filteredRequirements = data.customer_id
+        ? requirements.filter(r => r.customer_id === data.customer_id)
+        : requirements;
+
     return (
         <form onSubmit={submit} className="space-y-4">
             <div className="space-y-1">
@@ -51,12 +58,43 @@ export default function MeetingForm({ meeting, customers }: Props) {
                     label="Customer"
                     items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || c.name }))}
                     selectedId={data.customer_id}
-                    onSelect={(id) => setData("customer_id", id as number)}
+                    onSelect={(id) => {
+                        setData("customer_id", id as number);
+                        // Optional: Clear requirement if it doesn't belong to the new customer
+                        if (data.requirement_id) {
+                            const req = requirements.find(r => r.id === data.requirement_id);
+                            if (req && req.customer_id !== id) {
+                                setData(d => ({ ...d, customer_id: id as number, requirement_id: "" }));
+                            }
+                        }
+                    }}
                     placeholder="Select Customer"
                     searchPlaceholder="Search customers..."
                     allowManualInput={false}
                 />
                 <ErrorMessage message={errors.customer_id} />
+            </div>
+
+            <div className="space-y-1">
+                <GenericCombobox
+                    label="Requirement (Optional)"
+                    items={filteredRequirements.map(r => ({ id: r.id, name: r.title || `Requirement #${r.id}` }))}
+                    selectedId={data.requirement_id}
+                    onSelect={(id) => {
+                        setData("requirement_id", id as number);
+                        // If requirement is selected, auto-select the customer
+                        if (id) {
+                            const req = requirements.find(r => r.id === id);
+                            if (req && req.customer_id !== data.customer_id) {
+                                setData(d => ({ ...d, requirement_id: id as number, customer_id: req.customer_id }));
+                            }
+                        }
+                    }}
+                    placeholder="Select Requirement"
+                    searchPlaceholder="Search requirements..."
+                    allowManualInput={false}
+                />
+                <ErrorMessage message={errors.requirement_id} />
             </div>
 
             <div>

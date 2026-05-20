@@ -14,8 +14,14 @@ class FollowUp extends Model
     use HasFactory;
 
     protected $fillable = [
-        'customer_id', 'user_id', 'follow_up_date', 'notes',
-        'status', 'priority', 'completed_at',
+        'customer_id',
+        'user_id',
+        'requirement_id',
+        'follow_up_date',
+        'notes',
+        'status',
+        'priority',
+        'completed_at',
     ];
 
     protected $casts = [
@@ -49,6 +55,11 @@ class FollowUp extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function requirement()
+    {
+        return $this->belongsTo(Requirement::class);
+    }
+
     // Scopes
     public function scopePending($query)
     {
@@ -68,13 +79,13 @@ class FollowUp extends Model
     public function scopeUpcoming($query)
     {
         return $query->whereDate('follow_up_date', '>', today())
-                     ->whereNull('completed_at');
+            ->whereNull('completed_at');
     }
 
     public function scopeOverdue($query)
     {
         return $query->whereDate('follow_up_date', '<', today())
-                     ->whereNull('completed_at');
+            ->whereNull('completed_at');
     }
 
     public function scopeByUser($query, $userId)

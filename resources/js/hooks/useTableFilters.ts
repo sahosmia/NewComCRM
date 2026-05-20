@@ -43,7 +43,7 @@ export const useTableFilters = <T extends { id: number }>({
     const applyFilters = useCallback(
         (newFilters: { search?: string; per_page?: string; page?: number }) => {
 
-            const params: Record<string, any> = {
+            const params: Record<string, string | number | undefined> = {
                 ...paramsObject, // preserve other filters
                 search: newFilters.search ?? search,
                 per_page: newFilters.per_page ?? perPage,

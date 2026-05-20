@@ -13,7 +13,7 @@ class SaleRepository
         $perPage = $params['per_page'] ?? 10;
 
         return Sale::query()
-            ->with(['customer', 'requirement.items.product'])
+            ->with(['customer.assignedUser', 'requirement.items.product'])
             ->latest()
             ->paginate($perPage)
             ->withQueryString();
@@ -33,7 +33,7 @@ class SaleRepository
     public function getForExport(array $ids): Collection
     {
         return Sale::query()
-            ->with(['customer', 'requirement.items.product'])
+            ->with(['customer.assignedUser', 'requirement.items.product'])
             ->when(!empty($ids), fn($q) => $q->whereIn('id', $ids))
             ->get();
     }

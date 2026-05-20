@@ -346,22 +346,21 @@
     <main>
         <div style="margin: -20px 28px 0; text-align: justify; font-size: 15px;">
             <div class="recipient-info">
+                @php
+                    $recipient = $requirement->quotationRecipient ?? $requirement->customer;
+                @endphp
                 Date: {{ date('d F Y', strtotime($date)) }}<br><br>
 
                 To,<br>
-                <strong>{{ $requirement->customer->name }}</strong><br>
-                {{ $requirement->customer->designation }}<br>
-                {{ $requirement->customer->company->name ?? 'N/A' }}<br>
-                {{ $requirement->customer->company->address ?? 'N/A' }}<br>
-                Cell: +88{{ $requirement->customer->phones[0] ?? '' }} | E-mail: {{ $requirement->customer->email }}
+                <strong>{{ $recipient->name }}</strong><br>
+                {{ $recipient->designation }}<br>
+                {{ $recipient->company->name ?? 'N/A' }}<br>
+                {{ $recipient->company->address ?? 'N/A' }}<br>
+                Cell: +88{{ $recipient->phones[0] ?? '' }} | E-mail: {{ $recipient->email }}
             </div>
 
             <div class="subject-line">
-                <span style="color: #2F5496;">Subject:</span>
-                <span class="subject-blue">Technical & Financial Offer for</span>
-                <span class="subject-blue" style="color: blue;">Supply
-                    {{ $requirement->has_installation ? 'and Installation' : '' }}</span>
-                of <span class="subject-red">{{ $requirement->title ?? 'Required Items' }}</span>.
+                <span>Subject: Technical & Comercial Proposal for Supply {{ $requirement->has_installation ? 'and Installation' : '' }} {{ $requirement->title ?? 'Required Items' }}</span>.
             </div>
             <p>Dear Sir,
                 <br />
@@ -403,12 +402,15 @@
                 </div>
 
                 <div class="info-text">
-                    <strong>{{ $requirement->customer->assignedUser->name }}</strong><br>
-                    {{ $requirement->customer->assignedUser->designation }}<br>
+                    @php
+                        $sender = $requirement->quotationSender ?? $requirement->customer->assignedUser;
+                    @endphp
+                    <strong>{{ $sender->name }}</strong><br>
+                    {{ $sender->designation }}<br>
                     <strong>Crystal Vision Solutions</strong><br>
-                    M: +88{{ $requirement->customer->assignedUser->phone }} | +8801911-561554
+                    M: +88{{ $sender->phone }} | +8801911-561554
                     (WhatsApp);<br>
-                    E-mail: {{ $requirement->customer->assignedUser->email }} |
+                    E-mail: {{ $sender->email }} |
                     crystalsolutionsbd@gmail.com
 
                     <div class="office-info">
@@ -448,10 +450,12 @@
                                 Brand & Model: {{ $item->product->brand }} {{ $item->product->model }}<br>
                                 {{ $item->product->description }}
                                 @if ($item->product->warranty)
-                                    <br><strong>Warranty:</strong> {{ $item->product->warranty }} {{ $item->product->warranty_duration_unit }}
+                                    <br><strong>Warranty:</strong> {{ $item->product->warranty }}
+                                    {{ $item->product->warranty_duration_unit }}
                                 @endif
                             </td>
-                            <td class="text-center">{{ $item->quantity }} {{ $item->product->unit->short_form ?? ($item->product->unit->title ?? 'Unit') }}
+                            <td class="text-center">{{ $item->quantity }}
+                                {{ $item->product->unit->short_form ?? ($item->product->unit->title ?? 'Unit') }}
                             </td>
                             <td class="text-right">{{ number_format($item->unit_price, 0) }}</td>
                             <td class="text-right">{{ number_format($item->total_price, 0) }}/=</td>
@@ -469,38 +473,38 @@
                                 $negative = 'negative ';
                                 $decimal = ' point ';
                                 $dictionary = [
-                                    0 => 'zero',
-                                    1 => 'one',
-                                    2 => 'two',
-                                    3 => 'three',
-                                    4 => 'four',
-                                    5 => 'five',
-                                    6 => 'six',
-                                    7 => 'seven',
-                                    8 => 'eight',
-                                    9 => 'nine',
-                                    10 => 'ten',
-                                    11 => 'eleven',
-                                    12 => 'twelve',
-                                    13 => 'thirteen',
-                                    14 => 'fourteen',
-                                    15 => 'fifteen',
-                                    16 => 'sixteen',
-                                    17 => 'seventeen',
-                                    18 => 'eighteen',
-                                    19 => 'nineteen',
-                                    20 => 'twenty',
-                                    30 => 'thirty',
-                                    40 => 'forty',
-                                    50 => 'fifty',
-                                    60 => 'sixty',
-                                    70 => 'seventy',
-                                    80 => 'eighty',
-                                    90 => 'ninety',
-                                    100 => 'hundred',
-                                    1000 => 'thousand',
-                                    100000 => 'lac',
-                                    10000000 => 'crore',
+                                    0 => 'Zero',
+                                    1 => 'One',
+                                    2 => 'Two',
+                                    3 => 'Three',
+                                    4 => 'Four',
+                                    5 => 'Five',
+                                    6 => 'Six',
+                                    7 => 'Seven',
+                                    8 => 'Eight',
+                                    9 => 'Nine',
+                                    10 => 'Ten',
+                                    11 => 'Eleven',
+                                    12 => 'Twelve',
+                                    13 => 'Thirteen',
+                                    14 => 'Fourteen',
+                                    15 => 'Fifteen',
+                                    16 => 'Sixteen',
+                                    17 => 'Seventeen',
+                                    18 => 'Eighteen',
+                                    19 => 'Nineteen',
+                                    20 => 'Twenty',
+                                    30 => 'Thirty',
+                                    40 => 'Forty',
+                                    50 => 'Fifty',
+                                    60 => 'Sixty',
+                                    70 => 'Seventy',
+                                    80 => 'Eighty',
+                                    90 => 'Ninety',
+                                    100 => 'Hundred',
+                                    1000 => 'Thousand',
+                                    100000 => 'Lac',
+                                    10000000 => 'Crore',
                                 ];
 
                                 if (!is_numeric($number)) {
@@ -563,7 +567,6 @@
                                         }
                                         break;
                                 }
-
                                 return $string;
                             }
                         }
@@ -574,7 +577,7 @@
                     @if ($requirement->has_accessories)
                         <tr>
                             <td class="text-center">{{ str_pad($currentSl, 2, '0', STR_PAD_LEFT) }}</td>
-                            <td><strong>Accessories Charge</strong> ({{ $requirement->accessories_title }})</td>
+                            <td> {{ $requirement->accessories_title }}</td>
                             <td class="text-center">{{ $requirement->accessories_quantity }}
                                 {{ $requirement->accessories_unit_id }}</td>
                             <td class="text-right">{{ number_format($requirement->accessories_price, 0) }}</td>
@@ -588,7 +591,7 @@
                     @if ($requirement->has_installation)
                         <tr>
                             <td class="text-center">{{ str_pad($currentSl, 2, '0', STR_PAD_LEFT) }}</td>
-                            <td><strong>Installation Charge</strong> ({{ $requirement->installation_title }})</td>
+                            <td> {{ $requirement->installation_title }}</td>
                             <td class="text-center">{{ $requirement->installation_quantity }}
                                 {{ $requirement->installation_unit_id }}</td>
                             <td class="text-right">{{ number_format($requirement->installation_price, 0) }}</td>
@@ -641,8 +644,11 @@
                 </div>
 
                 <div class="info-text">
-                    <strong>{{ $requirement->customer->assignedUser->name }}</strong><br>
-                    {{ $requirement->customer->assignedUser->designation }}<br>
+                    @php
+                        $sender = $requirement->quotationSender ?? $requirement->customer->assignedUser;
+                    @endphp
+                    <strong>{{ $sender->name }}</strong><br>
+                    {{ $sender->designation }}<br>
                     <strong>Crystal Vision Solutions</strong><br>
 
                 </div>
@@ -673,9 +679,14 @@
                     </li>
                     <li>
                         <span class="term-head">4. Payment Terms:</span>
-                        {{ $requirement->advance_payment ?? '______' }}%
-                        Advance with Purchase Order {{ $requirement->before_payment ?? '______' }}% Before
-                        Delivery / After Installation (Or as mutually agreed).
+                        {{ $requirement->advance_payment ?? '______' }}% Advance with Purchase Order
+                        @if ($requirement->before_payment > 0)
+                            {{ $requirement->before_payment }}% Before Delivery.
+                        @elseif($requirement->after_payment > 0)
+                            {{ $requirement->after_payment }}% After Installation / Delivery.
+                        @else
+                            ______% Before Delivery / After Installation (Or as mutually agreed).
+                        @endif
                     </li>
                     <li>
                         <span class="term-head">5. Payment Method:</span> Cash / Bank transfer / Cheque to be made

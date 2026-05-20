@@ -1,10 +1,11 @@
 import { TableRow, TableCell } from "@/components/ui/table";
+import { memo } from "react";
 
 interface Props {
     columns: number;
 }
 
-const TableSkeleton = ({ columns }: Props) => {
+const TableSkeleton = memo(({ columns }: Props) => {
     return (
         <>
             {Array.from({ length: 6 }).map((_, i) => (
@@ -18,6 +19,6 @@ const TableSkeleton = ({ columns }: Props) => {
             ))}
         </>
     );
-};
+});
 
 export default TableSkeleton;

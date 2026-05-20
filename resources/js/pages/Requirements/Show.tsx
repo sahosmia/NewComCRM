@@ -9,6 +9,8 @@ import {
     ArrowLeft,
     Package,
     Printer,
+    Video,
+    History
 } from "lucide-react";
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
 import StatusBadge from "@/components/shared/StatusBadge";
@@ -95,21 +97,66 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                     {/* Left Side: Customer & Terms (Remains same) */}
                     <div className="lg:col-span-4 space-y-6">
                         {requirement.customer && <CustomerInfoCard customer={requirement.customer} />}
-                        <div className="bg-card border rounded-xl p-5 shadow-sm space-y-4">
-                            <h2 className="font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
-                                <FileText className="w-3 h-3 text-primary" /> Terms & Delivery
-                            </h2>
-                            <div className="grid grid-cols-2 gap-4 text-xs">
-                                <div><p className="text-muted-foreground mb-1">Price Validity</p><p className="font-bold">{requirement.price_validity_days || 'N/A'} Days</p></div>
-                                <div><p className="text-muted-foreground mb-1">Delivery Time</p><p className="font-bold">{requirement.delivery_time_days || 'N/A'} Days</p></div>
-                                <div><p className="text-muted-foreground mb-1">Advance Pay</p><p className="font-bold">{requirement.advance_payment}%</p></div>
-                                <div><p className="text-muted-foreground mb-1">Before Delivery</p><p className="font-bold">{requirement.before_payment}%</p></div>
+
+                        {/* Meetings Section */}
+                        <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
+                            <div className="p-4 border-b bg-muted/20 flex justify-between items-center">
+                                <h2 className="font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
+                                    <Video className="w-3 h-3 text-primary" /> Meetings
+                                </h2>
+                                <Link href={route('meetings.create', { customer_id: requirement.customer_id, requirement_id: requirement.id })}>
+                                    <Button variant="ghost" size="sm" className="h-7 text-[10px] uppercase font-bold">Schedule</Button>
+                                </Link>
+                            </div>
+                            <div className="p-4 space-y-3">
+                                {requirement.meetings && requirement.meetings.length > 0 ? (
+                                    requirement.meetings.map(meeting => (
+                                        <Link key={meeting.id} href={route('meetings.show', meeting.id)} className="block">
+                                            <div className="text-xs p-2 rounded border hover:bg-muted/50 transition-colors">
+                                                <p className="font-bold truncate">{meeting.title}</p>
+                                                <p className="text-[10px] text-muted-foreground">{new Date(meeting.scheduled_at).toLocaleString()}</p>
+                                            </div>
+                                        </Link>
+                                    ))
+                                ) : (
+                                    <p className="text-[10px] text-muted-foreground italic text-center py-2">No meetings scheduled</p>
+                                )}
                             </div>
                         </div>
+
+                        {/* Followups Section */}
+                        <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
+                            <div className="p-4 border-b bg-muted/20 flex justify-between items-center">
+                                <h2 className="font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
+                                    <History className="w-3 h-3 text-primary" /> Follow-ups
+                                </h2>
+                                <Link href={route('follow-ups.create', { customer_id: requirement.customer_id, requirement_id: requirement.id })}>
+                                    <Button variant="ghost" size="sm" className="h-7 text-[10px] uppercase font-bold">Add</Button>
+                                </Link>
+                            </div>
+                            <div className="p-4 space-y-3">
+                                {requirement.follow_ups && requirement.follow_ups.length > 0 ? (
+                                    requirement.follow_ups.map(followup => (
+                                        <Link key={followup.id} href={route('follow-ups.show', followup.id)} className="block">
+                                            <div className="text-xs p-2 rounded border hover:bg-muted/50 transition-colors">
+                                                <p className="font-bold truncate">{followup.notes || 'Follow-up'}</p>
+                                                <p className="text-[10px] text-muted-foreground">{new Date(followup.follow_up_date).toLocaleString()}</p>
+                                            </div>
+                                        </Link>
+                                    ))
+                                ) : (
+                                    <p className="text-[10px] text-muted-foreground italic text-center py-2">No follow-ups recorded</p>
+                                )}
+                            </div>
+                        </div>
+
+
                     </div>
 
                     {/* Right Side: Items Table */}
+
                     <div className="lg:col-span-8">
+
                         <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
                             <div className="p-5 border-b bg-muted/20 flex justify-between items-center">
                                 <div className="flex items-center gap-2">
@@ -194,6 +241,19 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                         </tr>
                                     </tfoot>
                                 </table>
+                            </div>
+                        </div>
+
+                         <div className="bg-card border rounded-xl p-5 shadow-sm space-y-4 mt-6">
+                            <h2 className="font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
+                                <FileText className="w-3 h-3 text-primary" /> Terms & Delivery
+                            </h2>
+                            <div className="grid grid-cols-2 gap-4 text-xs">
+                                <div><p className="text-muted-foreground mb-1">Price Validity</p><p className="font-bold">{requirement.price_validity_days || 'N/A'} Days</p></div>
+                                <div><p className="text-muted-foreground mb-1">Delivery Time</p><p className="font-bold">{requirement.delivery_time_days || 'N/A'} Days</p></div>
+                                <div><p className="text-muted-foreground mb-1">Advance Pay</p><p className="font-bold">{requirement.advance_payment}%</p></div>
+                                {requirement.before_payment > 0 && <div><p className="text-muted-foreground mb-1">Before Delivery</p><p className="font-bold">{requirement.before_payment}%</p></div>}
+                                {requirement.after_payment > 0 && <div><p className="text-muted-foreground mb-1">After Delivery</p><p className="font-bold">{requirement.after_payment}%</p></div>}
                             </div>
                         </div>
                     </div>

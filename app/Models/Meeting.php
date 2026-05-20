@@ -14,8 +14,16 @@ class Meeting extends Model
     use HasFactory;
 
     protected $fillable = [
-        'customer_id', 'user_id', 'title', 'scheduled_at',
-        'meeting_type', 'location', 'agenda', 'notes', 'status'
+        'customer_id',
+        'user_id',
+        'requirement_id',
+        'title',
+        'scheduled_at',
+        'meeting_type',
+        'location',
+        'agenda',
+        'notes',
+        'status'
     ];
 
     protected $casts = [
@@ -44,6 +52,10 @@ class Meeting extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function requirement()
+    {
+        return $this->belongsTo(Requirement::class);
+    }
 
     // Scopes
     public function scopeScheduled($query)
@@ -59,7 +71,7 @@ class Meeting extends Model
     public function scopeUpcoming($query)
     {
         return $query->where('scheduled_at', '>', now())
-                     ->where('status', 'scheduled');
+            ->where('status', 'scheduled');
     }
 
     public function scopeByUser($query, $userId)

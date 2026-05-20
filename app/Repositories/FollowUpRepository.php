@@ -13,7 +13,7 @@ class FollowUpRepository
         $perPage = $params['per_page'] ?? 10;
 
         return FollowUp::query()
-            ->with(['customer', 'user'])
+            ->with(['customer', 'user', 'requirement'])
             ->when(! $user->isSuperAdmin(), fn ($query) => $query->where('user_id', $user->id))
             ->when($params['search'] ?? null, function ($query, $search) {
                 $query->whereHas('customer', function ($q) use ($search) {
@@ -25,6 +25,7 @@ class FollowUpRepository
              ->when($params['start_date'] ?? null, fn ($query, $startDate) => $query->whereDate('follow_up_date', '>=', $startDate))
             ->when($params['end_date'] ?? null, fn ($query, $endDate) => $query->whereDate('follow_up_date', '<=', $endDate))
            ->when($params['customer_id'] ?? null, fn ($query, $id) => $query->where('customer_id', $id))
+            ->when($params['requirement_id'] ?? null, fn ($query, $id) => $query->where('requirement_id', $id))
             ->when(isset($params['sort']), function ($query) use ($params) {
                 $query->orderBy($params['sort'], $params['direction'] ?? 'desc');
             }, function ($query) {
@@ -79,7 +80,7 @@ class FollowUpRepository
     {
         $user = auth()->user();
         return FollowUp::query()
-            ->with(['customer', 'user'])
+            ->with(['customer', 'user', 'requirement'])
             ->when(!$user->isSuperAdmin(), fn($q) => $q->where('user_id', $user->id))
             ->when(!empty($ids), fn($q) => $q->whereIn('id', $ids))
             ->get();

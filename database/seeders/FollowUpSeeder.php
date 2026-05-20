@@ -19,9 +19,13 @@ class FollowUpSeeder extends Seeder
         }
 
         foreach ($customers as $customer) {
+            $requirements = $customer->requirements;
+            $requirementId = $requirements->isEmpty() ? null : $requirements->random()->id;
+
             FollowUp::create([
                 'customer_id' => $customer->id,
                 'user_id' => $customer->assigned_to,
+                'requirement_id' => $requirementId,
                 'follow_up_date' => now()->addDays(rand(1, 10)),
                 'notes' => 'Follow up with ' . $customer->name,
                 'status' => 'pending',
@@ -32,6 +36,7 @@ class FollowUpSeeder extends Seeder
             FollowUp::create([
                 'customer_id' => $customer->id,
                 'user_id' => $customer->assigned_to,
+                'requirement_id' => $requirementId,
                 'follow_up_date' => now()->subDays(rand(1, 10)),
                 'notes' => 'Discussed previous requirements',
                 'status' => 'done',

@@ -18,9 +18,11 @@ class MeetingSeeder extends Seeder
         }
 
         foreach ($customers->random(min(5, $customers->count())) as $customer) {
+            $requirements = $customer->requirements;
             Meeting::factory()->count(2)->create([
                 'customer_id' => $customer->id,
                 'user_id' => $customer->assigned_to,
+                'requirement_id' => $requirements->isEmpty() ? null : $requirements->random()->id,
             ]);
         }
     }

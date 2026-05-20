@@ -13,6 +13,7 @@ class MeetingService
     public function __construct(
         private MeetingRepository $meetings,
         private CustomerRepository $customers,
+        private RequirementService $requirementService,
     ) {}
 
     public function paginateIndex(array $filters): LengthAwarePaginator
@@ -23,6 +24,11 @@ class MeetingService
     public function customersForForm(): Collection
     {
         return $this->customers->selectOptions();
+    }
+
+    public function requirementsForForm(): \Illuminate\Support\Collection
+    {
+        return $this->requirementService->selectOptions();
     }
 
     public function create(array $validated, int $userId): Meeting

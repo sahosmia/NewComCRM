@@ -21,7 +21,16 @@ const columns: Column<Meeting>[] = [
     },
     {
         header: 'Customer',
-        accessor: (item) => item.customer?.name,
+        accessor: (item) => (
+            <div className="flex flex-col">
+                <span className="font-medium text-foreground">{item.customer?.name}</span>
+                <span className="text-[10px] text-muted-foreground truncate">{item.customer?.company?.name || 'N/A'}</span>
+            </div>
+        ),
+    },
+    {
+        header: 'Requirement',
+        accessor: (item) => item.requirement?.title || 'N/A',
     },
     {
         header: 'Schedule Date Time',
@@ -44,6 +53,21 @@ const columns: Column<Meeting>[] = [
                 routeName="meetings.update-status"
                 options={MEETING_STATUS_OPTIONS}
             />
+        ),
+    },
+    {
+        header: 'Representative',
+        accessor: (item) => (
+            <div className="flex flex-col">
+                {item.user ? (
+                    <>
+                        <span className="text-xs font-medium">{item.user.name}</span>
+                        <span className="text-[10px] text-muted-foreground">{item.user.email}</span>
+                    </>
+                ) : (
+                    <span className="text-xs text-muted-foreground italic">N/A</span>
+                )}
+            </div>
         ),
     },
     {

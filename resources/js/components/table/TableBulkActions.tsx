@@ -8,6 +8,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
+import { memo } from 'react';
 
 interface BulkActionsProps {
     selectedItems: number[] | string[];
@@ -20,7 +21,7 @@ interface BulkActionsProps {
     handleBulkDelete: (ids: (number | string)[], route: string) => void;
 }
 
-export function TableBulkActions({
+export const TableBulkActions = memo(({
     selectedItems,
     entityName,
     exportRoute,
@@ -29,7 +30,7 @@ export function TableBulkActions({
     handleExport,
     handlePrint,
     handleBulkDelete,
-}: BulkActionsProps) {
+}: BulkActionsProps) => {
 
     if (selectedItems.length === 0 && !exportRoute && !printRoute && !bulkDeleteRoute) return null;
 
@@ -82,4 +83,4 @@ export function TableBulkActions({
             </DropdownMenuContent>
         </DropdownMenu>
     );
-}
+});

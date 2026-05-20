@@ -4,6 +4,7 @@ namespace Database\Factories;
 use App\Models\Customer;
 use App\Models\Requirement;
 use App\Models\Unit;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class RequirementFactory extends Factory
@@ -35,9 +36,12 @@ class RequirementFactory extends Factory
             'installation_price' => $hasInstallation ? $this->faker->randomFloat(2, 200, 1000) : 0,
             'price_validity_days' => 7,
             'delivery_time_days' => 3,
-            'advance_payment' => 50,
-            'before_payment' => 50,
+            'advance_payment' => 30,
+            'before_payment' => 40,
+            'after_payment' => 30,
             'delivery_location' => $this->faker->address(),
+            'send_qutation_to' => Customer::inRandomOrder()->first()?->id ?? Customer::factory(),
+            'qutation_send_by' => User::where('role', 'user')->inRandomOrder()->first()?->id ?? User::factory(),
         ];
     }
 }

@@ -1,12 +1,12 @@
 import { Link } from '@inertiajs/react';
 import { Building2, Globe, Mail, Phone, MapPin } from 'lucide-react';
-import type { Column } from '@/types';
+import type { Column, Company } from '@/types';
 import { TableRowActions } from '@/components/table/TableRowActions';
 
-const columns: Column<any>[] = [
+const columns: Column<Company>[] = [
   {
     header: 'Company Name',
-    accessor: (item: any) => (
+    accessor: (item) => (
         <div className="flex flex-col min-w-0"> {/* min-w-0 helps flex children truncate */}
             <div className="flex items-center gap-2">
                 <Building2 className="w-4 h-4 text-muted-foreground shrink-0" />
@@ -31,7 +31,7 @@ const columns: Column<any>[] = [
 },
     {
         header: 'Contact Info',
-        accessor: (item: any) => (
+        accessor: (item) => (
             <div className="flex flex-col text-sm gap-1">
                 {item.email && (
                     <div className="flex items-center gap-2">
@@ -51,7 +51,7 @@ const columns: Column<any>[] = [
     },
     {
         header: 'Address',
-        accessor: (item: any) => (
+        accessor: (item) => (
             <div className="flex items-start gap-2 text-sm max-w-50">
                 <MapPin className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
                 <span className="truncate whitespace-normal line-clamp-2">{item.address || 'N/A'}</span>
@@ -61,7 +61,7 @@ const columns: Column<any>[] = [
     },
     {
         header: '',
-        accessor: (item: any) => (
+        accessor: (item) => (
             <TableRowActions
                 item={item}
                 resource="companies"

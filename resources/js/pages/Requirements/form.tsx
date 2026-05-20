@@ -22,9 +22,10 @@ interface Props {
     customers: CustomerType[];
     products: Product[];
     units: Unit[];
+    users: { id: number; name: string }[];
 }
 
-export default function RequirementForm({ requirement, customers, products, units }: Props) {
+export default function RequirementForm({ requirement, customers, products, units, users }: Props) {
     const urlParams = new URLSearchParams(window.location.search);
     const preSelectedCustomerId = urlParams.get('customer_id');
 
@@ -52,8 +53,11 @@ export default function RequirementForm({ requirement, customers, products, unit
         price_validity_days: requirement?.price_validity_days || "",
         delivery_time_days: requirement?.delivery_time_days || "",
         advance_payment: requirement?.advance_payment ?? 0,
-        before_payment: requirement?.before_payment ?? 100,
+        before_payment: requirement?.before_payment ?? 0,
+        after_payment: requirement?.after_payment ?? 0,
         delivery_location: requirement?.delivery_location || "",
+        send_qutation_to: requirement?.send_qutation_to || "",
+        qutation_send_by: requirement?.qutation_send_by || "",
 
         items: requirement?.items || [
             { product_id: 0, quantity: 1, unit_price: "", description: "" }
@@ -145,6 +149,30 @@ export default function RequirementForm({ requirement, customers, products, unit
                             <ErrorMessage message={errors.delivery_location} />
                         </div>
 
+                        <div className="space-y-2">
+                            <GenericCombobox
+                                label="Send Quotation To"
+                                items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company?.name || ''}` }))}
+                                selectedId={data.send_qutation_to}
+                                onSelect={(id) => setData("send_qutation_to", id as number)}
+                                placeholder="Select Recipient (Optional)"
+                                searchPlaceholder="Search customers..."
+                            />
+                            <ErrorMessage message={errors.send_qutation_to} />
+                        </div>
+
+                        <div className="space-y-2">
+                            <GenericCombobox
+                                label="Quotation Sent By"
+                                items={users.map(u => ({ id: u.id, name: u.name }))}
+                                selectedId={data.qutation_send_by}
+                                onSelect={(id) => setData("qutation_send_by", id as number)}
+                                placeholder="Select Sender (Optional)"
+                                searchPlaceholder="Search users..."
+                            />
+                            <ErrorMessage message={errors.qutation_send_by} />
+                        </div>
+
 
 
 
@@ -155,22 +183,46 @@ export default function RequirementForm({ requirement, customers, products, unit
                             <FormLabel>Advance Payment (%)</FormLabel>
                             <Input
                                 type="number"
-                                value={data.advance_payment}
-                                onChange={(e) => setData("advance_payment", e.target.value)}
+                                value={data.advance_payment === 0 ? "" : data.advance_payment}
+                                onChange={(e) => setData("advance_payment", e.target.value === "" ? 0 : Number(e.target.value))}
                                 placeholder="Advance Payment"
                             />
-                            <ErrorMessage message={errors.advance_payment} />
                         </div>
 
                         <div className="space-y-2">
                             <FormLabel>Before Delivery Payment (%)</FormLabel>
                             <Input
                                 type="number"
-                                value={data.before_payment}
-                                onChange={(e) => setData("before_payment", e.target.value)}
+                                value={data.before_payment === 0 ? "" : data.before_payment}
+                                onChange={(e) => {
+                                    const val = e.target.value === "" ? 0 : Number(e.target.value);
+                                    setData(d => ({
+                                        ...d,
+                                        before_payment: val,
+                                        after_payment: val > 0 ? 0 : d.after_payment
+                                    }));
+                                }}
                                 placeholder="Before Delivery Payment"
+                                disabled={Number(data.after_payment) > 0}
                             />
-                            <ErrorMessage message={errors.before_payment} />
+                        </div>
+
+                        <div className="space-y-2">
+                            <FormLabel>After Delivery Payment (%)</FormLabel>
+                            <Input
+                                type="number"
+                                value={data.after_payment === 0 ? "" : data.after_payment}
+                                onChange={(e) => {
+                                    const val = e.target.value === "" ? 0 : Number(e.target.value);
+                                    setData(d => ({
+                                        ...d,
+                                        after_payment: val,
+                                        before_payment: val > 0 ? 0 : d.before_payment
+                                    }));
+                                }}
+                                placeholder="After Delivery Payment"
+                                disabled={Number(data.before_payment) > 0}
+                            />
                         </div>
 
                         <div className="space-y-2">
@@ -181,7 +233,6 @@ export default function RequirementForm({ requirement, customers, products, unit
                                 onChange={(e) => setData("delivery_time_days", e.target.value)}
                                 placeholder="Delivery Timeline"
                             />
-                            <ErrorMessage message={errors.delivery_time_days} />
                         </div>
 
                         <div className="space-y-2">
@@ -219,7 +270,6 @@ export default function RequirementForm({ requirement, customers, products, unit
                                 />
                                 <Percent className="w-3 absolute right-2 top-2 text-muted-foreground" />
                             </div>
-                            <ErrorMessage message={errors.vat_percentage} />
                         </div>
 
                         <div className="space-y-2">
@@ -236,7 +286,6 @@ export default function RequirementForm({ requirement, customers, products, unit
                                 />
                                 <Percent className="w-3 absolute right-2 top-2 text-muted-foreground" />
                             </div>
-                            <ErrorMessage message={errors.ait_percentage} />
 
                         </div>
 
@@ -281,7 +330,6 @@ export default function RequirementForm({ requirement, customers, products, unit
                             onItemChange={handleItemChange}
                             onRemove={removeItem}
                             isRemoveDisabled={data.items.length === 1}
-                            errors={errors}
                         />
                     ))}
                 </div>

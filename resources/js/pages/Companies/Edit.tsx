@@ -2,9 +2,10 @@ import AppLayout from '@/layouts/app-layout';
 import Heading from '@/components/admin/heading';
 import { Head } from '@inertiajs/react';
 import CompanyForm from './form';
+import { Company } from '@/types';
 
 interface Props {
-    company: any;
+    company: Company;
 }
 
 export default function Edit({ company }: Props) {

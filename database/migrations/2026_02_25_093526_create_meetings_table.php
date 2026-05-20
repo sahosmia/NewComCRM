@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('customer_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('requirement_id')->nullable()->constrained()->onDelete('set null');
             $table->string('title');
             $table->dateTime('scheduled_at')->nullable();
             $table->enum('meeting_type', ['physical', 'virtual', 'phone'])->default('physical');

@@ -2,7 +2,7 @@ import { router } from '@inertiajs/react';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { Loader2 } from 'lucide-react';
 
 // Define a type for the status configuration
@@ -20,13 +20,13 @@ interface InlineStatusUpdateProps {
     method?: 'patch' | 'put' | 'post';
 }
 
-export function InlineStatusUpdate({
+export const InlineStatusUpdate = memo(({
     id,
     currentStatus,
     routeName,
     options,
     method = 'patch'
-}: InlineStatusUpdateProps) {
+}: InlineStatusUpdateProps) => {
     const [loading, setLoading] = useState(false);
 
     // Find the config for the active status to apply colors
@@ -80,4 +80,4 @@ export function InlineStatusUpdate({
             </Select>
         </div>
     );
-}
+});

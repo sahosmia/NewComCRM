@@ -26,10 +26,12 @@ class RequirementService
 
     public function formOptions(): array
     {
+        $userRepo = app(\App\Repositories\UserRepository::class);
         return [
             'customers' => $this->customers->forRequirementForm(),
             'products'  => $this->products->forRequirementForm(),
             'units'     => $this->units->all(),
+            'users'     => $userRepo->selectOptions(),
         ];
     }
 
@@ -79,5 +81,10 @@ class RequirementService
     public function getForExport(array $ids): \Illuminate\Support\Collection
     {
         return $this->requirements->getForExport($ids);
+    }
+
+    public function selectOptions(): \Illuminate\Support\Collection
+    {
+        return $this->requirements->selectOptions();
     }
 }

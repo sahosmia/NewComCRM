@@ -14,7 +14,7 @@ class RequirementRepository
 
         return Requirement::query()
             ->with([
-                'customer',
+                'customer.assignedUser',
                 'items.product.unit'
             ])
 
@@ -38,8 +38,8 @@ class RequirementRepository
                 $query->where('customer_id', $customer_id);
             })
 
-            ->when($params['start_date'] ?? null, fn ($query, $startDate) => $query->whereDate('created_at', '>=', $startDate))
-            ->when($params['end_date'] ?? null, fn ($query, $endDate) => $query->whereDate('created_at', '<=', $endDate))
+            ->when($params['start_date'] ?? null, fn($query, $startDate) => $query->whereDate('created_at', '>=', $startDate))
+            ->when($params['end_date'] ?? null, fn($query, $endDate) => $query->whereDate('created_at', '<=', $endDate))
 
             ->when(isset($params['sort']), function ($query) use ($params) {
                 $query->orderBy($params['sort'], $params['direction'] ?? 'desc');
@@ -96,4 +96,18 @@ class RequirementRepository
             ->when(!empty($ids), fn($q) => $q->whereIn('id', $ids))
             ->get();
     }
+
+    public function selectOptions(): \Illuminate\Database\Eloquent\Collection
+    {
+        $user = auth()->user();
+        return Requirement::query()
+            ->select('id', 'title', 'customer_id')
+            ->when(!$user->isSuperAdmin(), function ($query) use ($user) {
+                $query->whereHas('customer', function ($q) use ($user) {
+                    $q->where('assigned_to', $user->id);
+                });
+            })
+            ->get();
+    }
+
 }

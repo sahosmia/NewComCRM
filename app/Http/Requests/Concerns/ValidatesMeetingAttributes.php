@@ -10,10 +10,10 @@ trait ValidatesMeetingAttributes
     protected function meetingAttributeRules(): array
     {
         return [
-            'customer_id'  => 'required|exists:customers,id',
-            'title'        => 'required|string|max:255',
-            'scheduled_at' => 'required|date',
-
+            'customer_id'    => 'required|exists:customers,id',
+            'requirement_id' => 'nullable|exists:requirements,id',
+            'title'          => 'required|string|max:255',
+            'scheduled_at'   => 'required|date',
             'meeting_type' => 'required|in:physical,virtual,phone',
             'location'     => 'required_if:meeting_type,physical|nullable|string|max:255',
             'agenda'       => 'nullable|string',

@@ -24,17 +24,10 @@ const columns: Column<Requirement>[] = [
         ),
     },
     {
-        header: 'Requested Products',
+        header: 'Requirement Title',
         accessor: (item) => (
-            <div className="flex flex-wrap gap-1 max-w-62">
-                {item.items?.map((row) => (
-                    <span key={row.id} className="text-sm py-0  whitespace-nowrap truncate">
-                        {row.product?.name}
-                        x {row.quantity} {row.product?.unit?.short_form}
-
-                    </span>
-                ))}
-
+            <div className="font-medium text-sm">
+                {item.title || `REQ-${item.id}`}
             </div>
         ),
     },
@@ -56,6 +49,21 @@ const columns: Column<Requirement>[] = [
                 options={RequirementOptions}
 
             />
+        ),
+    },
+    {
+        header: 'Representative',
+        accessor: (item) => (
+            <div className="flex flex-col">
+                {item.customer?.assigned_user ? (
+                    <>
+                        <span className="text-xs font-medium">{item.customer.assigned_user.name}</span>
+                        <span className="text-[10px] text-muted-foreground">{item.customer.assigned_user.email}</span>
+                    </>
+                ) : (
+                    <span className="text-xs text-muted-foreground italic">N/A</span>
+                )}
+            </div>
         ),
     },
     {

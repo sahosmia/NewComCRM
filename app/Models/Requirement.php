@@ -38,7 +38,10 @@ class Requirement extends Model
         'delivery_time_days',
         'advance_payment',
         'before_payment',
+        'after_payment',
         'delivery_location',
+        'send_qutation_to',
+        'qutation_send_by',
     ];
 
     protected $casts = [
@@ -65,6 +68,16 @@ class Requirement extends Model
         return $this->belongsTo(Customer::class);
     }
 
+    public function quotationRecipient(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class, 'send_qutation_to');
+    }
+
+    public function quotationSender(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'qutation_send_by');
+    }
+
     public function accessoriesUnit(): BelongsTo
     {
         return $this->belongsTo(Unit::class, 'accessories_unit_id');
@@ -73,6 +86,17 @@ class Requirement extends Model
     public function installationUnit(): BelongsTo
     {
         return $this->belongsTo(Unit::class, 'installation_unit_id');
+    }
+
+
+    public function meetings(): HasMany
+    {
+        return $this->hasMany(Meeting::class);
+    }
+
+    public function followUps(): HasMany
+    {
+        return $this->hasMany(FollowUp::class);
     }
     protected $appends = ['ait_price'];
 

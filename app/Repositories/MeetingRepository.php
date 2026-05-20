@@ -12,7 +12,7 @@ class MeetingRepository
         $perPage = $params['per_page'] ?? 10;
 
         return Meeting::query()
-            ->with(['customer', 'user'])
+            ->with(['customer', 'user', 'requirement'])
             ->when($params['search'] ?? null, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('title', 'like', "%{$search}%")
@@ -32,6 +32,8 @@ class MeetingRepository
             })
             ->when($params['start_date'] ?? null, fn ($query, $startDate) => $query->whereDate('scheduled_at', '>=', $startDate))
             ->when($params['end_date'] ?? null, fn ($query, $endDate) => $query->whereDate('scheduled_at', '<=', $endDate))
+            ->when($params['requirement_id'] ?? null, fn ($query, $id) => $query->where('requirement_id', $id))
+             ->when($params['customer_id'] ?? null, fn ($query, $id) => $query->where('customer_id', $id))
             ->when($params['sort'] ?? null, function ($query, $sort) use ($params) {
                 $allowedSorts = ['title', 'scheduled_at', 'meeting_type', 'status', 'created_at'];
                 if (in_array($sort, $allowedSorts)) {
@@ -76,7 +78,7 @@ class MeetingRepository
     {
         $user = auth()->user();
         return Meeting::query()
-            ->with(['customer', 'user'])
+            ->with(['customer', 'user', 'requirement'])
             ->when(!$user->isSuperAdmin(), fn($q) => $q->where('user_id', $user->id))
             ->when(!empty($ids), fn($q) => $q->whereIn('id', $ids))
             ->get();

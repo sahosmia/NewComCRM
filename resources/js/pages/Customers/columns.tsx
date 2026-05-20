@@ -62,11 +62,12 @@ const columns: Column<CustomerType>[] = [
     {
         header: 'Assigned To',
         accessor: (item) => (
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col">
                 {item.assigned_user ? (
-                    <div className="flex items-center gap-2 ">
+                    <>
                         <span className="text-sm font-medium truncate">{item.assigned_user.name}</span>
-                    </div>
+                        <span className="text-[10px] text-muted-foreground truncate">{item.assigned_user.email}</span>
+                    </>
                 ) : (
                     <span className="text-xs text-muted-foreground italic">Unassigned</span>
                 )}

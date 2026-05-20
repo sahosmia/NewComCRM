@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { usePage } from '@inertiajs/react';
 
 export default function AppLayout({ children, breadcrumbs, ...props }: AppLayoutProps) {
-    const { flash } = usePage().props as any;
+    const { flash } = usePage().props;
 
     useEffect(() => {
         if (flash?.success) {

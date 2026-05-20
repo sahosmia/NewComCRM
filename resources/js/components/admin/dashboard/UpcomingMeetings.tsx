@@ -53,6 +53,11 @@ function MeetingList({ meetings }: { meetings: Meeting[] }) {
                                 <MapPin className="mr-1 h-3 w-3" />
                                 {meeting.customer?.company?.name || 'No Location'}
                             </span>
+                             {meeting.requirement && (
+                                <span className="flex items-center text-[11px] text-blue-600 font-medium truncate">
+                                    📋 {meeting.requirement.title || `Req #${meeting.requirement.id}`}
+                                </span>
+                            )}
                         </div>
                     </div>
                 </div>

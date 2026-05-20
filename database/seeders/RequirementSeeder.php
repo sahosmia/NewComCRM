@@ -17,17 +17,11 @@ class RequirementSeeder extends Seeder
         }
 
         foreach ($customers as $customer) {
-            $requirementCount = rand(1, 2);
-            for ($i = 0; $i < $requirementCount; $i++) {
-                Requirement::create([
-                    'customer_id' => $customer->id,
-                    'title' => 'Project ' . fake()->word(),
-                    'notes' => fake()->sentence(),
-                    'status' => fake()->randomElement(['pending', 'processing', 'purchased']),
-                    'ait_percentage' => 5,
-                    'vat_percentage' => 10,
-                ]);
-            }
+            Requirement::factory()->count(rand(1, 2))->create([
+                'customer_id' => $customer->id,
+                'send_qutation_to' => $customer->id,
+                'qutation_send_by' => $customer->assigned_to,
+            ]);
         }
     }
 }
