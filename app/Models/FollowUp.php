@@ -14,7 +14,7 @@ class FollowUp extends Model
     use HasFactory;
 
     protected $fillable = [
-        'customer_id', 'user_id', 'follow_up_date', 'notes',
+        'customer_id', 'user_id', 'requirement_id', 'follow_up_date', 'notes',
         'status', 'priority', 'completed_at',
     ];
 
@@ -47,6 +47,11 @@ class FollowUp extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function requirement()
+    {
+        return $this->belongsTo(Requirement::class);
     }
 
     // Scopes

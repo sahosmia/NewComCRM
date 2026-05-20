@@ -80,4 +80,9 @@ class RequirementService
     {
         return $this->requirements->getForExport($ids);
     }
+
+    public function selectOptions(): \Illuminate\Support\Collection
+    {
+        return $this->requirements->selectOptions();
+    }
 }

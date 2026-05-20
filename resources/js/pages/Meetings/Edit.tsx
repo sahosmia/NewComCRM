@@ -6,9 +6,10 @@ import { CustomerType, Meeting } from "@/types";
 interface Props {
     meeting: Meeting;
     customers: CustomerType[];
+    requirements: { id: number; title: string | null; customer_id: number }[];
 }
 
-export default function Edit({ meeting, customers }: Props) {
+export default function Edit({ meeting, customers, requirements }: Props) {
     return (
         <AppLayout breadcrumbs={[{ title: "Meetings", href: route('meetings.index') }, { title: "Edit", href: "" }]}>
             <Head title="Edit Meeting" />
@@ -16,7 +17,7 @@ export default function Edit({ meeting, customers }: Props) {
             <div className="p-6">
                 <h1 className="text-xl font-bold mb-4">Edit Meeting</h1>
                 <div className="bg-card p-6 border rounded-lg shadow-sm  max-w-2xl mx-auto">
-                    <MeetingForm meeting={meeting} customers={customers} />
+                    <MeetingForm meeting={meeting} customers={customers} requirements={requirements} />
                 </div>
             </div>
         </AppLayout>

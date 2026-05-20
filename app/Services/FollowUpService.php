@@ -14,6 +14,7 @@ class FollowUpService
     public function __construct(
         private FollowUpRepository $followUps,
         private CustomerRepository $customers,
+        private RequirementService $requirementService,
     ) {}
 
     public function paginateIndex(array $filters, User $user)
@@ -61,5 +62,10 @@ class FollowUpService
     public function customersForForm(): Collection
     {
         return $this->customers->selectOptions();
+    }
+
+    public function requirementsForForm(): \Illuminate\Support\Collection
+    {
+        return $this->requirementService->selectOptions();
     }
 }

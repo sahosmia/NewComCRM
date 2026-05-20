@@ -4,7 +4,7 @@ import AppLayout from "@/layouts/app-layout";
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-    Calendar, MapPin, ClipboardList
+    Calendar, MapPin, ClipboardList, Briefcase
 } from "lucide-react";
 import StatusBadge from "@/components/shared/StatusBadge";
 import { Meeting } from "@/types";
@@ -79,6 +79,35 @@ export default function Show({ meeting }: { meeting: Meeting }) {
 
                     {/* Right Column: Agenda & Notes */}
                     <div className="lg:col-span-2 space-y-6">
+
+                        {/* Linked Requirement Card */}
+                        {meeting.requirement && (
+                            <Card className="border-l-4 border-l-blue-500">
+                                <CardHeader>
+                                    <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 text-blue-600">
+                                        <Briefcase className="w-4 h-4" />
+                                        Linked Requirement
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="flex justify-between items-center bg-blue-50/30 p-4 rounded-lg border border-blue-100/50">
+                                        <div>
+                                            <p className="text-sm font-bold text-foreground">
+                                                {meeting.requirement.title || `Requirement #${meeting.requirement.id}`}
+                                            </p>
+                                            <p className="text-xs text-muted-foreground mt-1">
+                                                Status: <span className="capitalize">{meeting.requirement.status}</span>
+                                            </p>
+                                        </div>
+                                        <Button variant="outline" size="sm" asChild>
+                                            <Link href={route('requirements.show', meeting.requirement.id)}>
+                                                View Requirement
+                                            </Link>
+                                        </Button>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
 
                         {/* Agenda Card */}
                         <Card className="border-l-4 border-l-amber-500">

@@ -36,6 +36,7 @@ class FollowUpController extends Controller
     {
         return Inertia::render('FollowUps/Create', [
             'customers' => $this->followUpService->customersForForm(),
+            'requirements' => $this->followUpService->requirementsForForm(),
         ]);
     }
 
@@ -53,7 +54,7 @@ class FollowUpController extends Controller
     public function show(FollowUp $followUp)
     {
         return Inertia::render('FollowUps/Show', [
-            'followUp' => $followUp->load(['customer', 'user']),
+            'followUp' => $followUp->load(['customer', 'user', 'requirement']),
         ]);
     }
 
@@ -62,6 +63,7 @@ class FollowUpController extends Controller
         return Inertia::render('FollowUps/Edit', [
             'followUp' => $followUp,
             'customers' => $this->followUpService->customersForForm(),
+            'requirements' => $this->followUpService->requirementsForForm(),
         ]);
     }
 

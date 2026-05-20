@@ -74,6 +74,16 @@ class Requirement extends Model
     {
         return $this->belongsTo(Unit::class, 'installation_unit_id');
     }
+
+    public function meetings(): HasMany
+    {
+        return $this->hasMany(Meeting::class);
+    }
+
+    public function followUps(): HasMany
+    {
+        return $this->hasMany(FollowUp::class);
+    }
     protected $appends = ['ait_price'];
 
     // append

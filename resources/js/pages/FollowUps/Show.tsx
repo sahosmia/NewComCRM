@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     User, Calendar, ArrowLeft, MessageSquare,
-    Clock, CheckCircle2
+    Clock, CheckCircle2, Briefcase
 } from "lucide-react";
 import { Head, Link } from "@inertiajs/react";
 import { cn } from "@/lib/utils";
@@ -90,6 +90,35 @@ export default function Show({ followUp }: { followUp: FollowUp }) {
 
                     {/* Right Column: Content & Next Steps (Like History/Remarks) */}
                     <div className="lg:col-span-2 space-y-6">
+
+                        {/* Linked Requirement Card */}
+                        {followUp.requirement && (
+                            <Card className="border-l-4 border-l-blue-500">
+                                <CardHeader>
+                                    <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 text-blue-600">
+                                        <Briefcase className="w-4 h-4" />
+                                        Linked Requirement
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="flex justify-between items-center bg-blue-50/30 p-4 rounded-lg border border-blue-100/50">
+                                        <div>
+                                            <p className="text-sm font-bold text-foreground">
+                                                {followUp.requirement.title || `Requirement #${followUp.requirement.id}`}
+                                            </p>
+                                            <p className="text-xs text-muted-foreground mt-1">
+                                                Status: <span className="capitalize">{followUp.requirement.status}</span>
+                                            </p>
+                                        </div>
+                                        <Button variant="outline" size="sm" asChild>
+                                            <Link href={route('requirements.show', followUp.requirement.id)}>
+                                                View Requirement
+                                            </Link>
+                                        </Button>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
 
                         <Card className="overflow-hidden">
                             <CardHeader className="pb-3">

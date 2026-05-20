@@ -24,6 +24,10 @@ const columns: Column<Meeting>[] = [
         accessor: (item) => item.customer?.name,
     },
     {
+        header: 'Requirement',
+        accessor: (item) => item.requirement?.title || 'N/A',
+    },
+    {
         header: 'Schedule Date Time',
         accessor: (item) => new Date(item.scheduled_at).toLocaleString(),
     },

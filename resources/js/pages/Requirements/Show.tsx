@@ -9,6 +9,8 @@ import {
     ArrowLeft,
     Package,
     Printer,
+    Video,
+    History
 } from "lucide-react";
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
 import StatusBadge from "@/components/shared/StatusBadge";
@@ -95,6 +97,59 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                     {/* Left Side: Customer & Terms (Remains same) */}
                     <div className="lg:col-span-4 space-y-6">
                         {requirement.customer && <CustomerInfoCard customer={requirement.customer} />}
+
+                        {/* Meetings Section */}
+                        <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
+                            <div className="p-4 border-b bg-muted/20 flex justify-between items-center">
+                                <h2 className="font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
+                                    <Video className="w-3 h-3 text-primary" /> Meetings
+                                </h2>
+                                <Link href={route('meetings.create', { customer_id: requirement.customer_id, requirement_id: requirement.id })}>
+                                    <Button variant="ghost" size="sm" className="h-7 text-[10px] uppercase font-bold">Schedule</Button>
+                                </Link>
+                            </div>
+                            <div className="p-4 space-y-3">
+                                {requirement.meetings && requirement.meetings.length > 0 ? (
+                                    requirement.meetings.map(meeting => (
+                                        <Link key={meeting.id} href={route('meetings.show', meeting.id)} className="block">
+                                            <div className="text-xs p-2 rounded border hover:bg-muted/50 transition-colors">
+                                                <p className="font-bold truncate">{meeting.title}</p>
+                                                <p className="text-[10px] text-muted-foreground">{new Date(meeting.scheduled_at).toLocaleString()}</p>
+                                            </div>
+                                        </Link>
+                                    ))
+                                ) : (
+                                    <p className="text-[10px] text-muted-foreground italic text-center py-2">No meetings scheduled</p>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Followups Section */}
+                        <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
+                            <div className="p-4 border-b bg-muted/20 flex justify-between items-center">
+                                <h2 className="font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
+                                    <History className="w-3 h-3 text-primary" /> Follow-ups
+                                </h2>
+                                <Link href={route('follow-ups.create', { customer_id: requirement.customer_id, requirement_id: requirement.id })}>
+                                    <Button variant="ghost" size="sm" className="h-7 text-[10px] uppercase font-bold">Add</Button>
+                                </Link>
+                            </div>
+                            <div className="p-4 space-y-3">
+                                {requirement.follow_ups && requirement.follow_ups.length > 0 ? (
+                                    requirement.follow_ups.map(followup => (
+                                        <Link key={followup.id} href={route('follow-ups.show', followup.id)} className="block">
+                                            <div className="text-xs p-2 rounded border hover:bg-muted/50 transition-colors">
+                                                <p className="font-bold truncate">{followup.notes || 'Follow-up'}</p>
+                                                <p className="text-[10px] text-muted-foreground">{new Date(followup.follow_up_date).toLocaleString()}</p>
+                                            </div>
+                                        </Link>
+                                    ))
+                                ) : (
+                                    <p className="text-[10px] text-muted-foreground italic text-center py-2">No follow-ups recorded</p>
+                                )}
+                            </div>
+                        </div>
+
                         <div className="bg-card border rounded-xl p-5 shadow-sm space-y-4">
                             <h2 className="font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
                                 <FileText className="w-3 h-3 text-primary" /> Terms & Delivery

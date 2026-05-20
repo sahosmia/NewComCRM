@@ -96,4 +96,17 @@ class RequirementRepository
             ->when(!empty($ids), fn($q) => $q->whereIn('id', $ids))
             ->get();
     }
+
+    public function selectOptions(): \Illuminate\Database\Eloquent\Collection
+    {
+        $user = auth()->user();
+        return Requirement::query()
+            ->select('id', 'title', 'customer_id')
+            ->when(!$user->isSuperAdmin(), function ($query) use ($user) {
+                $query->whereHas('customer', function ($q) use ($user) {
+                    $q->where('assigned_to', $user->id);
+                });
+            })
+            ->get();
+    }
 }

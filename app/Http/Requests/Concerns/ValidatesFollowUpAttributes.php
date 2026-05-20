@@ -11,6 +11,7 @@ trait ValidatesFollowUpAttributes
     {
         return [
             'customer_id'    => 'required|exists:customers,id',
+            'requirement_id' => 'nullable|exists:requirements,id',
             'follow_up_date' => 'required|date',
             'notes'          => 'nullable|string',
             'status'         => 'required|in:pending,done',

@@ -35,6 +35,7 @@ class MeetingController extends Controller
     {
         return Inertia::render('Meetings/Create', [
             'customers' => $this->meetingService->customersForForm(),
+            'requirements' => $this->meetingService->requirementsForForm(),
         ]);
     }
 
@@ -58,7 +59,7 @@ class MeetingController extends Controller
     public function show(Meeting $meeting)
     {
         return Inertia::render('Meetings/Show', [
-            'meeting' => $meeting->load(['customer', 'user']),
+            'meeting' => $meeting->load(['customer', 'user', 'requirement']),
         ]);
     }
 
@@ -70,6 +71,7 @@ class MeetingController extends Controller
         return Inertia::render('Meetings/Edit', [
             'meeting' => $meeting,
             'customers' => $this->meetingService->customersForForm(),
+            'requirements' => $this->meetingService->requirementsForForm(),
         ]);
     }
 

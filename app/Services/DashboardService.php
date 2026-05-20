@@ -62,7 +62,7 @@ class DashboardService
     private function todayFollowups(User $user)
     {
         $query = FollowUp::query()
-            ->with('customer')
+            ->with(['customer', 'requirement'])
             ->today()
             ->pending()
             ->orderBy('follow_up_date');
@@ -77,7 +77,7 @@ class DashboardService
     private function upcomingMeetings(User $user)
     {
         $query = Meeting::query()
-            ->with('customer')
+            ->with(['customer', 'requirement'])
             ->upcoming()
             ->orderBy('scheduled_at')
             ->limit(5);

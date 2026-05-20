@@ -67,7 +67,9 @@ class RequirementController extends Controller
                 'customer',
                 'items.product.unit',
                 'accessoriesUnit',
-                'installationUnit'
+                'installationUnit',
+                'meetings',
+                'followUps'
             ]),
         ]);
     }

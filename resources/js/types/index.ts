@@ -96,6 +96,7 @@ export interface Meeting {
     id: number;
     customer_id: number;
     user_id: number;
+    requirement_id: number | null;
     title: string;
     scheduled_at: string;
     meeting_type: 'physical' | 'virtual' | 'phone';
@@ -107,6 +108,7 @@ export interface Meeting {
     updated_at: string;
     customer?: CustomerType;
     user?: User;
+    requirement?: Requirement;
 }
 
 
@@ -183,12 +185,15 @@ export interface Requirement {
     items?: RequirementItem[];
     accessoriesUnit?: Unit;
     installationUnit?: Unit;
+    meetings?: Meeting[];
+    follow_ups?: FollowUp[];
 }
 
 export interface FollowUp {
     id: number;
     customer_id: number;
     user_id: number;
+    requirement_id: number | null;
     follow_up_date: string;
     notes: string;
     status: 'price_shared' | 'negotiation' | 'purchase' | 'lost' | 'pending' | 'follow_up';
@@ -198,6 +203,7 @@ export interface FollowUp {
     updated_at: string;
     customer?: CustomerType;
     user?: User;
+    requirement?: Requirement;
 }
 
 

@@ -17,6 +17,10 @@ const columns: Column<FollowUp>[] = [
         accessor: (item) => item.customer?.name,
     },
     {
+        header: 'Requirement',
+        accessor: (item) => item.requirement?.title || 'N/A',
+    },
+    {
         header: 'Follow Up Date',
         accessor: (item) => formatDate(item.follow_up_date),
     },

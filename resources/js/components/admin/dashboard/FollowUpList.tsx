@@ -43,6 +43,11 @@ function FollowUpList({ followups }: { followups: FollowUp[] }) {
                             <span className="font-medium text-primary">
                                 🕒 {formatTime(item.follow_up_date)}
                             </span>
+                            {item.requirement && (
+                                <span className="font-medium text-blue-600">
+                                    📋 {item.requirement.title || `Req #${item.requirement.id}`}
+                                </span>
+                            )}
                             <span className="line-clamp-1 italic">
                                 {item.notes}
                             </span>

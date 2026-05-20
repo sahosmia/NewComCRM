@@ -12,7 +12,7 @@ class MeetingRepository
         $perPage = $params['per_page'] ?? 10;
 
         return Meeting::query()
-            ->with(['customer', 'user'])
+            ->with(['customer', 'user', 'requirement'])
             ->when($params['search'] ?? null, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('title', 'like', "%{$search}%")
@@ -76,7 +76,7 @@ class MeetingRepository
     {
         $user = auth()->user();
         return Meeting::query()
-            ->with(['customer', 'user'])
+            ->with(['customer', 'user', 'requirement'])
             ->when(!$user->isSuperAdmin(), fn($q) => $q->where('user_id', $user->id))
             ->when(!empty($ids), fn($q) => $q->whereIn('id', $ids))
             ->get();

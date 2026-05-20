@@ -14,7 +14,7 @@ class Meeting extends Model
     use HasFactory;
 
     protected $fillable = [
-        'customer_id', 'user_id', 'title', 'scheduled_at',
+        'customer_id', 'user_id', 'requirement_id', 'title', 'scheduled_at',
         'meeting_type', 'location', 'agenda', 'notes', 'status'
     ];
 
@@ -43,6 +43,11 @@ class Meeting extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function requirement()
+    {
+        return $this->belongsTo(Requirement::class);
     }
 
     // Scopes

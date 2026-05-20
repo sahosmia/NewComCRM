@@ -13,7 +13,7 @@ class FollowUpRepository
         $perPage = $params['per_page'] ?? 10;
 
         return FollowUp::query()
-            ->with(['customer', 'user'])
+            ->with(['customer', 'user', 'requirement'])
             ->when(! $user->isSuperAdmin(), fn ($query) => $query->where('user_id', $user->id))
             ->when($params['search'] ?? null, function ($query, $search) {
                 $query->whereHas('customer', function ($q) use ($search) {
@@ -79,7 +79,7 @@ class FollowUpRepository
     {
         $user = auth()->user();
         return FollowUp::query()
-            ->with(['customer', 'user'])
+            ->with(['customer', 'user', 'requirement'])
             ->when(!$user->isSuperAdmin(), fn($q) => $q->where('user_id', $user->id))
             ->when(!empty($ids), fn($q) => $q->whereIn('id', $ids))
             ->get();

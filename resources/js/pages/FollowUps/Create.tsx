@@ -5,9 +5,10 @@ import { CustomerType } from "@/types";
 
 interface Props {
     customers: CustomerType[];
+    requirements: { id: number; title: string | null; customer_id: number }[];
 }
 
-export default function Create({ customers }: Props) {
+export default function Create({ customers, requirements }: Props) {
     return (
         <AppLayout breadcrumbs={[{ title: "Follow Ups", href: route('follow-ups.index') }, { title: "New Schedule", href: "#" }]}>
             <Head title="Create Follow Ups" />
@@ -18,7 +19,7 @@ export default function Create({ customers }: Props) {
                     <p className="text-muted-foreground text-sm">Plan your next interaction with the customer.</p>
                 </div>
                 <div className="bg-card p-8 border rounded-xl shadow-sm ring-1 ring-border/50">
-                    <FollowUpForm customers={customers} />
+                    <FollowUpForm customers={customers} requirements={requirements} />
                 </div>
             </div>
         </AppLayout>
