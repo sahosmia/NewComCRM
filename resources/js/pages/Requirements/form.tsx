@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, LayoutList, Percent, Settings, Drill, } from "lucide-react";
-import { Requirement, RequirementItem } from "@/types";
+import { Requirement, RequirementItem, User } from "@/types";
 import { CustomerType } from "@/types";
 import { Product } from "@/types";
 import { Unit } from "@/types";
@@ -22,7 +22,7 @@ interface Props {
     customers: CustomerType[];
     products: Product[];
     units: Unit[];
-    users: { id: number; name: string }[];
+    users: User[];
 }
 
 export default function RequirementForm({ requirement, customers, products, units, users }: Props) {

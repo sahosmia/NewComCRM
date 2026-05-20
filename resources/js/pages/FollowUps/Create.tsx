@@ -1,11 +1,11 @@
 import AppLayout from "@/layouts/app-layout";
 import FollowUpForm from "./form";
 import { Head } from "@inertiajs/react";
-import { CustomerType } from "@/types";
+import { CustomerType, Requirement } from "@/types";
 
 interface Props {
     customers: CustomerType[];
-    requirements: { id: number; title: string | null; customer_id: number }[];
+    requirements: Requirement[];
 }
 
 export default function Create({ customers, requirements }: Props) {

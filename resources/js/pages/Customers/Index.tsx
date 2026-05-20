@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import { CustomerType, FilterOption, PaginationType, SortOption, UserTypeforForm } from '@/types';
+import { Company, CustomerType, FilterOption, PaginationType, SortOption, UserTypeforForm } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
@@ -8,7 +8,7 @@ import { columns } from './columns';
 interface Props {
     customers: PaginationType<CustomerType>;
     users: UserTypeforForm[];
-    companies: { id: number; name: string }[];
+    companies: Company[];
 }
 
 

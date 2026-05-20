@@ -1,12 +1,12 @@
 import AppLayout from "@/layouts/app-layout";
 import MeetingForm from "./form";
 import { Head } from "@inertiajs/react";
-import { CustomerType, Meeting } from "@/types";
+import { CustomerType, Meeting, Requirement } from "@/types";
 
 interface Props {
     meeting: Meeting;
     customers: CustomerType[];
-    requirements: { id: number; title: string | null; customer_id: number }[];
+    requirements: Requirement[];
 }
 
 export default function Edit({ meeting, customers, requirements }: Props) {
