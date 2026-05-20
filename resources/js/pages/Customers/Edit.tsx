@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import CustomerForm from "./form";
+import CustomerForm from "./Form";
 import { Head } from "@inertiajs/react";
 import { Company, CustomerType, User } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

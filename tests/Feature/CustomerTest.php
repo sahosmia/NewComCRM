@@ -90,7 +90,7 @@ test('user can delete their own customer', function () {
         ->delete(route('customers.destroy', $customer))
         ->assertStatus(302);
 
-    $this->assertSoftDeleted('customers', ['id' => $customer->id]);
+    $this->assertDatabaseMissing('customers', ['id' => $customer->id]);
 });
 
 test('user cannot bulk delete others customers', function () {
@@ -102,6 +102,6 @@ test('user cannot bulk delete others customers', function () {
             'ids' => [$myCustomer->id, $othersCustomer->id]
         ]);
 
-    $this->assertSoftDeleted('customers', ['id' => $myCustomer->id]);
+    $this->assertDatabaseMissing('customers', ['id' => $myCustomer->id]);
     $this->assertDatabaseHas('customers', ['id' => $othersCustomer->id]);
 });

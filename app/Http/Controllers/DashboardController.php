@@ -20,6 +20,6 @@ class DashboardController extends Controller
             abort(401);
         }
 
-        return Inertia::render('dashboard', $this->dashboardService->dashboardData($user));
+        return Inertia::render('Dashboard', $this->dashboardService->dashboardData($user));
     }
 }

@@ -3,7 +3,7 @@ import { PaginationType, SortOption } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
-import { columns } from './columns';
+import { columns } from './Columns';
 
 interface Props {
     companies: PaginationType<any>;

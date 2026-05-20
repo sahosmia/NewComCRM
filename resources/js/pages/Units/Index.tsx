@@ -4,7 +4,7 @@ import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import { Unit } from '@/types/unit';
-import { columns } from './columns';
+import { columns } from './Columns';
 
 interface Props {
     units: PaginationType<Unit>;

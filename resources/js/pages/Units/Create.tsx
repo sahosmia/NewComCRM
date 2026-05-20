@@ -1,7 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head } from '@inertiajs/react';
 import Heading from '@/components/admin/heading';
-import UnitForm from './form';
+import UnitForm from './Form';
 
 export default function UnitCreate() {
     const breadcrumbs = [
