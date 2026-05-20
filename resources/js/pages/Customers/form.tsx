@@ -88,7 +88,15 @@ export default function CustomerForm({ customer, users, companies }: Props) {
                                     selectedId={data.company_id}
                                     placeholder="Select company"
                                     searchPlaceholder="Search company..."
-                                    onSelect={(id) => setData("company_id", id)}
+                                    onSelect={(id) => {
+                                        setData("company_id", id);
+                                        if (id) {
+                                            const company = companies.find(c => c.id === id);
+                                            if (company?.address && (data.addresses.length === 0 || (data.addresses.length === 1 && !data.addresses[0]))) {
+                                                setData("addresses", [company.address]);
+                                            }
+                                        }
+                                    }}
                                 />
 
                                 <ErrorMessage message={errors.company_id} />

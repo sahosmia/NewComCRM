@@ -110,11 +110,12 @@ class CustomerController extends Controller
 
         return Excel::download(new GeneralExport(
             $customers,
-            ['Name', 'Email', 'Company', 'Designation', 'Type', 'Status', 'Assigned To'],
+            ['Name', 'Email', 'Phones', 'Company', 'Designation', 'Type', 'Status', 'Assigned To'],
             function ($customer) {
                 return [
                     $customer->name,
                     $customer->email,
+                    $customer->phones ? implode(', ', $customer->phones) : '',
                     $customer->company?->name,
                     $customer->designation,
                     $customer->type,
@@ -133,6 +134,7 @@ class CustomerController extends Controller
             return [
                 $customer->name,
                 $customer->email,
+                $customer->phones ? implode(', ', $customer->phones) : '',
                 $customer->company?->name,
                 $customer->designation,
                 $customer->type,
@@ -143,7 +145,7 @@ class CustomerController extends Controller
 
         return view('print.general', [
             'title' => 'Customer List',
-            'headings' => ['Name', 'Email', 'Company', 'Designation', 'Type', 'Status', 'Assigned To'],
+            'headings' => ['Name', 'Email', 'Phones', 'Company', 'Designation', 'Type', 'Status', 'Assigned To'],
             'data' => $data
         ]);
     }

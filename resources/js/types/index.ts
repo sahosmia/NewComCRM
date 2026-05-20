@@ -323,5 +323,10 @@ export interface CommonTableProps<T> {
 
 
 export interface Company {
-    id: number, name: string;
+    id: number;
+    name: string;
+    email?: string;
+    phone?: string;
+    website?: string;
+    address?: string;
 }
