@@ -18,7 +18,8 @@ class CustomerController extends Controller
     public function __construct(
         private CustomerService $customerService,
         private CompanyService $companyService,
-    ) {}
+    ) {
+    }
 
 
 
@@ -83,7 +84,7 @@ class CustomerController extends Controller
         return back()->with('success', 'Customer deleted successfully!');
     }
 
-      public function updateStatus(Request $request, Customer $customer)
+    public function updateStatus(Request $request, Customer $customer)
     {
         $this->authorize('update', $customer);
 
@@ -110,11 +111,12 @@ class CustomerController extends Controller
 
         return Excel::download(new GeneralExport(
             $customers,
-            ['Name', 'Email', 'Company', 'Designation', 'Type', 'Status', 'Assigned To'],
+            ['Name', 'Email', 'Phone', 'Company', 'Designation', 'Type', 'Status', 'Assigned To'],
             function ($customer) {
                 return [
                     $customer->name,
                     $customer->email,
+                    $customer->phones ? implode(', ', $customer->phones) : '',
                     $customer->company?->name,
                     $customer->designation,
                     $customer->type,
@@ -133,6 +135,7 @@ class CustomerController extends Controller
             return [
                 $customer->name,
                 $customer->email,
+                $customer->phones ? implode(', ', $customer->phones) : '',
                 $customer->company?->name,
                 $customer->designation,
                 $customer->type,
@@ -143,7 +146,7 @@ class CustomerController extends Controller
 
         return view('print.general', [
             'title' => 'Customer List',
-            'headings' => ['Name', 'Email', 'Company', 'Designation', 'Type', 'Status', 'Assigned To'],
+            'headings' => ['Name', 'Email', 'Phone', 'Company', 'Designation', 'Type', 'Status', 'Assigned To'],
             'data' => $data
         ]);
     }

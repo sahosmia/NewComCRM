@@ -75,28 +75,38 @@ export default function CustomerForm({ customer, users, companies }: Props) {
                             <ErrorMessage message={errors.name} />
                         </div>
 
+
+
+                        <div className="grid gap-2">
+                            <GenericCombobox
+                                label="Company"
+                                items={companies}
+                                selectedId={data.company_id}
+                                placeholder="Select company"
+                                searchPlaceholder="Search company..."
+                                onSelect={(id) => {
+                                    setData("company_id", id);
+                                    if (id) {
+                                        const company = companies.find(c => c.id === id);
+                                        if (company?.address && (data.addresses.length === 0 || (data.addresses.length === 1 && !data.addresses[0]))) {
+                                            setData("addresses", [company.address]);
+                                        }
+                                    }
+                                }}
+                            />
+
+                            <ErrorMessage message={errors.company_id} />
+                        </div>
+
                         <div className="grid gap-2">
                             <FormLabel>Email Address</FormLabel>
                             <Input type="email" value={data.email} onChange={e => setData("email", e.target.value)} placeholder="john@example.com" />
                             <ErrorMessage message={errors.email} />
                         </div>
-
-                            <div className="grid gap-2">
-                                <GenericCombobox
-                                    label="Company"
-                                    items={companies}
-                                    selectedId={data.company_id}
-                                    placeholder="Select company"
-                                    searchPlaceholder="Search company..."
-                                    onSelect={(id) => setData("company_id", id)}
-                                />
-
-                                <ErrorMessage message={errors.company_id} />
-                            </div>
-                            <div className="grid gap-2">
-                                <FormLabel>Designation</FormLabel>
-                                <Input value={data.designation} onChange={e => setData("designation", e.target.value)} placeholder="Manager" />
-                            </div>
+                        <div className="grid gap-2">
+                            <FormLabel>Designation</FormLabel>
+                            <Input value={data.designation} onChange={e => setData("designation", e.target.value)} placeholder="Manager" />
+                        </div>
 
                         {/* Phone Numbers - Dynamic List */}
                         <div className="space-y-3">

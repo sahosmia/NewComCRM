@@ -117,14 +117,21 @@ class Requirement extends Model
         }
 
         $itemsTotal = $this->items->sum('total_price');
+        $itemsCostingTotal = $this->items->sum('costing_price');
 
         $accessoriesTotal = $this->has_accessories ? ($this->accessories_quantity * $this->accessories_price * $aitFactor) : 0;
         $installationTotal = $this->has_installation ? ($this->installation_quantity * $this->installation_price * $aitFactor) : 0;
 
         $subTotal = $itemsTotal + $accessoriesTotal + $installationTotal;
 
+        $taxableAmount = ($itemsTotal - $itemsCostingTotal) + $accessoriesTotal + $installationTotal;
+
+        // VAT/Tax (Add-on Logic): Total = Subtotal + (TaxableAmount * VAT_Percentage / 100)
+        $vatAmount = $this->vat_percentage > 0 ? ($taxableAmount * ($this->vat_percentage / 100)) : 0;
+        
+
         // VAT/Tax (Add-on Logic): Total = Subtotal + (Subtotal * VAT_Percentage / 100)
-        $vatAmount = $this->vat_percentage > 0 ? ($subTotal * ($this->vat_percentage / 100)) : 0;
+        // $vatAmount = $this->vat_percentage > 0 ? ($subTotal * ($this->vat_percentage / 100)) : 0;
 
         $this->grand_total = round($subTotal + $vatAmount, 2);
         $this->save();

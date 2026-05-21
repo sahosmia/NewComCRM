@@ -2,7 +2,8 @@ import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
 import { TableRowActions } from '@/components/table/TableRowActions';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Column, Requirement } from '@/types';
-import { FileDown } from 'lucide-react';
+import { FileDown, History, Video } from 'lucide-react';
+import { Link } from '@inertiajs/react';
 
 const RequirementOptions = [
     { value: 'pending', label: "Pending", colorClass: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20' },
@@ -84,11 +85,23 @@ const columns: Column<Requirement>[] = [
                 resource="requirements"
                 label="Requirement"
                 customActions={
-                    <DropdownMenuItem asChild>
-                        <a href={route('requirements.download', item.id)} target="_blank">
-                            <FileDown className="w-4 h-4 mr-2" /> Download PDF
-                        </a>
-                    </DropdownMenuItem>
+                    <>
+                        <DropdownMenuItem asChild>
+                            <Link href={route('meetings.create', { customer_id: item.customer_id, requirement_id: item.id })}>
+                                <Video className="w-4 h-4 mr-2" /> Add Meeting
+                            </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                            <Link href={route('follow-ups.create', { customer_id: item.customer_id, requirement_id: item.id })}>
+                                <History className="w-4 h-4 mr-2" /> Add Follow-up
+                            </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                            <a href={route('requirements.download', item.id)} target="_blank">
+                                <FileDown className="w-4 h-4 mr-2" /> Download PDF
+                            </a>
+                        </DropdownMenuItem>
+                    </>
                 }
             />
         ),
