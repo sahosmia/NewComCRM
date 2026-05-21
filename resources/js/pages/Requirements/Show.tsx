@@ -15,6 +15,7 @@ import {
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
 import StatusBadge from "@/components/shared/StatusBadge";
 import { Requirement } from "@/types";
+import { formatDate } from "@/utils/date-format";
 
 export default function Show({ requirement }: { requirement: Requirement }) {
     const breadcrumbs = [
@@ -58,7 +59,7 @@ export default function Show({ requirement }: { requirement: Requirement }) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Requirement: ${requirement.customer?.name}`} />
+            <Head title={`Requirement: ${requirement.customer?.name || 'N/A'}`} />
 
             <div className="p-6 max-w-6xl mx-auto space-y-6">
                 {/* Top Action Bar (Remains same) */}
@@ -79,7 +80,7 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                             <div className="flex items-center gap-4 mt-1">
                                 <p className="text-xs text-muted-foreground flex items-center gap-1 font-medium">
                                     <Calendar className="w-3 h-3 text-primary" />
-                                    Created on {new Date(requirement.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                    Created on {formatDate(requirement.created_at)}
                                 </p>
                             </div>
                         </div>
@@ -201,18 +202,28 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                         {requirement.has_accessories && (
                                             <tr className="bg-muted/5">
                                                 <td className="px-6 py-4 font-semibold">{requirement.accessories_title}</td>
-                                                <td className="px-6 py-4">{requirement.accessories_quantity} {requirement.accessoriesUnit?.short_form}</td>
-                                                <td className="px-6 py-4 text-right">{formatCurrency(requirement.accessories_price)}</td>
-                                                <td className="px-6 py-4 text-right font-bold text-primary">{formatCurrency(requirement.accessories_quantity * requirement.accessories_price)}</td>
+                                                <td className="px-6 py-4">
+                                                    {requirement.accessories_quantity}{' '}
+                                                    {requirement.accessories_unit?.title || requirement.accessories_unit?.short_form}
+                                                </td>
+                                                <td className="px-6 py-4 text-right">{formatCurrency(Number(requirement.accessories_price))}</td>
+                                                <td className="px-6 py-4 text-right font-bold text-primary">
+                                                    {formatCurrency(Number(requirement.accessories_quantity) * Number(requirement.accessories_price))}
+                                                </td>
                                             </tr>
                                         )}
 
                                         {requirement.has_installation && (
                                             <tr className="bg-muted/5">
                                                 <td className="px-6 py-4 font-semibold">{requirement.installation_title}</td>
-                                                <td className="px-6 py-4">{requirement.installation_quantity} {requirement.installationUnit?.short_form}</td>
-                                                <td className="px-6 py-4 text-right">{formatCurrency(requirement.installation_price)}</td>
-                                                <td className="px-6 py-4 text-right font-bold text-primary">{formatCurrency(requirement.installation_quantity * requirement.installation_price)}</td>
+                                                <td className="px-6 py-4">
+                                                    {requirement.installation_quantity}{' '}
+                                                    {requirement.installation_unit?.title || requirement.installation_unit?.short_form}
+                                                </td>
+                                                <td className="px-6 py-4 text-right">{formatCurrency(Number(requirement.installation_price))}</td>
+                                                <td className="px-6 py-4 text-right font-bold text-primary">
+                                                    {formatCurrency(Number(requirement.installation_quantity) * Number(requirement.installation_price))}
+                                                </td>
                                             </tr>
                                         )}
                                     </tbody>
@@ -256,16 +267,16 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                 <FileText className="w-3 h-3 text-primary" /> Terms & Delivery
                             </h2>
                             <div className="grid grid-cols-2 gap-4 text-xs">
-                                {requirement.quotationRecipient && (
+                                {requirement.quotation_recipient && (
                                     <div className="col-span-2 border-b pb-2 mb-2">
                                         <p className="text-muted-foreground mb-1 uppercase text-[9px] font-bold">Sent To</p>
-                                        <p className="font-bold">{requirement.quotationRecipient.name} ({requirement.quotationRecipient.company?.name})</p>
+                                        <p className="font-bold">{requirement.quotation_recipient.name} ({requirement.quotation_recipient.company?.name || 'N/A'})</p>
                                     </div>
                                 )}
-                                {requirement.quotationSender && (
+                                {requirement.quotation_sender && (
                                     <div className="col-span-2 border-b pb-2 mb-2">
                                         <p className="text-muted-foreground mb-1 uppercase text-[9px] font-bold">Sent By</p>
-                                        <p className="font-bold">{requirement.quotationSender.name}</p>
+                                        <p className="font-bold">{requirement.quotation_sender.name}</p>
                                     </div>
                                 )}
                                 <div><p className="text-muted-foreground mb-1">Price Validity</p><p className="font-bold">{requirement.price_validity_days || 'N/A'} Days</p></div>

@@ -11,10 +11,28 @@ class SaleRepository
     public function paginateForIndex(array $params): LengthAwarePaginator
     {
         $perPage = $params['per_page'] ?? 10;
+        $search = $params['search'] ?? null;
+        $customerId = $params['customer_id'] ?? null;
+        $userId = $params['user_id'] ?? null;
+        $startDate = $params['start_date'] ?? null;
+        $endDate = $params['end_date'] ?? null;
+        $sort = $params['sort'] ?? 'sale_date';
+        $direction = $params['direction'] ?? 'desc';
 
         return Sale::query()
             ->with(['customer.assignedUser', 'requirement.items.product'])
-            ->latest()
+            ->when($search, function ($query, $search) {
+                $query->whereHas('requirement', function ($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%");
+                });
+            })
+            ->when($customerId, fn($q) => $q->where('customer_id', $customerId))
+            ->when($userId, function ($query, $userId) {
+                $query->whereHas('customer', fn($q) => $q->where('assigned_to', $userId));
+            })
+            ->when($startDate, fn($q) => $q->whereDate('sale_date', '>=', $startDate))
+            ->when($endDate, fn($q) => $q->whereDate('sale_date', '<=', $endDate))
+            ->orderBy($sort, $direction)
             ->paginate($perPage)
             ->withQueryString();
     }

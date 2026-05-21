@@ -16,17 +16,31 @@ class SaleController extends Controller
 
     public function index(Request $request)
     {
+        $userRepo = app(\App\Repositories\UserRepository::class);
+        $customerRepo = app(\App\Repositories\CustomerRepository::class);
+
         return Inertia::render('Sales/Index', [
-            'sales' => $this->saleService->paginateIndex($request->all())
+            'sales' => $this->saleService->paginateIndex($request->all()),
+            'filters' => [
+                'users' => $userRepo->selectOptions(),
+                'customers' => $customerRepo->selectOptions(),
+            ]
         ]);
     }
 
-    public function bulkDestroy(Request $request)
+    public function show(\App\Models\Sale $sale)
     {
-        $this->saleService->bulkDelete($request->input('ids', []));
-
-        return back()->with('success', 'Sales deleted successfully');
+        return Inertia::render('Sales/Show', [
+            'sale' => $sale->load(['customer.company', 'requirement'])
+        ]);
     }
+
+    // public function bulkDestroy(Request $request)
+    // {
+    //     $this->saleService->bulkDelete($request->input('ids', []));
+
+    //     return back()->with('success', 'Sales deleted successfully');
+    // }
 
     public function export(Request $request)
     {

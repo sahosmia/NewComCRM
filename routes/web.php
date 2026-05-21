@@ -102,7 +102,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('export', 'export')->name('export');
         Route::get('print', 'print')->name('print');
-        Route::delete('bulk-destroy', 'bulkDestroy')->name('bulkDestroy');
+        Route::get('{sale}', 'show')->name('show');
+        // Route::delete('bulk-destroy', 'bulkDestroy')->name('bulkDestroy');
     });
 
     // --- Limited Resources ---
