@@ -33,6 +33,7 @@ interface GenericComboboxProps {
     emptyText?: string;
     allowManualInput?: boolean;
     className?: string;
+    renderAction?: React.ReactNode;
 }
 
 export function GenericCombobox({
@@ -46,6 +47,7 @@ export function GenericCombobox({
     emptyText = "No item found.",
     allowManualInput = true,
     className,
+    renderAction,
 }: GenericComboboxProps) {
     const [open, setOpen] = React.useState(false);
 
@@ -57,20 +59,21 @@ export function GenericCombobox({
         <>
             <FormLabel>{label}</FormLabel>
 
-            <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                    <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={open}
-                        className={cn("w-full justify-between font-normal", !selectedId && !manualValue && "text-muted-foreground", className)}
-                    >
-                        <span className="truncate">{displayLabel}</span>
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
-                    <Command>
+            <div className="relative">
+                <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={open}
+                            className={cn("w-full justify-between font-normal", renderAction && "pr-18", !selectedId && !manualValue && "text-muted-foreground", className)}
+                        >
+                            <span className="truncate">{displayLabel}</span>
+                            <ChevronsUpDown className={cn("ml-2 h-4 w-4 shrink-0 opacity-50", renderAction && "absolute right-10")} />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                        <Command>
                         <CommandInput placeholder={searchPlaceholder} />
                         <CommandEmpty>
                             <div className="p-2 space-y-2">
@@ -104,10 +107,16 @@ export function GenericCombobox({
                                     {item.name}
                                 </CommandItem>
                             ))}
-                        </CommandGroup>
-                    </Command>
-                </PopoverContent>
-            </Popover>
+                            </CommandGroup>
+                        </Command>
+                    </PopoverContent>
+                </Popover>
+                {renderAction && (
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                        {renderAction}
+                    </div>
+                )}
+            </div>
         </>
     );
 }

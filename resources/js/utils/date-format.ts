@@ -1,8 +1,8 @@
 import { format, parseISO, isValid } from 'date-fns';
 
 export const DATE_FORMATS = {
-    default: 'MMM dd, yyyy',
-    datetime: 'MMM dd, yyyy hh:mm a',
+    default: 'dd MMM, yyyy',
+    datetime: 'dd MMM, yyyy hh:mm a',
     time: 'hh:mm a',
     iso: 'yyyy-MM-dd',
     sql: 'yyyy-MM-dd HH:mm:ss',

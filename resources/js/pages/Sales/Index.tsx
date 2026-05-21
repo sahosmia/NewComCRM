@@ -1,12 +1,15 @@
 import AppLayout from '@/layouts/app-layout';
-import { PaginationType, SortOption } from '@/types';
+import { PaginationType, SortOption, FilterOption } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import { Badge } from '@/components/ui/badge';
+import { formatDate } from '@/utils/date-format';
 
 interface Props {
     sales: PaginationType<any>;
+    customers: { id: number, name: string }[];
+    users: { id: number, name: string }[];
 }
 
 const columns: any[] = [
@@ -56,19 +59,42 @@ const columns: any[] = [
     },
     {
         header: 'Sale Date',
-        accessor: (item: any) => new Date(item.sale_date).toLocaleDateString(),
+        accessor: (item: any) => formatDate(item.sale_date),
     },
 ];
 
-export default function SaleIndex({ sales }: Props) {
+export default function SaleIndex({ sales, customers, users }: Props) {
     const breadcrumbs = [
         { title: 'Dashboard', href: route('dashboard') },
         { title: 'Sales', href: route('sales.index') },
     ];
 
-     const salesSortOptions :SortOption [] = [
-            { label: 'Newest First', sort: 'created_at', direction: 'desc' },
-        ];
+    const filters: FilterOption[] = [
+        {
+            name: 'customer_id',
+            label: 'Customer',
+            type: 'searchSelect',
+            options: customers.map(c => ({ label: c.name, value: c.id }))
+        },
+        {
+            name: 'assigned_to',
+            label: 'Representative',
+            type: 'searchSelect',
+            options: users.map(u => ({ label: u.name, value: u.id }))
+        },
+        {
+            name: 'date_range',
+            label: 'Sale Date Range',
+            type: 'date_range'
+        }
+    ];
+
+    const salesSortOptions: SortOption[] = [
+        { label: 'Date (Newest)', sort: 'sale_date', direction: 'desc' },
+        { label: 'Date (Oldest)', sort: 'sale_date', direction: 'asc' },
+        { label: 'Amount (High to Low)', sort: 'amount', direction: 'desc' },
+        { label: 'Amount (Low to High)', sort: 'amount', direction: 'asc' },
+    ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -84,10 +110,11 @@ export default function SaleIndex({ sales }: Props) {
                     data={sales}
                     columns={columns}
                     routeName="sales.index"
+                    filters={filters}
+                    sortOptions={salesSortOptions}
                     exportRoute="sales.export"
                     printRoute="sales.print"
-                    // sortOptions={salesSortOptions}
-                     bulkDeleteRoute="sales.bulkDestroy"
+                    bulkDeleteRoute="sales.bulkDestroy"
                     entityName="Sale"
                 />
             </div>

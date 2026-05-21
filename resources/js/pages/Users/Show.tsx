@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, Mail, Phone, User, Calendar, ArrowLeft } from "lucide-react";
 import { Head, Link } from "@inertiajs/react";
 import { DeleteResourceButton, EditResourceButton } from "@/components/shared/resource-actions";
+import { formatDate } from "@/utils/date-format";
 
 export default function Show({ user }: { user: any }) {
     return (
@@ -90,7 +91,7 @@ export default function Show({ user }: { user: any }) {
                             <CardContent className="space-y-4">
                                 <div className="flex items-center gap-3">
                                     <Calendar className="w-4 h-4 text-primary" />
-                                    <p className="text-sm font-medium">Joined: <span className="text-muted-foreground ml-1">{new Date(user.created_at).toLocaleDateString()}</span></p>
+                                    <p className="text-sm font-medium">Joined: <span className="text-muted-foreground ml-1">{formatDate(user.created_at)}</span></p>
                                 </div>
                             </CardContent>
                         </Card>

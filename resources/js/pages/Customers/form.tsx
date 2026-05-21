@@ -12,6 +12,7 @@ import type { Company, CustomerType, User } from "@/types";
 import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 import FormLabel from "@/components/admin/form/FormLabel";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
+import { CompanyModal } from "@/components/admin/modals/CompanyModal";
 
 
 
@@ -23,9 +24,9 @@ interface Props {
 
 
 
-export default function CustomerForm({ customer, users, companies }: Props) {
+export default function CustomerForm({ customer, users, companies: initialCompanies }: Props) {
     const [openPopover, setOpenPopover] = useState(false);
-    const [openCompanyPopover, setOpenCompanyPopover] = useState(false);
+    const [localCompanies, setLocalCompanies] = useState<Company[]>(initialCompanies);
 
     const { data, setData, post, put, processing, errors } = useForm({
         name: customer?.name ?? "",
@@ -80,19 +81,39 @@ export default function CustomerForm({ customer, users, companies }: Props) {
                         <div className="grid gap-2">
                             <GenericCombobox
                                 label="Company"
-                                items={companies}
+                                items={localCompanies}
                                 selectedId={data.company_id}
                                 placeholder="Select company"
                                 searchPlaceholder="Search company..."
                                 onSelect={(id) => {
                                     setData("company_id", id);
                                     if (id) {
-                                        const company = companies.find(c => c.id === id);
+                                        const company = localCompanies.find(c => c.id === id);
                                         if (company?.address && (data.addresses.length === 0 || (data.addresses.length === 1 && !data.addresses[0]))) {
                                             setData("addresses", [company.address]);
                                         }
                                     }
                                 }}
+                                renderAction={
+                                    <CompanyModal
+                                        onSuccess={(newCompany) => {
+                                            setLocalCompanies(prev => [newCompany, ...prev]);
+                                            setData("company_id", newCompany.id);
+                                            if (newCompany.address && (data.addresses.length === 0 || (data.addresses.length === 1 && !data.addresses[0]))) {
+                                                setData("addresses", [newCompany.address]);
+                                            }
+                                        }}
+                                        trigger={
+                                            <div
+                                                role="button"
+                                                className="flex h-6 w-6 items-center justify-center rounded-md hover:bg-muted ml-1"
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                <Plus className="h-4 w-4" />
+                                            </div>
+                                        }
+                                    />
+                                }
                             />
 
                             <ErrorMessage message={errors.company_id} />

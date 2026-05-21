@@ -17,7 +17,9 @@ class SaleController extends Controller
     public function index(Request $request)
     {
         return Inertia::render('Sales/Index', [
-            'sales' => $this->saleService->paginateIndex($request->all())
+            'sales' => $this->saleService->paginateIndex($request->all()),
+            'customers' => $this->saleService->customersForForm(),
+            'users' => $this->saleService->usersForForm()
         ]);
     }
 

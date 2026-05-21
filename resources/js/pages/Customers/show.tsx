@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare, LayoutList, Plus, Video } from "lucide-react";
 import { Head, Link } from "@inertiajs/react";
 import { CustomerType, FollowUp, Meeting, Requirement } from "@/types";
+import { formatDate, formatDateTime } from "@/utils/date-format";
 
 export default function Show({ customer }: { customer: CustomerType & { requirements: Requirement[], follow_ups: FollowUp[], meetings: Meeting[] } }) {
     return (
@@ -106,7 +107,7 @@ export default function Show({ customer }: { customer: CustomerType & { requirem
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <Calendar className="w-4 h-4 text-primary" />
-                                    <p className="text-sm font-medium">Created: <span className="text-muted-foreground ml-1">{new Date(customer.created_at).toLocaleDateString()}</span></p>
+                                    <p className="text-sm font-medium">Created: <span className="text-muted-foreground ml-1">{formatDate(customer.created_at)}</span></p>
                                 </div>
                             </CardContent>
                         </Card>
@@ -162,7 +163,7 @@ export default function Show({ customer }: { customer: CustomerType & { requirem
                                                     <tr key={req.id} className="hover:bg-muted/30 transition-colors">
                                                         <td className="px-4 py-3 font-medium">#{req.id}</td>
                                                         <td className="px-4 py-3 text-muted-foreground">
-                                                            {new Date(req.created_at).toLocaleDateString()}
+                                                            {formatDate(req.created_at)}
                                                         </td>
                                                         <td className="px-4 py-3 font-bold">
                                                             ৳ {parseFloat(req.grand_total).toLocaleString()}
@@ -226,7 +227,7 @@ export default function Show({ customer }: { customer: CustomerType & { requirem
                                                     <div className="flex justify-between items-start mb-1">
                                                         <h4 className="font-semibold text-sm capitalize">{fu.status.replace('_', ' ')}</h4>
                                                         <time className="text-[10px] text-muted-foreground font-medium uppercase tracking-tighter">
-                                                            {new Date(fu.follow_up_date).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}
+                                                            {formatDate(fu.follow_up_date)}
                                                         </time>
                                                     </div>
                                                     <p className="text-sm text-muted-foreground line-clamp-2 italic">
@@ -290,7 +291,7 @@ export default function Show({ customer }: { customer: CustomerType & { requirem
                                                     <div className="flex justify-between items-start mb-1">
                                                         <h4 className="font-semibold text-sm capitalize">{m.title}</h4>
                                                         <time className="text-[10px] text-muted-foreground font-medium uppercase tracking-tighter">
-                                                            {new Date(m.scheduled_at).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                                            {formatDateTime(m.scheduled_at)}
                                                         </time>
                                                     </div>
                                                     <p className="text-sm text-muted-foreground line-clamp-2 italic">

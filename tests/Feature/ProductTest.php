@@ -114,7 +114,7 @@ it('can_delete_a_product', function () {
         ->delete(route('products.destroy', $product));
 
     $response->assertRedirect(route('products.index'));
-    $this->assertSoftDeleted('products', [
+    $this->assertDatabaseMissing('products', [
         'id' => $product->id,
     ]);
 });

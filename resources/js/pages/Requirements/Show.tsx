@@ -15,6 +15,7 @@ import {
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
 import StatusBadge from "@/components/shared/StatusBadge";
 import { Requirement } from "@/types";
+import { formatDate, formatDateTime } from "@/utils/date-format";
 
 export default function Show({ requirement }: { requirement: Requirement }) {
     const breadcrumbs = [
@@ -79,7 +80,7 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                             <div className="flex items-center gap-4 mt-1">
                                 <p className="text-xs text-muted-foreground flex items-center gap-1 font-medium">
                                     <Calendar className="w-3 h-3 text-primary" />
-                                    Created on {new Date(requirement.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                    Created on {formatDate(requirement.created_at)}
                                 </p>
                             </div>
                         </div>
@@ -118,7 +119,7 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                         <Link key={meeting.id} href={route('meetings.show', meeting.id)} className="block">
                                             <div className="text-xs p-2 rounded border hover:bg-muted/50 transition-colors">
                                                 <p className="font-bold truncate">{meeting.title}</p>
-                                                <p className="text-[10px] text-muted-foreground">{new Date(meeting.scheduled_at).toLocaleString()}</p>
+                                                <p className="text-[10px] text-muted-foreground">{formatDateTime(meeting.scheduled_at)}</p>
                                             </div>
                                         </Link>
                                     ))
@@ -144,7 +145,7 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                         <Link key={followup.id} href={route('follow-ups.show', followup.id)} className="block">
                                             <div className="text-xs p-2 rounded border hover:bg-muted/50 transition-colors">
                                                 <p className="font-bold truncate">{followup.notes || 'Follow-up'}</p>
-                                                <p className="text-[10px] text-muted-foreground">{new Date(followup.follow_up_date).toLocaleString()}</p>
+                                                <p className="text-[10px] text-muted-foreground">{formatDate(followup.follow_up_date)}</p>
                                             </div>
                                         </Link>
                                     ))

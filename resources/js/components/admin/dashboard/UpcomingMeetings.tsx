@@ -1,5 +1,6 @@
 import { Calendar, Clock, MapPin } from 'lucide-react';
 import { Meeting } from '@/types';
+import { formatDate, formatTime } from '@/utils/date-format';
 
 function MeetingList({ meetings }: { meetings: Meeting[] }) {
     if (meetings.length === 0) {
@@ -11,20 +12,6 @@ function MeetingList({ meetings }: { meetings: Meeting[] }) {
         );
     }
 
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('en-GB', {
-            day: 'numeric',
-            month: 'short',
-        });
-    };
-
-    const formatTime = (dateString: string) => {
-        return new Date(dateString).toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
-        });
-    };
-
     return (
         <div className="space-y-6">
             {meetings.map((meeting) => (
@@ -32,10 +19,10 @@ function MeetingList({ meetings }: { meetings: Meeting[] }) {
                     {/* Date Box */}
                     <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-primary/5 text-primary border border-primary/10 transition-colors group-hover:bg-primary group-hover:text-white">
                         <span className="text-[10px] font-bold uppercase leading-none">
-                            {new Date(meeting.scheduled_at).toLocaleDateString('en-GB', { month: 'short' })}
+                            {formatDate(meeting.scheduled_at, 'MMM')}
                         </span>
                         <span className="text-xl font-bold leading-tight">
-                            {new Date(meeting.scheduled_at).getDate()}
+                            {formatDate(meeting.scheduled_at, 'd')}
                         </span>
                     </div>
 

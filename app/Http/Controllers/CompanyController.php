@@ -34,7 +34,14 @@ class CompanyController extends Controller
             'address' => 'nullable|string',
         ]);
 
-        $this->service->createCompany($data);
+        $company = $this->service->createCompany($data);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => 'Company created successfully.',
+                'company' => $company
+            ], 201);
+        }
 
         return redirect()->route('companies.index')
             ->with('success', 'Company created successfully.');
