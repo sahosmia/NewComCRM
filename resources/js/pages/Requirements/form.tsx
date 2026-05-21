@@ -38,13 +38,13 @@ export default function RequirementForm({ requirement, customers, products, unit
         ait_percentage: requirement?.ait_percentage ?? (requirement ? 0 : 5),
         vat_percentage: requirement?.vat_percentage ?? (requirement ? 0 : 10),
 
-        has_accessories: requirement?.has_accessories ?? false,
+        has_accessories: !!(requirement?.has_accessories ?? false),
         accessories_title: requirement?.accessories_title || "",
         accessories_quantity: requirement?.accessories_quantity || "",
         accessories_unit_id: requirement?.accessories_unit_id || "",
         accessories_price: requirement?.accessories_price || "",
 
-        has_installation: requirement?.has_installation ?? false,
+        has_installation: !!(requirement?.has_installation ?? false),
         installation_title: requirement?.installation_title || "",
         installation_quantity: requirement?.installation_quantity || "",
         installation_unit_id: requirement?.installation_unit_id || "",
@@ -60,12 +60,12 @@ export default function RequirementForm({ requirement, customers, products, unit
         qutation_send_by: requirement?.qutation_send_by || "",
 
         items: requirement?.items || [
-            { product_id: 0, quantity: 1, unit_price: "", costing_price: "", description: "" }
+            { product_id: 0, quantity: 1, unit_price: "", costing_price: 0, description: "" }
         ],
     });
 
     const addItem = () => {
-        setData("items", [...data.items, { product_id: 0, quantity: 1, unit_price: "", costing_price: "", description: "" }]);
+        setData("items", [...data.items, { product_id: 0, quantity: 1, unit_price: "", costing_price: 0, description: "" }]);
     };
 
     const removeItem = (index: number) => {

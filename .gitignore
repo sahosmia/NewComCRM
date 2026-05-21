@@ -29,3 +29,7 @@ yarn-error.log
 *.zip
 server.log
 vite.log
+php_server.log
+test-results/
+playwright-report/
+verification/

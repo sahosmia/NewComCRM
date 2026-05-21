@@ -204,7 +204,7 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                                 <td className="px-6 py-4 font-semibold">{requirement.accessories_title}</td>
                                                 <td className="px-6 py-4">
                                                     {requirement.accessories_quantity}{' '}
-                                                    {requirement.accessories_unit?.title || requirement.accessories_unit?.short_form}
+                                    {requirement.accessories_unit?.short_form || ''}
                                                 </td>
                                                 <td className="px-6 py-4 text-right">{formatCurrency(Number(requirement.accessories_price))}</td>
                                                 <td className="px-6 py-4 text-right font-bold text-primary">
@@ -218,7 +218,7 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                                 <td className="px-6 py-4 font-semibold">{requirement.installation_title}</td>
                                                 <td className="px-6 py-4">
                                                     {requirement.installation_quantity}{' '}
-                                                    {requirement.installation_unit?.title || requirement.installation_unit?.short_form}
+                                    {requirement.installation_unit?.short_form || ''}
                                                 </td>
                                                 <td className="px-6 py-4 text-right">{formatCurrency(Number(requirement.installation_price))}</td>
                                                 <td className="px-6 py-4 text-right font-bold text-primary">
@@ -229,13 +229,13 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                     </tbody>
 
                                     <tfoot className="bg-primary/2 border-t-2 border-primary/10">
-                                        {(requirement.has_vat || requirement.has_ait) && (
+                                        {(Number(requirement.vat_percentage) > 0 || Number(requirement.ait_percentage) > 0) && (
                                             <>
                                                 <tr>
                                                     <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">Sub-Total</td>
                                                     <td className="px-6 py-2 text-right font-mono text-sm">{formatCurrency(totals.subTotal)}</td>
                                                 </tr>
-                                                {requirement.has_vat && (
+                                {Number(requirement.vat_percentage) > 0 && (
                                                     <tr>
                                                         <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">VAT ({requirement.vat_percentage}%)</td>
                                                         <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">+ {formatCurrency(totals.vatAmount)}</td>

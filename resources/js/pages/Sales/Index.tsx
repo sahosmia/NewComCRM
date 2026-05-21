@@ -35,18 +35,6 @@ const columns: any[] = [
         ),
     },
     {
-        header: 'Products',
-        accessor: (item: any) => (
-            <div className="flex flex-wrap gap-1 max-w-62">
-                {item.requirement?.items?.map((row: any) => (
-                    <Badge key={row.id} variant="secondary" className="text-[10px] font-normal">
-                        {row.product?.name} x {row.quantity}
-                    </Badge>
-                ))}
-            </div>
-        ),
-    },
-    {
         header: 'Amount',
         accessor: (item: any) => (
             <div className="font-bold">

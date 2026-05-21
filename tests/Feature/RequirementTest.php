@@ -40,6 +40,7 @@ it('can_store_a_new_requirement', function () {
                 'product_id' => $product->id,
                 'quantity' => 5,
                 'unit_price' => 100.00,
+                'costing_price' => 0,
             ]
         ],
         'notes' => 'Some notes',
@@ -83,6 +84,7 @@ it('can_update_an_existing_requirement', function () {
                 'product_id' => $product->id,
                 'quantity' => 10,
                 'unit_price' => 150.00,
+                'costing_price' => 0,
             ]
         ],
         'ait_percentage' => 5,
