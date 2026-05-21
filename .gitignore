@@ -27,3 +27,14 @@ yarn-error.log
 /.vscode
 /.zed
 *.zip
+
+# Logs
+server.log
+vite.log
+php_server.log
+vite_server.log
+
+# Testing
+test-results/
+playwright-report/
+verification/

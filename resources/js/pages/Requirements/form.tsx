@@ -118,269 +118,293 @@ export default function RequirementForm({ requirement, customers, products, unit
     };
 
     return (
-        <form onSubmit={submit} className="max-w-6xl mx-auto space-y-8 pb-10">
-            {/* Top Section: Customer & Status */}
-            <Card>
-                <CardContent className="space-y-6 ">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4  ">
-
-                        <div className="space-y-2">
-                            <FormLabel>Requirement Title</FormLabel>
-                            <Input
-                                placeholder="Requirement Title"
-                                value={data.title}
-                                onChange={e => setData('title', e.target.value)}
-                            />
-                            <ErrorMessage message={errors.title} />
+        <form onSubmit={submit} className="max-w-6xl mx-auto space-y-6 pb-24">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Left Column: Main Details */}
+                <div className="lg:col-span-2 space-y-6">
+                    <Card className="overflow-hidden border-none shadow-sm ring-1 ring-slate-200">
+                        <div className="p-4 bg-slate-50/50 border-b border-slate-200">
+                            <h3 className="text-sm font-semibold flex items-center gap-2 text-slate-700">
+                                <LayoutList className="w-4 h-4 text-primary" /> Basic Information
+                            </h3>
                         </div>
-                        <div className="space-y-2">
-                            <GenericCombobox
-                                label="Customer Information"
-                                items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company?.name || ''}` }))}
-                                selectedId={data.customer_id}
-                                placeholder="Select Customer"
-                                searchPlaceholder="Search customers..."
-                                onSelect={(id) => setData("customer_id", id as number)}
-                            />
-                            <ErrorMessage message={errors.customer_id} />
+                        <CardContent className="p-6 space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <FormLabel>Requirement Title</FormLabel>
+                                    <Input
+                                        placeholder="Enter title (e.g. Server Maintenance 2024)"
+                                        value={data.title}
+                                        onChange={e => setData('title', e.target.value)}
+                                        className="h-10"
+                                    />
+                                    <ErrorMessage message={errors.title} />
+                                </div>
+                                <div className="space-y-2">
+                                    <GenericCombobox
+                                        label="Customer Information"
+                                        items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company?.name || ''}` }))}
+                                        selectedId={data.customer_id}
+                                        placeholder="Select Customer"
+                                        searchPlaceholder="Search customers..."
+                                        onSelect={(id) => setData("customer_id", id as number)}
+                                    />
+                                    <ErrorMessage message={errors.customer_id} />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <GenericCombobox
+                                        label="Send Quotation To"
+                                        items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company?.name || ''}` }))}
+                                        selectedId={data.send_qutation_to}
+                                        onSelect={(id) => setData("send_qutation_to", id as number)}
+                                        placeholder="Select Recipient (Optional)"
+                                        searchPlaceholder="Search customers..."
+                                    />
+                                    <ErrorMessage message={errors.send_qutation_to} />
+                                </div>
+                                <div className="space-y-2">
+                                    <GenericCombobox
+                                        label="Quotation Sent By"
+                                        items={users.map(u => ({ id: u.id, name: u.name }))}
+                                        selectedId={data.qutation_send_by}
+                                        onSelect={(id) => setData("qutation_send_by", id as number)}
+                                        placeholder="Select Sender (Optional)"
+                                        searchPlaceholder="Search users..."
+                                    />
+                                    <ErrorMessage message={errors.qutation_send_by} />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Items Section moved inside main column */}
+                    <div className="bg-card border-none shadow-sm ring-1 ring-slate-200 rounded-xl overflow-hidden">
+                        <div className="p-4 bg-slate-50/50 flex justify-between items-center border-b border-slate-200">
+                            <h3 className="text-sm font-semibold flex items-center gap-2 text-slate-700">
+                                <Plus className="w-4 h-4 text-primary" /> Requirement Items
+                            </h3>
+                            <Button type="button" variant="outline" size="sm" onClick={addItem} className="h-8 gap-1 bg-background border-slate-200 hover:bg-slate-50">
+                                <Plus className="w-3.5 h-3.5" /> Add New Item
+                            </Button>
                         </div>
 
-
-
-
-
-                        <div className="space-y-2">
-                            <GenericCombobox
-                                label="Send Quotation To"
-                                items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company?.name || ''}` }))}
-                                selectedId={data.send_qutation_to}
-                                onSelect={(id) => setData("send_qutation_to", id as number)}
-                                placeholder="Select Recipient (Optional)"
-                                searchPlaceholder="Search customers..."
-                            />
-                            <ErrorMessage message={errors.send_qutation_to} />
+                        <div className="p-6 space-y-4">
+                            {data.items.map((item, index) => (
+                                <RequirementItemRow
+                                    key={index}
+                                    index={index}
+                                    item={item}
+                                    products={products}
+                                    aitFactor={aitFactor}
+                                    onItemChange={handleItemChange}
+                                    onRemove={removeItem}
+                                    isRemoveDisabled={data.items.length === 1}
+                                    errors={errors}
+                                />
+                            ))}
                         </div>
+                    </div>
+                </div>
 
-                         <div className="space-y-1.5">
-                            <FormLabel>Delivery Location</FormLabel>
-                            <Input
-                                placeholder="Location"
-                                value={data.delivery_location}
-                                onChange={(e) => setData("delivery_location", e.target.value)}
-                            />
-                            <ErrorMessage message={errors.delivery_location} />
+                {/* Right Column: Sidebar Info */}
+                <div className="space-y-6">
+                    <Card className="border-none shadow-sm ring-1 ring-slate-200">
+                        <div className="p-4 bg-slate-50/50 border-b border-slate-200">
+                            <h3 className="text-sm font-semibold flex items-center gap-2 text-slate-700">
+                                <Settings className="w-4 h-4 text-primary" /> Delivery & Status
+                            </h3>
                         </div>
-
-                        <div className="space-y-2">
-                            <GenericCombobox
-                                label="Quotation Sent By"
-                                items={users.map(u => ({ id: u.id, name: u.name }))}
-                                selectedId={data.qutation_send_by}
-                                onSelect={(id) => setData("qutation_send_by", id as number)}
-                                placeholder="Select Sender (Optional)"
-                                searchPlaceholder="Search users..."
-                            />
-                            <ErrorMessage message={errors.qutation_send_by} />
-                        </div>
-
-                        {/* --- Section 1: Terms & Delivery  */}
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <CardContent className="p-6 space-y-5">
+                            <div className="space-y-2">
+                                <FormLabel>Status</FormLabel>
+                                <FormSelect
+                                    value={data.status}
+                                    onChange={(v) => setData("status", v as Requirement["status"])}
+                                    options={RequirementOptions}
+                                    error={errors.status}
+                                />
+                            </div>
 
                             <div className="space-y-2">
-                                <FormLabel>Delivery Timeline (Days)</FormLabel>
+                                <FormLabel>Delivery Location</FormLabel>
                                 <Input
-                                    type="number"
-                                    value={data.delivery_time_days}
-                                    onChange={(e) => setData("delivery_time_days", e.target.value)}
-                                    placeholder="Delivery Timeline"
+                                    placeholder="e.g. Main Warehouse"
+                                    value={data.delivery_location}
+                                    onChange={(e) => setData("delivery_location", e.target.value)}
+                                    className="h-10"
                                 />
-                                <ErrorMessage message={errors.delivery_time_days} />
+                                <ErrorMessage message={errors.delivery_location} />
                             </div>
-                            <div className="space-y-1.5">
-                                <FormLabel>Price Validity (Days)</FormLabel>
-                                <Input
-                                    type="number"
-                                    placeholder="Days"
-                                    value={data.price_validity_days}
-                                    onChange={(e) => setData("price_validity_days", e.target.value)}
-                                />
-                                <ErrorMessage message={errors.price_validity_days} />
-                            </div>
-                        </div>
 
-
-                        <div className="space-y-2">
-                            <FormSelect
-                                label="Status"
-                                value={data.status}
-                                onChange={(v) => setData("status", v as Requirement["status"])}
-                                options={RequirementOptions}
-                                error={errors.status}
-                            />
-                            <ErrorMessage message={errors.status} />
-                        </div>
-
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                            <div className="space-y-2">
-
-                                <FormLabel>Include VAT</FormLabel>
-                                <div className="relative ">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <FormLabel>Timeline (Days)</FormLabel>
                                     <Input
                                         type="number"
-                                        size={1}
-                                        className=" text-xs pr-6"
-                                        value={data.vat_percentage}
-                                        onChange={(e) => setData("vat_percentage", e.target.value)}
-                                        placeholder="VAT Percentage"
+                                        value={data.delivery_time_days}
+                                        onChange={(e) => setData("delivery_time_days", e.target.value)}
+                                        placeholder="0"
+                                        className="h-10"
                                     />
-                                    <Percent className="w-3 absolute right-2 top-2 text-muted-foreground" />
+                                    <ErrorMessage message={errors.delivery_time_days} />
                                 </div>
-                                <ErrorMessage message={errors.vat_percentage} />
-                            </div>
-
-                            <div className="space-y-2">
-
-                                <FormLabel>Include AIT</FormLabel>
-                                <div className="relative ">
+                                <div className="space-y-2">
+                                    <FormLabel>Validity (Days)</FormLabel>
                                     <Input
                                         type="number"
-                                        size={1}
-                                        className="text-xs pr-6"
-                                        value={data.ait_percentage}
-                                        onChange={(e) => setData("ait_percentage", e.target.value)}
-                                        placeholder="AIT Percentage"
+                                        placeholder="0"
+                                        value={data.price_validity_days}
+                                        onChange={(e) => setData("price_validity_days", e.target.value)}
+                                        className="h-10"
                                     />
-                                    <Percent className="w-3 absolute right-2 top-2 text-muted-foreground" />
+                                    <ErrorMessage message={errors.price_validity_days} />
                                 </div>
-                                <ErrorMessage message={errors.ait_percentage} />
                             </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="border-none shadow-sm ring-1 ring-slate-200">
+                        <div className="p-4 bg-slate-50/50 border-b border-slate-200">
+                            <h3 className="text-sm font-semibold flex items-center gap-2 text-slate-700">
+                                <Percent className="w-4 h-4 text-primary" /> Taxes & Payments
+                            </h3>
                         </div>
-
-                        <div className="col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div className="space-y-2">
-                                <FormLabel>Advance Payment (%)</FormLabel>
-                                <Input
-                                    type="number"
-                                    value={data.advance_payment === 0 ? "" : data.advance_payment}
-                                    onChange={(e) => setData("advance_payment", e.target.value === "" ? 0 : Number(e.target.value))}
-                                    placeholder="Advance Payment"
-                                />
-                                <ErrorMessage message={errors.advance_payment} />
+                        <CardContent className="p-6 space-y-5">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <FormLabel>VAT (%)</FormLabel>
+                                    <div className="relative">
+                                        <Input
+                                            type="number"
+                                            className="pr-8 h-10"
+                                            value={data.vat_percentage}
+                                            onChange={(e) => setData("vat_percentage", e.target.value)}
+                                        />
+                                        <Percent className="w-3.5 h-3.5 absolute right-3 top-3.5 text-slate-400" />
+                                    </div>
+                                    <ErrorMessage message={errors.vat_percentage} />
+                                </div>
+                                <div className="space-y-2">
+                                    <FormLabel>AIT (%)</FormLabel>
+                                    <div className="relative">
+                                        <Input
+                                            type="number"
+                                            className="pr-8 h-10"
+                                            value={data.ait_percentage}
+                                            onChange={(e) => setData("ait_percentage", e.target.value)}
+                                        />
+                                        <Percent className="w-3.5 h-3.5 absolute right-3 top-3.5 text-slate-400" />
+                                    </div>
+                                    <ErrorMessage message={errors.ait_percentage} />
+                                </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <FormLabel>Before Delivery Payment (%)</FormLabel>
-                                <Input
-                                    type="number"
-                                    value={data.before_payment === 0 ? "" : data.before_payment}
-                                    onChange={(e) => {
-                                        const val = e.target.value === "" ? 0 : Number(e.target.value);
-                                        setData(d => ({
-                                            ...d,
-                                            before_payment: val,
-                                            after_payment: val > 0 ? 0 : d.after_payment
-                                        }));
-                                    }}
-                                    placeholder="Before Delivery Payment"
-                                    disabled={Number(data.after_payment) > 0}
-                                />
-                                <ErrorMessage message={errors.before_payment} />
-                            </div>
+                            <div className="space-y-4 pt-2">
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <FormLabel>Advance (%)</FormLabel>
+                                        <span className="text-[10px] font-medium text-slate-500">{data.advance_payment}%</span>
+                                    </div>
+                                    <Input
+                                        type="number"
+                                        value={data.advance_payment === 0 ? "" : data.advance_payment}
+                                        onChange={(e) => setData("advance_payment", e.target.value === "" ? 0 : Number(e.target.value))}
+                                        className="h-10"
+                                    />
+                                    <ErrorMessage message={errors.advance_payment} />
+                                </div>
 
-                            <div className="space-y-2">
-                                <FormLabel>After Delivery Payment (%)</FormLabel>
-                                <Input
-                                    type="number"
-                                    value={data.after_payment === 0 ? "" : data.after_payment}
-                                    onChange={(e) => {
-                                        const val = e.target.value === "" ? 0 : Number(e.target.value);
-                                        setData(d => ({
-                                            ...d,
-                                            after_payment: val,
-                                            before_payment: val > 0 ? 0 : d.before_payment
-                                        }));
-                                    }}
-                                    placeholder="After Delivery Payment"
-                                    disabled={Number(data.before_payment) > 0}
-                                />
-                                <ErrorMessage message={errors.after_payment} />
+                                <div className="space-y-2">
+                                    <FormLabel>Before Delivery (%)</FormLabel>
+                                    <Input
+                                        type="number"
+                                        value={data.before_payment === 0 ? "" : data.before_payment}
+                                        onChange={(e) => {
+                                            const val = e.target.value === "" ? 0 : Number(e.target.value);
+                                            setData(d => ({
+                                                ...d,
+                                                before_payment: val,
+                                                after_payment: val > 0 ? 0 : d.after_payment
+                                            }));
+                                        }}
+                                        disabled={Number(data.after_payment) > 0}
+                                        className="h-10"
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <FormLabel>After Delivery (%)</FormLabel>
+                                    <Input
+                                        type="number"
+                                        value={data.after_payment === 0 ? "" : data.after_payment}
+                                        onChange={(e) => {
+                                            const val = e.target.value === "" ? 0 : Number(e.target.value);
+                                            setData(d => ({
+                                                ...d,
+                                                after_payment: val,
+                                                before_payment: val > 0 ? 0 : d.before_payment
+                                            }));
+                                        }}
+                                        disabled={Number(data.before_payment) > 0}
+                                        className="h-10"
+                                    />
+                                </div>
                             </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="border-none shadow-sm ring-1 ring-slate-200">
+                        <div className="p-4 bg-slate-50/50 border-b border-slate-200">
+                            <h3 className="text-sm font-semibold flex items-center gap-2 text-slate-700">
+                                <LayoutList className="w-4 h-4 text-primary" /> Internal Remarks
+                            </h3>
                         </div>
-
-                        <div className="space-y-2 col-span-2">
-                            <FormLabel>Internal Remarks</FormLabel>
+                        <CardContent className="p-6">
                             <Textarea
-                                className="bg-background resize-none text-xs border-slate-200 focus:border-primary/50"
-                                rows={2}
+                                className="bg-background resize-none text-sm border-slate-200 focus:border-primary/50"
+                                rows={4}
                                 placeholder="Add special instructions for team..."
                                 value={data.notes}
                                 onChange={(e) => setData("notes", e.target.value)}
                             />
                             <ErrorMessage message={errors.notes} />
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-
-            {/* Items Section */}
-            <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
-                <div className="p-4 bg-muted/40 flex justify-between items-center border-b">
-                    <h3 className="font-bold flex items-center gap-2 uppercase text-xs tracking-widest text-muted-foreground">
-                        <LayoutList className="w-4 h-4 text-primary" /> Requirement Items
-                    </h3>
-                    <Button type="button" variant="outline" size="sm" onClick={addItem} className="h-8 gap-1 bg-background">
-                        <Plus className="w-4 h-4" /> Add Item
-                    </Button>
-                </div>
-
-                <div className="p-4 space-y-4">
-                    {/* Table Header for Desktop */}
-                    {data.items.map((item, index) => (
-                        <RequirementItemRow
-                            key={index}
-                            index={index}
-                            item={item}
-                            products={products}
-                            aitFactor={aitFactor}
-                            onItemChange={handleItemChange}
-                            onRemove={removeItem}
-                            isRemoveDisabled={data.items.length === 1}
-                            errors={errors}
-                        />
-                    ))}
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
 
-            {/* Accessories Section */}
-            <ServiceSection
-                title="Accessories"
-                icon={<Settings className="w-4 h-4 text-primary" />}
-                hasService={data.has_accessories}
-                onServiceToggle={(v) => setData("has_accessories", v)}
-                prefix="accessories"
-                data={data}
-                setData={setData}
-                units={units}
-                aitFactor={aitFactor}
-                errors={errors}
-            />
+            <div className="space-y-6">
+                {/* Accessories Section */}
+                <ServiceSection
+                    title="Accessories"
+                    icon={<Settings className="w-4 h-4 text-primary" />}
+                    hasService={data.has_accessories}
+                    onServiceToggle={(v) => setData("has_accessories", v)}
+                    prefix="accessories"
+                    data={data}
+                    setData={setData}
+                    units={units}
+                    aitFactor={aitFactor}
+                    errors={errors}
+                />
 
-            {/* Installation Section */}
-            <ServiceSection
-                title="Installation"
-                icon={<Drill className="w-4 h-4 text-primary" />}
-                hasService={data.has_installation}
-                onServiceToggle={(v) => setData("has_installation", v)}
-                prefix="installation"
-                data={data}
-                setData={setData}
-                units={units}
-                aitFactor={aitFactor}
-                errors={errors}
-            />
+                {/* Installation Section */}
+                <ServiceSection
+                    title="Installation"
+                    icon={<Drill className="w-4 h-4 text-primary" />}
+                    hasService={data.has_installation}
+                    onServiceToggle={(v) => setData("has_installation", v)}
+                    prefix="installation"
+                    data={data}
+                    setData={setData}
+                    units={units}
+                    aitFactor={aitFactor}
+                    errors={errors}
+                />
+            </div>
 
 
             {/* Grand Total Footer */}
