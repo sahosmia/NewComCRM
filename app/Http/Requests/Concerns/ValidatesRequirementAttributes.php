@@ -20,13 +20,13 @@ trait ValidatesRequirementAttributes
 
             'has_accessories'      => 'nullable|boolean',
             'accessories_title'    => 'required_if:has_accessories,true|nullable|string|max:255',
-            'accessories_quantity' => 'required_if:has_accessories,true|integer|min:0',
+            'accessories_quantity' => 'required_if:has_accessories,true|integer|min:1',
             'accessories_unit_id'  => 'required_if:has_accessories,true|nullable|exists:units,id',
             'accessories_price'    => 'required_if:has_accessories,true|numeric|min:0',
 
             'has_installation'      => 'nullable|boolean',
             'installation_title'    => 'required_if:has_installation,true|nullable|string|max:255',
-            'installation_quantity' => 'required_if:has_installation,true|integer|min:0',
+            'installation_quantity' => 'required_if:has_installation,true|integer|min:1',
             'installation_unit_id'  => 'required_if:has_installation,true|nullable|exists:units,id',
             'installation_price'    => 'required_if:has_installation,true|numeric|min:0',
 

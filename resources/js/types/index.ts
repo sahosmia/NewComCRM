@@ -186,12 +186,12 @@ export interface Requirement {
 
     customer?: CustomerType;
     items?: RequirementItem[];
-    accessoriesUnit?: Unit;
-    installationUnit?: Unit;
+    accessories_unit?: Unit;
+    installation_unit?: Unit;
     meetings?: Meeting[];
     follow_ups?: FollowUp[];
-    quotationRecipient?: CustomerType;
-    quotationSender?: User;
+    quotation_recipient?: CustomerType;
+    quotation_sender?: User;
 }
 
 export interface FollowUp {

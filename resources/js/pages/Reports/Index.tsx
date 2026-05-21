@@ -18,9 +18,13 @@ import {
     Video,
     TrendingUp,
     Filter,
+    FileText,
 } from "lucide-react";
-import { CustomerType, FollowUp, Meeting, Sale, User } from "@/types";
+import { CustomerType, FollowUp, Meeting, Sale, User, Requirement, PaginationType } from "@/types";
 import { formatDate } from "@/utils/date-format";
+import { formatCurrency } from "@/utils/number-format";
+import StatusBadge from "@/components/shared/StatusBadge";
+import Pagination from "@/components/admin/Pagination";
 
 interface Props {
     stats: {
@@ -34,6 +38,7 @@ interface Props {
     meetings: Meeting[];
     sales: Sale[];
     customers: CustomerType[];
+    requirements: PaginationType<Requirement>;
     filters: {
         users: User[];
         customers: { id: number; name: string }[];
@@ -46,6 +51,7 @@ export default function ReportIndex({
     meetings,
     sales,
     customers,
+    requirements,
     filters,
 }: Props) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -66,14 +72,6 @@ export default function ReportIndex({
         }
 
         router.get(route("reports.index"), params, { preserveState: true });
-    };
-
-    const formatCurrency = (amount: number | string) => {
-        return new Intl.NumberFormat("en-BD", {
-            style: "currency",
-            currency: "BDT",
-            maximumFractionDigits: 0,
-        }).format(Number(amount));
     };
 
     return (
@@ -377,6 +375,51 @@ export default function ReportIndex({
                                         )}
                                     </tbody>
                                 </table>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Requirements Section */}
+                    <Card className="lg:col-span-2">
+                        <CardHeader className="bg-muted/10">
+                            <CardTitle className="text-lg flex items-center gap-2">
+                                <FileText className="w-5 h-5 text-indigo-600" /> Requirements History
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-0">
+                            <div className="max-h-[500px] overflow-auto">
+                                <table className="w-full text-sm text-left">
+                                    <thead className="sticky top-0 bg-background text-[10px] uppercase font-bold text-muted-foreground border-b z-10">
+                                        <tr>
+                                            <th className="px-4 py-3">Date</th>
+                                            <th className="px-4 py-3">Title</th>
+                                            <th className="px-4 py-3">Customer</th>
+                                            <th className="px-4 py-3">Status</th>
+                                            <th className="px-4 py-3 text-right">Grand Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y">
+                                        {requirements && requirements.data.length > 0 ? requirements.data.map((req) => (
+                                            <tr key={req.id} className="hover:bg-muted/50 transition-colors">
+                                                <td className="px-4 py-3 text-xs whitespace-nowrap">{formatDate(req.created_at)}</td>
+                                                <td className="px-4 py-3 font-medium text-xs truncate max-w-xs">{req.title || `REQ-${req.id}`}</td>
+                                                <td className="px-4 py-3">
+                                                    <p className="font-medium text-xs truncate">{req.customer?.name}</p>
+                                                    <p className="text-[10px] text-muted-foreground">{req.customer?.company?.name || 'Personal'}</p>
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    <StatusBadge status={req.status} />
+                                                </td>
+                                                <td className="px-4 py-3 text-right font-bold text-xs">{formatCurrency(req.grand_total)}</td>
+                                            </tr>
+                                        )) : (
+                                            <tr><td colSpan={5} className="text-center py-8 text-muted-foreground italic">No requirements found</td></tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className="p-4 border-t">
+                                <Pagination data={requirements} routeName="reports.index" />
                             </div>
                         </CardContent>
                     </Card>

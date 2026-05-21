@@ -33,6 +33,7 @@ interface GenericComboboxProps {
     emptyText?: string;
     allowManualInput?: boolean;
     className?: string;
+    renderAction?: React.ReactNode;
 }
 
 export function GenericCombobox({
@@ -46,6 +47,7 @@ export function GenericCombobox({
     emptyText = "No item found.",
     allowManualInput = true,
     className,
+    renderAction,
 }: GenericComboboxProps) {
     const [open, setOpen] = React.useState(false);
 
@@ -57,57 +59,57 @@ export function GenericCombobox({
         <>
             <FormLabel>{label}</FormLabel>
 
-            <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                    <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={open}
-                        className={cn("w-full justify-between font-normal", !selectedId && !manualValue && "text-muted-foreground", className)}
-                    >
-                        <span className="truncate">{displayLabel}</span>
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
-                    <Command>
-                        <CommandInput placeholder={searchPlaceholder} />
-                        <CommandEmpty>
-                            <div className="p-2 space-y-2">
-                                <p className="text-xs text-muted-foreground">{emptyText}</p>
-                                {allowManualInput && (
-                                    <Input
-                                        placeholder="Or type manual name..."
-                                        className="h-8 text-xs"
-                                        value={manualValue || ""}
-                                        onChange={(e) => onSelect("", e.target.value)}
-                                    />
-                                )}
-                            </div>
-                        </CommandEmpty>
-                        <CommandGroup className="max-h-60 overflow-auto">
-                            {items.map((item) => (
-                                <CommandItem
-                                    key={item.id}
-                                    value={item.name}
-                                    onSelect={() => {
-                                        onSelect(item.id, item.name);
-                                        setOpen(false);
-                                    }}
-                                >
-                                    <Check
-                                        className={cn(
-                                            "mr-2 h-4 w-4",
-                                            String(selectedId) === String(item.id) ? "opacity-100" : "opacity-0"
-                                        )}
-                                    />
-                                    {item.name}
-                                </CommandItem>
-                            ))}
-                        </CommandGroup>
-                    </Command>
-                </PopoverContent>
-            </Popover>
+            <div className="relative">
+                <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={open}
+                            className={cn("w-full justify-between font-normal", renderAction && "pr-10", !selectedId && !manualValue && "text-muted-foreground", className)}
+                        >
+                            <span className="truncate">{displayLabel}</span>
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                    </PopoverTrigger>
+                    {renderAction && (
+                        <div className="absolute right-8 top-1/2 -translate-y-1/2">
+                            {renderAction}
+                        </div>
+                    )}
+                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                        <Command>
+                            <CommandInput placeholder={searchPlaceholder} />
+                            <CommandEmpty>
+                                <div className="p-2 space-y-2">
+                                    <p className="text-xs text-muted-foreground">{emptyText}</p>
+
+                                </div>
+                            </CommandEmpty>
+                            <CommandGroup className="max-h-60 overflow-auto">
+                                {items.map((item) => (
+                                    <CommandItem
+                                        key={item.id}
+                                        value={item.name}
+                                        onSelect={() => {
+                                            onSelect(item.id, item.name);
+                                            setOpen(false);
+                                        }}
+                                    >
+                                        <Check
+                                            className={cn(
+                                                "mr-2 h-4 w-4",
+                                                String(selectedId) === String(item.id) ? "opacity-100" : "opacity-0"
+                                            )}
+                                        />
+                                        {item.name}
+                                    </CommandItem>
+                                ))}
+                            </CommandGroup>
+                        </Command>
+                    </PopoverContent>
+                </Popover>
+            </div>
         </>
     );
 }

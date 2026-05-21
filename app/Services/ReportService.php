@@ -26,6 +26,7 @@ class ReportService
             'meetings' => $this->getMeetings($dateRange, $userId, $customerId),
             'sales' => $this->getSales($dateRange, $userId, $customerId),
             'customers' => $this->getCustomers($dateRange, $userId),
+            'requirements' => $this->getRequirements($dateRange, $userId, $customerId),
             'filters' => [
                 'users' => $user->isSuperAdmin() ? User::select('id', 'name')->get() : [],
                 'customers' => Customer::select('id', 'name')->get(),
@@ -147,5 +148,24 @@ class ReportService
         return $this->applyFilters(Customer::with(['assignedUser', 'company']), $dateRange, $userId, null, 'created_at')
             ->latest()
             ->get();
+    }
+
+    private function getRequirements(array $dateRange, $userId, $customerId)
+    {
+        $query = \App\Models\Requirement::with(['customer.company', 'items.product']);
+
+        if ($customerId) {
+            $query->where('customer_id', $customerId);
+        }
+
+        if ($userId) {
+            $query->whereHas('customer', fn($q) => $q->where('assigned_to', $userId));
+        }
+
+        if ($dateRange['start']) {
+            $query->whereBetween('created_at', [$dateRange['start'], $dateRange['end']]);
+        }
+
+        return $query->latest()->paginate(10)->withQueryString();
     }
 }

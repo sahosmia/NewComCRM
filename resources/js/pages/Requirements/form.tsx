@@ -123,19 +123,8 @@ export default function RequirementForm({ requirement, customers, products, unit
             <Card>
                 <CardContent className="space-y-6 ">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4  ">
-                        <div className="space-y-2">
-                            <GenericCombobox
-                                label="Customer Information"
-                                items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company?.name || ''}` }))}
-                                selectedId={data.customer_id}
-                                onSelect={(id) => setData("customer_id", id as number)}
-                                placeholder="Select Customer"
-                                searchPlaceholder="Search customers..."
-                            />
-                            <ErrorMessage message={errors.customer_id} />
-                        </div>
 
-                        <div className="space-y-2">
+                         <div className="space-y-2">
                             <FormLabel>Requirement Title</FormLabel>
                             <Input
                                 placeholder="Requirement Title"
@@ -144,6 +133,19 @@ export default function RequirementForm({ requirement, customers, products, unit
                             />
                             <ErrorMessage message={errors.title} />
                         </div>
+                        <div className="space-y-2">
+                            <GenericCombobox
+                                label="Customer Information"
+                                items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company?.name || ''}` }))}
+                                selectedId={data.customer_id}
+                                placeholder="Select Customer"
+                                searchPlaceholder="Search customers..."
+                                onSelect={(id) => setData("customer_id", id as number)}
+                            />
+                            <ErrorMessage message={errors.customer_id} />
+                        </div>
+
+
 
                         <div className="space-y-1.5">
                             <FormLabel>Delivery Location</FormLabel>

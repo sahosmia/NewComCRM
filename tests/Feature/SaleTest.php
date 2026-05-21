@@ -50,3 +50,17 @@ it('can_list_all_sales', function () {
         ->has('sales.data', 3)
     );
 });
+
+it('can_show_a_sale_detail', function () {
+    $sale = Sale::factory()->create();
+
+    $response = $this->actingAs($this->user)
+        ->get(route('sales.show', $sale));
+
+    $response->assertStatus(200);
+    $response->assertInertia(fn ($page) => $page
+        ->component('Sales/Show')
+        ->where('sale.id', $sale->id)
+        ->has('sale.requirement')
+    );
+});
