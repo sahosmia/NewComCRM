@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { TableRowActions } from '@/components/table/TableRowActions';
 import { Meeting } from '@/types';
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
+import { formatDateTime } from '@/utils/date-format';
 
 const MEETING_STATUS_OPTIONS = [
     { value: 'scheduled', label: 'Scheduled', colorClass: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
@@ -34,7 +35,7 @@ const columns: Column<Meeting>[] = [
     },
     {
         header: 'Schedule Date Time',
-        accessor: (item) => new Date(item.scheduled_at).toLocaleString(),
+        accessor: (item) => formatDateTime(item.scheduled_at)
     },
     {
         header: 'Type',

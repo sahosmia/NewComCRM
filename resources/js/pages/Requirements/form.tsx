@@ -38,13 +38,13 @@ export default function RequirementForm({ requirement, customers, products, unit
         ait_percentage: requirement?.ait_percentage ?? (requirement ? 0 : 5),
         vat_percentage: requirement?.vat_percentage ?? (requirement ? 0 : 10),
 
-        has_accessories: requirement?.has_accessories ?? false,
+        has_accessories: !!(requirement?.has_accessories ?? false),
         accessories_title: requirement?.accessories_title || "",
         accessories_quantity: requirement?.accessories_quantity || "",
         accessories_unit_id: requirement?.accessories_unit_id || "",
         accessories_price: requirement?.accessories_price || "",
 
-        has_installation: requirement?.has_installation ?? false,
+        has_installation: !!(requirement?.has_installation ?? false),
         installation_title: requirement?.installation_title || "",
         installation_quantity: requirement?.installation_quantity || "",
         installation_unit_id: requirement?.installation_unit_id || "",
@@ -60,12 +60,12 @@ export default function RequirementForm({ requirement, customers, products, unit
         qutation_send_by: requirement?.qutation_send_by || "",
 
         items: requirement?.items || [
-            { product_id: 0, quantity: 1, unit_price: "", costing_price: "", description: "" }
+            { product_id: 0, quantity: 1, unit_price: "", costing_price: 0, description: "" }
         ],
     });
 
     const addItem = () => {
-        setData("items", [...data.items, { product_id: 0, quantity: 1, unit_price: "", costing_price: "", description: "" }]);
+        setData("items", [...data.items, { product_id: 0, quantity: 1, unit_price: "", costing_price: 0, description: "" }]);
     };
 
     const removeItem = (index: number) => {
@@ -124,7 +124,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                 <CardContent className="space-y-6 ">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4  ">
 
-                         <div className="space-y-2">
+                        <div className="space-y-2">
                             <FormLabel>Requirement Title</FormLabel>
                             <Input
                                 placeholder="Requirement Title"
@@ -147,15 +147,7 @@ export default function RequirementForm({ requirement, customers, products, unit
 
 
 
-                        <div className="space-y-1.5">
-                            <FormLabel>Delivery Location</FormLabel>
-                            <Input
-                                placeholder="Location"
-                                value={data.delivery_location}
-                                onChange={(e) => setData("delivery_location", e.target.value)}
-                            />
-                            <ErrorMessage message={errors.delivery_location} />
-                        </div>
+
 
                         <div className="space-y-2">
                             <GenericCombobox
@@ -167,6 +159,16 @@ export default function RequirementForm({ requirement, customers, products, unit
                                 searchPlaceholder="Search customers..."
                             />
                             <ErrorMessage message={errors.send_qutation_to} />
+                        </div>
+
+                         <div className="space-y-1.5">
+                            <FormLabel>Delivery Location</FormLabel>
+                            <Input
+                                placeholder="Location"
+                                value={data.delivery_location}
+                                onChange={(e) => setData("delivery_location", e.target.value)}
+                            />
+                            <ErrorMessage message={errors.delivery_location} />
                         </div>
 
                         <div className="space-y-2">
@@ -181,67 +183,32 @@ export default function RequirementForm({ requirement, customers, products, unit
                             <ErrorMessage message={errors.qutation_send_by} />
                         </div>
 
-
-
-
-
-
                         {/* --- Section 1: Terms & Delivery  */}
-                        <div className="space-y-2">
-                            <FormLabel>Advance Payment (%)</FormLabel>
-                            <Input
-                                type="number"
-                                value={data.advance_payment === 0 ? "" : data.advance_payment}
-                                onChange={(e) => setData("advance_payment", e.target.value === "" ? 0 : Number(e.target.value))}
-                                placeholder="Advance Payment"
-                            />
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                            <div className="space-y-2">
+                                <FormLabel>Delivery Timeline (Days)</FormLabel>
+                                <Input
+                                    type="number"
+                                    value={data.delivery_time_days}
+                                    onChange={(e) => setData("delivery_time_days", e.target.value)}
+                                    placeholder="Delivery Timeline"
+                                />
+                                <ErrorMessage message={errors.delivery_time_days} />
+                            </div>
+                            <div className="space-y-1.5">
+                                <FormLabel>Price Validity (Days)</FormLabel>
+                                <Input
+                                    type="number"
+                                    placeholder="Days"
+                                    value={data.price_validity_days}
+                                    onChange={(e) => setData("price_validity_days", e.target.value)}
+                                />
+                                <ErrorMessage message={errors.price_validity_days} />
+                            </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <FormLabel>Before Delivery Payment (%)</FormLabel>
-                            <Input
-                                type="number"
-                                value={data.before_payment === 0 ? "" : data.before_payment}
-                                onChange={(e) => {
-                                    const val = e.target.value === "" ? 0 : Number(e.target.value);
-                                    setData(d => ({
-                                        ...d,
-                                        before_payment: val,
-                                        after_payment: val > 0 ? 0 : d.after_payment
-                                    }));
-                                }}
-                                placeholder="Before Delivery Payment"
-                                disabled={Number(data.after_payment) > 0}
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <FormLabel>After Delivery Payment (%)</FormLabel>
-                            <Input
-                                type="number"
-                                value={data.after_payment === 0 ? "" : data.after_payment}
-                                onChange={(e) => {
-                                    const val = e.target.value === "" ? 0 : Number(e.target.value);
-                                    setData(d => ({
-                                        ...d,
-                                        after_payment: val,
-                                        before_payment: val > 0 ? 0 : d.before_payment
-                                    }));
-                                }}
-                                placeholder="After Delivery Payment"
-                                disabled={Number(data.before_payment) > 0}
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <FormLabel>Delivery Timeline (Days)</FormLabel>
-                            <Input
-                                type="number"
-                                value={data.delivery_time_days}
-                                onChange={(e) => setData("delivery_time_days", e.target.value)}
-                                placeholder="Delivery Timeline"
-                            />
-                        </div>
 
                         <div className="space-y-2">
                             <FormSelect
@@ -251,50 +218,96 @@ export default function RequirementForm({ requirement, customers, products, unit
                                 options={RequirementOptions}
                                 error={errors.status}
                             />
+                            <ErrorMessage message={errors.status} />
                         </div>
 
-                        <div className="space-y-1.5">
-                            <FormLabel>Price Validity (Days)</FormLabel>
-                            <Input
-                                type="number"
-                                placeholder="Days"
-                                value={data.price_validity_days}
-                                onChange={(e) => setData("price_validity_days", e.target.value)}
-                            />
-                            <ErrorMessage message={errors.price_validity_days} />
-                        </div>
 
-                        <div className="space-y-2">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                            <FormLabel>Include VAT</FormLabel>
-                            <div className="relative ">
-                                <Input
-                                    type="number"
-                                    size={1}
-                                    className=" text-xs pr-6"
-                                    value={data.vat_percentage}
-                                    onChange={(e) => setData("vat_percentage", e.target.value)}
-                                    placeholder="VAT Percentage"
-                                />
-                                <Percent className="w-3 absolute right-2 top-2 text-muted-foreground" />
+                            <div className="space-y-2">
+
+                                <FormLabel>Include VAT</FormLabel>
+                                <div className="relative ">
+                                    <Input
+                                        type="number"
+                                        size={1}
+                                        className=" text-xs pr-6"
+                                        value={data.vat_percentage}
+                                        onChange={(e) => setData("vat_percentage", e.target.value)}
+                                        placeholder="VAT Percentage"
+                                    />
+                                    <Percent className="w-3 absolute right-2 top-2 text-muted-foreground" />
+                                </div>
+                                <ErrorMessage message={errors.vat_percentage} />
+                            </div>
+
+                            <div className="space-y-2">
+
+                                <FormLabel>Include AIT</FormLabel>
+                                <div className="relative ">
+                                    <Input
+                                        type="number"
+                                        size={1}
+                                        className="text-xs pr-6"
+                                        value={data.ait_percentage}
+                                        onChange={(e) => setData("ait_percentage", e.target.value)}
+                                        placeholder="AIT Percentage"
+                                    />
+                                    <Percent className="w-3 absolute right-2 top-2 text-muted-foreground" />
+                                </div>
+                                <ErrorMessage message={errors.ait_percentage} />
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-
-                            <FormLabel>Include AIT</FormLabel>
-                            <div className="relative ">
+                        <div className="col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="space-y-2">
+                                <FormLabel>Advance Payment (%)</FormLabel>
                                 <Input
                                     type="number"
-                                    size={1}
-                                    className="text-xs pr-6"
-                                    value={data.ait_percentage}
-                                    onChange={(e) => setData("ait_percentage", e.target.value)}
-                                    placeholder="AIT Percentage"
+                                    value={data.advance_payment === 0 ? "" : data.advance_payment}
+                                    onChange={(e) => setData("advance_payment", e.target.value === "" ? 0 : Number(e.target.value))}
+                                    placeholder="Advance Payment"
                                 />
-                                <Percent className="w-3 absolute right-2 top-2 text-muted-foreground" />
+                                <ErrorMessage message={errors.advance_payment} />
                             </div>
 
+                            <div className="space-y-2">
+                                <FormLabel>Before Delivery Payment (%)</FormLabel>
+                                <Input
+                                    type="number"
+                                    value={data.before_payment === 0 ? "" : data.before_payment}
+                                    onChange={(e) => {
+                                        const val = e.target.value === "" ? 0 : Number(e.target.value);
+                                        setData(d => ({
+                                            ...d,
+                                            before_payment: val,
+                                            after_payment: val > 0 ? 0 : d.after_payment
+                                        }));
+                                    }}
+                                    placeholder="Before Delivery Payment"
+                                    disabled={Number(data.after_payment) > 0}
+                                />
+                                <ErrorMessage message={errors.before_payment} />
+                            </div>
+
+                            <div className="space-y-2">
+                                <FormLabel>After Delivery Payment (%)</FormLabel>
+                                <Input
+                                    type="number"
+                                    value={data.after_payment === 0 ? "" : data.after_payment}
+                                    onChange={(e) => {
+                                        const val = e.target.value === "" ? 0 : Number(e.target.value);
+                                        setData(d => ({
+                                            ...d,
+                                            after_payment: val,
+                                            before_payment: val > 0 ? 0 : d.before_payment
+                                        }));
+                                    }}
+                                    placeholder="After Delivery Payment"
+                                    disabled={Number(data.before_payment) > 0}
+                                />
+                                <ErrorMessage message={errors.after_payment} />
+                            </div>
                         </div>
 
                         <div className="space-y-2 col-span-2">
@@ -306,12 +319,9 @@ export default function RequirementForm({ requirement, customers, products, unit
                                 value={data.notes}
                                 onChange={(e) => setData("notes", e.target.value)}
                             />
+                            <ErrorMessage message={errors.notes} />
                         </div>
                     </div>
-
-
-
-
                 </CardContent>
             </Card>
 

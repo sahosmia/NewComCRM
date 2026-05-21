@@ -139,6 +139,7 @@ export interface RequirementItem {
     requirement_id?: number;
     product_id: number;
     quantity: number;
+    costing_price: string | number;
     unit_price: string | number;
     total_price?: string | number;
     product?: Product;
