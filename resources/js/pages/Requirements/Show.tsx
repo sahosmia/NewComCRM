@@ -229,19 +229,19 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                     </tbody>
 
                                     <tfoot className="bg-primary/2 border-t-2 border-primary/10">
-                                        {(requirement.has_vat || requirement.has_ait) && (
+                                        {(Number(requirement.vat_percentage) > 0 || Number(requirement.ait_percentage) > 0) && (
                                             <>
                                                 <tr>
                                                     <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">Sub-Total</td>
                                                     <td className="px-6 py-2 text-right font-mono text-sm">{formatCurrency(totals.subTotal)}</td>
                                                 </tr>
-                                                {requirement.has_vat && (
+                                                {Number(requirement.vat_percentage) > 0 && (
                                                     <tr>
                                                         <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">VAT ({requirement.vat_percentage}%)</td>
                                                         <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">+ {formatCurrency(totals.vatAmount)}</td>
                                                     </tr>
                                                 )}
-                                                {/* {requirement.has_ait && (
+                                                {/* {Number(requirement.ait_percentage) > 0 && (
                                                     <tr>
                                                         <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">AIT Adjustment ({requirement.ait_percentage}%)</td>
                                                         <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">+ {formatCurrency(totals.aitAmount)}</td>

@@ -25,15 +25,11 @@ class UpdateRequirementRequest extends FormRequest
         if ($this->has('items')) {
             $items = $this->items;
             foreach ($items as $key => $item) {
-                if (isset($item['costing_price']) && $item['costing_price'] === '') {
-                    $items[$key]['costing_price'] = null;
+                if (!isset($item['costing_price']) || $item['costing_price'] === '' || $item['costing_price'] === null) {
+                    $items[$key]['costing_price'] = 0;
                 }
             }
             $this->merge(['items' => $items]);
-        }
-
-        if ($this->has('costing_price') && $this->costing_price === '') {
-            $this->merge(['costing_price' => null]);
         }
     }
 

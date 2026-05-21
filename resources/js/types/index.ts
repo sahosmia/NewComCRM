@@ -140,6 +140,7 @@ export interface RequirementItem {
     product_id: number;
     quantity: number;
     unit_price: string | number;
+    costing_price: string | number;
     total_price?: string | number;
     product?: Product;
     created_at?: string;
