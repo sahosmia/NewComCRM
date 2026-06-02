@@ -14,8 +14,6 @@ class ProductFactory extends Factory
     {
         return [
             'name'           => $this->faker->words(3, true),
-            'brand'          => $this->faker->company(),
-            'model'          => $this->faker->bothify('MODEL-####??'),
             'description'    => $this->faker->sentence(),
             'category'       => $this->faker->randomElement(['Electronics', 'Cable', 'Switch', 'Accessories']),
             'stock_quantity' => $this->faker->numberBetween(10, 100),
@@ -23,8 +21,7 @@ class ProductFactory extends Factory
             'supplier_name'  => $this->faker->company(),
             'source'         => $this->faker->paragraph(),
             'unit_id'        => Unit::inRandomOrder()->first()?->id ?? Unit::factory(),
-            'warranty'       => $this->faker->numberBetween(1, 3),
-            'warranty_duration_unit' => $this->faker->randomElement(['months', 'years']),
+           
         ];
     }
 }

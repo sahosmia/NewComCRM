@@ -1,11 +1,12 @@
-import { Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
-import { Product } from "@/types";
+import { Product, Unit } from "@/types";
 import FormLabel from "@/components/admin/form/FormLabel";
+import { useModal } from "@/contexts/ModalContext";
 
 interface ItemRowProps {
     index: number;
@@ -16,10 +17,12 @@ interface ItemRowProps {
     onRemove: (index: number) => void;
     isRemoveDisabled: boolean;
     errors: any;
+        units: Unit[];
+
 }
 
-export const RequirementItemRow = ({ index, item, products, aitFactor, onItemChange, onRemove, isRemoveDisabled, errors }: ItemRowProps) => {
-
+export const RequirementItemRow = ({ index, item, products, aitFactor, onItemChange, onRemove, isRemoveDisabled, errors, units }: ItemRowProps) => {
+    const { openModal } = useModal();
     const calculateGross = () => (parseFloat(item.unit_price) || 0) * aitFactor;
     const calculateTotal = () => ((parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor) + (parseFloat(item.costing_price) || 0);
 
@@ -63,6 +66,23 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                                 onSelect={(id) => onItemChange(index, "product_id", id)}
                                 placeholder="Select a product..."
                                 searchPlaceholder="Search product..."
+                                 renderAction={
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-6 w-6"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            openModal('CREATE_PRODUCT', {
+                                                units: units,
+                                                onSuccess: (id: number) => onItemChange(index, "product_id", id)
+                                            });
+                                        }}
+                                    >
+                                        <Plus className="h-4 w-4" />
+                                    </Button>
+                                }
                             />
                         </div>
                         <ErrorMessage message={productIdError} />

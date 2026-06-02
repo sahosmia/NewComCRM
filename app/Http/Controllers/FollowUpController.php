@@ -7,6 +7,8 @@ use App\Http\Requests\UpdateFollowUpRequest;
 use App\Models\FollowUp;
 use App\Models\User;
 use App\Services\FollowUpService;
+use App\Repositories\UserRepository;
+use App\Services\CompanyService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -17,6 +19,8 @@ class FollowUpController extends Controller
 {
     public function __construct(
         private FollowUpService $followUpService,
+        private UserRepository $userRepository,
+        private CompanyService $companyService,
     ) {}
 
     public function index(Request $request)
@@ -37,18 +41,29 @@ class FollowUpController extends Controller
         return Inertia::render('FollowUps/Create', [
             'customers' => $this->followUpService->customersForForm(),
             'requirements' => $this->followUpService->requirementsForForm(),
+            'users' => $this->userRepository->selectOptions(),
+            'companies' => $this->companyService->listAll(),
         ]);
     }
 
     public function store(StoreFollowUpRequest $request)
     {
-        $this->followUpService->create(
+        $followUp = $this->followUpService->create(
             $request->validated(),
             (int) Auth::id()
         );
 
-        return redirect()->route('follow-ups.index')
-            ->with('success', 'Follow up scheduled successfully.');
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => 'Follow up scheduled successfully',
+                'follow_up' => $followUp,
+                'new_id' => $followUp->id,
+            ], 201);
+        }
+
+        return back()
+            ->with('success', 'Follow up scheduled successfully.')
+            ->with('new_id', $followUp->id);
     }
 
     public function show(FollowUp $followUp)
@@ -64,6 +79,8 @@ class FollowUpController extends Controller
             'followUp' => $followUp,
             'customers' => $this->followUpService->customersForForm(),
             'requirements' => $this->followUpService->requirementsForForm(),
+            'users' => $this->userRepository->selectOptions(),
+            'companies' => $this->companyService->listAll(),
         ]);
     }
 

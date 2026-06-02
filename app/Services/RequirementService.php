@@ -7,7 +7,9 @@ use App\Repositories\CustomerRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\RequirementRepository;
 use App\Repositories\UnitRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class RequirementService
@@ -26,12 +28,15 @@ class RequirementService
 
     public function formOptions(): array
     {
-        $userRepo = app(\App\Repositories\UserRepository::class);
+        $userRepo = app(UserRepository::class);
+        $companyService = app(CompanyService::class);
         return [
             'customers' => $this->customers->forRequirementForm(),
             'products'  => $this->products->forRequirementForm(),
             'units'     => $this->units->all(),
             'users'     => $userRepo->selectOptions(),
+            'companies' => $companyService->listAll(),
+
         ];
     }
 
@@ -78,12 +83,12 @@ class RequirementService
         $this->requirements->bulkDelete($ids);
     }
 
-    public function getForExport(array $ids): \Illuminate\Support\Collection
+    public function getForExport(array $ids): Collection
     {
         return $this->requirements->getForExport($ids);
     }
 
-    public function selectOptions(): \Illuminate\Support\Collection
+    public function selectOptions(): Collection
     {
         return $this->requirements->selectOptions();
     }

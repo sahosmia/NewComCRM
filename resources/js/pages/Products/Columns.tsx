@@ -7,10 +7,7 @@ const columns: Column<Product>[] = [
         accessor: (item) => (
             <div className="flex flex-col min-w-0 max-w-48">
                 <span className="font-medium text-foreground">{item.name}</span>
-                <span className="text-xs text-muted-foreground truncate">{item.brand} {item.model ? `| ${item.model}` : ''}
-                </span>
-                <span className="text-xs text-muted-foreground truncate">{item.warranty ? `  Warranty: ${item.warranty} ${item.warranty_duration_unit}` : ''}
-                </span>
+
             </div>
         ),
     },

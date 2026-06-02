@@ -63,7 +63,6 @@ it('can_filter_products_by_category', function () {
 it('can_store_a_new_product', function () {
     $productData = [
         'name' => 'New Product',
-        'brand' => 'New Brand',
         'unit_price' => 150.50,
         'description' => 'Product description',
         'category' => 'Software',

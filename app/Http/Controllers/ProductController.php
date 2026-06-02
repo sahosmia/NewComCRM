@@ -43,10 +43,19 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        $this->productService->create($request->validated());
+        $product = $this->productService->create($request->validated());
 
-        return redirect()->route('products.index')
-            ->with('success', 'Product created successfully');
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => 'Product created successfully',
+                'product' => $product,
+                'new_id' => $product->id,
+            ], 201);
+        }
+
+        return back()
+            ->with('success', 'Product created successfully')
+            ->with('new_id', $product->id);
     }
 
     /**
@@ -107,12 +116,10 @@ class ProductController extends Controller
 
         return Excel::download(new GeneralExport(
             $products,
-            ['Name', 'Brand', 'Model', 'Category', 'Stock', 'Price', 'Supplier'],
+            ['Name', 'Category', 'Stock', 'Price', 'Supplier'],
             function ($product) {
                 return [
                     $product->name,
-                    $product->brand,
-                    $product->model,
                     $product->category,
                     $product->stock_quantity,
                     $product->unit_price,
@@ -129,8 +136,6 @@ class ProductController extends Controller
         $data = $products->map(function ($product) {
             return [
                 $product->name,
-                $product->brand,
-                $product->model,
                 $product->category,
                 $product->stock_quantity,
                 $product->unit_price,
@@ -140,7 +145,7 @@ class ProductController extends Controller
 
         return view('print.general', [
             'title' => 'Product List',
-            'headings' => ['Name', 'Brand', 'Model', 'Category', 'Stock', 'Price', 'Supplier'],
+            'headings' => ['Name', 'Category', 'Stock', 'Price', 'Supplier'],
             'data' => $data
         ]);
     }

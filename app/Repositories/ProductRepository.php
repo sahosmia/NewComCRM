@@ -17,8 +17,6 @@ class ProductRepository
             ->when($params['search'] ?? null, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('brand', 'like', "%{$search}%")
-                        ->orWhere('model', 'like', "%{$search}%")
                         ->orWhere('supplier_name', 'like', "%{$search}%")
                         ->orWhere('category', 'like', "%{$search}%");
                 });

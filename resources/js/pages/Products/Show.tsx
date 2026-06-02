@@ -53,15 +53,7 @@ export default function Show({ product }: { product: Product }) {
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
-                            <div className="space-y-4">
-                                <InfoItem icon={<Tag className="w-4 h-4" />} label="Brand" value={product.brand} />
-                                <InfoItem icon={<Package className="w-4 h-4" />} label="Model" value={product.model} />
-                                <InfoItem
-                                    icon={<ShieldCheck className="w-4 h-4" />}
-                                    label="Warranty"
-                                    value={product.warranty ? `${product.warranty} ${product.warranty_duration_unit}` : "No warranty"}
-                                />
-                            </div>
+                            
                             <div className="space-y-4">
                                 <InfoItem icon={<Layers className="w-4 h-4" />} label="Category" value={product.category} />
                                 <InfoItem icon={<Truck className="w-4 h-4" />} label="Supplier" value={product.supplier_name} />

@@ -20,8 +20,6 @@ class ProductSeeder extends Seeder
         $realProducts = [
             [
                 'name' => 'Cat6 Network Cable',
-                'brand' => 'Rosenberger',
-                'model' => 'CP1104',
                 'category' => 'Cable',
                 'unit_price' => 15000,
                 'unit_id' => $units->where('short_form', 'Roll')->first()?->id ?? $units->random()->id,
@@ -29,8 +27,6 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => '24 Port Gigabit Switch',
-                'brand' => 'Cisco',
-                'model' => 'CBS250-24T-4G',
                 'category' => 'Switch',
                 'unit_price' => 35000,
                 'unit_id' => $units->where('short_form', 'Pcs')->first()?->id ?? $units->random()->id,
@@ -38,8 +34,6 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Optical Fiber Patch Cord',
-                'brand' => 'CommScope',
-                'model' => 'LC-SC Duplex',
                 'category' => 'Accessories',
                 'unit_price' => 1200,
                 'unit_id' => $units->where('short_form', 'Pcs')->first()?->id ?? $units->random()->id,

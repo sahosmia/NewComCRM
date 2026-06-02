@@ -14,6 +14,10 @@ export default function CustomerInfoCard({ customer }: {customer: CustomerType})
                     Contact Information
                 </CardTitle>
             </CardHeader>
+
+            <CardHeader>
+                    Linked Requirement
+            </CardHeader>
             <CardContent className="space-y-5 pt-5">
                 {/* Name & Designation */}
                 <div className="flex items-start gap-3">

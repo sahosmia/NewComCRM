@@ -44,12 +44,22 @@ class CustomerController extends Controller
 
     public function store(StoreCustomerRequest $request)
     {
-        $this->customerService->create($request->validated());
+        $customer = $this->customerService->create($request->validated());
 
-        return redirect()->route('customers.index')
-            ->with('success', 'Customer created successfully');
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => 'Customer created successfully',
+                'customer' => $customer,
+                'new_id' => $customer->id,
+            ], 201);
+        }
+
+        return back()
+            ->with('success', 'Customer created successfully')
+            ->with('new_id', $customer->id);
     }
 
+    
     public function show(Customer $customer)
     {
         $this->authorize('view', $customer);

@@ -446,13 +446,10 @@
                         <tr>
                             <td class="text-center">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</td>
                             <td>
-                                <strong>{{ $item->product->name }}</strong> -
-                                Brand & Model: {{ $item->product->brand }} {{ $item->product->model }}<br>
+                                <strong>{{ $item->product->name }}</strong>
+                                <br>
                                 {{ $item->description ?? $item->product->description }}
-                                @if ($item->product->warranty)
-                                    <br><strong>Warranty:</strong> {{ $item->product->warranty }}
-                                    {{ $item->product->warranty_duration_unit }}
-                                @endif
+
                             </td>
                             <td class="text-center">{{ $item->quantity }}
                                 {{ $item->product->unit->short_form ?? ($item->product->unit->title ?? 'Unit') }}

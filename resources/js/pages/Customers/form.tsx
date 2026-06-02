@@ -12,7 +12,8 @@ import type { Company, CustomerType, User } from "@/types";
 import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 import FormLabel from "@/components/admin/form/FormLabel";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
-import { CompanyModal } from "@/components/admin/modals/CompanyModal";
+import { useModal } from "@/contexts/ModalContext";
+
 
 
 
@@ -25,6 +26,8 @@ interface Props {
 
 
 export default function CustomerForm({ customer, users, companies: initialCompanies }: Props) {
+        const { openModal } = useModal();
+
     const [openPopover, setOpenPopover] = useState(false);
     const [localCompanies, setLocalCompanies] = useState<Company[]>(initialCompanies);
 
@@ -95,24 +98,26 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                                     }
                                 }}
                                 renderAction={
-                                    <CompanyModal
-                                        onSuccess={(newCompany) => {
-                                            setLocalCompanies(prev => [newCompany, ...prev]);
-                                            setData("company_id", newCompany.id);
-                                            if (newCompany.address && (data.addresses.length === 0 || (data.addresses.length === 1 && !data.addresses[0]))) {
-                                                setData("addresses", [newCompany.address]);
-                                            }
+                                     <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-6 w-6"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            openModal('CREATE_COMPANY', {
+                                                onSuccess: (newCompany: Company) => {
+                                                    setLocalCompanies(prev => [newCompany, ...prev]);
+                                                    setData("company_id", newCompany.id);
+                                                    if (newCompany.address && (data.addresses.length === 0 || (data.addresses.length === 1 && !data.addresses[0]))) {
+                                                        setData("addresses", [newCompany.address]);
+                                                    }
+                                                }
+                                            });
                                         }}
-                                        trigger={
-                                            <div
-                                                role="button"
-                                                className="flex h-6 w-6 items-center justify-center rounded-md hover:bg-muted ml-1"
-                                                onClick={(e) => e.stopPropagation()}
-                                            >
-                                                <Plus className="h-4 w-4" />
-                                            </div>
-                                        }
-                                    />
+                                    >
+                                        <Plus className="h-4 w-4" />
+                                    </Button>
                                 }
                             />
 

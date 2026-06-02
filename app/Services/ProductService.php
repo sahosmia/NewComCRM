@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Product;
 use App\Repositories\ProductRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class ProductService
 {
@@ -37,7 +38,7 @@ class ProductService
         $this->products->bulkDelete($ids);
     }
 
-    public function getForExport(array $ids): \Illuminate\Support\Collection
+    public function getForExport(array $ids): Collection
     {
         return $this->products->getForExport($ids);
     }

@@ -38,9 +38,19 @@ export interface NavItemWithSubmenu extends NavItem {
 export interface SharedData {
     name: string;
     quote: { message: string; author: string };
+    customers?: CustomerType[];
+    requirements?: Requirement[];
+    units?: Unit[];
+    users?: User[];
+    companies?: Company[];
     auth: Auth;
     ziggy: Config & { location: string };
     sidebarOpen: boolean;
+    flash: {
+        success: string | null;
+        error: string | null;
+        new_id?: number | string;
+    };
     [key: string]: unknown;
 }
 
@@ -117,16 +127,13 @@ export interface Meeting {
 export interface Product {
     id: number;
     name: string;
-    brand: string | null;
-    model: string | null;
+
     unit_price: string;
     description: string | null;
     category: string | null;
     stock_quantity: number;
     supplier_name: string | null;
     source: string | null;
-    warranty: number | null;
-    warranty_duration_unit: 'months' | 'years' | null;
     created_at: string;
     updated_at: string;
     deleted_at?: string | null;

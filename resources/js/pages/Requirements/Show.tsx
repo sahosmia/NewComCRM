@@ -2,7 +2,9 @@ import { Link, Head } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/layouts/app-layout";
 import { Badge } from "@/components/ui/badge";
-import { useMemo } from "react"; // Added useMemo
+import { useMemo } from "react"; 
+import { useModal } from "@/contexts/ModalContext";
+
 import {
     Calendar,
     FileText,
@@ -18,6 +20,8 @@ import { Requirement } from "@/types";
 import { formatDate } from "@/utils/date-format";
 
 export default function Show({ requirement }: { requirement: Requirement }) {
+        const { openModal } = useModal();
+
     const breadcrumbs = [
         { title: "Requirements", href: route('requirements.index') },
         { title: `REQ-${requirement.id}`, href: "#" }
@@ -109,9 +113,17 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                 <h2 className="font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
                                     <Video className="w-3 h-3 text-primary" /> Meetings
                                 </h2>
-                                <Link href={route('meetings.create', { customer_id: requirement.customer_id, requirement_id: requirement.id })}>
-                                    <Button variant="ghost" size="sm" className="h-7 text-[10px] uppercase font-bold">Schedule</Button>
-                                </Link>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    className="h-7 text-[10px] uppercase font-bold"
+                                    onClick={() => openModal('CREATE_MEETING', {
+                                        customer_id: requirement.customer_id,
+                                        requirement_id: requirement.id
+                                    })}
+                                >
+                                    Schedule
+                                </Button>
                             </div>
                             <div className="p-4 space-y-3">
                                 {requirement.meetings && requirement.meetings.length > 0 ? (
@@ -135,9 +147,17 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                 <h2 className="font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
                                     <History className="w-3 h-3 text-primary" /> Follow-ups
                                 </h2>
-                                <Link href={route('follow-ups.create', { customer_id: requirement.customer_id, requirement_id: requirement.id })}>
-                                    <Button variant="ghost" size="sm" className="h-7 text-[10px] uppercase font-bold">Add</Button>
-                                </Link>
+                                <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    className="h-7 text-[10px] uppercase font-bold"
+                                    onClick={() => openModal('CREATE_FOLLOW_UP', {
+                                        customer_id: requirement.customer_id,
+                                        requirement_id: requirement.id
+                                    })}
+                                >
+                                    Add
+                                </Button>
                             </div>
                             <div className="p-4 space-y-3">
                                 {requirement.follow_ups && requirement.follow_ups.length > 0 ? (
@@ -188,7 +208,7 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                             <tr key={item.id} className="hover:bg-muted/5 transition-colors">
                                                 <td className="px-6 py-4">
                                                     <p className="font-semibold">{item.product?.name}</p>
-                                                    <p className="text-[10px] text-muted-foreground mt-1 uppercase">Brand: {item.product?.brand || 'N/A'}</p>
+                                                    
                                                     {item.description && (
                                                         <p className="text-[10px] text-muted-foreground mt-1 italic whitespace-pre-wrap">{item.description}</p>
                                                     )}

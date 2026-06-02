@@ -8,9 +8,7 @@ use Inertia\Inertia;
 
 class CompanyController extends Controller
 {
-    public function __construct(protected CompanyService $service)
-    {
-    }
+    public function __construct(protected CompanyService $service) {}
 
     public function index(Request $request)
     {
@@ -43,10 +41,10 @@ class CompanyController extends Controller
             ], 201);
         }
 
-        
 
-        return redirect()->route('companies.index')
-            ->with('success', 'Company created successfully.');
+        return back()
+            ->with('success', 'Company created successfully.')
+            ->with('new_id', $company->id);
     }
 
     public function edit($id)

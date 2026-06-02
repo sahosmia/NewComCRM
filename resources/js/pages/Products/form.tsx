@@ -3,16 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+
 import { Product, Unit } from "@/types";
-import { Loader2 } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
+import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
+import { useModal } from "@/contexts/ModalContext";
+
 
 interface Props {
     product?: Product;
@@ -20,12 +17,10 @@ interface Props {
 }
 
 export default function ProductForm({ product, units = [] }: Props) {
+    const { openModal } = useModal();
+
     const { data, setData, post, put, processing, errors } = useForm({
         name: product?.name || "",
-        brand: product?.brand || "",
-        model: product?.model || "",
-        warranty: product?.warranty || "",
-        warranty_duration_unit: product?.warranty_duration_unit || "years",
         unit_price: product?.unit_price || "",
         category: product?.category || "",
         stock_quantity: product?.stock_quantity || "",
@@ -62,31 +57,8 @@ export default function ProductForm({ product, units = [] }: Props) {
 
                 </div>
 
-                {/* Brand */}
-                <div className="space-y-2">
-                    <Label htmlFor="brand">Brand</Label>
-                    <Input
-                        id="brand"
-                        placeholder="Brand Name"
-                        value={data.brand}
-                        onChange={(e) => setData("brand", e.target.value)}
-                    />
-                    <ErrorMessage message={errors.brand} />
 
-                </div>
 
-                {/* Model */}
-                <div className="space-y-2">
-                    <Label htmlFor="model">Model</Label>
-                    <Input
-                        id="model"
-                        placeholder="Model Number"
-                        value={data.model}
-                        onChange={(e) => setData("model", e.target.value)}
-                    />
-                    <ErrorMessage message={errors.model} />
-
-                </div>
 
                 {/* Unit Price */}
                 <div className="space-y-2">
@@ -143,37 +115,10 @@ export default function ProductForm({ product, units = [] }: Props) {
 
                 </div>
 
-                {/* Warranty */}
-                <div className="space-y-2">
-                    <Label htmlFor="warranty">Warranty</Label>
-                    <div className="flex gap-2">
-                        <Input
-                            id="warranty"
-                            type="number"
-                            placeholder="Duration"
-                            value={data.warranty}
-                            onChange={(e) => setData("warranty", parseInt(e.target.value, 10) || "")}
-                            className="flex-1"
-                        />
-                        <Select
-                            onValueChange={(value) => setData("warranty_duration_unit", value)}
-                            defaultValue={data.warranty_duration_unit}
-                        >
-                            <SelectTrigger className="w-32">
-                                <SelectValue placeholder="Unit" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="months">Months</SelectItem>
-                                <SelectItem value="years">Years</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <ErrorMessage message={errors.warranty} />
-                    <ErrorMessage message={errors.warranty_duration_unit} />
-                </div>
+
 
                 {/* Unit */}
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                     <Label htmlFor="unit_id">Unit</Label>
                     <Select
                         onValueChange={(value) => setData("unit_id", value)}
@@ -190,6 +135,38 @@ export default function ProductForm({ product, units = [] }: Props) {
                             ))}
                         </SelectContent>
                     </Select>
+                    <ErrorMessage message={errors.unit_id} />
+                </div> */}
+
+                <div className="space-y-2">
+                    <GenericCombobox
+                        label="Unit"
+                        items={units.map(unit => ({
+                            id: unit.id,
+                            name: unit.short_form ? `${unit.title} (${unit.short_form})` : unit.title
+                        }))}
+                        selectedId={data.unit_id}
+                        onSelect={(id) => setData("unit_id", id as number)}
+                        placeholder="Select a unit"
+                        searchPlaceholder="Search customers..."
+                        allowManualInput={false}
+                        renderAction={
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    openModal('CREATE_UNIT', {
+                                        onSuccess: (id: number) => setData('unit_id', id)
+                                    });
+                                }}
+                            >
+                                <Plus className="h-4 w-4" />
+                            </Button>
+                        }
+                    />
                     <ErrorMessage message={errors.unit_id} />
                 </div>
             </div>

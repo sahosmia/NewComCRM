@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, LayoutList, Percent, Settings, Drill, } from "lucide-react";
-import { Requirement, RequirementItem, User } from "@/types";
+import { Company, Requirement, RequirementItem, User } from "@/types";
 import { CustomerType } from "@/types";
 import { Product } from "@/types";
 import { Unit } from "@/types";
@@ -16,6 +16,8 @@ import { RequirementItemRow } from "./com/RequirementItemRow";
 import { FormSummaryFooter } from "./com/FormSummaryFooter";
 import { ServiceSection } from "./com/ServiceSection";
 import FormLabel from "@/components/admin/form/FormLabel";
+import { useModal } from "@/contexts/ModalContext";
+
 
 interface Props {
     requirement?: Requirement;
@@ -23,9 +25,12 @@ interface Props {
     products: Product[];
     units: Unit[];
     users: User[];
+        companies: Company[];
+
 }
 
-export default function RequirementForm({ requirement, customers, products, units, users }: Props) {
+export default function RequirementForm({ requirement, customers, products, units, users, companies }: Props) {
+    const { openModal } = useModal();
     const urlParams = new URLSearchParams(window.location.search);
     const preSelectedCustomerId = urlParams.get('customer_id');
 
@@ -128,7 +133,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                 <LayoutList className="w-4 h-4 text-primary" /> Basic Information
                             </h3>
                         </div>
-                        <CardContent className="p-6 space-y-6">
+                        <CardContent className=" space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <FormLabel>Requirement Title</FormLabel>
@@ -148,6 +153,24 @@ export default function RequirementForm({ requirement, customers, products, unit
                                         placeholder="Select Customer"
                                         searchPlaceholder="Search customers..."
                                         onSelect={(id) => setData("customer_id", id as number)}
+                                        renderAction={
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-6 w-6"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    openModal('CREATE_CUSTOMER', {
+                                                        users: users,
+                                                        companies: companies,
+                                                        onSuccess: (id: number) => setData('customer_id', id)
+                                                    });
+                                                }}
+                                            >
+                                                <Plus className="h-4 w-4" />
+                                            </Button>
+                                        }
                                     />
                                     <ErrorMessage message={errors.customer_id} />
                                 </div>
@@ -162,6 +185,24 @@ export default function RequirementForm({ requirement, customers, products, unit
                                         onSelect={(id) => setData("send_qutation_to", id as number)}
                                         placeholder="Select Recipient (Optional)"
                                         searchPlaceholder="Search customers..."
+                                         renderAction={
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-6 w-6"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    openModal('CREATE_CUSTOMER', {
+                                                        users: users,
+                                                        companies: companies,
+                                                        onSuccess: (id: number) => setData('send_qutation_to', id)
+                                                    });
+                                                }}
+                                            >
+                                                <Plus className="h-4 w-4" />
+                                            </Button>
+                                        }
                                     />
                                     <ErrorMessage message={errors.send_qutation_to} />
                                 </div>
@@ -173,6 +214,24 @@ export default function RequirementForm({ requirement, customers, products, unit
                                         onSelect={(id) => setData("qutation_send_by", id as number)}
                                         placeholder="Select Sender (Optional)"
                                         searchPlaceholder="Search users..."
+                                         renderAction={
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-6 w-6"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    openModal('CREATE_CUSTOMER', {
+                                                        users: users,
+                                                        companies: companies,
+                                                        onSuccess: (id: number) => setData('qutation_send_by', id)
+                                                    });
+                                                }}
+                                            >
+                                                <Plus className="h-4 w-4" />
+                                            </Button>
+                                        }
                                     />
                                     <ErrorMessage message={errors.qutation_send_by} />
                                 </div>
@@ -203,6 +262,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                     onRemove={removeItem}
                                     isRemoveDisabled={data.items.length === 1}
                                     errors={errors}
+                                     units={units}
                                 />
                             ))}
                         </div>
@@ -217,10 +277,10 @@ export default function RequirementForm({ requirement, customers, products, unit
                                 <Settings className="w-4 h-4 text-primary" /> Delivery & Status
                             </h3>
                         </div>
-                        <CardContent className="p-6 space-y-5">
+                        <CardContent className=" space-y-5">
                             <div className="space-y-2">
-                                <FormLabel>Status</FormLabel>
                                 <FormSelect
+                                    label="Status"
                                     value={data.status}
                                     onChange={(v) => setData("status", v as Requirement["status"])}
                                     options={RequirementOptions}
@@ -272,7 +332,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                 <Percent className="w-4 h-4 text-primary" /> Taxes & Payments
                             </h3>
                         </div>
-                        <CardContent className="p-6 space-y-5">
+                        <CardContent className=" space-y-5">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <FormLabel>VAT (%)</FormLabel>
@@ -362,7 +422,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                 <LayoutList className="w-4 h-4 text-primary" /> Internal Remarks
                             </h3>
                         </div>
-                        <CardContent className="p-6">
+                        <CardContent className="">
                             <Textarea
                                 className="bg-background resize-none text-sm border-slate-200 focus:border-primary/50"
                                 rows={4}

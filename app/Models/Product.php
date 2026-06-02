@@ -12,11 +12,8 @@ class Product extends Model
 
     protected $fillable = [
         'name',
-        'brand',
-        'model',
+
         'description',
-        'warranty',
-        'warranty_duration_unit',
         'category',
         'stock_quantity',
         'unit_price',
@@ -28,7 +25,6 @@ class Product extends Model
     protected $casts = [
         'unit_price' => 'decimal:2',
         'stock_quantity' => 'integer',
-        'warranty' =>'integer',
     ];
 
     // Relationships
@@ -42,13 +38,9 @@ class Product extends Model
         return $this->hasMany(Requirement::class);
     }
 
-    
 
-    // Scopes
-    public function scopeByBrand($query, $brand)
-    {
-        return $query->where('brand', $brand);
-    }
+
+
 
     public function scopeInStock($query)
     {
