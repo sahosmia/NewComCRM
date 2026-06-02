@@ -29,10 +29,19 @@ class UnitController extends Controller
 
     public function store(StoreUnitRequest $request)
     {
-        $this->unitService->create($request->validated());
+        $unit = $this->unitService->create($request->validated());
 
-        return redirect()->route('units.index')
-            ->with('success', 'Unit created successfully');
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => 'Unit created successfully',
+                'unit' => $unit,
+                'new_id' => $unit->id,
+            ], 201);
+        }
+
+        return back()
+            ->with('success', 'Unit created successfully')
+            ->with('new_id', $unit->id);
     }
 
     public function edit(Unit $unit)

@@ -5,8 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare, LayoutList, Plus, Video } from "lucide-react";
 import { Head, Link } from "@inertiajs/react";
 import { CustomerType, FollowUp, Meeting, Requirement } from "@/types";
+import { useModal } from "@/contexts/ModalContext";
 
 export default function Show({ customer }: { customer: CustomerType & { requirements: Requirement[], follow_ups: FollowUp[], meetings: Meeting[] } }) {
+    const { openModal } = useModal();
     return (
         <AppLayout
             breadcrumbs={[
@@ -204,10 +206,14 @@ export default function Show({ customer }: { customer: CustomerType & { requirem
                                     <Calendar className="w-5 h-5 text-primary" />
                                     Follow-up History
                                 </CardTitle>
-                                <Button size="sm" variant="outline" asChild>
-                                    <Link href={route("follow-ups.create", { customer_id: customer.id })}>
-                                        <Plus className="w-4 h-4 mr-1" /> Log Follow-up
-                                    </Link>
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => openModal('CREATE_FOLLOW_UP', {
+                                        customer_id: customer.id
+                                    })}
+                                >
+                                    <Plus className="w-4 h-4 mr-1" /> Log Follow-up
                                 </Button>
                             </CardHeader>
                             <CardContent>
@@ -268,10 +274,14 @@ export default function Show({ customer }: { customer: CustomerType & { requirem
                                     <Video className="w-5 h-5 text-primary" />
                                     Meeting History
                                 </CardTitle>
-                                <Button size="sm" variant="outline" asChild>
-                                    <Link href={route("meetings.create", { customer_id: customer.id })}>
-                                        <Plus className="w-4 h-4 mr-1" /> Schedule Meeting
-                                    </Link>
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => openModal('CREATE_MEETING', {
+                                        customer_id: customer.id
+                                    })}
+                                >
+                                    <Plus className="w-4 h-4 mr-1" /> Schedule Meeting
                                 </Button>
                             </CardHeader>
                             <CardContent>

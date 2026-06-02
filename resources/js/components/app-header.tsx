@@ -1,11 +1,14 @@
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Menu, Plus, Search } from 'lucide-react';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
@@ -32,6 +35,7 @@ import { useCurrentUrl } from '@/hooks/use-current-url';
 import { useInitials } from '@/hooks/use-initials';
 import { cn, toUrl } from '@/lib/utils';
 import type { BreadcrumbItem, NavItem } from '@/types';
+import { useModal } from '@/contexts/ModalContext';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
 import { dashboard } from '@/routes';
@@ -65,6 +69,7 @@ const activeItemStyles =
     'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
 
 export function AppHeader({ breadcrumbs = [] }: Props) {
+    const { openModal } = useModal();
     const page = usePage();
     const { auth } = page.props;
     const getInitials = useInitials();
@@ -177,6 +182,38 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                     </div>
 
                     <div className="ml-auto flex items-center space-x-2">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" size="sm" className="hidden gap-1 md:flex">
+                                    <Plus className="h-4 w-4" />
+                                    <span>Quick Create</span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-48">
+                                <DropdownMenuLabel>Quick Create</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => openModal('CREATE_UNIT')}>
+                                    New Unit
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => openModal('CREATE_COMPANY')}>
+                                    New Company
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => openModal('CREATE_PRODUCT')}>
+                                    New Product
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => openModal('CREATE_CUSTOMER')}>
+                                    New Customer
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <Link href={route('meetings.create')}>
+                                    <DropdownMenuItem>New Meeting</DropdownMenuItem>
+                                </Link>
+                                <Link href={route('follow-ups.create')}>
+                                    <DropdownMenuItem>New Follow Up</DropdownMenuItem>
+                                </Link>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+
                         <div className="relative flex items-center space-x-1">
                             <Button
                                 variant="ghost"

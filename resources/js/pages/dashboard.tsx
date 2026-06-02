@@ -9,7 +9,10 @@ import MeetingList from '@/components/admin/dashboard/UpcomingMeetings';
 import SalesChart from '@/components/admin/dashboard/ChartData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Meeting, FollowUp } from '@/types';
+import { Meeting, FollowUp, CustomerType, Requirement } from '@/types';
+import { useModal } from '@/contexts/ModalContext';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 
 interface DashboardProps {
     meetings: {
@@ -33,6 +36,10 @@ interface DashboardProps {
     customers: {
         today_count: number;
         total_count: number;
+        list: CustomerType[];
+    };
+    requirements: {
+        list: Requirement[];
     };
     chartData: any[];
 }
@@ -44,7 +51,8 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Dashboard({ meetings, followUps, sales, customers, chartData }: DashboardProps) {
+export default function Dashboard({ meetings, followUps, sales, customers, requirements, chartData }: DashboardProps) {
+    const { openModal } = useModal();
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('en-BD', {
             style: 'currency',
@@ -59,9 +67,25 @@ export default function Dashboard({ meetings, followUps, sales, customers, chart
 
             <div className='p-6 space-y-8'>
                 {/* Header */}
-                <div className="flex flex-col gap-1">
-                    <h1 className="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
-                    <p className="text-muted-foreground">Real-time metrics and operational updates for today.</p>
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div className="flex flex-col gap-1">
+                        <h1 className="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
+                        <p className="text-muted-foreground">Real-time metrics and operational updates for today.</p>
+                    </div>
+                    <div className="flex gap-2">
+                        <Button size="sm" onClick={() => openModal('CREATE_FOLLOW_UP', {
+                            customers: customers.list,
+                            requirements: requirements.list
+                        })}>
+                            <Plus className="h-4 w-4 mr-1" /> Follow-up
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => openModal('CREATE_MEETING', {
+                            customers: customers.list,
+                            requirements: requirements.list
+                        })}>
+                            <Plus className="h-4 w-4 mr-1" /> Meeting
+                        </Button>
+                    </div>
                 </div>
 
                 {/* Main Metrics Row */}

@@ -27,11 +27,13 @@ class RequirementService
     public function formOptions(): array
     {
         $userRepo = app(\App\Repositories\UserRepository::class);
+        $companyService = app(\App\Services\CompanyService::class);
         return [
             'customers' => $this->customers->forRequirementForm(),
             'products'  => $this->products->forRequirementForm(),
             'units'     => $this->units->all(),
             'users'     => $userRepo->selectOptions(),
+            'companies' => $companyService->listAll(),
         ];
     }
 

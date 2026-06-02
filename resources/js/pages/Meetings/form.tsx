@@ -9,17 +9,22 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Meeting } from "@/types";
+import { Meeting, User } from "@/types";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
 import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
+import { useModal } from "@/contexts/ModalContext";
+import { Plus } from "lucide-react";
 
 interface Props {
     meeting?: Meeting;
     customers: { id: number; name: string; full_name_with_company?: string }[];
     requirements: { id: number; title: string | null; customer_id: number }[];
+    users?: User[];
+    companies?: Company[];
 }
 
-export default function MeetingForm({ meeting, customers, requirements }: Props) {
+export default function MeetingForm({ meeting, customers, requirements, users = [], companies = [] }: Props) {
+    const { openModal } = useModal();
     const urlParams = new URLSearchParams(window.location.search);
     const preSelectedCustomerId = urlParams.get('customer_id');
     const preSelectedRequirementId = urlParams.get('requirement_id');
@@ -71,6 +76,24 @@ export default function MeetingForm({ meeting, customers, requirements }: Props)
                     placeholder="Select Customer"
                     searchPlaceholder="Search customers..."
                     allowManualInput={false}
+                    renderAction={
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                openModal('CREATE_CUSTOMER', {
+                                    users: users,
+                                    companies: companies,
+                                    onSuccess: (id: number) => setData('customer_id', id)
+                                });
+                            }}
+                        >
+                            <Plus className="h-4 w-4" />
+                        </Button>
+                    }
                 />
                 <ErrorMessage message={errors.customer_id} />
             </div>

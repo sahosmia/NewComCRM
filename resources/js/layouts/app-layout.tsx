@@ -4,6 +4,8 @@ import { Toaster } from "@/components/ui/sonner"
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 import { usePage } from '@inertiajs/react';
+import { ModalProvider } from '@/contexts/ModalContext';
+import { ModalRegistry } from '@/components/modals/ModalRegistry';
 
 export default function AppLayout({ children, breadcrumbs, ...props }: AppLayoutProps) {
     const { flash } = usePage().props;
@@ -17,10 +19,13 @@ export default function AppLayout({ children, breadcrumbs, ...props }: AppLayout
         }
     }, [flash]);
     return (
-        <AppLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
-            {children}
+        <ModalProvider>
+            <AppLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
+                {children}
 
-            <Toaster richColors position="top-right" />
-        </AppLayoutTemplate>
+                <Toaster richColors position="top-right" />
+                <ModalRegistry />
+            </AppLayoutTemplate>
+        </ModalProvider>
     );
 }

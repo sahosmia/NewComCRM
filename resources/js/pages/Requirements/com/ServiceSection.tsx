@@ -5,6 +5,9 @@ import { FormSelect } from "@/components/admin/form/FormSelect";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
 import { Unit } from "@/types";
 import FormLabel from "@/components/admin/form/FormLabel";
+import { useModal } from "@/contexts/ModalContext";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 interface ServiceSectionProps {
     title: string;
@@ -20,6 +23,7 @@ interface ServiceSectionProps {
 }
 
 export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefix, data, setData, units, aitFactor, errors }: ServiceSectionProps) => {
+    const { openModal } = useModal();
     return (
         <div className={`bg-white border rounded-xl shadow-sm overflow-hidden mb-6 transition-all ${hasService ? 'ring-1 ring-primary/20 shadow-md' : 'border-slate-200'}`}>
             <div className={`p-4 flex justify-between items-center border-b transition-colors ${hasService ? 'bg-primary/5 border-primary/10' : 'bg-slate-50/50 border-slate-200'}`}>
@@ -56,13 +60,26 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                                 <ErrorMessage message={errors[`${prefix}_quantity`]} />
                             </div>
                             <div className="space-y-2 col-span-1 md:col-span-2 lg:col-span-2">
-                                <FormSelect
-                                    label="Unit"
-                                    value={data[`${prefix}_unit_id`].toString()}
-                                    onChange={(v) => setData(`${prefix}_unit_id`, v)}
-                                    options={units.map(u => ({ label: u.short_form, value: u.id.toString() }))}
-                                    error={errors[`${prefix}_unit_id`]}
-                                />
+                                <FormLabel>Unit</FormLabel>
+                                <div className="flex gap-2">
+                                    <FormSelect
+                                        value={data[`${prefix}_unit_id`].toString()}
+                                        onChange={(v) => setData(`${prefix}_unit_id`, v)}
+                                        options={units.map(u => ({ label: u.short_form, value: u.id.toString() }))}
+                                        error={errors[`${prefix}_unit_id`]}
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="icon"
+                                        className="h-10 w-10 shrink-0"
+                                        onClick={() => openModal('CREATE_UNIT', {
+                                            onSuccess: (id: number) => setData(`${prefix}_unit_id`, id.toString())
+                                        })}
+                                    >
+                                        <Plus className="h-4 w-4" />
+                                    </Button>
+                                </div>
                                 <ErrorMessage message={errors[`${prefix}_unit_id`]} />
                             </div>
                         </div>

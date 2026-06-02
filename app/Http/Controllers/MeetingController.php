@@ -6,6 +6,8 @@ use App\Http\Requests\StoreMeetingRequest;
 use App\Http\Requests\UpdateMeetingRequest;
 use App\Models\Meeting;
 use App\Services\MeetingService;
+use App\Repositories\UserRepository;
+use App\Services\CompanyService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -16,6 +18,8 @@ class MeetingController extends Controller
 {
     public function __construct(
         private MeetingService $meetingService,
+        private UserRepository $userRepository,
+        private CompanyService $companyService,
     ) {}
 
     /**
@@ -36,6 +40,8 @@ class MeetingController extends Controller
         return Inertia::render('Meetings/Create', [
             'customers' => $this->meetingService->customersForForm(),
             'requirements' => $this->meetingService->requirementsForForm(),
+            'users' => $this->userRepository->selectOptions(),
+            'companies' => $this->companyService->listAll(),
         ]);
     }
 
@@ -44,13 +50,22 @@ class MeetingController extends Controller
      */
     public function store(StoreMeetingRequest $request)
     {
-        $this->meetingService->create(
+        $meeting = $this->meetingService->create(
             $request->validated(),
             (int) Auth::id()
         );
 
-        return redirect()->route('meetings.index')
-            ->with('success', 'Meeting scheduled successfully');
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => 'Meeting scheduled successfully',
+                'meeting' => $meeting,
+                'new_id' => $meeting->id,
+            ], 201);
+        }
+
+        return back()
+            ->with('success', 'Meeting scheduled successfully')
+            ->with('new_id', $meeting->id);
     }
 
     /**
@@ -72,6 +87,8 @@ class MeetingController extends Controller
             'meeting' => $meeting,
             'customers' => $this->meetingService->customersForForm(),
             'requirements' => $this->meetingService->requirementsForForm(),
+            'users' => $this->userRepository->selectOptions(),
+            'companies' => $this->companyService->listAll(),
         ]);
     }
 

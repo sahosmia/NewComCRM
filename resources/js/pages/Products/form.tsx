@@ -11,8 +11,9 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Product, Unit } from "@/types";
-import { Loader2 } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
+import { useModal } from "@/contexts/ModalContext";
 
 interface Props {
     product?: Product;
@@ -20,6 +21,7 @@ interface Props {
 }
 
 export default function ProductForm({ product, units = [] }: Props) {
+    const { openModal } = useModal();
     const { data, setData, post, put, processing, errors } = useForm({
         name: product?.name || "",
         brand: product?.brand || "",
@@ -175,21 +177,33 @@ export default function ProductForm({ product, units = [] }: Props) {
                 {/* Unit */}
                 <div className="space-y-2">
                     <Label htmlFor="unit_id">Unit</Label>
-                    <Select
-                        onValueChange={(value) => setData("unit_id", value)}
-                        defaultValue={data.unit_id?.toString()}
-                    >
-                        <SelectTrigger className={errors.unit_id ? "border-red-500" : ""}>
-                            <SelectValue placeholder="Select a unit" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {units.map((unit) => (
-                                <SelectItem key={unit.id} value={unit.id.toString()}>
-                                    {unit.title} ({unit.short_form})
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                    <div className="flex gap-2">
+                        <Select
+                            onValueChange={(value) => setData("unit_id", value)}
+                            value={data.unit_id?.toString()}
+                        >
+                            <SelectTrigger className={errors.unit_id ? "border-red-500" : ""}>
+                                <SelectValue placeholder="Select a unit" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {units.map((unit) => (
+                                    <SelectItem key={unit.id} value={unit.id.toString()}>
+                                        {unit.title} ({unit.short_form})
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            onClick={() => openModal('CREATE_UNIT', {
+                                onSuccess: (id: number) => setData('unit_id', id.toString())
+                            })}
+                        >
+                            <Plus className="h-4 w-4" />
+                        </Button>
+                    </div>
                     <ErrorMessage message={errors.unit_id} />
                 </div>
             </div>

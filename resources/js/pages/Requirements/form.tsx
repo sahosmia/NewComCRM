@@ -16,6 +16,7 @@ import { RequirementItemRow } from "./com/RequirementItemRow";
 import { FormSummaryFooter } from "./com/FormSummaryFooter";
 import { ServiceSection } from "./com/ServiceSection";
 import FormLabel from "@/components/admin/form/FormLabel";
+import { useModal } from "@/contexts/ModalContext";
 
 interface Props {
     requirement?: Requirement;
@@ -23,9 +24,12 @@ interface Props {
     products: Product[];
     units: Unit[];
     users: User[];
+    companies: Company[];
 }
 
-export default function RequirementForm({ requirement, customers, products, units, users }: Props) {
+export default function RequirementForm(props: Props) {
+    const { requirement, customers, products, units, users } = props;
+    const { openModal } = useModal();
     const urlParams = new URLSearchParams(window.location.search);
     const preSelectedCustomerId = urlParams.get('customer_id');
 
@@ -148,6 +152,24 @@ export default function RequirementForm({ requirement, customers, products, unit
                                         placeholder="Select Customer"
                                         searchPlaceholder="Search customers..."
                                         onSelect={(id) => setData("customer_id", id as number)}
+                                        renderAction={
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-6 w-6"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    openModal('CREATE_CUSTOMER', {
+                                                        users: users,
+                                                        companies: props.companies,
+                                                        onSuccess: (id: number) => setData('customer_id', id)
+                                                    });
+                                                }}
+                                            >
+                                                <Plus className="h-4 w-4" />
+                                            </Button>
+                                        }
                                     />
                                     <ErrorMessage message={errors.customer_id} />
                                 </div>
@@ -162,6 +184,24 @@ export default function RequirementForm({ requirement, customers, products, unit
                                         onSelect={(id) => setData("send_qutation_to", id as number)}
                                         placeholder="Select Recipient (Optional)"
                                         searchPlaceholder="Search customers..."
+                                        renderAction={
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-6 w-6"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    openModal('CREATE_CUSTOMER', {
+                                                        users: users,
+                                                        companies: props.companies,
+                                                        onSuccess: (id: number) => setData('send_qutation_to', id)
+                                                    });
+                                                }}
+                                            >
+                                                <Plus className="h-4 w-4" />
+                                            </Button>
+                                        }
                                     />
                                     <ErrorMessage message={errors.send_qutation_to} />
                                 </div>
@@ -203,6 +243,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                     onRemove={removeItem}
                                     isRemoveDisabled={data.items.length === 1}
                                     errors={errors}
+                                        units={units}
                                 />
                             ))}
                         </div>

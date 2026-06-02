@@ -45,8 +45,9 @@ class CompanyController extends Controller
 
         
 
-        return redirect()->route('companies.index')
-            ->with('success', 'Company created successfully.');
+        return back()
+            ->with('success', 'Company created successfully.')
+            ->with('new_id', $company->id);
     }
 
     public function edit($id)

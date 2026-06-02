@@ -38,9 +38,19 @@ export interface NavItemWithSubmenu extends NavItem {
 export interface SharedData {
     name: string;
     quote: { message: string; author: string };
+    customers?: CustomerType[];
+    requirements?: Requirement[];
+    units?: Unit[];
+    users?: User[];
+    companies?: Company[];
     auth: Auth;
     ziggy: Config & { location: string };
     sidebarOpen: boolean;
+    flash: {
+        success: string | null;
+        error: string | null;
+        new_id?: number | string;
+    };
     [key: string]: unknown;
 }
 

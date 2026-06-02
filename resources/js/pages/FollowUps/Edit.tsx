@@ -1,15 +1,17 @@
 import AppLayout from "@/layouts/app-layout";
 import FollowUpForm from "./form";
 import { Head } from "@inertiajs/react";
-import { CustomerType, FollowUp, Requirement } from "@/types";
+import { Company, CustomerType, FollowUp, Requirement, User } from "@/types";
 
 interface Props {
     followUp: FollowUp;
     customers: CustomerType[];
     requirements: Requirement[];
+    users: User[];
+    companies: Company[];
 }
 
-export default function Edit({ followUp, customers, requirements }: Props) {
+export default function Edit({ followUp, customers, requirements, users, companies }: Props) {
     return (
         <AppLayout breadcrumbs={[{ title: "Follow Ups", href: route('follow-ups.index') }, { title: "Edit", href: route('follow-ups.edit', followUp.id) }]}>
             <Head title="Edit Follow Ups" />

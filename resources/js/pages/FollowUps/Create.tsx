@@ -1,14 +1,16 @@
 import AppLayout from "@/layouts/app-layout";
 import FollowUpForm from "./form";
 import { Head } from "@inertiajs/react";
-import { CustomerType, Requirement } from "@/types";
+import { Company, CustomerType, Requirement, User } from "@/types";
 
 interface Props {
     customers: CustomerType[];
     requirements: Requirement[];
+    users: User[];
+    companies: Company[];
 }
 
-export default function Create({ customers, requirements }: Props) {
+export default function Create({ customers, requirements, users, companies }: Props) {
     return (
         <AppLayout breadcrumbs={[{ title: "Follow Ups", href: route('follow-ups.index') }, { title: "New Schedule", href: "#" }]}>
             <Head title="Create Follow Ups" />
@@ -19,7 +21,12 @@ export default function Create({ customers, requirements }: Props) {
                     <p className="text-muted-foreground text-sm">Plan your next interaction with the customer.</p>
                 </div>
                 <div className="bg-card p-8 border rounded-xl shadow-sm ring-1 ring-border/50">
-                    <FollowUpForm customers={customers} requirements={requirements} />
+                    <FollowUpForm
+                        customers={customers}
+                        requirements={requirements}
+                        users={users}
+                        companies={companies}
+                    />
                 </div>
             </div>
         </AppLayout>
