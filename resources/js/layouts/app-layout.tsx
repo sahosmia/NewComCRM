@@ -19,13 +19,12 @@ export default function AppLayout({ children, breadcrumbs, ...props }: AppLayout
         }
     }, [flash]);
     return (
-        <ModalProvider>
+        <>
             <AppLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
                 {children}
-
-                <Toaster richColors position="top-right" />
                 <ModalRegistry />
             </AppLayoutTemplate>
-        </ModalProvider>
+            <Toaster richColors position="top-right" />
+        </>
     );
 }
