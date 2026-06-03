@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import { FilterOption, Meeting, PaginationType, SortOption } from '@/types';
+import { CustomerType, FilterOption, Meeting, PaginationType, Requirement, SortOption } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
@@ -7,15 +7,42 @@ import { columns } from './Columns';
 
 interface Props {
     meetings: PaginationType<Meeting>;
+    customers: CustomerType[];
+    requirements: Requirement[];
 }
 
-export default function MeetingIndex({ meetings }: Props) {
+export default function MeetingIndex({ meetings, customers, requirements }: Props) {
     const breadcrumbs = [
         { title: 'Dashboard', href: route('dashboard') },
         { title: 'Meetings', href: route('meetings.index') },
     ];
 
     const filters: FilterOption[] = [
+        {
+            name: 'customer_id',
+            label: 'Customer',
+            type: 'searchSelect',
+            options: customers.map((customer) => ({
+                label: customer.name || 'N/A',
+                value: customer.id,
+            }))
+        },
+        {
+            name: 'requirement_id',
+            label: 'Requirement',
+            type: 'searchSelect',
+            options: requirements.map(r => ({ label: r.title, value: r.id.toString() }))
+        },
+        {
+            name: 'period',
+            label: 'Period',
+            type: 'select',
+            options: [
+                { label: 'Today', value: 'today' },
+                { label: 'Upcoming', value: 'upcoming' },
+                { label: 'Overdue', value: 'overdue' },
+            ]
+        },
         {
             name: 'meeting_type',
             label: 'Meeting Type',

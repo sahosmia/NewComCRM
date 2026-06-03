@@ -2,7 +2,7 @@ import { Link, Head } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/layouts/app-layout";
 import { Badge } from "@/components/ui/badge";
-import { useMemo } from "react"; 
+import { useMemo } from "react";
 import { useModal } from "@/contexts/ModalContext";
 
 import {
@@ -20,7 +20,7 @@ import { Requirement } from "@/types";
 import { formatDate } from "@/utils/date-format";
 
 export default function Show({ requirement }: { requirement: Requirement }) {
-        const { openModal } = useModal();
+    const { openModal } = useModal();
 
     const breadcrumbs = [
         { title: "Requirements", href: route('requirements.index') },
@@ -40,8 +40,11 @@ export default function Show({ requirement }: { requirement: Requirement }) {
         const itemsTotal = requirement.items?.reduce((sum: number, i: any) => sum + parseFloat(i.total_price), 0) || 0;
         const itemsCostingTotal = requirement.items?.reduce((sum: number, i: any) => sum + (parseFloat(i.costing_price) || 0), 0) || 0;
 
-        const accessoriesTotal = requirement.has_accessories ? (requirement.accessories_quantity * (parseFloat(requirement.accessories_price as string) || 0)) : 0;
-        const installationTotal = requirement.has_installation ? (requirement.installation_quantity * (parseFloat(requirement.installation_price as string) || 0)) : 0;
+        // const accessoriesTotal = requirement.has_accessories ? (requirement.accessories_quantity * (parseFloat(requirement.accessories_price as string) || 0)) : 0;
+        // const installationTotal = requirement.has_installation ? (requirement.installation_quantity * (parseFloat(requirement.installation_price as string) || 0)) : 0;
+
+        const accessoriesTotal = requirement.has_accessories ? requirement.accessories?.reduce((sum: number, i: any) => sum + (parseFloat(i.total_price) || 0), 0) || 0 : 0;
+        const installationTotal = requirement.has_installation ? requirement.installations?.reduce((sum: number, i: any) => sum + (parseFloat(i.total_price) || 0), 0) || 0 : 0;
 
         const subTotal = itemsTotal + accessoriesTotal + installationTotal;
 
@@ -113,9 +116,9 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                 <h2 className="font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
                                     <Video className="w-3 h-3 text-primary" /> Meetings
                                 </h2>
-                                  <Button 
-                                    variant="ghost" 
-                                    size="sm" 
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
                                     className="h-7 text-[10px] uppercase font-bold"
                                     onClick={() => openModal('CREATE_MEETING', {
                                         customer_id: requirement.customer_id,
@@ -147,9 +150,9 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                 <h2 className="font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
                                     <History className="w-3 h-3 text-primary" /> Follow-ups
                                 </h2>
-                                <Button 
-                                    variant="ghost" 
-                                    size="sm" 
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
                                     className="h-7 text-[10px] uppercase font-bold"
                                     onClick={() => openModal('CREATE_FOLLOW_UP', {
                                         customer_id: requirement.customer_id,
@@ -208,7 +211,7 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                             <tr key={item.id} className="hover:bg-muted/5 transition-colors">
                                                 <td className="px-6 py-4">
                                                     <p className="font-semibold">{item.product?.name}</p>
-                                                    
+
                                                     {item.description && (
                                                         <p className="text-[10px] text-muted-foreground mt-1 italic whitespace-pre-wrap">{item.description}</p>
                                                     )}
@@ -219,7 +222,7 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                             </tr>
                                         ))}
 
-                                        {requirement.has_accessories && (
+                                        {/* {requirement.has_accessories && (
                                             <tr className="bg-muted/5">
                                                 <td className="px-6 py-4 font-semibold">{requirement.accessories_title}</td>
                                                 <td className="px-6 py-4">
@@ -245,7 +248,35 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                                     {formatCurrency(Number(requirement.installation_quantity) * Number(requirement.installation_price))}
                                                 </td>
                                             </tr>
-                                        )}
+                                        )} */}
+
+                                         {requirement.has_accessories && requirement.accessories?.map((accessory: any) => (
+                                            <tr key={`acc-${accessory.id}`} className="bg-muted/5">
+                                                <td className="px-6 py-4 font-semibold">{accessory.title}</td>
+                                                <td className="px-6 py-4">
+                                                    {accessory.quantity}{' '}
+                                                    {accessory.unit?.short_form || accessory.unit?.title || 'Unit'}
+                                                </td>
+                                                <td className="px-6 py-4 text-right">{formatCurrency(Number(accessory.price))}</td>
+                                                <td className="px-6 py-4 text-right font-bold text-primary">
+                                                    {formatCurrency(Number(accessory.quantity) * Number(accessory.price))}
+                                                </td>
+                                            </tr>
+                                        ))}
+
+                                        {requirement.has_installation && requirement.installations?.map((installation: any) => (
+                                            <tr key={`inst-${installation.id}`} className="bg-muted/5">
+                                                <td className="px-6 py-4 font-semibold">{installation.title}</td>
+                                                <td className="px-6 py-4">
+                                                    {installation.quantity}{' '}
+                                                    {installation.unit?.short_form || installation.unit?.title || 'Unit'}
+                                                </td>
+                                                <td className="px-6 py-4 text-right">{formatCurrency(Number(installation.price))}</td>
+                                                <td className="px-6 py-4 text-right font-bold text-primary">
+                                                    {formatCurrency(Number(installation.quantity) * Number(installation.price))}
+                                                </td>
+                                            </tr>
+                                        ))}
                                     </tbody>
 
                                     <tfoot className="bg-primary/2 border-t-2 border-primary/10">
@@ -282,7 +313,7 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                             </div>
                         </div>
 
-                         <div className="bg-card border rounded-xl p-5 shadow-sm space-y-4 mt-6">
+                        <div className="bg-card border rounded-xl p-5 shadow-sm space-y-4 mt-6">
                             <h2 className="font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
                                 <FileText className="w-3 h-3 text-primary" /> Terms & Delivery
                             </h2>

@@ -59,13 +59,5 @@ class FollowUpService
         $this->followUps->markComplete($followUp, $status);
     }
 
-    public function customersForForm(): Collection
-    {
-        return $this->customers->selectOptions();
-    }
-
-    public function requirementsForForm(): Collection
-    {
-        return $this->requirementService->selectOptions();
-    }
+  
 }

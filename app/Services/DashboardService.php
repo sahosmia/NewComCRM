@@ -21,6 +21,34 @@ class DashboardService
             'sales' => $this->getSalesMetrics($user),
             'customers' => $this->getCustomerMetrics($user),
             'chartData' => $this->chartData($user),
+            'birthdays' => $this->getBirthdayMetrics($user),
+        ];
+    }
+
+        private function getBirthdayMetrics(User $user): array
+    {
+        $baseQuery = Customer::query()
+            ->when(!$user->isSuperAdmin(), fn($q) => $q->where('assigned_to', $user->id));
+
+        return [
+            'today' => (clone $baseQuery)->whereMonth('date_of_birth', now()->month)
+                ->whereDay('date_of_birth', now()->day)
+                ->get(),
+            'this_month' => (clone $baseQuery)->whereMonth('date_of_birth', now()->month)
+                ->whereDay('date_of_birth', '>', now()->day)
+                ->when(config('database.default') === 'sqlite', function($q) {
+                    $q->orderByRaw("strftime('%d', date_of_birth) ASC");
+                }, function($q) {
+                    $q->orderByRaw('DAY(date_of_birth) ASC');
+                })
+                ->limit(5)
+                ->get(),
+            'today_count' => (clone $baseQuery)->whereMonth('date_of_birth', now()->month)
+                ->whereDay('date_of_birth', now()->day)
+                ->count(),
+            'month_count' => (clone $baseQuery)->whereMonth('date_of_birth', now()->month)
+                ->whereDay('date_of_birth', '>=', now()->day)
+                ->count(),
         ];
     }
 

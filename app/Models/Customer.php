@@ -21,6 +21,7 @@ class Customer extends Model
         'company_id',
         'type',
         'phones',
+        'date_of_birth',
         'email',
         'addresses',
         'assigned_to',
@@ -35,12 +36,13 @@ class Customer extends Model
         'phones' => 'array',
         'addresses' => 'array',
         'type' => 'string',
+        'date_of_birth' => 'date',
     ];
 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['name', 'type', 'email', 'status'])
+            ->logOnly(['name', 'type', 'email', 'status', 'date_of_birth'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
     }
@@ -74,7 +76,7 @@ class Customer extends Model
         return $this->hasMany(Meeting::class);
     }
 
-    
+
 
 
 

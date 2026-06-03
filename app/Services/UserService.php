@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Storage;
 
 class UserService
 {
@@ -18,18 +18,29 @@ class UserService
         return $this->users->paginateForIndex($filters);
     }
 
-    public function usersForForm(): Collection
-    {
-        return $this->users->selectOptions();
-    }
 
     public function create(array $data): User
     {
+        if (isset($data['signature']) && $data['signature'] instanceof \Illuminate\Http\UploadedFile) {
+            $data['signature'] = $data['signature']->store('signatures', 'public');
+        }
+
         return $this->users->create($data);
     }
 
     public function update(User $user, array $data): void
     {
+        if (empty($data['password'])) {
+            unset($data['password']);
+        }
+
+        if (isset($data['signature']) && $data['signature'] instanceof \Illuminate\Http\UploadedFile) {
+            if ($user->signature) {
+                Storage::disk('public')->delete($user->signature);
+            }
+            $data['signature'] = $data['signature']->store('signatures', 'public');
+        }
+
         $this->users->update($user, $data);
     }
 

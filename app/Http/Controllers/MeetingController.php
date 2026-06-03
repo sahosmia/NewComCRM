@@ -6,20 +6,18 @@ use App\Http\Requests\StoreMeetingRequest;
 use App\Http\Requests\UpdateMeetingRequest;
 use App\Models\Meeting;
 use App\Services\MeetingService;
-use App\Repositories\UserRepository;
-use App\Services\CompanyService;
+use App\Services\LookupService;
+use App\Services\ExportService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use App\Exports\GeneralExport;
-use Maatwebsite\Excel\Facades\Excel;
 
 class MeetingController extends Controller
 {
     public function __construct(
         private MeetingService $meetingService,
-        private UserRepository $userRepository,
-        private CompanyService $companyService,
+        private LookupService $lookupService,
+        private ExportService $exportService,
     ) {}
 
     /**
@@ -29,6 +27,8 @@ class MeetingController extends Controller
     {
         return Inertia::render('Meetings/Index', [
             'meetings' => $this->meetingService->paginateIndex($request->all()),
+            'customers' => $this->lookupService->getCustomersForSelect(),
+            'requirements' => $this->lookupService->getRequirementsForSelect(),
         ]);
     }
 
@@ -38,10 +38,10 @@ class MeetingController extends Controller
     public function create()
     {
         return Inertia::render('Meetings/Create', [
-            'customers' => $this->meetingService->customersForForm(),
-            'requirements' => $this->meetingService->requirementsForForm(),
-            'users' => $this->userRepository->selectOptions(),
-            'companies' => $this->companyService->listAll(),
+            'customers' => $this->lookupService->getCustomersForSelect(),
+            'requirements' => $this->lookupService->getRequirementsForSelect(),
+            'users' => $this->lookupService->getUsersForSelect(),
+            'companies' => $this->lookupService->getCompanies(),
         ]);
     }
 
@@ -63,7 +63,7 @@ class MeetingController extends Controller
             ], 201);
         }
 
-        return back()
+        return redirect()->route('meetings.index')
             ->with('success', 'Meeting scheduled successfully')
             ->with('new_id', $meeting->id);
     }
@@ -85,10 +85,10 @@ class MeetingController extends Controller
     {
         return Inertia::render('Meetings/Edit', [
             'meeting' => $meeting,
-            'customers' => $this->meetingService->customersForForm(),
-            'requirements' => $this->meetingService->requirementsForForm(),
-            'users' => $this->userRepository->selectOptions(),
-            'companies' => $this->companyService->listAll(),
+            'customers' => $this->lookupService->getCustomersForSelect(),
+            'requirements' => $this->lookupService->getRequirementsForSelect(),
+            'users' => $this->lookupService->getUsersForSelect(),
+            'companies' => $this->lookupService->getCompanies(),
         ]);
     }
 
@@ -137,39 +137,35 @@ class MeetingController extends Controller
     {
         $meetings = $this->meetingService->getForExport($request->input('ids', []));
 
-        return Excel::download(new GeneralExport(
+        return $this->exportService->excel(
             $meetings,
             ['Customer', 'Title', 'Date', 'Type', 'Status'],
-            function ($meeting) {
-                return [
-                    $meeting->customer ? $meeting->customer->name : 'N/A',
-                    $meeting->title,
-                    $meeting->scheduled_at,
-                    $meeting->meeting_type,
-                    $meeting->status,
-                ];
-            }
-        ), 'meetings.xlsx');
+            fn($meeting) => [
+                $meeting->customer ? $meeting->customer->name : 'N/A',
+                $meeting->title,
+                $meeting->scheduled_at,
+                $meeting->meeting_type,
+                $meeting->status,
+            ],
+            'meetings.xlsx'
+        );
     }
 
     public function print(Request $request)
     {
         $meetings = $this->meetingService->getForExport($request->input('ids', []));
 
-        $data = $meetings->map(function ($meeting) {
-            return [
+        return $this->exportService->printView(
+            $meetings,
+            ['Customer', 'Title', 'Date', 'Type', 'Status'],
+            fn($meeting) => [
                 $meeting->customer ? $meeting->customer->name : 'N/A',
                 $meeting->title,
                 $meeting->scheduled_at,
                 $meeting->meeting_type,
                 $meeting->status,
-            ];
-        });
-
-        return view('print.general', [
-            'title' => 'Meeting List',
-            'headings' => ['Customer', 'Title', 'Date', 'Type', 'Status'],
-            'data' => $data
-        ]);
+            ],
+            'Meeting List'
+        );
     }
 }

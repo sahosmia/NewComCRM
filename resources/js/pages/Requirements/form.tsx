@@ -44,16 +44,14 @@ export default function RequirementForm({ requirement, customers, products, unit
         vat_percentage: requirement?.vat_percentage ?? (requirement ? 0 : 10),
 
         has_accessories: !!(requirement?.has_accessories ?? false),
-        accessories_title: requirement?.accessories_title || "",
-        accessories_quantity: requirement?.accessories_quantity || "",
-        accessories_unit_id: requirement?.accessories_unit_id || "",
-        accessories_price: requirement?.accessories_price || "",
+        accessories: requirement?.accessories || [
+            { title: "", quantity: 1, unit_id: "", price: "" }
+        ],
 
         has_installation: !!(requirement?.has_installation ?? false),
-        installation_title: requirement?.installation_title || "",
-        installation_quantity: requirement?.installation_quantity || "",
-        installation_unit_id: requirement?.installation_unit_id || "",
-        installation_price: requirement?.installation_price || "",
+        installations: requirement?.installations || [
+            { title: "", quantity: 1, unit_id: "", price: "" }
+        ],
 
         price_validity_days: requirement?.price_validity_days || "",
         delivery_time_days: requirement?.delivery_time_days || "",
@@ -104,8 +102,13 @@ export default function RequirementForm({ requirement, customers, products, unit
         return sum + (parseFloat(item.costing_price) || 0);
     }, 0);
 
-    const accessoriesTotal = data.has_accessories ? (parseFloat(data.accessories_quantity as string) || 0) * (parseFloat(data.accessories_price as string) || 0) * aitFactor : 0;
-    const installationTotal = data.has_installation ? (parseFloat(data.installation_quantity as string) || 0) * (parseFloat(data.installation_price as string) || 0) * aitFactor : 0;
+    const accessoriesTotal = data.has_accessories ? data.accessories.reduce((sum: number, item: any) => {
+        return sum + (parseFloat(item.quantity) || 0) * (parseFloat(item.price) || 0) * aitFactor;
+    }, 0) : 0;
+
+    const installationTotal = data.has_installation ? data.installations.reduce((sum: number, item: any) => {
+        return sum + (parseFloat(item.quantity) || 0) * (parseFloat(item.price) || 0) * aitFactor;
+    }, 0) : 0;
 
     const subTotal = itemsTotal + accessoriesTotal + installationTotal;
 
@@ -444,8 +447,8 @@ export default function RequirementForm({ requirement, customers, products, unit
                     hasService={data.has_accessories}
                     onServiceToggle={(v) => setData("has_accessories", v)}
                     prefix="accessories"
-                    data={data}
-                    setData={setData}
+                    items={data.accessories}
+                    setItems={(items) => setData("accessories", items)}
                     units={units}
                     aitFactor={aitFactor}
                     errors={errors}
@@ -457,9 +460,9 @@ export default function RequirementForm({ requirement, customers, products, unit
                     icon={<Drill className="w-4 h-4 text-primary" />}
                     hasService={data.has_installation}
                     onServiceToggle={(v) => setData("has_installation", v)}
-                    prefix="installation"
-                    data={data}
-                    setData={setData}
+                    prefix="installations"
+                    items={data.installations}
+                    setItems={(items) => setData("installations", items)}
                     units={units}
                     aitFactor={aitFactor}
                     errors={errors}

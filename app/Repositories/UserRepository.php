@@ -44,26 +44,11 @@ class UserRepository
 
     public function create(array $data): User
     {
-        if (isset($data['signature']) && $data['signature'] instanceof \Illuminate\Http\UploadedFile) {
-            $data['signature'] = $data['signature']->store('signatures', 'public');
-        }
-
         return User::query()->create($data);
     }
 
     public function update(User $user, array $data): void
     {
-        if (empty($data['password'])) {
-            unset($data['password']);
-        }
-
-        if (isset($data['signature']) && $data['signature'] instanceof \Illuminate\Http\UploadedFile) {
-            if ($user->signature) {
-                Storage::disk('public')->delete($user->signature);
-            }
-            $data['signature'] = $data['signature']->store('signatures', 'public');
-        }
-
         $user->update($data);
     }
 

@@ -4,6 +4,9 @@ import { TableRowActions } from '@/components/table/TableRowActions';
 import { Meeting } from '@/types';
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
 import { formatDateTime } from '@/utils/date-format';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { Link } from '@inertiajs/react';
+import { MessageSquare } from 'lucide-react';
 
 const MEETING_STATUS_OPTIONS = [
     { value: 'scheduled', label: 'Scheduled', colorClass: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
@@ -78,6 +81,13 @@ const columns: Column<Meeting>[] = [
                 item={item}
                 resource="meetings"
                 label="Meeting"
+                customActions={
+                    <DropdownMenuItem asChild>
+                        <Link href={route('follow-ups.create', { customer_id: item.customer_id, requirement_id: item.requirement_id })}>
+                            <MessageSquare className="w-4 h-4 mr-2" /> Add Follow-up
+                        </Link>
+                    </DropdownMenuItem>
+                }
             />
         ),
         className: 'w-[7%]',

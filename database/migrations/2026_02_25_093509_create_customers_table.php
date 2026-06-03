@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('designation')->nullable();
             $table->foreignId('company_id')->nullable()->constrained()->onDelete('set null');
             $table->string('email')->nullable();
+            $table->date('date_of_birth')->nullable();
             $table->foreignId('assigned_to')->constrained('users')->onDelete('cascade');
             $table->enum('type', ['corporate', 'reseller', 'personal'])->default('corporate');
             $table->json('phones')->nullable();

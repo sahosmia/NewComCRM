@@ -26,7 +26,7 @@ interface Props {
 
 
 export default function CustomerForm({ customer, users, companies: initialCompanies }: Props) {
-        const { openModal } = useModal();
+    const { openModal } = useModal();
 
     const [openPopover, setOpenPopover] = useState(false);
     const [localCompanies, setLocalCompanies] = useState<Company[]>(initialCompanies);
@@ -36,6 +36,7 @@ export default function CustomerForm({ customer, users, companies: initialCompan
         designation: customer?.designation ?? "",
         company_id: customer?.company_id ?? "",
         email: customer?.email ?? "",
+        date_of_birth: customer?.date_of_birth ?? "",
         assigned_to: customer?.assigned_to ?? (users.length === 1 ? users[0].id : ""),
         status: customer?.status ?? "active",
         type: customer?.type ?? "corporate",
@@ -74,7 +75,7 @@ export default function CustomerForm({ customer, users, companies: initialCompan
 
                     <div className="grid gap-4">
                         <div className="grid gap-2">
-                            <FormLabel>Full Name</FormLabel>
+                            <FormLabel required>Full Name</FormLabel>
                             <Input value={data.name} onChange={e => setData("name", e.target.value)} placeholder="e.g. John Doe" />
                             <ErrorMessage message={errors.name} />
                         </div>
@@ -88,6 +89,7 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                                 selectedId={data.company_id}
                                 placeholder="Select company"
                                 searchPlaceholder="Search company..."
+                                required={data.type !== "personal"}
                                 onSelect={(id) => {
                                     setData("company_id", id);
                                     if (id) {
@@ -98,7 +100,7 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                                     }
                                 }}
                                 renderAction={
-                                     <Button
+                                    <Button
                                         type="button"
                                         variant="ghost"
                                         size="icon"
@@ -125,18 +127,19 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                         </div>
 
                         <div className="grid gap-2">
-                            <FormLabel>Email Address</FormLabel>
+                            <FormLabel required={data.type !== "personal"}>Email Address</FormLabel>
                             <Input type="email" value={data.email} onChange={e => setData("email", e.target.value)} placeholder="john@example.com" />
                             <ErrorMessage message={errors.email} />
                         </div>
                         <div className="grid gap-2">
-                            <FormLabel>Designation</FormLabel>
+                            <FormLabel required={data.type !== "personal"}>Designation</FormLabel>
                             <Input value={data.designation} onChange={e => setData("designation", e.target.value)} placeholder="Manager" />
+                            <ErrorMessage message={errors.designation} />
                         </div>
 
                         {/* Phone Numbers - Dynamic List */}
                         <div className="space-y-3">
-                            <FormLabel>Phone Numbers</FormLabel>
+                            <FormLabel required>Phone Numbers</FormLabel>
                             {data.phones.map((phone, i) => (
                                 <div key={`phone-${i}`} className="space-y-1">
                                     <div className="flex gap-2 relative group">
@@ -192,7 +195,7 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                         </div>
 
                         <div className="grid gap-2">
-                            <FormLabel>Assigned Representative</FormLabel>
+                            <FormLabel required>Assigned Representative</FormLabel>
                             <Popover open={openPopover} onOpenChange={setOpenPopover}>
                                 <PopoverTrigger asChild>
                                     <Button variant="outline" className={cn("w-full justify-between font-normal", !data.assigned_to && "text-muted-foreground")}>
@@ -243,6 +246,11 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                         <div className="grid gap-2">
                             <FormLabel>Internal Remarks</FormLabel>
                             <Textarea value={data.remarks} onChange={e => setData("remarks", e.target.value)} placeholder="Any specific notes or preferences..." className="min-h-25" />
+                        </div>
+                        <div className="grid gap-2">
+                            <FormLabel>Date of Birth</FormLabel>
+                            <Input type="date" value={data.date_of_birth} onChange={e => setData("date_of_birth", e.target.value)} />
+                            <ErrorMessage message={errors.date_of_birth} />
                         </div>
                     </div>
                 </div>

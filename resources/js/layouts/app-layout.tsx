@@ -4,7 +4,6 @@ import { Toaster } from "@/components/ui/sonner"
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 import { usePage } from '@inertiajs/react';
-import { ModalProvider } from '@/contexts/ModalContext';
 import { ModalRegistry } from '@/components/modals/ModalRegistry';
 
 export default function AppLayout({ children, breadcrumbs, ...props }: AppLayoutProps) {

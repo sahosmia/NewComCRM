@@ -91,6 +91,7 @@ export interface CustomerType {
     phones: string[];
     addresses: string[];
     email: string;
+    date_of_birth: string;
     type: 'corporate' | 'reseller' | 'personal';
     assigned_to?: number | string;
     status: 'active' | 'inactive';
@@ -155,6 +156,17 @@ export interface RequirementItem {
     description?: string;
 }
 
+export interface RequirementServiceItem {
+    id?: number;
+    requirement_id?: number;
+    title: string;
+    quantity: number | string;
+    unit_id: number | string;
+    price: string | number;
+    total_price?: string | number;
+    unit?: Unit;
+}
+
 export interface Requirement {
     id: number;
     customer_id: number;
@@ -169,16 +181,11 @@ export interface Requirement {
     vat_percentage: string | number;
 
     has_accessories: boolean;
-    accessories_title: string | null;
-    accessories_quantity: string | number | null;
-    accessories_unit_id: number | null;
-    accessories_price: string | number | null;
+    accessories?: RequirementServiceItem[];
 
     has_installation: boolean;
-    installation_title: string | null;
-    installation_quantity: string | number | null;
-    installation_unit_id: number | null;
-    installation_price: string | number | null;
+    installations?: RequirementServiceItem[];
+
 
     price_validity_days: number | null;
     delivery_time_days: number | null;

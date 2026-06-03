@@ -19,12 +19,12 @@ trait ValidatesCustomerAttributes
             'company_id'    => $isPersonal ? 'nullable|exists:companies,id' : 'required|exists:companies,id',
             'email'         => ($isPersonal ? 'nullable' : 'required') . "|email|max:255|unique:customers,email,{$customerId}",
             'type'          => 'required|in:corporate,reseller,personal',
+            'date_of_birth' => 'nullable|date',
             'phones'        => 'required|array|min:1',
             'phones.*'      => ['required', 'string', 'regex:/^01[3-9]\d{8}$/',],
             'addresses'     => 'nullable|array',
             'addresses.*'   => 'nullable|string',
             'remarks'       => 'nullable|string',
-            'designation'   => 'nullable|string|max:255',
             'assigned_to'   => 'required|exists:users,id',
             'status'        => 'required|in:active,inactive',
         ];

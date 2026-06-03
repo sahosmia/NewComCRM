@@ -9,6 +9,8 @@ use App\Services\RequirementService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Services\LookupService;
+use App\Services\ExportService;
 
 use App\Exports\GeneralExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -20,6 +22,8 @@ class RequirementController extends Controller
 {
     public function __construct(
         private RequirementService $requirementService,
+         private LookupService $lookupService,
+        private ExportService $exportService,
     ) {}
 
     /**
@@ -41,8 +45,13 @@ class RequirementController extends Controller
         $this->authorize('create', Requirement::class);
 
 
-        return Inertia::render('Requirements/Create', $this->requirementService->formOptions());
-    }
+   return Inertia::render('Requirements/Create', [
+            'customers' => $this->lookupService->getCustomersForRequirementForm(),
+            'products'  => $this->lookupService->getProductsForSelect(),
+            'units'     => $this->lookupService->getUnits(),
+            'users'     => $this->lookupService->getUsersForSelect(),
+            'companies' => $this->lookupService->getCompanies(),
+        ]);    }
 
     /**
      * Store a newly created resource in storage.
@@ -66,8 +75,8 @@ class RequirementController extends Controller
             'requirement' => $requirement->load([
                 'customer',
                 'items.product.unit',
-                'accessoriesUnit',
-                'installationUnit',
+                'accessories.unit',
+                'installations.unit',
                 'meetings',
                 'followUps',
                 'quotationRecipient.company',
@@ -81,10 +90,14 @@ class RequirementController extends Controller
      */
     public function edit(Requirement $requirement)
     {
-        return Inertia::render('Requirements/Edit', array_merge(
-            ['requirement' => $requirement->load(['items', 'accessoriesUnit', 'installationUnit'])],
-            $this->requirementService->formOptions()
-        ));
+           return Inertia::render('Requirements/Edit', [
+            'requirement' => $requirement->load(['items', 'accessoriesUnit', 'installationUnit']),
+            'customers' => $this->lookupService->getCustomersForRequirementForm(),
+            'products'  => $this->lookupService->getProductsForSelect(),
+            'units'     => $this->lookupService->getUnits(),
+            'users'     => $this->lookupService->getUsersForSelect(),
+            'companies' => $this->lookupService->getCompanies(),
+        ]);
     }
 
     /**
@@ -131,91 +144,43 @@ class RequirementController extends Controller
 
     public function downloadPdf(Requirement $requirement)
     {
-
-        $requirement->load([
-            'customer.assignedUser',
-            'items.product.unit',
-            'accessoriesUnit',
-            'installationUnit',
-            'quotationRecipient.company',
-            'quotationSender'
-        ]);
-
-        $getImage = function ($path) {
-            if (!file_exists($path)) return "";
-            $data = file_get_contents($path);
-            $type = pathinfo($path, PATHINFO_EXTENSION);
-            return 'data:' . $type . ';base64,' . base64_encode($data);
-        };
-        $assignedUser = $requirement->customer->assignedUser;
-
-        $customerSignaturePath = null;
-        if ($assignedUser && $assignedUser->signature) {
-            $customerSignaturePath = storage_path('app/public/' . $assignedUser->signature);
-        }
-        $data = [
-            'header_logo_1' => $getImage(public_path('pdf-logo1.png')),
-            'header_logo_2' => $getImage(public_path('crystal-logo-png.png')),
-            'seal'    => $getImage(public_path('seal.png')),
-            'signature' => $getImage($customerSignaturePath),
-            'title' => 'Project Report',
-            'date' => date('d F Y'),
-            'requirement' => $requirement,
-
-        ];
-
-        ini_set('memory_limit', '256M');
-
-        $pdf = Pdf::loadView('pdf.my_report', $data)->setPaper('a4', 'portrait')->setOption(['isPhpEnabled' => true]);
-
-        return $pdf->stream('Quotation_' . $requirement->id . '.pdf');
+        return $this->requirementService->generatePdf($requirement)
+            ->stream('Quotation_' . $requirement->id . '.pdf');
     }
 
     public function export(Request $request)
     {
         $requirements = $this->requirementService->getForExport($request->input('ids', []));
 
-        return Excel::download(new GeneralExport(
+        return $this->exportService->excel(
             $requirements,
             ['Customer', 'Items', 'Total Price', 'Status', 'Date'],
-            function ($requirement) {
-                $items = $requirement->items->map(function ($item) {
-                    return ($item->product ? $item->product->name : 'Unknown') . " (x{$item->quantity})";
-                })->implode(', ');
-
-                return [
-                    $requirement->customer ? $requirement->customer->name : 'N/A',
-                    $items,
-                    $requirement->grand_total,
-                    $requirement->status,
-                    $requirement->created_at->toDateTimeString(),
-                ];
-            }
-        ), 'requirements.xlsx');
+            fn($requirement) => [
+                $requirement->customer ? $requirement->customer->name : 'N/A',
+                $requirement->items->map(fn($item) => ($item->product ? $item->product->name : 'Unknown') . " (x{$item->quantity})")->implode(', '),
+                $requirement->grand_total,
+                $requirement->status,
+                $requirement->created_at->toDateTimeString(),
+            ],
+            'requirements.xlsx'
+        );
     }
 
     public function print(Request $request)
     {
         $requirements = $this->requirementService->getForExport($request->input('ids', []));
 
-        $data = $requirements->map(function ($requirement) {
-            $items = $requirement->items->map(function ($item) {
-                return ($item->product ? $item->product->name : 'Unknown') . " (x{$item->quantity})";
-            })->implode(', ');
-
-            return [
+        return $this->exportService->printView(
+            $requirements,
+            ['Customer', 'Items', 'Total Price', 'Status', 'Date'],
+            fn($requirement) => [
                 $requirement->customer ? $requirement->customer->name : 'N/A',
-                $items,
+                $requirement->items->map(fn($item) => ($item->product ? $item->product->name : 'Unknown') . " (x{$item->quantity})")->implode(', '),
                 $requirement->grand_total,
                 $requirement->status,
                 $requirement->created_at->toDateTimeString(),
-            ];
-        });
-
-        return view('print.general', [
-            'title' => 'Requirement List',
-            'headings' => ['Customer', 'Items', 'Total Price', 'Status', 'Date'],
-            'data' => $data
-        ]);
+            ],
+            'Requirement List'
+        );
     }
 }

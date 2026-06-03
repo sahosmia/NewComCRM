@@ -4,6 +4,11 @@ import { TableRowActions } from '@/components/table/TableRowActions';
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
 import { formatDate } from '@/utils/date-format';
 import { FollowUp } from '@/types';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { Video } from 'lucide-react';
+import { Link } from '@inertiajs/react';
+
+
 
 
 const FOLLOW_UP_OPTIONS = [
@@ -70,6 +75,13 @@ const columns: Column<FollowUp>[] = [
                 item={item}
                 resource="follow-ups"
                 label="Follow Up"
+                customActions={
+                    <DropdownMenuItem asChild >
+                        <Link href={route('meetings.create', { customer_id: item.customer_id, requirement_id: item.requirement_id })}>
+                            <Video className="w-4 h-4 mr-2" /> Add Meeting
+                        </Link>
+                    </DropdownMenuItem>
+                }
             />
         ),
         className: 'w-[7%]',

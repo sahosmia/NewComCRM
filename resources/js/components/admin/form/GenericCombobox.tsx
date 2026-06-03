@@ -34,6 +34,7 @@ interface GenericComboboxProps {
     allowManualInput?: boolean;
     className?: string;
     renderAction?: React.ReactNode;
+    required?: boolean;
 }
 
 export function GenericCombobox({
@@ -48,6 +49,7 @@ export function GenericCombobox({
     allowManualInput = true,
     className,
     renderAction,
+    required = false
 }: GenericComboboxProps) {
     const [open, setOpen] = React.useState(false);
 
@@ -57,7 +59,7 @@ export function GenericCombobox({
 
     return (
         <>
-            <FormLabel>{label}</FormLabel>
+            <FormLabel required={required}>{label}</FormLabel>
 
             <div className="relative">
                 <Popover open={open} onOpenChange={setOpen}>

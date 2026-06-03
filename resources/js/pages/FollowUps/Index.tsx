@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import { FilterOption, FollowUp, PaginationType, SortOption } from '@/types';
+import { CustomerType, FilterOption, FollowUp, PaginationType, Requirement, SortOption } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
@@ -7,16 +7,39 @@ import { columns } from './Columns';
 
 interface Props {
     followUps: PaginationType<FollowUp>;
-    stats: Record<string, number>;
+    customers: CustomerType[];
+    requirements: Requirement[];
 }
 
-export default function FollowUpIndex({ followUps, stats }: Props) {
+export default function FollowUpIndex({ followUps, customers, requirements }: Props) {
     const breadcrumbs = [
         { title: 'Dashboard', href: route('dashboard') },
         { title: 'Follow Ups', href: route('follow-ups.index') },
     ];
 
     const filters: FilterOption[] = [
+               {
+            name: 'customer_id',
+            label: 'Customer',
+            type: 'searchSelect',
+            options: customers.map(c => ({ label: c.name, value: c.id.toString() }))
+        },
+        {
+            name: 'requirement_id',
+            label: 'Requirement',
+            type: 'searchSelect',
+            options: requirements.map(r => ({ label: r.title, value: r.id.toString() }))
+        },
+        {
+            name: 'period',
+            label: 'Period',
+            type: 'select',
+            options: [
+                { label: 'Today', value: 'today' },
+                { label: 'Upcoming', value: 'upcoming' },
+                { label: 'Overdue', value: 'overdue' },
+            ]
+        },
         {
             name: 'status',
             label: 'Status',

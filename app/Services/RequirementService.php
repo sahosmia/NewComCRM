@@ -3,11 +3,7 @@
 namespace App\Services;
 
 use App\Models\Requirement;
-use App\Repositories\CustomerRepository;
-use App\Repositories\ProductRepository;
 use App\Repositories\RequirementRepository;
-use App\Repositories\UnitRepository;
-use App\Repositories\UserRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -16,39 +12,32 @@ class RequirementService
 {
     public function __construct(
         private RequirementRepository $requirements,
-        private CustomerRepository $customers,
-        private ProductRepository $products,
-        private UnitRepository $units,
-    ) {}
+    ) {
+    }
 
     public function paginateIndex(array $filters): LengthAwarePaginator
     {
         return $this->requirements->paginateForIndex($filters);
     }
 
-    public function formOptions(): array
-    {
-        $userRepo = app(UserRepository::class);
-        $companyService = app(CompanyService::class);
-        return [
-            'customers' => $this->customers->forRequirementForm(),
-            'products'  => $this->products->forRequirementForm(),
-            'units'     => $this->units->all(),
-            'users'     => $userRepo->selectOptions(),
-            'companies' => $companyService->listAll(),
 
-        ];
-    }
 
     public function create(array $data): Requirement
     {
         return DB::transaction(function () use ($data) {
-            $requirementData = collect($data)->except(['items'])->toArray();
+            $requirementData = collect($data)->except(['items', 'accessories', 'installations'])->toArray();
             $requirementData['status'] = 'pending';
 
             $requirement = $this->requirements->create($requirementData);
 
             $requirement->items()->createMany($data['items']);
+            if (!empty($data['accessories'])) {
+                $requirement->accessories()->createMany($data['accessories']);
+            }
+
+            if (!empty($data['installations'])) {
+                $requirement->installations()->createMany($data['installations']);
+            }
 
             // Explicitly calculate to ensure taxes/accessories/installation are included
             $requirement->calculateGrandTotal();
@@ -60,13 +49,23 @@ class RequirementService
     public function update(Requirement $requirement, array $data): void
     {
         DB::transaction(function () use ($requirement, $data) {
-            $requirementData = collect($data)->except(['items'])->toArray();
+            $requirementData = collect($data)->except(['items', 'accessories', 'installations'])->toArray();
 
             $this->requirements->update($requirement, $requirementData);
 
             $requirement->items()->delete();
 
             $requirement->items()->createMany($data['items']);
+
+             $requirement->accessories()->delete();
+            if (!empty($data['accessories'])) {
+                $requirement->accessories()->createMany($data['accessories']);
+            }
+
+            $requirement->installations()->delete();
+            if (!empty($data['installations'])) {
+                $requirement->installations()->createMany($data['installations']);
+            }
 
             // Explicitly calculate to ensure taxes/accessories/installation are included
             $requirement->calculateGrandTotal();

@@ -2,7 +2,7 @@ import AppLayout from "@/layouts/app-layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare, LayoutList, Plus, Video } from "lucide-react";
+import { Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare, LayoutList, Plus, Video, Building2 } from "lucide-react";
 import { Head, Link } from "@inertiajs/react";
 import { CustomerType, FollowUp, Meeting, Requirement } from "@/types";
 import { useModal } from "@/contexts/ModalContext";
@@ -62,7 +62,7 @@ export default function Show({ customer }: ShowProps) {
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="flex items-start gap-3">
-                                    <Mail className="w-4 h-4 mt-1 text-primary" />
+                                    <Building2 className="w-4 h-4 mt-1 text-primary" />
                                     <div>
                                         <p className="text-sm font-medium">Company</p>
                                         <p className="text-sm text-muted-foreground">{customer.designation} at <span className="font-semibold text-foreground">{customer.company?.name || 'N/A'}</span></p>
@@ -74,6 +74,14 @@ export default function Show({ customer }: ShowProps) {
                                     <div>
                                         <p className="text-sm font-medium">Email</p>
                                         <p className="text-sm text-muted-foreground">{customer.email || 'N/A'}</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start gap-3">
+                                    <Calendar className="w-4 h-4 mt-1 text-primary" />
+                                    <div>
+                                        <p className="text-sm font-medium">Date of Birth</p>
+                                        <p className="text-sm text-muted-foreground">{customer.date_of_birth ? new Date(customer.date_of_birth).toLocaleDateString() : 'N/A'}</p>
                                     </div>
                                 </div>
 
@@ -215,14 +223,14 @@ export default function Show({ customer }: ShowProps) {
                                     <Calendar className="w-5 h-5 text-primary" />
                                     Follow-up History
                                 </CardTitle>
-                                <Button 
-                                    size="sm" 
+                                <Button
+                                    size="sm"
                                     variant="outline"
                                     onClick={() => openModal('CREATE_FOLLOW_UP', {
                                         customer_id: customer.id
                                     })}
                                 >
-                                        <Plus className="w-4 h-4 mr-1" /> Log Follow-up
+                                    <Plus className="w-4 h-4 mr-1" /> Log Follow-up
                                 </Button>
                             </CardHeader>
                             <CardContent>
@@ -283,14 +291,14 @@ export default function Show({ customer }: ShowProps) {
                                     <Video className="w-5 h-5 text-primary" />
                                     Meeting History
                                 </CardTitle>
-                                 <Button 
-                                    size="sm" 
+                                <Button
+                                    size="sm"
                                     variant="outline"
                                     onClick={() => openModal('CREATE_MEETING', {
                                         customer_id: customer.id
                                     })}
                                 >
-                                        <Plus className="w-4 h-4 mr-1" /> Schedule Meeting
+                                    <Plus className="w-4 h-4 mr-1" /> Schedule Meeting
                                 </Button>
                             </CardHeader>
                             <CardContent>

@@ -7,42 +7,42 @@ use App\Http\Requests\UpdateFollowUpRequest;
 use App\Models\FollowUp;
 use App\Models\User;
 use App\Services\FollowUpService;
-use App\Repositories\UserRepository;
-use App\Services\CompanyService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use App\Exports\GeneralExport;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Services\LookupService;
+use App\Services\ExportService;
 
 class FollowUpController extends Controller
 {
     public function __construct(
         private FollowUpService $followUpService,
-        private UserRepository $userRepository,
-        private CompanyService $companyService,
-    ) {}
+        private LookupService $lookupService,
+        private ExportService $exportService,
+    ) {
+    }
 
     public function index(Request $request)
     {
         $user = Auth::user();
-        if (! $user instanceof User) {
+        if (!$user instanceof User) {
             abort(401);
         }
 
         return Inertia::render('FollowUps/Index', [
             'followUps' => $this->followUpService->paginateIndex($request->all(), $user),
-            'stats' => $this->followUpService->stats(),
+            'customers' => $this->lookupService->getCustomersForSelect(),
+            'requirements' => $this->lookupService->getRequirementsForSelect(),
         ]);
     }
 
     public function create()
     {
         return Inertia::render('FollowUps/Create', [
-            'customers' => $this->followUpService->customersForForm(),
-            'requirements' => $this->followUpService->requirementsForForm(),
-            'users' => $this->userRepository->selectOptions(),
-            'companies' => $this->companyService->listAll(),
+            'customers' => $this->lookupService->getCustomersForSelect(),
+            'requirements' => $this->lookupService->getRequirementsForSelect(),
+            'users' => $this->lookupService->getUsersForSelect(),
+            'companies' => $this->lookupService->getCompanies(),
         ]);
     }
 
@@ -77,10 +77,10 @@ class FollowUpController extends Controller
     {
         return Inertia::render('FollowUps/Edit', [
             'followUp' => $followUp,
-            'customers' => $this->followUpService->customersForForm(),
-            'requirements' => $this->followUpService->requirementsForForm(),
-            'users' => $this->userRepository->selectOptions(),
-            'companies' => $this->companyService->listAll(),
+            'customers' => $this->lookupService->getCustomersForSelect(),
+            'requirements' => $this->lookupService->getRequirementsForSelect(),
+            'users' => $this->lookupService->getUsersForSelect(),
+            'companies' => $this->lookupService->getCompanies(),
         ]);
     }
 
@@ -134,39 +134,37 @@ class FollowUpController extends Controller
     {
         $followUps = $this->followUpService->getForExport($request->input('ids', []));
 
-        return Excel::download(new GeneralExport(
+        return $this->exportService->excel(
             $followUps,
             ['Customer', 'Date', 'Status', 'Priority', 'Notes'],
-            function ($followUp) {
-                return [
-                    $followUp->customer ? $followUp->customer->name : 'N/A',
-                    $followUp->follow_up_date,
-                    $followUp->status,
-                    $followUp->priority,
-                    $followUp->notes,
-                ];
-            }
-        ), 'follow_ups.xlsx');
+            fn($followUp) => [
+                $followUp->customer ? $followUp->customer->name : 'N/A',
+                $followUp->follow_up_date,
+                $followUp->status,
+                $followUp->priority,
+                $followUp->notes,
+            ],
+            'follow_ups.xlsx'
+        );
     }
 
     public function print(Request $request)
     {
         $followUps = $this->followUpService->getForExport($request->input('ids', []));
 
-        $data = $followUps->map(function ($followUp) {
-            return [
+        return $this->exportService->printView(
+            $followUps,
+            ['Customer', 'Date', 'Status', 'Priority', 'Notes'],
+            fn($followUp) => [
                 $followUp->customer ? $followUp->customer->name : 'N/A',
                 $followUp->follow_up_date,
                 $followUp->status,
                 $followUp->priority,
                 $followUp->notes,
-            ];
-        });
+            ],
+            'Follow Up List'
+        );
 
-        return view('print.general', [
-            'title' => 'Follow Up List',
-            'headings' => ['Customer', 'Date', 'Status', 'Priority', 'Notes'],
-            'data' => $data
-        ]);
+
     }
 }
