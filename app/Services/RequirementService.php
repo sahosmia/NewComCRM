@@ -43,12 +43,20 @@ class RequirementService
     public function create(array $data): Requirement
     {
         return DB::transaction(function () use ($data) {
-            $requirementData = collect($data)->except(['items'])->toArray();
+            $requirementData = collect($data)->except(['items', 'accessories', 'installations'])->toArray();
             $requirementData['status'] = 'pending';
 
             $requirement = $this->requirements->create($requirementData);
 
             $requirement->items()->createMany($data['items']);
+
+            if (!empty($data['accessories'])) {
+                $requirement->accessories()->createMany($data['accessories']);
+            }
+
+            if (!empty($data['installations'])) {
+                $requirement->installations()->createMany($data['installations']);
+            }
 
             // Explicitly calculate to ensure taxes/accessories/installation are included
             $requirement->calculateGrandTotal();
@@ -60,13 +68,22 @@ class RequirementService
     public function update(Requirement $requirement, array $data): void
     {
         DB::transaction(function () use ($requirement, $data) {
-            $requirementData = collect($data)->except(['items'])->toArray();
+            $requirementData = collect($data)->except(['items', 'accessories', 'installations'])->toArray();
 
             $this->requirements->update($requirement, $requirementData);
 
             $requirement->items()->delete();
-
             $requirement->items()->createMany($data['items']);
+
+            $requirement->accessories()->delete();
+            if (!empty($data['accessories'])) {
+                $requirement->accessories()->createMany($data['accessories']);
+            }
+
+            $requirement->installations()->delete();
+            if (!empty($data['installations'])) {
+                $requirement->installations()->createMany($data['installations']);
+            }
 
             // Explicitly calculate to ensure taxes/accessories/installation are included
             $requirement->calculateGrandTotal();

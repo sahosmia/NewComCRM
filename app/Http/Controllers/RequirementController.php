@@ -66,8 +66,8 @@ class RequirementController extends Controller
             'requirement' => $requirement->load([
                 'customer',
                 'items.product.unit',
-                'accessoriesUnit',
-                'installationUnit',
+                'accessories.unit',
+                'installations.unit',
                 'meetings',
                 'followUps',
                 'quotationRecipient.company',
@@ -82,7 +82,7 @@ class RequirementController extends Controller
     public function edit(Requirement $requirement)
     {
         return Inertia::render('Requirements/Edit', array_merge(
-            ['requirement' => $requirement->load(['items', 'accessoriesUnit', 'installationUnit'])],
+            ['requirement' => $requirement->load(['items', 'accessories', 'installations'])],
             $this->requirementService->formOptions()
         ));
     }
@@ -135,8 +135,8 @@ class RequirementController extends Controller
         $requirement->load([
             'customer.assignedUser',
             'items.product.unit',
-            'accessoriesUnit',
-            'installationUnit',
+            'accessories.unit',
+            'installations.unit',
             'quotationRecipient.company',
             'quotationSender'
         ]);

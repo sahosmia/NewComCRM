@@ -25,15 +25,7 @@ class Requirement extends Model
         'ait_percentage',
         'vat_percentage',
         'has_accessories',
-        'accessories_title',
-        'accessories_quantity',
-        'accessories_unit_id',
-        'accessories_price',
         'has_installation',
-        'installation_title',
-        'installation_quantity',
-        'installation_unit_id',
-        'installation_price',
         'price_validity_days',
         'delivery_time_days',
         'advance_payment',
@@ -50,11 +42,6 @@ class Requirement extends Model
         'has_installation' => 'boolean',
         'ait_percentage' => 'decimal:2',
         'vat_percentage' => 'decimal:2',
-        'accessories_price' => 'decimal:2',
-        'installation_price' => 'decimal:2',
-        'accessories_quantity' => 'integer',
-        'installation_quantity' => 'integer',
-
     ];
 
     public function items(): HasMany
@@ -62,6 +49,15 @@ class Requirement extends Model
         return $this->hasMany(RequirementItem::class);
     }
 
+    public function accessories(): HasMany
+    {
+        return $this->hasMany(RequirementAccessory::class);
+    }
+
+    public function installations(): HasMany
+    {
+        return $this->hasMany(RequirementInstallation::class);
+    }
 
     public function customer(): BelongsTo
     {
@@ -78,15 +74,6 @@ class Requirement extends Model
         return $this->belongsTo(User::class, 'qutation_send_by');
     }
 
-    public function accessoriesUnit(): BelongsTo
-    {
-        return $this->belongsTo(Unit::class, 'accessories_unit_id');
-    }
-
-    public function installationUnit(): BelongsTo
-    {
-        return $this->belongsTo(Unit::class, 'installation_unit_id');
-    }
 
 
     public function meetings(): HasMany
@@ -119,8 +106,8 @@ class Requirement extends Model
         $itemsTotal = $this->items->sum('total_price');
         $itemsCostingTotal = $this->items->sum('costing_price');
 
-        $accessoriesTotal = $this->has_accessories ? ($this->accessories_quantity * $this->accessories_price * $aitFactor) : 0;
-        $installationTotal = $this->has_installation ? ($this->installation_quantity * $this->installation_price * $aitFactor) : 0;
+        $accessoriesTotal = $this->has_accessories ? $this->accessories->sum('total_price') : 0;
+        $installationTotal = $this->has_installation ? $this->installations->sum('total_price') : 0;
 
         $subTotal = $itemsTotal + $accessoriesTotal + $installationTotal;
 

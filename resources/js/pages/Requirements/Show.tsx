@@ -40,8 +40,8 @@ export default function Show({ requirement }: { requirement: Requirement }) {
         const itemsTotal = requirement.items?.reduce((sum: number, i: any) => sum + parseFloat(i.total_price), 0) || 0;
         const itemsCostingTotal = requirement.items?.reduce((sum: number, i: any) => sum + (parseFloat(i.costing_price) || 0), 0) || 0;
 
-        const accessoriesTotal = requirement.has_accessories ? (requirement.accessories_quantity * (parseFloat(requirement.accessories_price as string) || 0)) : 0;
-        const installationTotal = requirement.has_installation ? (requirement.installation_quantity * (parseFloat(requirement.installation_price as string) || 0)) : 0;
+        const accessoriesTotal = requirement.has_accessories ? requirement.accessories?.reduce((sum: number, i: any) => sum + (parseFloat(i.total_price) || 0), 0) || 0 : 0;
+        const installationTotal = requirement.has_installation ? requirement.installations?.reduce((sum: number, i: any) => sum + (parseFloat(i.total_price) || 0), 0) || 0 : 0;
 
         const subTotal = itemsTotal + accessoriesTotal + installationTotal;
 
@@ -219,33 +219,33 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                             </tr>
                                         ))}
 
-                                        {requirement.has_accessories && (
-                                            <tr className="bg-muted/5">
-                                                <td className="px-6 py-4 font-semibold">{requirement.accessories_title}</td>
+                                        {requirement.has_accessories && requirement.accessories?.map((accessory: any) => (
+                                            <tr key={`acc-${accessory.id}`} className="bg-muted/5">
+                                                <td className="px-6 py-4 font-semibold">{accessory.title}</td>
                                                 <td className="px-6 py-4">
-                                                    {requirement.accessories_quantity}{' '}
-                                                    {requirement.accessories_unit?.title || requirement.accessories_unit?.short_form}
+                                                    {accessory.quantity}{' '}
+                                                    {accessory.unit?.short_form || accessory.unit?.title || 'Unit'}
                                                 </td>
-                                                <td className="px-6 py-4 text-right">{formatCurrency(Number(requirement.accessories_price))}</td>
+                                                <td className="px-6 py-4 text-right">{formatCurrency(Number(accessory.price))}</td>
                                                 <td className="px-6 py-4 text-right font-bold text-primary">
-                                                    {formatCurrency(Number(requirement.accessories_quantity) * Number(requirement.accessories_price))}
+                                                    {formatCurrency(Number(accessory.quantity) * Number(accessory.price))}
                                                 </td>
                                             </tr>
-                                        )}
+                                        ))}
 
-                                        {requirement.has_installation && (
-                                            <tr className="bg-muted/5">
-                                                <td className="px-6 py-4 font-semibold">{requirement.installation_title}</td>
+                                        {requirement.has_installation && requirement.installations?.map((installation: any) => (
+                                            <tr key={`inst-${installation.id}`} className="bg-muted/5">
+                                                <td className="px-6 py-4 font-semibold">{installation.title}</td>
                                                 <td className="px-6 py-4">
-                                                    {requirement.installation_quantity}{' '}
-                                                    {requirement.installation_unit?.title || requirement.installation_unit?.short_form}
+                                                    {installation.quantity}{' '}
+                                                    {installation.unit?.short_form || installation.unit?.title || 'Unit'}
                                                 </td>
-                                                <td className="px-6 py-4 text-right">{formatCurrency(Number(requirement.installation_price))}</td>
+                                                <td className="px-6 py-4 text-right">{formatCurrency(Number(installation.price))}</td>
                                                 <td className="px-6 py-4 text-right font-bold text-primary">
-                                                    {formatCurrency(Number(requirement.installation_quantity) * Number(requirement.installation_price))}
+                                                    {formatCurrency(Number(installation.quantity) * Number(installation.price))}
                                                 </td>
                                             </tr>
-                                        )}
+                                        ))}
                                     </tbody>
 
                                     <tfoot className="bg-primary/2 border-t-2 border-primary/10">
