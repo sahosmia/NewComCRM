@@ -29,6 +29,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // --- Dashboard ---
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // --- Lookups ---
+    Route::get('/lookups', [App\Http\Controllers\LookupController::class, 'index'])->name('lookups.index');
+
     // --- Customers ---
     Route::prefix('customers')->name('customers.')->group(function () {
         Route::controller(CustomerController::class)->group(function () {

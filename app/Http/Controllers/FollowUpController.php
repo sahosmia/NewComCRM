@@ -7,8 +7,7 @@ use App\Http\Requests\UpdateFollowUpRequest;
 use App\Models\FollowUp;
 use App\Models\User;
 use App\Services\FollowUpService;
-use App\Repositories\UserRepository;
-use App\Services\CompanyService;
+use App\Services\LookupRegistry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -19,8 +18,7 @@ class FollowUpController extends Controller
 {
     public function __construct(
         private FollowUpService $followUpService,
-        private UserRepository $userRepository,
-        private CompanyService $companyService,
+        private LookupRegistry $lookups,
     ) {}
 
     public function index(Request $request)
@@ -33,19 +31,18 @@ class FollowUpController extends Controller
         return Inertia::render('FollowUps/Index', [
             'followUps' => $this->followUpService->paginateIndex($request->all(), $user),
             'stats' => $this->followUpService->stats(),
-            'customers' => $this->followUpService->customersForForm(),
-            'requirements' => $this->followUpService->requirementsForForm(),
+            ...$this->lookups->get(['customers', 'requirements']),
         ]);
     }
 
     public function create()
     {
-        return Inertia::render('FollowUps/Create', [
-            'customers' => $this->followUpService->customersForForm(),
-            'requirements' => $this->followUpService->requirementsForForm(),
-            'users' => $this->userRepository->selectOptions(),
-            'companies' => $this->companyService->listAll(),
-        ]);
+        return Inertia::render('FollowUps/Create', $this->lookups->get([
+            'customers',
+            'requirements',
+            'users',
+            'companies'
+        ]));
     }
 
     public function store(StoreFollowUpRequest $request)
@@ -79,10 +76,12 @@ class FollowUpController extends Controller
     {
         return Inertia::render('FollowUps/Edit', [
             'followUp' => $followUp,
-            'customers' => $this->followUpService->customersForForm(),
-            'requirements' => $this->followUpService->requirementsForForm(),
-            'users' => $this->userRepository->selectOptions(),
-            'companies' => $this->companyService->listAll(),
+            ...$this->lookups->get([
+                'customers',
+                'requirements',
+                'users',
+                'companies'
+            ]),
         ]);
     }
 

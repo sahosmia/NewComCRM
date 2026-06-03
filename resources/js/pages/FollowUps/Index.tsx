@@ -9,8 +9,8 @@ import { useModal } from '@/contexts/ModalContext';
 interface Props {
     followUps: PaginationType<FollowUp>;
     stats: Record<string, number>;
-    customers: CustomerType[];
-    requirements: Requirement[];
+    customers: SelectOption[];
+    requirements: SelectOption[];
 }
 
 export default function FollowUpIndex({ followUps, stats, customers, requirements }: Props) {
@@ -25,13 +25,13 @@ export default function FollowUpIndex({ followUps, stats, customers, requirement
             name: 'customer_id',
             label: 'Customer',
             type: 'searchSelect',
-            options: (customers ?? []).map(c => ({ label: c.name, value: c.id }))
+            options: customers
         },
         {
             name: 'requirement_id',
             label: 'Requirement',
             type: 'searchSelect',
-            options: (requirements ?? []).map(r => ({ label: r.title || `Req #${r.id}`, value: r.id }))
+            options: requirements
         },
         {
             name: 'period',

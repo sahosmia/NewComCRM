@@ -19,8 +19,8 @@ const FOLLOW_UP_OPTIONS = [
 
 const getColumns = (
     openModal: (type: 'CREATE_UNIT' | 'CREATE_COMPANY' | 'CREATE_CUSTOMER' | 'CREATE_PRODUCT' | 'CREATE_MEETING' | 'CREATE_FOLLOW_UP', props?: Record<string, unknown>) => void,
-    customers: CustomerType[],
-    requirements: Requirement[]
+    customers: SelectOption[],
+    requirements: SelectOption[]
 ): Column<FollowUp>[] => [
     {
         header: 'Customer',

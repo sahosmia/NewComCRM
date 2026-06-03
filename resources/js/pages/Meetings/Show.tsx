@@ -13,7 +13,7 @@ import { usePage } from "@inertiajs/react";
 
 export default function Show({ meeting }: { meeting: Meeting }) {
     const { openModal } = useModal();
-    const { customers, requirements } = usePage<{ customers: CustomerType[], requirements: Requirement[] }>().props;
+    const { customers, requirements } = usePage<{ customers: SelectOption[], requirements: SelectOption[] }>().props;
     const breadcrumbs = [
         { title: "Meetings", href: route('meetings.index') },
         { title: "Detail View", href: "#" }

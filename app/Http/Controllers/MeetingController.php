@@ -6,8 +6,7 @@ use App\Http\Requests\StoreMeetingRequest;
 use App\Http\Requests\UpdateMeetingRequest;
 use App\Models\Meeting;
 use App\Services\MeetingService;
-use App\Repositories\UserRepository;
-use App\Services\CompanyService;
+use App\Services\LookupRegistry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -18,8 +17,7 @@ class MeetingController extends Controller
 {
     public function __construct(
         private MeetingService $meetingService,
-        private UserRepository $userRepository,
-        private CompanyService $companyService,
+        private LookupRegistry $lookups,
     ) {}
 
     /**
@@ -29,8 +27,7 @@ class MeetingController extends Controller
     {
         return Inertia::render('Meetings/Index', [
             'meetings' => $this->meetingService->paginateIndex($request->all()),
-            'customers' => $this->meetingService->customersForForm(),
-            'requirements' => $this->meetingService->requirementsForForm(),
+            ...$this->lookups->get(['customers', 'requirements']),
         ]);
     }
 
@@ -39,12 +36,12 @@ class MeetingController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Meetings/Create', [
-            'customers' => $this->meetingService->customersForForm(),
-            'requirements' => $this->meetingService->requirementsForForm(),
-            'users' => $this->userRepository->selectOptions(),
-            'companies' => $this->companyService->listAll(),
-        ]);
+        return Inertia::render('Meetings/Create', $this->lookups->get([
+            'customers',
+            'requirements',
+            'users',
+            'companies'
+        ]));
     }
 
     /**
@@ -77,8 +74,7 @@ class MeetingController extends Controller
     {
         return Inertia::render('Meetings/Show', [
             'meeting' => $meeting->load(['customer.company', 'user', 'requirement.items.product.unit']),
-            'customers' => $this->meetingService->customersForForm(),
-            'requirements' => $this->meetingService->requirementsForForm(),
+            ...$this->lookups->get(['customers', 'requirements']),
         ]);
     }
 
@@ -89,10 +85,12 @@ class MeetingController extends Controller
     {
         return Inertia::render('Meetings/Edit', [
             'meeting' => $meeting,
-            'customers' => $this->meetingService->customersForForm(),
-            'requirements' => $this->meetingService->requirementsForForm(),
-            'users' => $this->userRepository->selectOptions(),
-            'companies' => $this->companyService->listAll(),
+            ...$this->lookups->get([
+                'customers',
+                'requirements',
+                'users',
+                'companies'
+            ]),
         ]);
     }
 
