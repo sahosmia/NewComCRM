@@ -21,15 +21,6 @@ class CustomerService
         return $this->customers->paginateForIndex($filters);
     }
 
-    public function usersForForm(): Collection
-    {
-        return $this->users->selectOptions();
-    }
-
-        public function customersForForm(): Collection
-    {
-        return $this->customers->selectOptions();
-    }
 
     public function create(array $data): Customer
     {

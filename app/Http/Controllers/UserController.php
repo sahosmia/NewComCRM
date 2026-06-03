@@ -6,6 +6,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use App\Services\UserService;
+use App\Services\LookupService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,6 +14,7 @@ class UserController extends Controller
 {
     public function __construct(
         private UserService $userService,
+        private LookupService $lookupService,
     ) {}
 
     public function index(Request $request)
@@ -25,7 +27,7 @@ class UserController extends Controller
     public function create()
     {
         return Inertia::render('Users/Create', [
-            'users' => $this->userService->usersForForm(),
+            'users' => $this->lookupService->getUsersForSelect(),
         ]);
     }
 
@@ -48,7 +50,7 @@ class UserController extends Controller
     {
         return Inertia::render('Users/Edit', [
             'user' => $user,
-            'users' => $this->userService->usersForForm(),
+            'users' => $this->lookupService->getUsersForSelect(),
         ]);
     }
 

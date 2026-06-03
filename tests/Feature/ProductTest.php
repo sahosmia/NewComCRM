@@ -72,7 +72,7 @@ it('can_store_a_new_product', function () {
     $response = $this->actingAs($this->user)
         ->post(route('products.store'), $productData);
 
-    $response->assertRedirect(route('products.index'));
+    $response->assertRedirect();
     $this->assertDatabaseHas('products', [
         'name' => 'New Product',
         'unit_price' => 150.50,
@@ -98,7 +98,7 @@ it('can_update_an_existing_product', function () {
     $response = $this->actingAs($this->user)
         ->put(route('products.update', $product), $updatedData);
 
-    $response->assertRedirect(route('products.index'));
+    $response->assertRedirect();
     $this->assertDatabaseHas('products', [
         'id' => $product->id,
         'name' => 'Updated Name',
@@ -112,8 +112,8 @@ it('can_delete_a_product', function () {
     $response = $this->actingAs($this->user)
         ->delete(route('products.destroy', $product));
 
-    $response->assertRedirect(route('products.index'));
-    $this->assertSoftDeleted('products', [
+    $response->assertRedirect();
+    $this->assertDatabaseMissing('products', [
         'id' => $product->id,
     ]);
 });

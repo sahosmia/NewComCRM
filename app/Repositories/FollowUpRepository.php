@@ -26,6 +26,14 @@ class FollowUpRepository
             ->when($params['end_date'] ?? null, fn ($query, $endDate) => $query->whereDate('follow_up_date', '<=', $endDate))
            ->when($params['customer_id'] ?? null, fn ($query, $id) => $query->where('customer_id', $id))
             ->when($params['requirement_id'] ?? null, fn ($query, $id) => $query->where('requirement_id', $id))
+            ->when($params['period'] ?? null, function ($query, $period) {
+                match ($period) {
+                    'today' => $query->whereDate('follow_up_date', today()),
+                    'upcoming' => $query->whereDate('follow_up_date', '>', today()),
+                    'overdue' => $query->whereDate('follow_up_date', '<', today())->where('status', 'pending'),
+                    default => null,
+                };
+            })
             ->when(isset($params['sort']), function ($query) use ($params) {
                 $query->orderBy($params['sort'], $params['direction'] ?? 'desc');
             }, function ($query) {

@@ -36,6 +36,7 @@ export default function CustomerForm({ customer, users, companies: initialCompan
         designation: customer?.designation ?? "",
         company_id: customer?.company_id ?? "",
         email: customer?.email ?? "",
+        date_of_birth: customer?.date_of_birth ?? "",
         assigned_to: customer?.assigned_to ?? (users.length === 1 ? users[0].id : ""),
         status: customer?.status ?? "active",
         type: customer?.type ?? "corporate",
@@ -124,10 +125,17 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                             <ErrorMessage message={errors.company_id} />
                         </div>
 
-                        <div className="grid gap-2">
-                            <FormLabel>Email Address</FormLabel>
-                            <Input type="email" value={data.email} onChange={e => setData("email", e.target.value)} placeholder="john@example.com" />
-                            <ErrorMessage message={errors.email} />
+                        <div className="grid sm:grid-cols-2 gap-4">
+                            <div className="grid gap-2">
+                                <FormLabel>Email Address</FormLabel>
+                                <Input type="email" value={data.email} onChange={e => setData("email", e.target.value)} placeholder="john@example.com" />
+                                <ErrorMessage message={errors.email} />
+                            </div>
+                            <div className="grid gap-2">
+                                <FormLabel>Date of Birth</FormLabel>
+                                <Input type="date" value={data.date_of_birth} onChange={e => setData("date_of_birth", e.target.value)} />
+                                <ErrorMessage message={errors.date_of_birth} />
+                            </div>
                         </div>
                         <div className="grid gap-2">
                             <FormLabel>Designation</FormLabel>

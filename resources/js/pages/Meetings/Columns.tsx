@@ -4,6 +4,8 @@ import { TableRowActions } from '@/components/table/TableRowActions';
 import { Meeting } from '@/types';
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
 import { formatDateTime } from '@/utils/date-format';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { MessageSquare } from 'lucide-react';
 
 const MEETING_STATUS_OPTIONS = [
     { value: 'scheduled', label: 'Scheduled', colorClass: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
@@ -11,7 +13,7 @@ const MEETING_STATUS_OPTIONS = [
     { value: 'cancelled', label: 'Cancelled', colorClass: 'bg-red-500/10 text-red-600 border-red-500/20' },
 ];
 
-const columns: Column<Meeting>[] = [
+const getColumns = (openModal: any): Column<Meeting>[] => [
     {
         header: 'Title',
         accessor: (item) => (
@@ -78,10 +80,20 @@ const columns: Column<Meeting>[] = [
                 item={item}
                 resource="meetings"
                 label="Meeting"
+                customActions={
+                    <DropdownMenuItem
+                        onSelect={() => openModal('CREATE_FOLLOW_UP', {
+                            customer_id: item.customer_id,
+                            requirement_id: item.requirement_id
+                        })}
+                    >
+                        <MessageSquare className="w-4 h-4 mr-2" /> Add Follow-up
+                    </DropdownMenuItem>
+                }
             />
         ),
         className: 'w-[7%]',
     },
 ];
 
-export { columns };
+export { getColumns };

@@ -8,6 +8,7 @@ use App\Repositories\ProductRepository;
 use App\Repositories\RequirementRepository;
 use App\Repositories\UnitRepository;
 use App\Repositories\UserRepository;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -26,19 +27,6 @@ class RequirementService
         return $this->requirements->paginateForIndex($filters);
     }
 
-    public function formOptions(): array
-    {
-        $userRepo = app(UserRepository::class);
-        $companyService = app(CompanyService::class);
-        return [
-            'customers' => $this->customers->forRequirementForm(),
-            'products'  => $this->products->forRequirementForm(),
-            'units'     => $this->units->all(),
-            'users'     => $userRepo->selectOptions(),
-            'companies' => $companyService->listAll(),
-
-        ];
-    }
 
     public function create(array $data): Requirement
     {
@@ -91,5 +79,47 @@ class RequirementService
     public function selectOptions(): Collection
     {
         return $this->requirements->selectOptions();
+    }
+
+    public function generatePdf(Requirement $requirement)
+    {
+        $requirement->load([
+            'customer.assignedUser',
+            'items.product.unit',
+            'accessoriesUnit',
+            'installationUnit',
+            'quotationRecipient.company',
+            'quotationSender'
+        ]);
+
+        $getImage = function ($path) {
+            if (!file_exists($path)) return "";
+            $data = file_get_contents($path);
+            $type = pathinfo($path, PATHINFO_EXTENSION);
+            return 'data:' . $type . ';base64,' . base64_encode($data);
+        };
+
+        $assignedUser = $requirement->customer->assignedUser;
+
+        $customerSignaturePath = null;
+        if ($assignedUser && $assignedUser->signature) {
+            $customerSignaturePath = storage_path('app/public/' . $assignedUser->signature);
+        }
+
+        $data = [
+            'header_logo_1' => $getImage(public_path('pdf-logo1.png')),
+            'header_logo_2' => $getImage(public_path('crystal-logo-png.png')),
+            'seal'    => $getImage(public_path('seal.png')),
+            'signature' => $getImage($customerSignaturePath),
+            'title' => 'Project Report',
+            'date' => date('d F Y'),
+            'requirement' => $requirement,
+        ];
+
+        ini_set('memory_limit', '256M');
+
+        return Pdf::loadView('pdf.my_report', $data)
+            ->setPaper('a4', 'portrait')
+            ->setOption(['isPhpEnabled' => true]);
     }
 }

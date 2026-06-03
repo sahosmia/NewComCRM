@@ -22,6 +22,7 @@ class Customer extends Model
         'type',
         'phones',
         'email',
+        'date_of_birth',
         'addresses',
         'assigned_to',
         'status',
@@ -35,6 +36,7 @@ class Customer extends Model
         'phones' => 'array',
         'addresses' => 'array',
         'type' => 'string',
+        'date_of_birth' => 'date',
     ];
 
     public function getActivitylogOptions(): LogOptions

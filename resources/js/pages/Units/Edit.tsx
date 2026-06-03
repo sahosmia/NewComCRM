@@ -2,7 +2,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Head } from '@inertiajs/react';
 import Heading from '@/components/admin/heading';
 import { Unit } from '@/types/unit';
-import UnitForm from './form';
+import UnitForm from './Form';
 
 interface Props {
     unit: Unit;

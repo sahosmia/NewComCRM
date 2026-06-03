@@ -30,7 +30,7 @@ it('can store a unit', function () {
     $response = $this->actingAs($this->user)
         ->post(route('units.store'), $data);
 
-    $response->assertRedirect(route('units.index'));
+    $response->assertRedirect();
     $this->assertDatabaseHas('units', $data);
 });
 

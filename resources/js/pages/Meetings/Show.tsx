@@ -4,12 +4,14 @@ import AppLayout from "@/layouts/app-layout";
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-    Calendar, MapPin, ClipboardList, Briefcase
+    Calendar, MapPin, ClipboardList, Briefcase, MessageSquare, Plus
 } from "lucide-react";
 import StatusBadge from "@/components/shared/StatusBadge";
 import { Meeting } from "@/types";
+import { useModal } from "@/contexts/ModalContext";
 
 export default function Show({ meeting }: { meeting: Meeting }) {
+    const { openModal } = useModal();
     const breadcrumbs = [
         { title: "Meetings", href: route('meetings.index') },
         { title: "Detail View", href: "#" }
@@ -44,6 +46,17 @@ export default function Show({ meeting }: { meeting: Meeting }) {
                     </div>
 
                     <div className="flex gap-2 shrink-0">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100"
+                            onClick={() => openModal('CREATE_FOLLOW_UP', {
+                                customer_id: meeting.customer_id,
+                                requirement_id: meeting.requirement_id
+                            })}
+                        >
+                            <Plus className="w-4 h-4 mr-2" /> Create Follow-up
+                        </Button>
                         <Button variant="outline" size="sm" asChild>
                             <Link href={route("meetings.index")}>
                                 Back

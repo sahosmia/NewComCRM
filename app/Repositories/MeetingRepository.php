@@ -33,7 +33,15 @@ class MeetingRepository
             ->when($params['start_date'] ?? null, fn ($query, $startDate) => $query->whereDate('scheduled_at', '>=', $startDate))
             ->when($params['end_date'] ?? null, fn ($query, $endDate) => $query->whereDate('scheduled_at', '<=', $endDate))
             ->when($params['requirement_id'] ?? null, fn ($query, $id) => $query->where('requirement_id', $id))
-             ->when($params['customer_id'] ?? null, fn ($query, $id) => $query->where('customer_id', $id))
+            ->when($params['customer_id'] ?? null, fn ($query, $id) => $query->where('customer_id', $id))
+            ->when($params['period'] ?? null, function ($query, $period) {
+                match ($period) {
+                    'today' => $query->whereDate('scheduled_at', today()),
+                    'upcoming' => $query->whereDate('scheduled_at', '>', today()),
+                    'overdue' => $query->whereDate('scheduled_at', '<', today())->where('status', 'scheduled'),
+                    default => null,
+                };
+            })
             ->when($params['sort'] ?? null, function ($query, $sort) use ($params) {
                 $allowedSorts = ['title', 'scheduled_at', 'meeting_type', 'status', 'created_at'];
                 if (in_array($sort, $allowedSorts)) {

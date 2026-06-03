@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import FollowUpForm from "./form";
+import FollowUpForm from "./Form";
 import { Head } from "@inertiajs/react";
 import { Company, CustomerType, FollowUp, Requirement, User } from "@/types";
 

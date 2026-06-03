@@ -3,29 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Services\SaleService;
+use App\Services\LookupService;
+use App\Services\ExportService;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
-use App\Exports\GeneralExport;
-use App\Repositories\CustomerRepository;
-use App\Repositories\UserRepository;
-use Maatwebsite\Excel\Facades\Excel;
 
 class SaleController extends Controller
 {
     public function __construct(
-        private SaleService $saleService
+        private SaleService $saleService,
+        private LookupService $lookupService,
+        private ExportService $exportService,
     ) {}
 
     public function index(Request $request)
     {
-        $userRepo = app(UserRepository::class);
-        $customerRepo = app(CustomerRepository::class);
-
         return Inertia::render('Sales/Index', [
             'sales' => $this->saleService->paginateIndex($request->all()),
             'filters' => [
-                'users' => $userRepo->selectOptions(),
-                'customers' => $customerRepo->selectOptions(),
+                'users' => $this->lookupService->getUsersForSelect(),
+                'customers' => $this->lookupService->getCustomersForSelect(),
             ]
         ]);
     }
@@ -48,35 +45,31 @@ class SaleController extends Controller
     {
         $sales = $this->saleService->getForExport($request->input('ids', []));
 
-        return Excel::download(new GeneralExport(
+        return $this->exportService->excel(
             $sales,
             ['Customer', 'Amount', 'Sale Date'],
-            function ($sale) {
-                return [
-                    $sale->customer ? $sale->customer->name : 'N/A',
-                    $sale->amount,
-                    $sale->sale_date->toDateTimeString(),
-                ];
-            }
-        ), 'sales.xlsx');
+            fn($sale) => [
+                $sale->customer ? $sale->customer->name : 'N/A',
+                $sale->amount,
+                $sale->sale_date->toDateTimeString(),
+            ],
+            'sales.xlsx'
+        );
     }
 
     public function print(Request $request)
     {
         $sales = $this->saleService->getForExport($request->input('ids', []));
 
-        $data = $sales->map(function($sale) {
-            return [
+        return $this->exportService->printView(
+            $sales,
+            ['Customer', 'Amount', 'Sale Date'],
+            fn($sale) => [
                 $sale->customer ? $sale->customer->name : 'N/A',
                 $sale->amount,
                 $sale->sale_date->toDateTimeString(),
-            ];
-        });
-
-        return view('print.general', [
-            'title' => 'Sale List',
-            'headings' => ['Customer', 'Amount', 'Sale Date'],
-            'data' => $data
-        ]);
+            ],
+            'Sale List'
+        );
     }
 }

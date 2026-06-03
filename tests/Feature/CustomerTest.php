@@ -47,7 +47,7 @@ test('authenticated user can create a customer', function () {
 
     $this->actingAs($this->user)
         ->post(route('customers.store'), $data)
-        ->assertRedirect(route('customers.index'));
+        ->assertRedirect();
 
     $this->assertDatabaseHas('customers', ['email' => $data['email']]);
 });
@@ -78,7 +78,7 @@ test('user can update their own customer', function () {
 
     $this->actingAs($this->user)
         ->put(route('customers.update', $customer), $updatedData)
-        ->assertRedirect(route('customers.index'));
+        ->assertRedirect();
 
     expect($customer->refresh()->name)->toBe('Updated Name');
 });

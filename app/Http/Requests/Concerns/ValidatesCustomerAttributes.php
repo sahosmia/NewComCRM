@@ -18,6 +18,7 @@ trait ValidatesCustomerAttributes
             'designation'   => $isPersonal ? 'nullable|string|max:255' : 'required|string|max:255',
             'company_id'    => $isPersonal ? 'nullable|exists:companies,id' : 'required|exists:companies,id',
             'email'         => ($isPersonal ? 'nullable' : 'required') . "|email|max:255|unique:customers,email,{$customerId}",
+            'date_of_birth' => 'nullable|date',
             'type'          => 'required|in:corporate,reseller,personal',
             'phones'        => 'required|array|min:1',
             'phones.*'      => ['required', 'string', 'regex:/^01[3-9]\d{8}$/',],

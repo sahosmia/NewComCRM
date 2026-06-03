@@ -3,20 +3,46 @@ import { FilterOption, FollowUp, PaginationType, SortOption } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
-import { columns } from './Columns';
+import { getColumns } from './Columns';
+import { useModal } from '@/contexts/ModalContext';
 
 interface Props {
     followUps: PaginationType<FollowUp>;
     stats: Record<string, number>;
+    customers: { id: number; name: string }[];
+    requirements: { id: number; title: string }[];
 }
 
-export default function FollowUpIndex({ followUps, stats }: Props) {
+export default function FollowUpIndex({ followUps, stats, customers, requirements }: Props) {
+    const { openModal } = useModal();
     const breadcrumbs = [
         { title: 'Dashboard', href: route('dashboard') },
         { title: 'Follow Ups', href: route('follow-ups.index') },
     ];
 
     const filters: FilterOption[] = [
+        {
+            name: 'customer_id',
+            label: 'Customer',
+            type: 'select',
+            options: customers.map(c => ({ label: c.name, value: c.id.toString() }))
+        },
+        {
+            name: 'requirement_id',
+            label: 'Requirement',
+            type: 'select',
+            options: requirements.map(r => ({ label: r.title, value: r.id.toString() }))
+        },
+        {
+            name: 'period',
+            label: 'Period',
+            type: 'select',
+            options: [
+                { label: 'Today', value: 'today' },
+                { label: 'Upcoming', value: 'upcoming' },
+                { label: 'Overdue', value: 'overdue' },
+            ]
+        },
         {
             name: 'status',
             label: 'Status',
@@ -61,7 +87,7 @@ export default function FollowUpIndex({ followUps, stats }: Props) {
 
                 <CommonTable
                     data={followUps}
-                    columns={columns}
+                    columns={getColumns(openModal)}
                     create_route="follow-ups.create"
                     routeName="follow-ups.index"
                     filters={filters}

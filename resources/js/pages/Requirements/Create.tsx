@@ -2,7 +2,7 @@ import AppLayout from "@/layouts/app-layout";
 import { Head } from "@inertiajs/react";
 import { CustomerType, Product, Requirement, User } from "@/types";
 import { Unit } from "@/types";
-import RequirementForm from "./form";
+import RequirementForm from "./Form";
 
 interface Props {
     customers: CustomerType[];

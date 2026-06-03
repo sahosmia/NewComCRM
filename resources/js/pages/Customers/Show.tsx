@@ -78,6 +78,14 @@ export default function Show({ customer }: ShowProps) {
                                 </div>
 
                                 <div className="flex items-start gap-3">
+                                    <Calendar className="w-4 h-4 mt-1 text-primary" />
+                                    <div>
+                                        <p className="text-sm font-medium">Date of Birth</p>
+                                        <p className="text-sm text-muted-foreground">{customer.date_of_birth ? new Date(customer.date_of_birth).toLocaleDateString() : 'N/A'}</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start gap-3">
                                     <Phone className="w-4 h-4 mt-1 text-primary" />
                                     <div>
                                         <p className="text-sm font-medium">Phone Numbers</p>

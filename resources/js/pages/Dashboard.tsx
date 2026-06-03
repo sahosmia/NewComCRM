@@ -2,10 +2,11 @@ import AppLayout from '@/layouts/app-layout';
 import { Head } from '@inertiajs/react';
 import type { BreadcrumbItem } from '@/types';
 import { dashboard } from '@/routes';
-import { Users, CheckCircle2, Video, ShoppingCart } from 'lucide-react';
+import { Users, CheckCircle2, Video, ShoppingCart, Cake } from 'lucide-react';
 import StatCard from '@/components/admin/dashboard/StatCard';
 import FollowUpList from '@/components/admin/dashboard/FollowUpList';
 import MeetingList from '@/components/admin/dashboard/UpcomingMeetings';
+import BirthdayList from '@/components/admin/dashboard/BirthdayList';
 import SalesChart from '@/components/admin/dashboard/ChartData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -38,6 +39,12 @@ interface DashboardProps {
         total_count: number;
         list: CustomerType[];
     };
+    birthdays: {
+        today: CustomerType[];
+        this_month: CustomerType[];
+        today_count: number;
+        month_count: number;
+    };
     requirements: {
         list: Requirement[];
     };
@@ -51,7 +58,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Dashboard({ meetings, followUps, sales, customers, requirements, chartData }: DashboardProps) {
+export default function Dashboard({ meetings, followUps, sales, customers, birthdays, requirements, chartData }: DashboardProps) {
     const { openModal } = useModal();
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('en-BD', {
@@ -131,28 +138,28 @@ export default function Dashboard({ meetings, followUps, sales, customers, requi
                         value={meetings.today_count}
                         icon="video"
                         color="blue"
-                        link="/meetings"
+                        link="/meetings?period=today"
                     />
                     <StatCard
                         title="Upcoming Meetings"
                         value={meetings.upcoming_count}
                         icon="calendar"
                         color="indigo"
-                        link="/meetings"
+                        link="/meetings?period=upcoming"
                     />
                     <StatCard
                         title="Today's Follow-ups"
                         value={followUps.today_count}
                         icon="clock"
                         color="yellow"
-                        link="/follow-ups"
+                        link="/follow-ups?period=today"
                     />
                     <StatCard
                         title="Upcoming Follow-ups"
                         value={followUps.upcoming_count}
                         icon="bell"
                         color="orange"
-                        link="/follow-ups"
+                        link="/follow-ups?period=upcoming"
                     />
                 </div>
 
@@ -225,13 +232,30 @@ export default function Dashboard({ meetings, followUps, sales, customers, requi
                             </CardContent>
                         </Card>
 
-                        <div className="rounded-xl border bg-primary/5 p-6 space-y-2 text-center">
-                            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                                <ShoppingCart className="h-5 w-5 text-primary" />
-                            </div>
-                            <h4 className="font-bold text-sm">System Insights</h4>
-                            <p className="text-xs text-muted-foreground">Keep an eye on upcoming follow-ups to maintain healthy pipeline velocity.</p>
-                        </div>
+                        {/* Birthday Section */}
+                        <Card className="bg-pink-50/20 border-pink-100 shadow-sm">
+                            <CardHeader className="py-3 border-b border-pink-100/50 flex flex-row items-center justify-between">
+                                <CardTitle className="text-sm font-bold uppercase tracking-wider text-pink-700 flex items-center gap-2">
+                                    <Cake className="h-4 w-4" /> Today's Birthdays
+                                </CardTitle>
+                                <Badge className="bg-pink-500 hover:bg-pink-600 border-none text-[10px]">{birthdays.today_count}</Badge>
+                            </CardHeader>
+                            <CardContent className="pt-4 pb-2">
+                                <BirthdayList customers={birthdays.today} />
+                            </CardContent>
+                        </Card>
+
+                        <Card className="bg-muted/10 border-dashed">
+                            <CardHeader className="py-3 border-b flex flex-row items-center justify-between">
+                                <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                                    <Cake className="h-4 w-4 opacity-70" /> This Month
+                                </CardTitle>
+                                <Badge variant="outline" className="text-[10px]">{birthdays.month_count}</Badge>
+                            </CardHeader>
+                            <CardContent className="pt-4 pb-2">
+                                <BirthdayList customers={birthdays.this_month} emptyMessage="No more birthdays this month." />
+                            </CardContent>
+                        </Card>
                     </div>
                 </div>
             </div>

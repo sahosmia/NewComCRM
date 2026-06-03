@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import MeetingForm from "./form";
+import MeetingForm from "./Form";
 import { Head } from "@inertiajs/react";
 import { Company, CustomerType, Requirement, User } from "@/types";
 

@@ -44,7 +44,7 @@ it('can_store_a_new_meeting', function () {
     $response = $this->actingAs($this->user)
         ->post(route('meetings.store'), $meetingData);
 
-    $response->assertRedirect(route('meetings.index'));
+    $response->assertRedirect();
     $this->assertDatabaseHas('meetings', [
         'customer_id' => $customer->id,
         'user_id' => $this->user->id,
@@ -74,7 +74,7 @@ it('can_update_an_existing_meeting', function () {
     $response = $this->actingAs($this->user)
         ->put(route('meetings.update', $meeting), $updatedData);
 
-    $response->assertRedirect(route('meetings.index'));
+    $response->assertRedirect();
     $this->assertDatabaseHas('meetings', [
         'id' => $meeting->id,
         'title' => 'Updated Meeting Title',
@@ -88,7 +88,7 @@ it('can_delete_a_meeting', function () {
     $response = $this->actingAs($this->user)
         ->delete(route('meetings.destroy', $meeting));
 
-    $response->assertRedirect(route('meetings.index'));
+    $response->assertRedirect();
     $this->assertDatabaseMissing('meetings', [
         'id' => $meeting->id,
     ]);

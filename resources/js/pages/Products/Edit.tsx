@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import ProductForm from "./form";
+import ProductForm from "./Form";
 import { Head } from "@inertiajs/react";
 import { Product, Unit } from "@/types";
 

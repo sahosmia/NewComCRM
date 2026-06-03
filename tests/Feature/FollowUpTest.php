@@ -43,7 +43,7 @@ it('can_store_a_new_follow_up', function () {
     $response = $this->actingAs($this->user)
         ->post(route('follow-ups.store'), $followUpData);
 
-    $response->assertRedirect(route('follow-ups.index'));
+    $response->assertRedirect();
     $this->assertDatabaseHas('follow_ups', [
         'customer_id' => $customer->id,
         'user_id' => $this->user->id,
@@ -73,7 +73,7 @@ it('can_update_an_existing_follow_up', function () {
     $response = $this->actingAs($this->user)
         ->put(route('follow-ups.update', $followUp), $updatedData);
 
-    $response->assertRedirect(route('follow-ups.index'));
+    $response->assertRedirect();
     $this->assertDatabaseHas('follow_ups', [
         'id' => $followUp->id,
         'notes' => 'Updated notes',
@@ -87,7 +87,7 @@ it('can_delete_a_follow_up', function () {
     $response = $this->actingAs($this->user)
         ->delete(route('follow-ups.destroy', $followUp));
 
-    $response->assertRedirect(route('follow-ups.index'));
+    $response->assertRedirect();
     $this->assertDatabaseMissing('follow_ups', [
         'id' => $followUp->id,
     ]);

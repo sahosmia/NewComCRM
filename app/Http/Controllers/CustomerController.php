@@ -7,17 +7,17 @@ use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
 use App\Models\User;
 use App\Services\CustomerService;
-use App\Services\CompanyService;
+use App\Services\LookupService;
+use App\Services\ExportService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Exports\GeneralExport;
-use Maatwebsite\Excel\Facades\Excel;
 
 class CustomerController extends Controller
 {
     public function __construct(
         private CustomerService $customerService,
-        private CompanyService $companyService,
+        private LookupService $lookupService,
+        private ExportService $exportService,
     ) {
     }
 
@@ -28,8 +28,8 @@ class CustomerController extends Controller
         $this->authorize('viewAny', Customer::class);
         return Inertia::render('Customers/Index', [
             'customers' => $this->customerService->paginateIndex($request->all()),
-            'users' => $this->customerService->usersForForm(),
-            'companies' => $this->companyService->listAll(),
+            'users' => $this->lookupService->getUsersForSelect(),
+            'companies' => $this->lookupService->getCompanies(),
         ]);
     }
 
@@ -37,8 +37,8 @@ class CustomerController extends Controller
     {
         $this->authorize('create', Customer::class);
         return Inertia::render('Customers/Create', [
-            'users' => $this->customerService->usersForForm(),
-            'companies' => $this->companyService->listAll(),
+            'users' => $this->lookupService->getUsersForSelect(),
+            'companies' => $this->lookupService->getCompanies(),
         ]);
     }
 
@@ -73,8 +73,8 @@ class CustomerController extends Controller
         $this->authorize('update', $customer);
         return Inertia::render('Customers/Edit', [
             'customer' => $customer,
-            'users' => $this->customerService->usersForForm(),
-            'companies' => $this->companyService->listAll(),
+            'users' => $this->lookupService->getUsersForSelect(),
+            'companies' => $this->lookupService->getCompanies(),
         ]);
     }
 
@@ -119,30 +119,10 @@ class CustomerController extends Controller
     {
         $customers = $this->customerService->getForExport($request->input('ids', []));
 
-        return Excel::download(new GeneralExport(
+        return $this->exportService->excel(
             $customers,
             ['Name', 'Email', 'Phone', 'Company', 'Designation', 'Type', 'Status', 'Assigned To'],
-            function ($customer) {
-                return [
-                    $customer->name,
-                    $customer->email,
-                    $customer->phones ? implode(', ', $customer->phones) : '',
-                    $customer->company?->name,
-                    $customer->designation,
-                    $customer->type,
-                    $customer->status,
-                    $customer->assignedUser ? $customer->assignedUser->name : '',
-                ];
-            }
-        ), 'customers.xlsx');
-    }
-
-    public function print(Request $request)
-    {
-        $customers = $this->customerService->getForExport($request->input('ids', []));
-
-        $data = $customers->map(function ($customer) {
-            return [
+            fn($customer) => [
                 $customer->name,
                 $customer->email,
                 $customer->phones ? implode(', ', $customer->phones) : '',
@@ -151,13 +131,29 @@ class CustomerController extends Controller
                 $customer->type,
                 $customer->status,
                 $customer->assignedUser ? $customer->assignedUser->name : '',
-            ];
-        });
+            ],
+            'customers.xlsx'
+        );
+    }
 
-        return view('print.general', [
-            'title' => 'Customer List',
-            'headings' => ['Name', 'Email', 'Phone', 'Company', 'Designation', 'Type', 'Status', 'Assigned To'],
-            'data' => $data
-        ]);
+    public function print(Request $request)
+    {
+        $customers = $this->customerService->getForExport($request->input('ids', []));
+
+        return $this->exportService->printView(
+            $customers,
+            ['Name', 'Email', 'Phone', 'Company', 'Designation', 'Type', 'Status', 'Assigned To'],
+            fn($customer) => [
+                $customer->name,
+                $customer->email,
+                $customer->phones ? implode(', ', $customer->phones) : '',
+                $customer->company?->name,
+                $customer->designation,
+                $customer->type,
+                $customer->status,
+                $customer->assignedUser ? $customer->assignedUser->name : '',
+            ],
+            'Customer List'
+        );
     }
 }

@@ -1,7 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
 import Heading from '@/components/admin/heading';
 import { Head } from '@inertiajs/react';
-import CompanyForm from './form';
+import CompanyForm from './Form';
 import { Company } from '@/types';
 
 interface Props {
