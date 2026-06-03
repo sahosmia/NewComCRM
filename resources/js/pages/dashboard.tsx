@@ -131,28 +131,28 @@ export default function Dashboard({ meetings, followUps, sales, customers, requi
                         value={meetings.today_count}
                         icon="video"
                         color="blue"
-                        link="/meetings"
+                        link="/meetings?period=today"
                     />
                     <StatCard
                         title="Upcoming Meetings"
                         value={meetings.upcoming_count}
                         icon="calendar"
                         color="indigo"
-                        link="/meetings"
+                        link="/meetings?period=upcoming"
                     />
                     <StatCard
                         title="Today's Follow-ups"
                         value={followUps.today_count}
                         icon="clock"
                         color="yellow"
-                        link="/follow-ups"
+                        link="/follow-ups?period=today"
                     />
                     <StatCard
                         title="Upcoming Follow-ups"
                         value={followUps.upcoming_count}
                         icon="bell"
                         color="orange"
-                        link="/follow-ups"
+                        link="/follow-ups?period=upcoming"
                     />
                 </div>
 

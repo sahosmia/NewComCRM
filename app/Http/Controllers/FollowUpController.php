@@ -33,6 +33,8 @@ class FollowUpController extends Controller
         return Inertia::render('FollowUps/Index', [
             'followUps' => $this->followUpService->paginateIndex($request->all(), $user),
             'stats' => $this->followUpService->stats(),
+            'customers' => $this->followUpService->customersForForm(),
+            'requirements' => $this->followUpService->requirementsForForm(),
         ]);
     }
 
@@ -95,7 +97,7 @@ class FollowUpController extends Controller
     public function updateStatus(Request $request, FollowUp $followUp)
     {
         $data = $request->validate([
-            'status' => 'required|in:pending,done'
+            'status' => 'required|in:price_shared,negotiation,purchase,lost,pending,follow_up'
         ]);
 
         $followUp->update(['status' => $data['status']]);

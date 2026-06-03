@@ -1,9 +1,11 @@
 import type { Column } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { TableRowActions } from '@/components/table/TableRowActions';
-import { Meeting } from '@/types';
+import { CustomerType, Meeting, Requirement } from '@/types';
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
 import { formatDateTime } from '@/utils/date-format';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { Clock } from 'lucide-react';
 
 const MEETING_STATUS_OPTIONS = [
     { value: 'scheduled', label: 'Scheduled', colorClass: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
@@ -11,7 +13,11 @@ const MEETING_STATUS_OPTIONS = [
     { value: 'cancelled', label: 'Cancelled', colorClass: 'bg-red-500/10 text-red-600 border-red-500/20' },
 ];
 
-const columns: Column<Meeting>[] = [
+const getColumns = (
+    openModal: (type: 'CREATE_UNIT' | 'CREATE_COMPANY' | 'CREATE_CUSTOMER' | 'CREATE_PRODUCT' | 'CREATE_MEETING' | 'CREATE_FOLLOW_UP', props?: Record<string, unknown>) => void,
+    customers: CustomerType[],
+    requirements: Requirement[]
+): Column<Meeting>[] => [
     {
         header: 'Title',
         accessor: (item) => (
@@ -78,10 +84,22 @@ const columns: Column<Meeting>[] = [
                 item={item}
                 resource="meetings"
                 label="Meeting"
+                customActions={
+                    <DropdownMenuItem
+                        onClick={() => openModal('CREATE_FOLLOW_UP', {
+                            customer_id: item.customer_id,
+                            requirement_id: item.requirement_id,
+                            customers,
+                            requirements
+                        })}
+                    >
+                        <Clock className="w-4 h-4 mr-2" /> Add Follow-up
+                    </DropdownMenuItem>
+                }
             />
         ),
         className: 'w-[7%]',
     },
 ];
 
-export { columns };
+export { getColumns };

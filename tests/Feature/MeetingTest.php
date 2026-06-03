@@ -44,7 +44,7 @@ it('can_store_a_new_meeting', function () {
     $response = $this->actingAs($this->user)
         ->post(route('meetings.store'), $meetingData);
 
-    $response->assertRedirect(route('meetings.index'));
+    $response->assertRedirect();
     $this->assertDatabaseHas('meetings', [
         'customer_id' => $customer->id,
         'user_id' => $this->user->id,

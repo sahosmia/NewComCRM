@@ -1,21 +1,47 @@
 import AppLayout from '@/layouts/app-layout';
-import { FilterOption, Meeting, PaginationType, SortOption } from '@/types';
+import { CustomerType, FilterOption, Meeting, PaginationType, Requirement, SortOption } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
-import { columns } from './Columns';
+import { getColumns } from './Columns';
+import { useModal } from '@/contexts/ModalContext';
 
 interface Props {
     meetings: PaginationType<Meeting>;
+    customers: CustomerType[];
+    requirements: Requirement[];
 }
 
-export default function MeetingIndex({ meetings }: Props) {
+export default function MeetingIndex({ meetings, customers, requirements }: Props) {
+    const { openModal } = useModal();
     const breadcrumbs = [
         { title: 'Dashboard', href: route('dashboard') },
         { title: 'Meetings', href: route('meetings.index') },
     ];
 
     const filters: FilterOption[] = [
+        {
+            name: 'customer_id',
+            label: 'Customer',
+            type: 'searchSelect',
+            options: (customers ?? []).map(c => ({ label: c.name, value: c.id }))
+        },
+        {
+            name: 'requirement_id',
+            label: 'Requirement',
+            type: 'searchSelect',
+            options: (requirements ?? []).map(r => ({ label: r.title || `Req #${r.id}`, value: r.id }))
+        },
+        {
+            name: 'period',
+            label: 'Period',
+            type: 'select',
+            options: [
+                { label: 'Today', value: 'today' },
+                { label: 'Upcoming', value: 'upcoming' },
+                { label: 'Overdue', value: 'overdue' },
+            ]
+        },
         {
             name: 'meeting_type',
             label: 'Meeting Type',
@@ -61,7 +87,7 @@ export default function MeetingIndex({ meetings }: Props) {
 
                 <CommonTable
                     data={meetings}
-                    columns={columns}
+                    columns={getColumns(openModal, customers, requirements)}
                     create_route="meetings.create"
                     routeName="meetings.index"
                     filters={filters}

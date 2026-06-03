@@ -7,9 +7,13 @@ import {
     Calendar, MapPin, ClipboardList, Briefcase
 } from "lucide-react";
 import StatusBadge from "@/components/shared/StatusBadge";
-import { Meeting } from "@/types";
+import { CustomerType, Meeting, Requirement } from "@/types";
+import { useModal } from "@/contexts/ModalContext";
+import { usePage } from "@inertiajs/react";
 
 export default function Show({ meeting }: { meeting: Meeting }) {
+    const { openModal } = useModal();
+    const { customers, requirements } = usePage<{ customers: CustomerType[], requirements: Requirement[] }>().props;
     const breadcrumbs = [
         { title: "Meetings", href: route('meetings.index') },
         { title: "Detail View", href: "#" }
@@ -53,6 +57,18 @@ export default function Show({ meeting }: { meeting: Meeting }) {
                             <Link href={route("meetings.edit", meeting.id)}>
                                 Edit
                             </Link>
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={() => openModal('CREATE_FOLLOW_UP', {
+                                customer_id: meeting.customer_id,
+                                requirement_id: meeting.requirement_id,
+                                customers,
+                                requirements
+                            })}
+                        >
+                            Create Follow-up
                         </Button>
                     </div>
                 </div>

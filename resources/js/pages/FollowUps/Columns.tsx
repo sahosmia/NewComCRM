@@ -3,15 +3,25 @@ import { Badge } from '@/components/ui/badge';
 import { TableRowActions } from '@/components/table/TableRowActions';
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
 import { formatDate } from '@/utils/date-format';
-import { FollowUp } from '@/types';
+import { CustomerType, FollowUp, Requirement } from '@/types';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { Video } from 'lucide-react';
 
 
 const FOLLOW_UP_OPTIONS = [
     { value: 'pending', label: 'Pending', colorClass: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20' },
-    { value: 'done', label: 'Done', colorClass: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' },
+    { value: 'price_shared', label: 'Price Shared', colorClass: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
+    { value: 'negotiation', label: 'Negotiation', colorClass: 'bg-purple-500/10 text-purple-600 border-purple-500/20' },
+    { value: 'purchase', label: 'Purchase', colorClass: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' },
+    { value: 'lost', label: 'Lost', colorClass: 'bg-red-500/10 text-red-600 border-red-500/20' },
+    { value: 'follow_up', label: 'Follow Up', colorClass: 'bg-indigo-500/10 text-indigo-600 border-indigo-500/20' },
 ];
 
-const columns: Column<FollowUp>[] = [
+const getColumns = (
+    openModal: (type: 'CREATE_UNIT' | 'CREATE_COMPANY' | 'CREATE_CUSTOMER' | 'CREATE_PRODUCT' | 'CREATE_MEETING' | 'CREATE_FOLLOW_UP', props?: Record<string, unknown>) => void,
+    customers: CustomerType[],
+    requirements: Requirement[]
+): Column<FollowUp>[] => [
     {
         header: 'Customer',
         accessor: (item) => (
@@ -70,10 +80,22 @@ const columns: Column<FollowUp>[] = [
                 item={item}
                 resource="follow-ups"
                 label="Follow Up"
+                customActions={
+                    <DropdownMenuItem
+                        onClick={() => openModal('CREATE_MEETING', {
+                            customer_id: item.customer_id,
+                            requirement_id: item.requirement_id,
+                            customers,
+                            requirements
+                        })}
+                    >
+                        <Video className="w-4 h-4 mr-2" /> Add Meeting
+                    </DropdownMenuItem>
+                }
             />
         ),
         className: 'w-[7%]',
     },
 ];
 
-export { columns };
+export { getColumns };

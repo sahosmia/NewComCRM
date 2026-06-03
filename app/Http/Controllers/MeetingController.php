@@ -29,6 +29,8 @@ class MeetingController extends Controller
     {
         return Inertia::render('Meetings/Index', [
             'meetings' => $this->meetingService->paginateIndex($request->all()),
+            'customers' => $this->meetingService->customersForForm(),
+            'requirements' => $this->meetingService->requirementsForForm(),
         ]);
     }
 
@@ -75,6 +77,8 @@ class MeetingController extends Controller
     {
         return Inertia::render('Meetings/Show', [
             'meeting' => $meeting->load(['customer.company', 'user', 'requirement.items.product.unit']),
+            'customers' => $this->meetingService->customersForForm(),
+            'requirements' => $this->meetingService->requirementsForForm(),
         ]);
     }
 
@@ -128,7 +132,12 @@ class MeetingController extends Controller
             'status' => 'required|in:scheduled,completed,cancelled'
         ]);
 
-        $meeting->update(['status' => $data['status']]);
+        $updateData = ['status' => $data['status']];
+        if ($data['status'] === 'completed') {
+            $updateData['completed_at'] = now();
+        }
+
+        $meeting->update($updateData);
 
         return back()->with('success', 'Status updated successfully');
     }

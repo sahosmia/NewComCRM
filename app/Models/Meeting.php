@@ -23,11 +23,14 @@ class Meeting extends Model
         'location',
         'agenda',
         'notes',
-        'status'
+        'status',
+        'priority',
+        'completed_at',
     ];
 
     protected $casts = [
         'scheduled_at' => 'datetime',
+        'completed_at' => 'datetime',
     ];
 
     const TYPES = [
@@ -40,6 +43,12 @@ class Meeting extends Model
         'scheduled' => 'Scheduled',
         'completed' => 'Completed',
         'cancelled' => 'Cancelled'
+    ];
+
+    const PRIORITIES = [
+        'high' => 'High',
+        'medium' => 'Medium',
+        'low' => 'Low'
     ];
 
     // Relationships
@@ -70,8 +79,14 @@ class Meeting extends Model
 
     public function scopeUpcoming($query)
     {
-        return $query->where('scheduled_at', '>', now())
-            ->where('status', 'scheduled');
+        return $query->whereDate('scheduled_at', '>', today())
+            ->whereNull('completed_at');
+    }
+
+    public function scopeOverdue($query)
+    {
+        return $query->whereDate('scheduled_at', '<', today())
+            ->whereNull('completed_at');
     }
 
     public function scopeByUser($query, $userId)
