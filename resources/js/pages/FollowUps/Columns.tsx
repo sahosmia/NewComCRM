@@ -4,6 +4,7 @@ import { TableRowActions } from '@/components/table/TableRowActions';
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
 import { formatDate } from '@/utils/date-format';
 import { CustomerType, FollowUp, Requirement } from '@/types';
+import { SelectOption } from '@/types/lookup';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Video } from 'lucide-react';
 

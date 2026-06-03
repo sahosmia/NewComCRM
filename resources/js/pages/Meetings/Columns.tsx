@@ -2,6 +2,7 @@ import type { Column } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { TableRowActions } from '@/components/table/TableRowActions';
 import { CustomerType, Meeting, Requirement } from '@/types';
+import { SelectOption } from '@/types/lookup';
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
 import { formatDateTime } from '@/utils/date-format';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';

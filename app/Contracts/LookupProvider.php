@@ -8,7 +8,7 @@ interface LookupProvider
 {
     /**
      * @param array $params
-     * @return Collection<\App\DTOs\LookupOption>
+     * @return Collection<array{value: string|int, label: string, meta?: array}>
      */
     public function handle(array $params = []): Collection;
 

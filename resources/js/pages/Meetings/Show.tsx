@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import StatusBadge from "@/components/shared/StatusBadge";
 import { CustomerType, Meeting, Requirement } from "@/types";
+import { SelectOption } from "@/types/lookup";
 import { useModal } from "@/contexts/ModalContext";
 import { usePage } from "@inertiajs/react";
 

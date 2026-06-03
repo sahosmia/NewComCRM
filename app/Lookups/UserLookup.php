@@ -3,7 +3,6 @@
 namespace App\Lookups;
 
 use App\Contracts\LookupProvider;
-use App\DTOs\LookupOption;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Collection;
 
@@ -16,10 +15,10 @@ class UserLookup implements LookupProvider
     public function handle(array $params = []): Collection
     {
         return $this->repository->selectOptions()
-            ->map(fn($user) => new LookupOption(
-                $user->id,
-                $user->name
-            ));
+            ->map(fn($user) => [
+                'value' => $user->id,
+                'label' => $user->name,
+            ]);
     }
 
     public function key(): string

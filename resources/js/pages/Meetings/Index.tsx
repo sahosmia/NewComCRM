@@ -1,5 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { CustomerType, FilterOption, Meeting, PaginationType, Requirement, SortOption } from '@/types';
+import { SelectOption } from '@/types/lookup';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
