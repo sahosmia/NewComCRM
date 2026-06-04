@@ -90,6 +90,7 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                                 placeholder="Select company"
                                 searchPlaceholder="Search company..."
                                 required={data.type !== "personal"}
+                                error={errors.company_id}
                                 onSelect={(id) => {
                                     setData("company_id", id);
                                     if (id) {
@@ -122,8 +123,6 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                                     </Button>
                                 }
                             />
-
-                            <ErrorMessage message={errors.company_id} />
                         </div>
 
                         <div className="grid gap-2">
@@ -172,25 +171,27 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                     <div className="grid gap-4">
                         <div className="grid sm:grid-cols-2 gap-4">
                             <div className="grid gap-2">
-                                <FormLabel>Customer Type</FormLabel>
+                                <FormLabel required>Customer Type</FormLabel>
                                 <Select value={data.type} onValueChange={val => setData("type", val as any)}>
-                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <SelectTrigger className={errors.type ? "border-destructive" : ""}><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="corporate">Corporate</SelectItem>
                                         <SelectItem value="reseller">Reseller</SelectItem>
                                         <SelectItem value="personal">Personal</SelectItem>
                                     </SelectContent>
                                 </Select>
+                                <ErrorMessage message={errors.type} />
                             </div>
                             <div className="grid gap-2">
-                                <FormLabel>Status</FormLabel>
+                                <FormLabel required>Status</FormLabel>
                                 <Select value={data.status} onValueChange={val => setData("status", val as any)}>
-                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <SelectTrigger className={errors.status ? "border-destructive" : ""}><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="active">Active</SelectItem>
                                         <SelectItem value="inactive">Inactive</SelectItem>
                                     </SelectContent>
                                 </Select>
+                                <ErrorMessage message={errors.status} />
                             </div>
                         </div>
 
@@ -224,18 +225,21 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                         <div className="grid gap-2">
                             <FormLabel>Addresses</FormLabel>
                             {data.addresses.map((addr, i) => (
-                                <div key={`addr-${i}`} className="flex gap-2">
-                                    <Textarea
-                                        value={addr}
-                                        onChange={e => updateListItem("addresses", i, e.target.value)}
-                                        placeholder="Full address details..."
-                                        className="min-h-20"
-                                    />
-                                    {data.addresses.length > 1 && (
-                                        <Button type="button" variant="ghost" size="icon" onClick={() => removeListItem("addresses", i)} className="text-muted-foreground hover:text-destructive">
-                                            <X className="w-4 h-4" />
-                                        </Button>
-                                    )}
+                                <div key={`addr-${i}`} className="space-y-1">
+                                    <div className="flex gap-2">
+                                        <Textarea
+                                            value={addr}
+                                            onChange={e => updateListItem("addresses", i, e.target.value)}
+                                            placeholder="Full address details..."
+                                            className="min-h-20"
+                                        />
+                                        {data.addresses.length > 1 && (
+                                            <Button type="button" variant="ghost" size="icon" onClick={() => removeListItem("addresses", i)} className="text-muted-foreground hover:text-destructive">
+                                                <X className="w-4 h-4" />
+                                            </Button>
+                                        )}
+                                    </div>
+                                    <ErrorMessage message={errors[`addresses.${i}` as keyof typeof errors]} />
                                 </div>
                             ))}
                             <Button type="button" variant="outline" size="sm" onClick={() => addListItem("addresses")} className="w-full border-dashed">
@@ -246,6 +250,7 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                         <div className="grid gap-2">
                             <FormLabel>Internal Remarks</FormLabel>
                             <Textarea value={data.remarks} onChange={e => setData("remarks", e.target.value)} placeholder="Any specific notes or preferences..." className="min-h-25" />
+                            <ErrorMessage message={errors.remarks} />
                         </div>
                         <div className="grid gap-2">
                             <FormLabel>Date of Birth</FormLabel>

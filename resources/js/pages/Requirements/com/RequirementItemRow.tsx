@@ -58,39 +58,38 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
                     {/* Product Selection */}
                     <div className="col-span-1 md:col-span-5 lg:col-span-4 space-y-2">
-                        <div className={productIdError ? "[&>button]:border-destructive [&>button]:focus:ring-destructive/20" : ""}>
-                            <GenericCombobox
-                                label="Product Name"
-                                items={products.map(p => ({ id: p.id, name: p.name }))}
-                                selectedId={item.product_id}
-                                onSelect={(id) => onItemChange(index, "product_id", id)}
-                                placeholder="Select a product..."
-                                searchPlaceholder="Search product..."
-                                 renderAction={
-                                    <Button
-                                        type="button"
-                                        variant="ghost"
-                                        size="icon"
-                                        className="h-6 w-6"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            openModal('CREATE_PRODUCT', {
-                                                units: units,
-                                                onSuccess: (id: number) => onItemChange(index, "product_id", id)
-                                            });
-                                        }}
-                                    >
-                                        <Plus className="h-4 w-4" />
-                                    </Button>
-                                }
-                            />
-                        </div>
-                        <ErrorMessage message={productIdError} />
+                        <GenericCombobox
+                            required
+                            label="Product Name"
+                            items={products.map(p => ({ id: p.id, name: p.name }))}
+                            selectedId={item.product_id}
+                            onSelect={(id) => onItemChange(index, "product_id", id)}
+                            placeholder="Select a product..."
+                            searchPlaceholder="Search product..."
+                            error={productIdError}
+                            renderAction={
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        openModal('CREATE_PRODUCT', {
+                                            units: units,
+                                            onSuccess: (id: number) => onItemChange(index, "product_id", id)
+                                        });
+                                    }}
+                                >
+                                    <Plus className="h-4 w-4" />
+                                </Button>
+                            }
+                        />
                     </div>
 
                     {/* Quantity */}
                     <div className="col-span-1 md:col-span-2 lg:col-span-2 space-y-2">
-                        <FormLabel>QTY</FormLabel>
+                        <FormLabel required>QTY</FormLabel>
                         <Input
                             type="number"
                             min="1"
@@ -107,7 +106,7 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
 
                     {/* Unit Price Input */}
                     <div className="col-span-1 md:col-span-3 lg:col-span-3 space-y-2">
-                        <FormLabel>Unit Price</FormLabel>
+                        <FormLabel required>Unit Price</FormLabel>
                         <div className="relative">
                             <Input
                                 type="number"

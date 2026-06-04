@@ -79,32 +79,34 @@ export default function CreateCustomerModal({ isOpen, onClose, onSuccess, compan
                 <form onSubmit={handleSubmit} className="space-y-6 py-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <FormLabel>Full Name</FormLabel>
+                            <FormLabel required>Full Name</FormLabel>
                             <Input value={data.name} onChange={e => setData("name", e.target.value)} placeholder="John Doe" />
                             <ErrorMessage message={errors.name} />
                         </div>
                         <div className="space-y-2">
                             <GenericCombobox
+                                required={data.type !== 'personal'}
                                 label="Company"
                                 items={companies}
                                 selectedId={data.company_id}
                                 onSelect={(id) => setData("company_id", id as number)}
                                 placeholder="Select company"
+                                error={errors.company_id}
                             />
-                            <ErrorMessage message={errors.company_id} />
                         </div>
                         <div className="space-y-2">
-                            <FormLabel>Email</FormLabel>
+                            <FormLabel required={data.type !== 'personal'}>Email</FormLabel>
                             <Input type="email" value={data.email} onChange={e => setData("email", e.target.value)} placeholder="john@example.com" />
                             <ErrorMessage message={errors.email} />
                         </div>
                         <div className="space-y-2">
-                            <FormLabel>Designation</FormLabel>
+                            <FormLabel required={data.type !== 'personal'}>Designation</FormLabel>
                             <Input value={data.designation} onChange={e => setData("designation", e.target.value)} placeholder="Manager" />
+                            <ErrorMessage message={errors.designation} />
                         </div>
 
                         <div className="space-y-2">
-                            <FormLabel>Type</FormLabel>
+                            <FormLabel required>Type</FormLabel>
                             <Select value={data.type} onValueChange={val => setData("type", val as any)}>
                                 <SelectTrigger><SelectValue /></SelectTrigger>
                                 <SelectContent>
@@ -113,10 +115,11 @@ export default function CreateCustomerModal({ isOpen, onClose, onSuccess, compan
                                     <SelectItem value="personal">Personal</SelectItem>
                                 </SelectContent>
                             </Select>
+                            <ErrorMessage message={errors.type} />
                         </div>
 
                         <div className="space-y-2">
-                            <FormLabel>Assigned Representative</FormLabel>
+                            <FormLabel required>Assigned Representative</FormLabel>
                             <Select value={String(data.assigned_to)} onValueChange={val => setData("assigned_to", parseInt(val))}>
                                 <SelectTrigger><SelectValue placeholder="Select staff" /></SelectTrigger>
                                 <SelectContent>
@@ -128,13 +131,16 @@ export default function CreateCustomerModal({ isOpen, onClose, onSuccess, compan
                     </div>
 
                     <div className="space-y-3">
-                        <FormLabel>Phone Numbers</FormLabel>
+                        <FormLabel required>Phone Numbers</FormLabel>
                         {data.phones.map((phone, i) => (
-                            <div key={i} className="flex gap-2">
-                                <Input value={phone} onChange={e => updateListItem("phones", i, e.target.value)} placeholder="017XXXXXXXX" />
-                                {data.phones.length > 1 && (
-                                    <Button type="button" variant="ghost" size="icon" onClick={() => removeListItem("phones", i)}><X className="w-4 h-4" /></Button>
-                                )}
+                            <div key={i} className="space-y-1">
+                                <div className="flex gap-2">
+                                    <Input value={phone} onChange={e => updateListItem("phones", i, e.target.value)} placeholder="017XXXXXXXX" />
+                                    {data.phones.length > 1 && (
+                                        <Button type="button" variant="ghost" size="icon" onClick={() => removeListItem("phones", i)}><X className="w-4 h-4" /></Button>
+                                    )}
+                                </div>
+                                <ErrorMessage message={errors[`phones.${i}` as keyof typeof errors]} />
                             </div>
                         ))}
                         <Button type="button" variant="outline" size="sm" onClick={() => addListItem("phones")} className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Phone</Button>
@@ -143,14 +149,23 @@ export default function CreateCustomerModal({ isOpen, onClose, onSuccess, compan
                     <div className="space-y-2">
                         <FormLabel>Addresses</FormLabel>
                         {data.addresses.map((addr, i) => (
-                            <div key={i} className="flex gap-2">
-                                <Textarea value={addr} onChange={e => updateListItem("addresses", i, e.target.value)} placeholder="Address..." className="min-h-16" />
-                                {data.addresses.length > 1 && (
-                                    <Button type="button" variant="ghost" size="icon" onClick={() => removeListItem("addresses", i)}><X className="w-4 h-4" /></Button>
-                                )}
+                            <div key={i} className="space-y-1">
+                                <div className="flex gap-2">
+                                    <Textarea value={addr} onChange={e => updateListItem("addresses", i, e.target.value)} placeholder="Address..." className="min-h-16" />
+                                    {data.addresses.length > 1 && (
+                                        <Button type="button" variant="ghost" size="icon" onClick={() => removeListItem("addresses", i)}><X className="w-4 h-4" /></Button>
+                                    )}
+                                </div>
+                                <ErrorMessage message={errors[`addresses.${i}` as keyof typeof errors]} />
                             </div>
                         ))}
                         <Button type="button" variant="outline" size="sm" onClick={() => addListItem("addresses")} className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Address</Button>
+                    </div>
+
+                    <div className="space-y-2">
+                        <FormLabel>Internal Remarks</FormLabel>
+                        <Textarea value={data.remarks} onChange={e => setData("remarks", e.target.value)} placeholder="Any specific notes..." className="min-h-16" />
+                        <ErrorMessage message={errors.remarks} />
                     </div>
 
                     <DialogFooter>

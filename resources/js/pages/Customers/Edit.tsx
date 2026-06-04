@@ -11,6 +11,7 @@ interface Props {
 }
 
 export default function Edit({ customer, users, companies }: Props) {
+console.log(customer);
 
     const breadcrumbs = [
         { title: "Customers", href: route("customers.index") },

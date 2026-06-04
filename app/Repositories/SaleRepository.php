@@ -10,7 +10,7 @@ class SaleRepository
 {
     public function paginateForIndex(array $params): LengthAwarePaginator
     {
-        $perPage = $params['per_page'] ?? 10;
+        $perPage = $params['per_page'] ?? setting('paginated_quantity', 10);
         $search = $params['search'] ?? null;
         $customerId = $params['customer_id'] ?? null;
         $userId = $params['user_id'] ?? null;
@@ -20,7 +20,7 @@ class SaleRepository
         $direction = $params['direction'] ?? 'desc';
 
         return Sale::query()
-            ->with(['customer.assignedUser', 'requirement.items.product'])
+            ->with(['customer.assignedUser', 'customer.company', 'requirement.items.product'])
             ->when($search, function ($query, $search) {
                 $query->whereHas('requirement', function ($q) use ($search) {
                     $q->where('title', 'like', "%{$search}%");
@@ -51,7 +51,7 @@ class SaleRepository
     public function getForExport(array $ids): Collection
     {
         return Sale::query()
-            ->with(['customer.assignedUser', 'requirement.items.product'])
+            ->with(['customer.assignedUser', 'customer.company', 'requirement.items.product'])
             ->when(!empty($ids), fn($q) => $q->whereIn('id', $ids))
             ->get();
     }

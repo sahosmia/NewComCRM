@@ -8,13 +8,10 @@ use App\Models\Requirement;
 use App\Services\RequirementService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Services\LookupService;
 use App\Services\ExportService;
 
-use App\Exports\GeneralExport;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Storage;
+
 
 
 
@@ -91,7 +88,7 @@ class RequirementController extends Controller
     public function edit(Requirement $requirement)
     {
            return Inertia::render('Requirements/Edit', [
-            'requirement' => $requirement->load(['items', 'accessoriesUnit', 'installationUnit']),
+            'requirement' => $requirement->load(['items', 'accessories.unit', 'installations.unit']),
             'customers' => $this->lookupService->getCustomersForRequirementForm(),
             'products'  => $this->lookupService->getProductsForSelect(),
             'units'     => $this->lookupService->getUnits(),

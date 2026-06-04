@@ -14,20 +14,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Loader2 } from 'lucide-react';
 import ErrorMessage from '@/components/admin/form/ErrorMessage';
 import { GenericCombobox } from '@/components/admin/form/GenericCombobox';
+import FormLabel from '@/components/admin/form/FormLabel';
 import { SharedData, FollowUp } from '@/types';
 import { CreateFollowUpModalProps } from '@/types/modals';
 
-export default function CreateFollowUpModal({ 
-    isOpen, 
-    onClose, 
-    onSuccess, 
-    customer_id, 
+export default function CreateFollowUpModal({
+    isOpen,
+    onClose,
+    onSuccess,
+    customer_id,
     requirement_id,
     customers = [],
-    requirements = [] 
+    requirements = []
 }: CreateFollowUpModalProps) {
     const { props: sharedProps } = usePage<SharedData>();
-    
+
     const availableCustomers = customers.length > 0 ? customers : (sharedProps.customers || []);
     const availableRequirements = requirements.length > 0 ? requirements : (sharedProps.requirements || []);
 
@@ -74,14 +75,15 @@ export default function CreateFollowUpModal({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1">
                             <GenericCombobox
+                                required
                                 label="Customer"
                                 items={availableCustomers.map(c => ({ id: c.id, name: c.full_name_with_company || c.name }))}
                                 selectedId={data.customer_id}
                                 onSelect={(id) => setData("customer_id", id as number)}
                                 placeholder="Select Customer"
                                 allowManualInput={false}
+                                error={errors.customer_id}
                             />
-                            <ErrorMessage message={errors.customer_id} />
                         </div>
                         <div className="space-y-1">
                             <GenericCombobox
@@ -91,14 +93,14 @@ export default function CreateFollowUpModal({
                                 onSelect={(id) => setData("requirement_id", id as number)}
                                 placeholder="Select Requirement"
                                 allowManualInput={false}
+                                error={errors.requirement_id}
                             />
-                            <ErrorMessage message={errors.requirement_id} />
                         </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Follow Up Date</label>
+                            <FormLabel required>Follow Up Date</FormLabel>
                             <Input
                                 type="datetime-local"
                                 value={data.follow_up_date}
@@ -107,7 +109,7 @@ export default function CreateFollowUpModal({
                             <ErrorMessage message={errors.follow_up_date} />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Priority</label>
+                            <FormLabel required>Priority</FormLabel>
                             <Select
                                 value={data.priority}
                                 onValueChange={(value) => setData("priority", value as FollowUp['priority'])}
@@ -119,11 +121,27 @@ export default function CreateFollowUpModal({
                                     <SelectItem value="high">High</SelectItem>
                                 </SelectContent>
                             </Select>
+                            <ErrorMessage message={errors.priority} />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium">Notes</label>
+                        <FormLabel>Status</FormLabel>
+                        <Select
+                            value={data.status}
+                            onValueChange={(value) => setData("status", value as FollowUp['status'])}
+                        >
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="pending">Pending</SelectItem>
+                                <SelectItem value="done">Done</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <ErrorMessage message={errors.status} />
+                    </div>
+
+                    <div className="space-y-2">
+                        <FormLabel>Notes</FormLabel>
                         <Textarea
                             placeholder="Follow up notes..."
                             value={data.notes}

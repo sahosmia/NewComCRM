@@ -91,7 +91,7 @@ export interface CustomerType {
     phones: string[];
     addresses: string[];
     email: string;
-    date_of_birth: string;
+    date_of_birth: string | null;
     type: 'corporate' | 'reseller' | 'personal';
     assigned_to?: number | string;
     status: 'active' | 'inactive';
@@ -345,6 +345,7 @@ export interface CommonTableProps<T> {
     dataKey?: string;
     bulkDeleteRoute?: string;
     entityName?: string;
+    importRoute?: string;
 }
 
 
@@ -355,4 +356,33 @@ export interface Company {
     phone?: string;
     website?: string;
     address?: string;
+}
+
+
+export interface SettingType {
+    [key: string]: string | number | null;
+}
+
+export interface SettingsForm {
+    logo: File | string | null;
+    secondary_logo: File | string | null;
+    favicon: File | string | null;
+    company_seal: File | string | null;
+    app_name: string;
+    email: string;
+    phone: string;
+    address: string;
+    website_url: string;
+    branding_slogan: string;
+    branding_services_bar: string;
+    support_whatsapp: string;
+    office_name_1: string;
+    office_name_2: string;
+    office_name_3: string;
+    office_address_1: string;
+    office_address_2: string;
+    office_address_3: string;
+    footer_contact_info: string;
+    pdf_sender_office_info: string;
+    paginated_quantity: number | string;
 }

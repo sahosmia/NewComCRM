@@ -62,19 +62,19 @@ export default function CreateProductModal({ isOpen, onClose, onSuccess, units =
                 <form onSubmit={handleSubmit} className="space-y-4 py-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2 md:col-span-2">
-                            <FormLabel>Product Name</FormLabel>
+                            <FormLabel required>Product Name</FormLabel>
                             <Input value={data.name} onChange={e => setData("name", e.target.value)} placeholder="Product Name" />
                             <ErrorMessage message={errors.name} />
                         </div>
 
 
                         <div className="space-y-2">
-                            <FormLabel>Unit Price</FormLabel>
+                            <FormLabel required>Unit Price</FormLabel>
                             <Input type="number" value={data.unit_price} onChange={e => setData("unit_price", e.target.value)} placeholder="0.00" />
                             <ErrorMessage message={errors.unit_price} />
                         </div>
                         <div className="space-y-2">
-                            <FormLabel>Unit</FormLabel>
+                            <FormLabel required>Unit</FormLabel>
                             <Select value={String(data.unit_id)} onValueChange={val => setData("unit_id", val)}>
                                 <SelectTrigger><SelectValue placeholder="Select Unit" /></SelectTrigger>
                                 <SelectContent>
@@ -83,10 +83,21 @@ export default function CreateProductModal({ isOpen, onClose, onSuccess, units =
                             </Select>
                             <ErrorMessage message={errors.unit_id} />
                         </div>
+                        <div className="space-y-2">
+                            <FormLabel>Category</FormLabel>
+                            <Input value={data.category} onChange={e => setData("category", e.target.value)} placeholder="Category" />
+                            <ErrorMessage message={errors.category} />
+                        </div>
+                        <div className="space-y-2">
+                            <FormLabel required>Stock Quantity</FormLabel>
+                            <Input type="number" value={data.stock_quantity} onChange={e => setData("stock_quantity", e.target.value)} placeholder="0" />
+                            <ErrorMessage message={errors.stock_quantity} />
+                        </div>
                     </div>
                     <div className="space-y-2">
                         <FormLabel>Description</FormLabel>
                         <Textarea value={data.description} onChange={e => setData("description", e.target.value)} placeholder="Description..." />
+                        <ErrorMessage message={errors.description} />
                     </div>
                     <DialogFooter>
                         <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>

@@ -14,20 +14,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Loader2 } from 'lucide-react';
 import ErrorMessage from '@/components/admin/form/ErrorMessage';
 import { GenericCombobox } from '@/components/admin/form/GenericCombobox';
+import FormLabel from '@/components/admin/form/FormLabel';
 import { SharedData, Meeting } from '@/types';
 import { CreateMeetingModalProps } from '@/types/modals';
 
-export default function CreateMeetingModal({ 
-    isOpen, 
-    onClose, 
-    onSuccess, 
-    customer_id, 
+export default function CreateMeetingModal({
+    isOpen,
+    onClose,
+    onSuccess,
+    customer_id,
     requirement_id,
     customers = [],
-    requirements = [] 
+    requirements = []
 }: CreateMeetingModalProps) {
     const { props: sharedProps } = usePage<SharedData>();
-    
+
     // Fallback to shared props if not provided via direct props
     const availableCustomers = customers.length > 0 ? customers : (sharedProps.customers || []);
     const availableRequirements = requirements.length > 0 ? requirements : (sharedProps.requirements || []);
@@ -78,14 +79,15 @@ export default function CreateMeetingModal({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1">
                             <GenericCombobox
+                                required
                                 label="Customer"
                                 items={availableCustomers.map(c => ({ id: c.id, name: c.full_name_with_company || c.name }))}
                                 selectedId={data.customer_id}
                                 onSelect={(id) => setData("customer_id", id as number)}
                                 placeholder="Select Customer"
                                 allowManualInput={false}
+                                error={errors.customer_id}
                             />
-                            <ErrorMessage message={errors.customer_id} />
                         </div>
                         <div className="space-y-1">
                             <GenericCombobox
@@ -95,13 +97,13 @@ export default function CreateMeetingModal({
                                 onSelect={(id) => setData("requirement_id", id as number)}
                                 placeholder="Select Requirement"
                                 allowManualInput={false}
+                                error={errors.requirement_id}
                             />
-                            <ErrorMessage message={errors.requirement_id} />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium">Title</label>
+                        <FormLabel required>Title</FormLabel>
                         <Input
                             placeholder="Meeting Title"
                             value={data.title}
@@ -112,7 +114,7 @@ export default function CreateMeetingModal({
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Schedule Date Time</label>
+                            <FormLabel required>Schedule Date Time</FormLabel>
                             <Input
                                 type="datetime-local"
                                 value={data.scheduled_at}
@@ -121,7 +123,7 @@ export default function CreateMeetingModal({
                             <ErrorMessage message={errors.scheduled_at} />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Meeting Type</label>
+                            <FormLabel required>Meeting Type</FormLabel>
                             <Select
                                 value={data.meeting_type}
                                 onValueChange={(value) => setData("meeting_type", value as Meeting['meeting_type'])}
@@ -133,27 +135,46 @@ export default function CreateMeetingModal({
                                     <SelectItem value="phone">Phone</SelectItem>
                                 </SelectContent>
                             </Select>
+                            <ErrorMessage message={errors.meeting_type} />
                         </div>
                     </div>
 
                     {data.meeting_type === 'physical' && (
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Location</label>
+                            <FormLabel required>Location</FormLabel>
                             <Input
                                 placeholder="Location"
                                 value={data.location}
                                 onChange={(e) => setData("location", e.target.value)}
                             />
+                            <ErrorMessage message={errors.location} />
                         </div>
                     )}
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium">Agenda</label>
+                        <FormLabel>Agenda</FormLabel>
                         <Textarea
                             placeholder="Meeting Agenda"
                             value={data.agenda}
                             onChange={(e) => setData("agenda", e.target.value)}
                         />
+                        <ErrorMessage message={errors.agenda} />
+                    </div>
+
+                    <div className="space-y-2">
+                        <FormLabel>Status</FormLabel>
+                        <Select
+                            value={data.status}
+                            onValueChange={(value) => setData("status", value as Meeting['status'])}
+                        >
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="scheduled">Scheduled</SelectItem>
+                                <SelectItem value="completed">Completed</SelectItem>
+                                <SelectItem value="cancelled">Cancelled</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <ErrorMessage message={errors.status} />
                     </div>
 
                     <DialogFooter>

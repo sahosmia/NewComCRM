@@ -16,7 +16,7 @@ export default function AppLayout({ children, breadcrumbs, ...props }: AppLayout
         if (flash?.error) {
             toast.error(flash.error);
         }
-    }, [flash]);
+    }, [flash?.success, flash?.error]);
     return (
         <>
             <AppLayoutTemplate breadcrumbs={breadcrumbs} {...props}>

@@ -32,7 +32,7 @@ class CustomerRepository
                 $q->whereBetween('created_at', [$start, $params['end_date'] ?? $start]);
             })
             ->latest($params['sort'] ?? 'created_at') // Simplified sorting
-            ->paginate($params['per_page'] ?? 10)
+            ->paginate($params['per_page'] ?? setting('paginated_quantity', 10))
             ->withQueryString();
     }
 

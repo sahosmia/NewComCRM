@@ -5,16 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
 import { Company } from "@/types";
+import FormLabel from "@/components/admin/form/FormLabel";
 
 interface Props {
     company?: Company;
 }
 
-const FormLabel = ({ children }: { children: React.ReactNode }) => (
-    <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-        {children}
-    </label>
-);
+
 
 export default function CompanyForm({ company }: Props) {
     const { data, setData, post, put, processing, errors } = useForm({
@@ -35,7 +32,7 @@ export default function CompanyForm({ company }: Props) {
         <form onSubmit={submit} className="space-y-8 max-w-2xl">
             <div className="grid gap-6">
                 <div className="grid gap-2">
-                    <FormLabel>Company Name</FormLabel>
+                    <FormLabel required>Company Name</FormLabel>
                     <Input value={data.name} onChange={e => setData("name", e.target.value)} placeholder="e.g. Acme Corp" />
                     <ErrorMessage message={errors.name} />
                 </div>

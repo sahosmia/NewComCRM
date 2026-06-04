@@ -25,7 +25,8 @@ import {
     UserCog,
     BadgeDollarSign,
     Building2,
-    Ruler
+    Ruler,
+    Settings
 } from 'lucide-react';
 
 export function AppSidebar() {
@@ -52,6 +53,13 @@ export function AppSidebar() {
             icon: UserCog,
             hidden: userRole !== 'super_admin'
         },
+        {
+            title: 'Global Settings',
+            href: route('admin.settings.index'),
+            icon: Settings,
+            hidden: userRole !== 'super_admin'
+        },
+
 
     ];
 

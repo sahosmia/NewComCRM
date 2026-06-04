@@ -14,6 +14,7 @@ use App\Http\Controllers\{
     SaleController,
     UnitController
 };
+use App\Http\Controllers\Admin\SettingController;
 use Illuminate\Support\Facades\Artisan;
 
 /*
@@ -130,6 +131,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             });
         });
         Route::resource('users', UserController::class);
+
+        // Global Settings
+        Route::get('admin-settings', [SettingController::class, 'index'])->name('admin.settings.index');
+        Route::post('admin-settings', [SettingController::class, 'update'])->name('admin.settings.update');
     });
 });
 

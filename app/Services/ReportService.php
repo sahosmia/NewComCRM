@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Customer;
 use App\Models\FollowUp;
 use App\Models\Meeting;
+use App\Models\Requirement;
 use App\Models\Sale;
 use App\Models\User;
 use Carbon\Carbon;
@@ -29,7 +30,7 @@ class ReportService
             'requirements' => $this->getRequirements($dateRange, $userId, $customerId),
             'filters' => [
                 'users' => $user->isSuperAdmin() ? User::select('id', 'name')->get() : [],
-                'customers' => Customer::select('id', 'name')->get(),
+                'customers' => Customer::select('id', 'name', 'company_id')->with('company:id,name')->get(),
             ],
         ];
     }
@@ -116,21 +117,21 @@ class ReportService
 
     private function getFollowUps(array $dateRange, $userId, $customerId)
     {
-        return $this->applyFilters(FollowUp::with(['customer', 'user']), $dateRange, $userId, $customerId, 'follow_up_date')
+        return $this->applyFilters(FollowUp::with(['customer.company', 'user']), $dateRange, $userId, $customerId, 'follow_up_date')
             ->latest('follow_up_date')
             ->get();
     }
 
     private function getMeetings(array $dateRange, $userId, $customerId)
     {
-        return $this->applyFilters(Meeting::with(['customer', 'user']), $dateRange, $userId, $customerId, 'scheduled_at')
+        return $this->applyFilters(Meeting::with(['customer.company', 'user']), $dateRange, $userId, $customerId, 'scheduled_at')
             ->latest('scheduled_at')
             ->get();
     }
 
     private function getSales(array $dateRange, $userId, $customerId)
     {
-        $query = Sale::with(['customer.assignedUser', 'requirement']);
+        $query = Sale::with(['customer.assignedUser', 'customer.company', 'requirement']);
         if ($customerId) {
             $query->where('customer_id', $customerId);
         }
@@ -152,7 +153,7 @@ class ReportService
 
     private function getRequirements(array $dateRange, $userId, $customerId)
     {
-        $query = \App\Models\Requirement::with(['customer.company', 'items.product']);
+        $query = Requirement::with(['customer.company', 'items.product']);
 
         if ($customerId) {
             $query->where('customer_id', $customerId);

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use App\Models\Setting;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -37,7 +38,11 @@ class HandleInertiaRequests extends Middleware
     {
         return [
             ...parent::share($request),
-            'name' => config('app.name'),
+            'name' => setting('app_name', config('app.name')),
+            'settings' => [
+                'app_name' => setting('app_name', config('app.name')),
+                'logo' => setting('logo'),
+            ],
             'auth' => [
                 'user' => $request->user(),
             ],

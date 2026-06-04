@@ -62,7 +62,7 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                     {items.map((item, index) => (
                         <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-6 items-end border-b pb-6 last:border-0 last:pb-0">
                             <div className="md:col-span-4 lg:col-span-4 space-y-2">
-                                <FormLabel>{title} Service Description</FormLabel>
+                                <FormLabel required>{title} Service Description</FormLabel>
                                 <Input
                                     placeholder={`Enter ${title.toLowerCase()} details...`}
                                     value={item.title}
@@ -73,7 +73,7 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                             </div>
                             <div className="grid grid-cols-3 md:col-span-3 lg:col-span-3 gap-4">
                                 <div className="space-y-2">
-                                    <FormLabel>QTY</FormLabel>
+                                    <FormLabel required>QTY</FormLabel>
                                     <Input
                                         type="number"
                                         className="text-center h-10 font-bold border-slate-200 focus:border-primary/50"
@@ -85,6 +85,7 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                                 <div className="space-y-2 col-span-2">
                                     <div className="flex gap-2">
                                         <FormSelect
+                                            required
                                             label="Unit"
                                             value={item.unit_id.toString()}
                                             onChange={(v) => handleItemChange(index, 'unit_id', v)}
@@ -107,7 +108,7 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                                 </div>
                             </div>
                             <div className="md:col-span-2 lg:col-span-2 space-y-2">
-                                <FormLabel>Unit Price</FormLabel>
+                                <FormLabel required>Unit Price</FormLabel>
                                 <Input
                                     type="number"
                                     value={item.price}
@@ -117,7 +118,7 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                                 <ErrorMessage message={errors[`${prefix}.${index}.price`]} />
                             </div>
                             <div className="md:col-span-2 lg:col-span-2 space-y-2">
-                                <FormLabel className="text-primary font-bold">Total (Incl. AIT)</FormLabel>
+                                <FormLabel>Total (Incl. AIT)</FormLabel>
                                 <div className="h-10 flex items-center px-4 bg-primary/5 rounded-lg border border-primary/20 font-mono font-black text-sm text-primary shadow-inner">
                                     ৳{(Number(item.quantity || 0) * Number(item.price || 0) * aitFactor).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                                 </div>

@@ -2,12 +2,12 @@ import { useForm } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 
 import { Product, Unit } from "@/types";
 import { Loader2, Plus } from "lucide-react";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
 import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
+import FormLabel from "@/components/admin/form/FormLabel";
 import { useModal } from "@/contexts/ModalContext";
 
 
@@ -45,7 +45,7 @@ export default function ProductForm({ product, units = [] }: Props) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Product Name */}
                 <div className="space-y-2 md:col-span-2">
-                    <Label htmlFor="name">Product Name</Label>
+                    <FormLabel required>Product Name</FormLabel>
                     <Input
                         id="name"
                         placeholder="e.g. Rosenberger Optical Patch Cord"
@@ -62,7 +62,7 @@ export default function ProductForm({ product, units = [] }: Props) {
 
                 {/* Unit Price */}
                 <div className="space-y-2">
-                    <Label htmlFor="unit_price">Unit Price</Label>
+                    <FormLabel required>Unit Price</FormLabel>
                     <Input
                         id="unit_price"
                         type="number"
@@ -77,7 +77,7 @@ export default function ProductForm({ product, units = [] }: Props) {
 
                 {/* Stock Quantity */}
                 <div className="space-y-2">
-                    <Label htmlFor="stock_quantity">Stock Quantity</Label>
+                    <FormLabel required>Stock Quantity</FormLabel>
                     <Input
                         id="stock_quantity"
                         type="number"
@@ -91,7 +91,7 @@ export default function ProductForm({ product, units = [] }: Props) {
 
                 {/* Category */}
                 <div className="space-y-2">
-                    <Label htmlFor="category">Category</Label>
+                    <FormLabel>Category</FormLabel>
                     <Input
                         id="category"
                         placeholder="Product Category"
@@ -104,7 +104,7 @@ export default function ProductForm({ product, units = [] }: Props) {
 
                 {/* Supplier Name */}
                 <div className="space-y-2">
-                    <Label htmlFor="supplier_name">Supplier Name</Label>
+                    <FormLabel>Supplier Name</FormLabel>
                     <Input
                         id="supplier_name"
                         placeholder="Main Supplier"
@@ -140,6 +140,7 @@ export default function ProductForm({ product, units = [] }: Props) {
 
                 <div className="space-y-2">
                     <GenericCombobox
+                        required
                         label="Unit"
                         items={units.map(unit => ({
                             id: unit.id,
@@ -150,6 +151,7 @@ export default function ProductForm({ product, units = [] }: Props) {
                         placeholder="Select a unit"
                         searchPlaceholder="Search customers..."
                         allowManualInput={false}
+                        error={errors.unit_id}
                         renderAction={
                             <Button
                                 type="button"
@@ -167,13 +169,12 @@ export default function ProductForm({ product, units = [] }: Props) {
                             </Button>
                         }
                     />
-                    <ErrorMessage message={errors.unit_id} />
                 </div>
             </div>
 
             {/* Source / Purchase Info */}
             <div className="space-y-2">
-                <Label htmlFor="source">Source / Purchase From</Label>
+                <FormLabel>Source / Purchase From</FormLabel>
                 <Textarea
                     id="source"
                     placeholder="Where to buy or find this?"
@@ -187,7 +188,7 @@ export default function ProductForm({ product, units = [] }: Props) {
 
             {/* Description */}
             <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <FormLabel>Description</FormLabel>
                 <Textarea
                     id="description"
                     placeholder="Product details and specifications..."

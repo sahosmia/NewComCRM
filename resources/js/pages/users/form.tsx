@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { UserType } from "@/types";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
+import FormLabel from "@/components/admin/form/FormLabel";
 
 interface Props { user?: UserType;}
 
@@ -44,48 +45,49 @@ export default function UserForm({ user }: Props) {
                 <div className="space-y-4">
 
                     <div className="space-y-1">
-                        <label className="text-sm font-medium">Full Name</label>
+                        <FormLabel required>Full Name</FormLabel>
                         <Input value={data.name} onChange={e => setData("name", e.target.value)} placeholder="John Doe" />
                         <ErrorMessage message={errors.name} />
                     </div>
 
                     <div className="space-y-1">
-                        <label className="text-sm font-medium">Phone</label>
+                        <FormLabel>Phone</FormLabel>
                         <Input value={data.phone} onChange={e => setData("phone", e.target.value)} placeholder="01XXXXXXXXX" />
                         <ErrorMessage message={errors.phone} />
                     </div>
 
                     <div className="space-y-1">
-                        <label className="text-sm font-medium">Designations</label>
+                        <FormLabel>Designations</FormLabel>
                         <Input value={data.designations} onChange={e => setData("designations", e.target.value)} placeholder="Software Engineer" />
                         <ErrorMessage message={errors.designations} />
                     </div>
 
                     <div className="space-y-1">
-                        <label className="text-sm font-medium">Email Address</label>
+                        <FormLabel required>Email Address</FormLabel>
                         <Input type="email" value={data.email} onChange={e => setData("email", e.target.value)} placeholder="john@example.com" />
                         <ErrorMessage message={errors.email} />
                     </div>
 
                     <div className="space-y-1">
-                        <label className="text-sm font-medium">User Role</label>
+                        <FormLabel required>User Role</FormLabel>
                         <Select value={data.role} onValueChange={val => setData("role", val as "user" | "super_admin")}>
-                            <SelectTrigger><SelectValue /></SelectTrigger>
+                            <SelectTrigger className={errors.role ? "border-destructive" : ""}><SelectValue /></SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="user">User</SelectItem>
                                 <SelectItem value="super_admin">Super Admin</SelectItem>
                             </SelectContent>
                         </Select>
+                        <ErrorMessage message={errors.role} />
                     </div>
 
                     <div className="space-y-1">
-                        <label className="text-sm font-medium">Password</label>
+                        <FormLabel required={!user}>Password</FormLabel>
                         <Input type="password" value={data.password} onChange={e => setData("password", e.target.value)} placeholder="" />
                         <ErrorMessage message={errors.password} />
                     </div>
 
                     <div className="space-y-1">
-                        <label className="text-sm font-medium">Signature</label>
+                        <FormLabel>Signature</FormLabel>
                         <Input
                             type="file"
                             accept="image/*"

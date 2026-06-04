@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import FormLabel from "./FormLabel";
+import ErrorMessage from "./ErrorMessage";
 
 interface Item {
     id: string | number;
@@ -35,6 +36,7 @@ interface GenericComboboxProps {
     className?: string;
     renderAction?: React.ReactNode;
     required?: boolean;
+    error?: string;
 }
 
 export function GenericCombobox({
@@ -49,7 +51,8 @@ export function GenericCombobox({
     allowManualInput = true,
     className,
     renderAction,
-    required = false
+    required = false,
+    error
 }: GenericComboboxProps) {
     const [open, setOpen] = React.useState(false);
 
@@ -68,7 +71,7 @@ export function GenericCombobox({
                             variant="outline"
                             role="combobox"
                             aria-expanded={open}
-                            className={cn("w-full justify-between font-normal", renderAction && "pr-10", !selectedId && !manualValue && "text-muted-foreground", className)}
+                            className={cn("w-full justify-between font-normal", renderAction && "pr-10", !selectedId && !manualValue && "text-muted-foreground", error && "border-destructive", className)}
                         >
                             <span className="truncate">{displayLabel}</span>
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -112,6 +115,7 @@ export function GenericCombobox({
                     </PopoverContent>
                 </Popover>
             </div>
+            <ErrorMessage message={error} />
         </>
     );
 }

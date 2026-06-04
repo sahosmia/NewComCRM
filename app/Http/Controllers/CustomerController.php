@@ -155,4 +155,28 @@ class CustomerController extends Controller
             'Customer List'
         );
     }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        try {
+            $result = $this->customerService->import($request->file('file'));
+
+            if (is_array($result) && isset($result['errors'])) {
+                $errors = [];
+                foreach ($result['errors'] as $failure) {
+                    $errors[] = "Row {$failure->row()}: " . implode(', ', $failure->errors());
+                }
+                return back()->withErrors(['import_errors' => $errors]);
+            }
+
+            return back()->with('success', 'Customers imported successfully');
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'An error occurred during import: ' . $e->getMessage()]);
+        }
+    }
 }

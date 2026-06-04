@@ -72,7 +72,7 @@ export default function CreateCompanyModal({ isOpen, onClose, onSuccess }: Creat
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4 py-2">
                     <div className="grid gap-2">
-                        <FormLabel>Company Name</FormLabel>
+                        <FormLabel required>Company Name</FormLabel>
                         <Input
                             value={data.name}
                             onChange={e => setData("name", e.target.value)}
@@ -109,6 +109,15 @@ export default function CreateCompanyModal({ isOpen, onClose, onSuccess }: Creat
                             placeholder="Full address details..."
                         />
                         <ErrorMessage message={errors.address} />
+                    </div>
+                    <div className="grid gap-2">
+                        <FormLabel>Website</FormLabel>
+                        <Input
+                            value={data.website}
+                            onChange={e => setData("website", e.target.value)}
+                            placeholder="https://..."
+                        />
+                        <ErrorMessage message={errors.website} />
                     </div>
                     <DialogFooter>
                         <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
 import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
+import FormLabel from "@/components/admin/form/FormLabel";
 import { Company, CustomerType, FollowUp, Requirement, User } from "@/types";
 import { useModal } from "@/contexts/ModalContext";
 import { Plus } from "lucide-react";
@@ -64,6 +65,7 @@ export default function FollowUpForm({ followUp, customers, requirements, users,
         <form onSubmit={submit} className="space-y-4">
             <div className="space-y-1">
                 <GenericCombobox
+                    required
                     label="Customer"
                     items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || c.name }))}
                     selectedId={data.customer_id}
@@ -79,6 +81,7 @@ export default function FollowUpForm({ followUp, customers, requirements, users,
                     placeholder="Select Customer"
                     searchPlaceholder="Search customers..."
                     allowManualInput={false}
+                    error={errors.customer_id}
                     renderAction={
                         <Button
                             type="button"
@@ -98,7 +101,6 @@ export default function FollowUpForm({ followUp, customers, requirements, users,
                         </Button>
                     }
                 />
-                <ErrorMessage message={errors.customer_id} />
             </div>
 
             <div className="space-y-1">
@@ -118,12 +120,12 @@ export default function FollowUpForm({ followUp, customers, requirements, users,
                     placeholder="Select Requirement"
                     searchPlaceholder="Search requirements..."
                     allowManualInput={false}
+                    error={errors.requirement_id}
                 />
-                <ErrorMessage message={errors.requirement_id} />
             </div>
 
             <div>
-                <label className="text-sm font-medium">Follow Up Date</label>
+                <FormLabel required>Follow Up Date</FormLabel>
                 <Input
                     type="datetime-local"
                     value={data.follow_up_date}
@@ -134,12 +136,12 @@ export default function FollowUpForm({ followUp, customers, requirements, users,
             </div>
 
             <div>
-                <label className="text-sm font-medium">Status</label>
+                <FormLabel required>Status</FormLabel>
                 <Select
                     value={data.status}
                     onValueChange={(value) => setData("status", value)}
                 >
-                    <SelectTrigger>
+                    <SelectTrigger className={errors.status ? "border-destructive" : ""}>
                         <SelectValue placeholder="Select Status" />
                     </SelectTrigger>
                     <SelectContent>
@@ -152,12 +154,12 @@ export default function FollowUpForm({ followUp, customers, requirements, users,
             </div>
 
             <div>
-                <label className="text-sm font-medium">Priority</label>
+                <FormLabel required>Priority</FormLabel>
                 <Select
                     value={data.priority}
                     onValueChange={(value) => setData("priority", value)}
                 >
-                    <SelectTrigger>
+                    <SelectTrigger className={errors.priority ? "border-destructive" : ""}>
                         <SelectValue placeholder="Select Priority" />
                     </SelectTrigger>
                     <SelectContent>
@@ -170,7 +172,7 @@ export default function FollowUpForm({ followUp, customers, requirements, users,
             </div>
 
             <div>
-                <label className="text-sm font-medium">Notes</label>
+                <FormLabel>Notes</FormLabel>
                 <Textarea
                     value={data.notes}
                     onChange={(e) => setData("notes", e.target.value)}

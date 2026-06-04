@@ -33,10 +33,15 @@
         }
     </style>
 
-    <title inertia>{{ config('app.name', 'Crystal Vision Solutions') }}</title>
+    <title inertia>{{ setting('app_name', config('app.name', 'Crystal Vision Solutions')) }}</title>
 
-    <link rel="icon" href="/favicon.ico" sizes="any">
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    @if(setting('favicon'))
+        <link rel="icon" href="/storage/{{ setting('favicon') }}" sizes="any">
+    @else
+        <link rel="icon" href="/favicon.ico" sizes="any">
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    @endif
+
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
     <link rel="preconnect" href="https://fonts.bunny.net">

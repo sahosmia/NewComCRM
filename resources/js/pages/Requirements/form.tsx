@@ -139,7 +139,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                         <CardContent className=" space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <FormLabel>Requirement Title</FormLabel>
+                                    <FormLabel required>Requirement Title</FormLabel>
                                     <Input
                                         placeholder="Enter title (e.g. Server Maintenance 2024)"
                                         value={data.title}
@@ -150,12 +150,14 @@ export default function RequirementForm({ requirement, customers, products, unit
                                 </div>
                                 <div className="space-y-2">
                                     <GenericCombobox
+                                        required
                                         label="Customer Information"
                                         items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company?.name || ''}` }))}
                                         selectedId={data.customer_id}
                                         placeholder="Select Customer"
                                         searchPlaceholder="Search customers..."
                                         onSelect={(id) => setData("customer_id", id as number)}
+                                        error={errors.customer_id}
                                         renderAction={
                                             <Button
                                                 type="button"
@@ -175,7 +177,6 @@ export default function RequirementForm({ requirement, customers, products, unit
                                             </Button>
                                         }
                                     />
-                                    <ErrorMessage message={errors.customer_id} />
                                 </div>
                             </div>
 
@@ -188,6 +189,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                         onSelect={(id) => setData("send_qutation_to", id as number)}
                                         placeholder="Select Recipient (Optional)"
                                         searchPlaceholder="Search customers..."
+                                        error={errors.send_qutation_to}
                                          renderAction={
                                             <Button
                                                 type="button"
@@ -207,7 +209,6 @@ export default function RequirementForm({ requirement, customers, products, unit
                                             </Button>
                                         }
                                     />
-                                    <ErrorMessage message={errors.send_qutation_to} />
                                 </div>
                                 <div className="space-y-2">
                                     <GenericCombobox
@@ -217,6 +218,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                         onSelect={(id) => setData("qutation_send_by", id as number)}
                                         placeholder="Select Sender (Optional)"
                                         searchPlaceholder="Search users..."
+                                        error={errors.qutation_send_by}
                                          renderAction={
                                             <Button
                                                 type="button"
@@ -236,7 +238,6 @@ export default function RequirementForm({ requirement, customers, products, unit
                                             </Button>
                                         }
                                     />
-                                    <ErrorMessage message={errors.qutation_send_by} />
                                 </div>
                             </div>
                         </CardContent>
@@ -283,6 +284,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                         <CardContent className=" space-y-5">
                             <div className="space-y-2">
                                 <FormSelect
+                                    required
                                     label="Status"
                                     value={data.status}
                                     onChange={(v) => setData("status", v as Requirement["status"])}
@@ -304,7 +306,7 @@ export default function RequirementForm({ requirement, customers, products, unit
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <FormLabel>Timeline (Days)</FormLabel>
+                                    <FormLabel required>Timeline (Days)</FormLabel>
                                     <Input
                                         type="number"
                                         value={data.delivery_time_days}
@@ -315,7 +317,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                     <ErrorMessage message={errors.delivery_time_days} />
                                 </div>
                                 <div className="space-y-2">
-                                    <FormLabel>Validity (Days)</FormLabel>
+                                    <FormLabel required>Validity (Days)</FormLabel>
                                     <Input
                                         type="number"
                                         placeholder="0"
@@ -338,7 +340,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                         <CardContent className=" space-y-5">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <FormLabel>VAT (%)</FormLabel>
+                                    <FormLabel required>VAT (%)</FormLabel>
                                     <div className="relative">
                                         <Input
                                             type="number"
@@ -351,7 +353,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                     <ErrorMessage message={errors.vat_percentage} />
                                 </div>
                                 <div className="space-y-2">
-                                    <FormLabel>AIT (%)</FormLabel>
+                                    <FormLabel required>AIT (%)</FormLabel>
                                     <div className="relative">
                                         <Input
                                             type="number"
@@ -368,7 +370,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                             <div className="space-y-4 pt-2">
                                 <div className="space-y-2">
                                     <div className="flex justify-between items-center">
-                                        <FormLabel>Advance (%)</FormLabel>
+                                        <FormLabel required>Advance (%)</FormLabel>
                                         <span className="text-[10px] font-medium text-slate-500">{data.advance_payment}%</span>
                                     </div>
                                     <Input
@@ -396,6 +398,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                         disabled={Number(data.after_payment) > 0}
                                         className="h-10"
                                     />
+                                    <ErrorMessage message={errors.before_payment} />
                                 </div>
 
                                 <div className="space-y-2">
@@ -414,6 +417,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                         disabled={Number(data.before_payment) > 0}
                                         className="h-10"
                                     />
+                                    <ErrorMessage message={errors.after_payment} />
                                 </div>
                             </div>
                         </CardContent>

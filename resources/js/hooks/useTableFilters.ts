@@ -77,7 +77,7 @@ export const useTableFilters = <T extends { id: number }>({
 
     // ✅ Sync state when URL changes (VERY IMPORTANT)
     useEffect(() => {
-        setSearch(queryParams.get('search') || "");
+        // setSearch(queryParams.get('search') || "");
         setPerPage(queryParams.get('per_page') || String(data.per_page || '10'));
     }, [queryParams, data.per_page]);
 

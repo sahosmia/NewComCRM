@@ -10,9 +10,9 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Loader2 } from 'lucide-react';
 import ErrorMessage from '@/components/admin/form/ErrorMessage';
+import FormLabel from '@/components/admin/form/FormLabel';
 
 interface CreateUnitModalProps {
     isOpen: boolean;
@@ -34,14 +34,14 @@ export default function CreateUnitModal({ isOpen, onClose, onSuccess }: CreateUn
             onSuccess: () => {
                 // Access the flashed data if available
                 const newUnitId = props.flash.new_id;
-                
+
                 // Partial reload to refresh units list on the current page
                 router.reload({ only: ['units'] });
 
                 if (onSuccess && newUnitId) {
                     onSuccess(Number(newUnitId));
                 }
-                
+
                 reset();
                 onClose();
             },
@@ -64,7 +64,7 @@ export default function CreateUnitModal({ isOpen, onClose, onSuccess }: CreateUn
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4 py-4">
                     <div className="space-y-2">
-                        <Label htmlFor="title">Title</Label>
+                        <FormLabel required>Title</FormLabel>
                         <Input
                             id="title"
                             placeholder="e.g. Piece, Box"
@@ -75,7 +75,7 @@ export default function CreateUnitModal({ isOpen, onClose, onSuccess }: CreateUn
                         <ErrorMessage message={errors.title} />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="short_form">Short Form</Label>
+                        <FormLabel required>Short Form</FormLabel>
                         <Input
                             id="short_form"
                             placeholder="e.g. Pcs, Box"

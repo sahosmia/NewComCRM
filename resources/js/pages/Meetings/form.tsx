@@ -12,6 +12,7 @@ import {
 import { Company, CustomerType, Meeting, Requirement, User } from "@/types";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
 import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
+import FormLabel from "@/components/admin/form/FormLabel";
 import { useModal } from "@/contexts/ModalContext";
 import { Plus } from "lucide-react";
 
@@ -60,6 +61,7 @@ export default function MeetingForm({ meeting, customers, requirements, users, c
         <form onSubmit={submit} className="space-y-4">
             <div className="space-y-1">
                 <GenericCombobox
+                    required
                     label="Customer"
                     items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || c.name }))}
                     selectedId={data.customer_id}
@@ -76,8 +78,8 @@ export default function MeetingForm({ meeting, customers, requirements, users, c
                     placeholder="Select Customer"
                     searchPlaceholder="Search customers..."
                     allowManualInput={false}
+                    error={errors.customer_id}
                 />
-                <ErrorMessage message={errors.customer_id} />
             </div>
 
             <div className="space-y-1">
@@ -98,6 +100,7 @@ export default function MeetingForm({ meeting, customers, requirements, users, c
                     placeholder="Select Requirement"
                     searchPlaceholder="Search requirements..."
                     allowManualInput={false}
+                    error={errors.requirement_id}
                     renderAction={
                         <Button
                             type="button"
@@ -117,11 +120,10 @@ export default function MeetingForm({ meeting, customers, requirements, users, c
                         </Button>
                     }
                 />
-                <ErrorMessage message={errors.requirement_id} />
             </div>
 
             <div>
-                <label className="text-sm font-medium">Title</label>
+                <FormLabel required>Title</FormLabel>
                 <Input
                     placeholder="Meeting Title"
                     value={data.title}
@@ -131,7 +133,7 @@ export default function MeetingForm({ meeting, customers, requirements, users, c
             </div>
 
             <div>
-                <label className="text-sm font-medium">Schedule Date Time</label>
+                <FormLabel required>Schedule Date Time</FormLabel>
                 <Input
                     type="datetime-local"
                     value={data.scheduled_at}
@@ -141,12 +143,12 @@ export default function MeetingForm({ meeting, customers, requirements, users, c
             </div>
 
             <div>
-                <label className="text-sm font-medium">Meeting Type</label>
+                <FormLabel required>Meeting Type</FormLabel>
                 <Select
                     value={data.meeting_type}
                     onValueChange={(value) => setData("meeting_type", value as Meeting['meeting_type'])}
                 >
-                    <SelectTrigger>
+                    <SelectTrigger className={errors.meeting_type ? "border-destructive" : ""}>
                         <SelectValue placeholder="Select Type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -160,7 +162,7 @@ export default function MeetingForm({ meeting, customers, requirements, users, c
 
             {data.meeting_type === 'physical' && (
                 <div>
-                    <label className="text-sm font-medium">Location</label>
+                    <FormLabel required>Location</FormLabel>
                     <Input
                         placeholder="Location"
                         value={data.location}
@@ -171,7 +173,7 @@ export default function MeetingForm({ meeting, customers, requirements, users, c
             )}
 
             <div>
-                <label className="text-sm font-medium">Agenda</label>
+                <FormLabel>Agenda</FormLabel>
                 <Textarea
                     placeholder="Meeting Agenda"
                     value={data.agenda}
@@ -181,12 +183,12 @@ export default function MeetingForm({ meeting, customers, requirements, users, c
             </div>
 
             <div>
-                <label className="text-sm font-medium">Status</label>
+                <FormLabel required>Status</FormLabel>
                 <Select
                     value={data.status}
                     onValueChange={(value) => setData("status", value as Meeting['status'])}
                 >
-                    <SelectTrigger>
+                    <SelectTrigger className={errors.status ? "border-destructive" : ""}>
                         <SelectValue placeholder="Select Status" />
                     </SelectTrigger>
                     <SelectContent>

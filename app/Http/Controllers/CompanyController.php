@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCompanyRequest;
+use App\Http\Requests\UpdateCompanyRequest;
 use App\Services\CompanyService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -22,17 +24,11 @@ class CompanyController extends Controller
         return Inertia::render('Companies/Create');
     }
 
-    public function store(Request $request)
+    public function store(StoreCompanyRequest $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255|unique:companies,name',
-            'email' => 'nullable|email|max:255',
-            'phone' => 'nullable|string|max:255',
-            'website' => 'nullable|url|max:255',
-            'address' => 'nullable|string',
-        ]);
 
-        $company = $this->service->createCompany($data);
+
+        $company = $this->service->createCompany($request->validated());
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -42,7 +38,7 @@ class CompanyController extends Controller
         }
 
 
-        return back()
+        return redirect()->route('companies.index')
             ->with('success', 'Company created successfully.')
             ->with('new_id', $company->id);
     }
@@ -54,17 +50,9 @@ class CompanyController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateCompanyRequest $request, $id)
     {
-        $data = $request->validate([
-            'name' => "required|string|max:255|unique:companies,name,{$id}",
-            'email' => 'nullable|email|max:255',
-            'phone' => 'nullable|string|max:255',
-            'website' => 'nullable|url|max:255',
-            'address' => 'nullable|string',
-        ]);
-
-        $this->service->updateCompany($id, $data);
+        $this->service->updateCompany($id, $request->validated());
 
         return redirect()->route('companies.index')
             ->with('success', 'Company updated successfully.');
@@ -83,6 +71,6 @@ class CompanyController extends Controller
         $ids = $request->input('ids', []);
         $this->service->bulkDelete($ids);
 
-        return back()->with('success', 'Companies deleted successfully');
+        return redirect()->route('companies.index')->with('success', 'Companies deleted successfully');
     }
 }

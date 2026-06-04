@@ -1,10 +1,10 @@
 import { useForm } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
-import { Unit } from "@/types/unit";
+import FormLabel from "@/components/admin/form/FormLabel";
+import { Unit } from "@/types";
 
 interface Props {
     unit?: Unit;
@@ -30,7 +30,7 @@ export default function UnitForm({ unit }: Props) {
         <form onSubmit={submit} className="space-y-6">
             <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-2">
-                    <Label htmlFor="title">Title</Label>
+                    <FormLabel required>Title</FormLabel>
                     <Input
                         id="title"
                         placeholder="e.g. Kilogram"
@@ -42,7 +42,7 @@ export default function UnitForm({ unit }: Props) {
                 </div>
 
                 <div className="space-y-2">
-                    <Label htmlFor="short_form">Short Form</Label>
+                    <FormLabel required>Short Form</FormLabel>
                     <Input
                         id="short_form"
                         placeholder="e.g. KG"

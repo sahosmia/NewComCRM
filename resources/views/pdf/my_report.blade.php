@@ -319,27 +319,41 @@
         <table class="header-top">
             <tr>
                 <td class="logo-section">
+                    @if($header_logo_1)
                     <img src="{{ $header_logo_1 }}" style="width: 100;">
+                    @endif
                 </td>
                 <td class="company-name-section">
+                    @if($header_logo_2)
                     <img src="{{ $header_logo_2 }}" style="width: 100%;">
+                    @else
+                    <h1 style="color: #A52A2A; margin: 0;">{{ setting('app_name', 'Crystal Vision Solutions') }}</h1>
+                    @endif
                 </td>
                 <td class="contact-section">
-                    <a href="http://www.crystalcomputers.com.bd">www.crystalcomputers.com.bd</a><br>
-                    <span style="color: #A52A2A; font-weight: bold; letter-spacing: -1px;">LEADING ICT AND SECURITY
-                        SERVICES PROVIDER</span>
+                    <a href="{{ setting('website_url', 'http://www.crystalcomputers.com.bd') }}">{{ str_replace(['http://', 'https://'], '', setting('website_url', 'www.crystalcomputers.com.bd')) }}</a><br>
+                    <span style="color: #A52A2A; font-weight: bold; letter-spacing: -1px;">{{ setting('branding_slogan', 'LEADING ICT AND SECURITY SERVICES PROVIDER') }}</span>
                 </td>
             </tr>
         </table>
 
         <div class="service-bar">
-            Server <span>|</span>
-            Server Spare Parts <span>|</span>
-            Networking Equipment's <span>|</span>
-            Security Equipment's <span>|</span>
-            Sound Equipment's <span>|</span>
-            Smart Device <span>|</span>
-            Interactive Display
+            @if(setting('branding_services_bar'))
+                @php
+                    $services = explode('|', setting('branding_services_bar'));
+                @endphp
+                @foreach($services as $index => $service)
+                    {{ trim($service) }}@if($index < count($services) - 1) <span>|</span> @endif
+                @endforeach
+            @else
+                Server <span>|</span>
+                Server Spare Parts <span>|</span>
+                Networking Equipment's <span>|</span>
+                Security Equipment's <span>|</span>
+                Sound Equipment's <span>|</span>
+                Smart Device <span>|</span>
+                Interactive Display
+            @endif
         </div>
     </header>
 
@@ -369,7 +383,7 @@
                 requirements.
                 <br /><br />
 
-                We, Crystal Vision Solutions, are an experienced and trusted importer, supplier, and system integrator
+                We, {{ setting('app_name', 'Crystal Vision Solutions') }}, are an experienced and trusted importer, supplier, and system integrator
                 of IT, networking equipment, and server solutions in Bangladesh. We are committed to delivering
                 genuine branded products, ensuring quality, reliability, and comprehensive after-sales service
                 support.
@@ -407,16 +421,18 @@
                     @endphp
                     <strong>{{ $sender->name }}</strong><br>
                     {{ $sender->designation }}<br>
-                    <strong>Crystal Vision Solutions</strong><br>
-                    M: +88{{ $sender->phone }} | +8801911-561554
+                    <strong>{{ setting('app_name', 'Crystal Vision Solutions') }}</strong><br>
+                    M: +88{{ $sender->phone }} | +88{{ setting('support_whatsapp', '01911-561554') }}
                     (WhatsApp);<br>
                     E-mail: {{ $sender->email }} |
-                    crystalsolutionsbd@gmail.com
+                    {{ setting('email', 'crystalsolutionsbd@gmail.com') }}
 
                     <div class="office-info">
-                        <strong>Corporate Office:</strong> Tower 71, Level-8, Near ECB Circle, Dhaka Cantonment,
-                        Dhaka-1206 <br />
-                        <strong>Elephant Road Branch:</strong> 95, City Super Market (Level 4), New Elephant Road, Dhaka
+                        @if(setting('pdf_sender_office_info'))
+                            {!! nl2br(setting('pdf_sender_office_info')) !!}
+                        @else
+                            <strong>Corporate Office:</strong> Tower 71, Level-8, Near ECB Circle, Dhaka Cantonment, Dhaka-1206
+                        @endif
                     </div>
                 </div>
             </div>
@@ -652,7 +668,7 @@
                     @endphp
                     <strong>{{ $sender->name }}</strong><br>
                     {{ $sender->designation }}<br>
-                    <strong>Crystal Vision Solutions</strong><br>
+                    <strong>{{ setting('app_name', 'Crystal Vision Solutions') }}</strong><br>
 
                 </div>
             </div>
@@ -673,7 +689,7 @@
                     </li>
                     <li>
                         <span class="term-head">2. Price Change:</span> Price may be changed based on the currency
-                        conversion rate (Global USD and RMB) at any time by Crystal Vision Solutions.
+                        conversion rate (Global USD and RMB) at any time by {{ setting('app_name', 'Crystal Vision Solutions') }}.
                     </li>
                     <li>
                         <span class="term-head">3. Delivery Time:</span> Delivery will be completed within
@@ -694,7 +710,7 @@
                     <li>
                         <span class="term-head">5. Payment Method:</span> Cash / Bank transfer / Cheque to be made
                         favoring
-                        "Crystal Vision Solutions".
+                        "{{ setting('app_name', 'Crystal Vision Solutions') }}".
                     </li>
                     <li>
                         <span class="term-head">6. Order Confirmation Policy:</span> No order will be processed,
@@ -743,7 +759,7 @@
                 </ol>
 
                 <div class="thanks-footer">
-                    Thanks for get in touch with Crystal Vision Solutions
+                    Thanks for get in touch with {{ setting('app_name', 'Crystal Vision Solutions') }}
                 </div>
             </div>
         </div>
@@ -763,25 +779,22 @@
         <table class="footer-address-table">
             <tr>
                 <td>
-                    <span class="branch-name">Elephant Road Branch</span>
-                    Tabas Building (Level-5), 53/2 New Elephant Road<br>
-                    Dhaka-1205, Bangladesh
+                    <span class="branch-name">{{ setting('office_name_1', 'Elephant Road Branch') }}</span>
+                    {!! nl2br(setting('office_address_1', "Tabas Building (Level-5), 53/2 New Elephant Road\nDhaka-1205, Bangladesh")) !!}
                 </td>
                 <td>
-                    <span class="branch-name">Corporate Office</span>
-                    Tower 71 (Level-8, C-9), 516/3 South Manikdi, Near ECB Circle<br>
-                    Dhaka Cantonment, Dhaka-1206, Bangladesh
+                    <span class="branch-name">{{ setting('office_name_2', 'Corporate Office') }}</span>
+                    {!! nl2br(setting('office_address_2', "Tower 71 (Level-8, C-9), 516/3 South Manikdi, Near ECB Circle\nDhaka Cantonment, Dhaka-1206, Bangladesh")) !!}
                 </td>
                 <td>
-                    <span class="branch-name">Service Centre</span>
-                    Tabas Building (Level-5), 53/2 New Elephant Road<br>
-                    Dhaka-1205, Bangladesh
+                    <span class="branch-name">{{ setting('office_name_3', 'Service Centre') }}</span>
+                    {!! nl2br(setting('office_address_3', "Tabas Building (Level-5), 53/2 New Elephant Road\nDhaka-1205, Bangladesh")) !!}
                 </td>
             </tr>
         </table>
 
         <div class="contact-bar">
-            E-mail: info@crystalcomputers.com.bd, Hunting: 09666733744, Mobile: 01730-495650, 01730-495651
+            {{ setting('footer_contact_info', 'E-mail: info@crystalcomputers.com.bd, Hunting: 09666733744, Mobile: 01730-495650, 01730-495651') }}
         </div>
         <div class="empty-bar">
 
