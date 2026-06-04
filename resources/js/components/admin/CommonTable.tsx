@@ -7,7 +7,7 @@ import { Link } from '@inertiajs/react';
 import React, { ReactNode } from 'react';
 import { Input } from '@/components/ui/input';
 import { TableFilters } from '../table/TableFilters';
-import { RotateCcw, Plus } from 'lucide-react';
+import { RotateCcw, Plus, FileUp } from 'lucide-react';
 import { router } from "@inertiajs/react";
 import Pagination from './Pagination';
 import { useEffect, useState } from "react";
@@ -16,6 +16,7 @@ import { handleBulkDelete } from '@/utils/table';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { TableBulkActions } from '../table/TableBulkActions';
+import ImportModal from '../modals/ImportModal';
 
 
 
@@ -30,10 +31,12 @@ const CommonTable = <T extends { id: number }>({
     bulkDeleteRoute,
     entityName,
     exportRoute,
-    printRoute
+    printRoute,
+    importRoute
 }: CommonTableProps<T> & { exportRoute?: string, printRoute?: string }) => {
 
     const [loading, setLoading] = useState(false);
+    const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     useEffect(() => {
         const start = () => setLoading(true);
         const finish = () => setLoading(false);
@@ -153,6 +156,19 @@ const CommonTable = <T extends { id: number }>({
                         </Badge>
                     )}
 
+                    {/* Import Action */}
+                    {importRoute && (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="gap-2"
+                            onClick={() => setIsImportModalOpen(true)}
+                        >
+                            <FileUp className="h-4 w-4" />
+                            <span>Import</span>
+                        </Button>
+                    )}
+
                     {/* Primary Action: Create */}
                     {create_route && (
                         <Button size="sm" asChild className="gap-2">
@@ -262,6 +278,15 @@ const CommonTable = <T extends { id: number }>({
             </div>
 
             <Pagination routeName={routeName} data={data} />
+
+            {importRoute && (
+                <ImportModal
+                    isOpen={isImportModalOpen}
+                    onClose={() => setIsImportModalOpen(false)}
+                    importRoute={importRoute}
+                    entityName={entityName || 'Records'}
+                />
+            )}
         </div>
     );
 };

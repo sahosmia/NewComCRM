@@ -345,6 +345,7 @@ export interface CommonTableProps<T> {
     dataKey?: string;
     bulkDeleteRoute?: string;
     entityName?: string;
+    importRoute?: string;
 }
 
 

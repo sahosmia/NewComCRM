@@ -96,6 +96,7 @@ export default function CustomerIndex({ customers, users, companies }: Props) {
                     sortOptions={customerSortOptions}
                     exportRoute="customers.export"
                     printRoute="customers.print"
+                    importRoute="customers.import"
                     bulkDeleteRoute="customers.bulkDestroy"
                     entityName="Customer"
                 />

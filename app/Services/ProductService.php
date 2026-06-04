@@ -6,6 +6,9 @@ use App\Models\Product;
 use App\Repositories\ProductRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use App\Imports\ProductImport;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\DB;
 
 class ProductService
 {
@@ -41,5 +44,30 @@ class ProductService
     public function getForExport(array $ids): Collection
     {
         return $this->products->getForExport($ids);
+    }
+
+    public function import($file)
+    {
+        $import = new ProductImport();
+
+        try {
+            DB::beginTransaction();
+            Excel::import($import, $file);
+
+            if ($import->failures()->isNotEmpty()) {
+                DB::rollBack();
+                return ['errors' => $import->failures()];
+            }
+
+            DB::commit();
+            return true;
+
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            DB::rollBack();
+            return ['errors' => $e->failures()];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 }
