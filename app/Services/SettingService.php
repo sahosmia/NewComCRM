@@ -41,8 +41,10 @@ class SettingService
 
             // Always update other fields from validated data (which can be null to clear them)
             $this->repository->updateOrCreate($key, $value);
-            Cache::forget("setting.{$key}");
         }
+
+        // Clear the global settings cache
+        Cache::forget('settings.all');
     }
 
     /**
@@ -62,7 +64,6 @@ class SettingService
 
         // Save path to DB
         $this->repository->updateOrCreate($key, $path);
-        Cache::forget("setting.{$key}");
 
         // Delete old image if exists
         if ($oldPath && Storage::disk('public')->exists($oldPath)) {

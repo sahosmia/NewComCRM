@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Cache;
 
 if (!function_exists('setting')) {
     /**
-     * Get setting value by key with caching and auto-casting.
+     * Get setting value by key with optimized global caching and auto-casting.
      *
      * @param string|null $key
      * @param mixed $default
@@ -13,13 +13,15 @@ if (!function_exists('setting')) {
      */
     function setting(?string $key = null, $default = null)
     {
+        $settings = Cache::rememberForever('settings.all', function () {
+            return Setting::pluck('value', 'key');
+        });
+
         if (is_null($key)) {
             return app(Setting::class);
         }
 
-        $value = Cache::remember("setting.{$key}", 3600, function () use ($key) {
-            return Setting::where('key', $key)->first()?->value;
-        });
+        $value = $settings->get($key);
 
         if (is_null($value)) {
             return $default;
