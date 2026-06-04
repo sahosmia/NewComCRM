@@ -363,11 +363,23 @@ export interface SettingType {
 
 export interface SettingsForm {
     logo: File | string | null;
+    secondary_logo: File | string | null;
     favicon: File | string | null;
     company_seal: File | string | null;
     app_name: string;
     email: string;
     phone: string;
     address: string;
+    website_url: string;
+    branding_slogan: string;
+    branding_services_bar: string;
+    support_whatsapp: string;
+    office_name_1: string;
+    office_name_2: string;
+    office_name_3: string;
+    office_address_1: string;
+    office_address_2: string;
+    office_address_3: string;
+    footer_contact_info: string;
     paginated_quantity: number | string;
 }

@@ -29,7 +29,7 @@ class SettingService
      */
     public function updateSettings(array $data): void
     {
-        $imageFields = ['logo', 'favicon', 'company_seal'];
+        $imageFields = ['logo', 'secondary_logo', 'favicon', 'company_seal'];
 
         foreach ($data as $key => $value) {
             if (in_array($key, $imageFields)) {
