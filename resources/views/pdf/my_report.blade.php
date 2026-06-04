@@ -428,7 +428,11 @@
                     {{ setting('email', 'crystalsolutionsbd@gmail.com') }}
 
                     <div class="office-info">
-                        {!! nl2br(setting('office_address_1', "<strong>Corporate Office:</strong> Tower 71, Level-8, Near ECB Circle, Dhaka Cantonment, Dhaka-1206")) !!}
+                        @if(setting('pdf_sender_office_info'))
+                            {!! nl2br(setting('pdf_sender_office_info')) !!}
+                        @else
+                            <strong>Corporate Office:</strong> Tower 71, Level-8, Near ECB Circle, Dhaka Cantonment, Dhaka-1206
+                        @endif
                     </div>
                 </div>
             </div>

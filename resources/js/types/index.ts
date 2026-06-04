@@ -381,5 +381,6 @@ export interface SettingsForm {
     office_address_2: string;
     office_address_3: string;
     footer_contact_info: string;
+    pdf_sender_office_info: string;
     paginated_quantity: number | string;
 }

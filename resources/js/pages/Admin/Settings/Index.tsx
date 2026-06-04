@@ -5,10 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import FormLabel from '@/components/admin/form/FormLabel';
 import InputError from '@/components/input-error';
 import { SettingsForm, SettingType } from '@/types';
-import { Building2, Mail, Phone, MapPin, Settings2, Image as ImageIcon, ShieldCheck, Globe, MessageSquare, FileText, LayoutList } from 'lucide-react';
+import { Building2, Mail, Phone, MapPin, Settings2, Image as ImageIcon, ShieldCheck, Globe, MessageSquare, FileText, LayoutList, UserCheck } from 'lucide-react';
 
 interface Props {
     settings: SettingType;
@@ -18,6 +19,8 @@ const BREADCRUMBS = [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Global Settings', href: '#' },
 ];
+
+const PAGINATION_OPTIONS = ['5', '10', '20', '50', '100'];
 
 export default function Index({ settings }: Props) {
     const { data, setData, post, processing, errors } = useForm<SettingsForm>({
@@ -40,6 +43,7 @@ export default function Index({ settings }: Props) {
         office_address_2: (settings.office_address_2 as string) || '',
         office_address_3: (settings.office_address_3 as string) || '',
         footer_contact_info: (settings.footer_contact_info as string) || '',
+        pdf_sender_office_info: (settings.pdf_sender_office_info as string) || '',
         paginated_quantity: (settings.paginated_quantity as string) || '10',
     });
 
@@ -328,6 +332,23 @@ export default function Index({ settings }: Props) {
                                 <InputError message={errors.branding_services_bar} />
                             </div>
 
+                            <div className="space-y-2">
+                                <FormLabel>
+                                    <div className="flex items-center gap-1">
+                                        <UserCheck className="h-3 w-3" />
+                                        PDF Sender Info (Below Signature)
+                                    </div>
+                                </FormLabel>
+                                <Textarea
+                                    value={data.pdf_sender_office_info}
+                                    onChange={(e) => setData('pdf_sender_office_info', e.target.value)}
+                                    placeholder="Enter HTML or text for office info below sender signature..."
+                                    rows={2}
+                                />
+                                <p className="text-xs text-muted-foreground">This info appears below the sender's name and designation in PDFs.</p>
+                                <InputError message={errors.pdf_sender_office_info} />
+                            </div>
+
                             <div className="grid gap-6 md:grid-cols-3">
                                 {/* Office 1 */}
                                 <div className="space-y-3 border-r pr-4">
@@ -419,12 +440,21 @@ export default function Index({ settings }: Props) {
                         <CardContent className="space-y-6">
                             <div className="max-w-xs space-y-2">
                                 <FormLabel required>Default Paginated Quantity</FormLabel>
-                                <Input
-                                    type="number"
-                                    min="1"
-                                    value={data.paginated_quantity}
-                                    onChange={(e) => setData('paginated_quantity', e.target.value)}
-                                />
+                                <Select
+                                    value={String(data.paginated_quantity)}
+                                    onValueChange={(value) => setData('paginated_quantity', value)}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select quantity" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {PAGINATION_OPTIONS.map((option) => (
+                                            <SelectItem key={option} value={option}>
+                                                {option}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                                 <p className="text-xs text-muted-foreground">
                                     Number of records shown per page in tables.
                                 </p>
