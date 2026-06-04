@@ -45,22 +45,12 @@ class CustomerImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
 
     public function rules(): array
     {
-        // Since we are in an import context, we don't have $this->route('customer') or $this->input('type') in the same way.
-        // We'll adapt the rules.
-        return [
-            'name'          => 'required|string|max:255',
-            'designation'   => 'nullable|string|max:255',
-            'company_id'    => 'nullable|exists:companies,id',
-            'email'         => 'nullable|email|max:255|unique:customers,email',
-            'type'          => 'required|in:corporate,reseller,personal',
-            'date_of_birth' => 'nullable|date',
-            'phones'        => 'required|array|min:1',
-            'phones.*'      => ['required', 'string', 'regex:/^01[3-9]\d{8}$/',],
-            'addresses'     => 'nullable|array',
-            'addresses.*'   => 'nullable|string',
-            'remarks'       => 'nullable|string',
-            'assigned_to'   => 'required|exists:users,id',
-            'status'        => 'required|in:active,inactive',
-        ];
+        $rules = $this->customerAttributeRules();
+        $rules['email'] = 'required|email|max:255|unique:customers,email';
+        return $rules;
     }
+
+    // Trait requirement stubs
+    protected function route($name) { return null; }
+    protected function input($key) { return null; }
 }

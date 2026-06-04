@@ -36,7 +36,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::delete('bulk-destroy', 'bulkDestroy')->name('bulkDestroy');
             Route::get('export/excel', 'export')->name('export');
             Route::get('print', 'print')->name('print');
-            Route::post('import/excel', 'import')->name('import');
+            Route::post('import', 'import')->name('import');
         });
     });
     Route::resource('customers', CustomerController::class);
@@ -47,7 +47,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::delete('bulk-destroy', 'bulkDestroy')->name('bulkDestroy');
             Route::get('export/excel', 'export')->name('export');
             Route::get('print', 'print')->name('print');
-            Route::post('import/excel', 'import')->name('import');
+            Route::post('import', 'import')->name('import');
         });
     });
     Route::resource('products', ProductController::class);
