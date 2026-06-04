@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+
+
 use App\Models\Sale;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -10,7 +12,7 @@ class SaleRepository
 {
     public function paginateForIndex(array $params): LengthAwarePaginator
     {
-        $perPage = $params['per_page'] ?? 10;
+        $perPage = $params['per_page'] ?? setting('paginated_quantity', 10);
         $search = $params['search'] ?? null;
         $customerId = $params['customer_id'] ?? null;
         $userId = $params['user_id'] ?? null;

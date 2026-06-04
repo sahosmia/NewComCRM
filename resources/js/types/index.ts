@@ -356,3 +356,18 @@ export interface Company {
     website?: string;
     address?: string;
 }
+
+export interface SettingType {
+    [key: string]: string | number | null;
+}
+
+export interface SettingsForm {
+    logo: File | string | null;
+    favicon: File | string | null;
+    company_seal: File | string | null;
+    app_name: string;
+    email: string;
+    phone: string;
+    address: string;
+    paginated_quantity: number | string;
+}

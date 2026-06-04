@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\{
     DashboardController,
     CustomerController,
@@ -130,6 +131,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             });
         });
         Route::resource('users', UserController::class);
+
+        // Global Settings
+        Route::get('admin-settings', [SettingController::class, 'index'])->name('admin.settings.index');
+        Route::post('admin-settings', [SettingController::class, 'update'])->name('admin.settings.update');
     });
 });
 

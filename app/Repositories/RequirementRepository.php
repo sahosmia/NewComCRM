@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+
+
 use App\Models\Requirement;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -9,7 +11,7 @@ class RequirementRepository
 {
     public function paginateForIndex(array $params): LengthAwarePaginator
     {
-        $perPage = $params['per_page'] ?? 10;
+        $perPage = $params['per_page'] ?? setting('paginated_quantity', 10);
         $user = auth()->user();
 
         return Requirement::query()

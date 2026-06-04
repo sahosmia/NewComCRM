@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+
+
 use App\Models\FollowUp;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -10,7 +12,7 @@ class FollowUpRepository
 {
     public function paginateForIndex(array $params, User $user): LengthAwarePaginator
     {
-        $perPage = $params['per_page'] ?? 10;
+        $perPage = $params['per_page'] ?? setting('paginated_quantity', 10);
 
         return FollowUp::query()
             ->with(['customer', 'user', 'requirement'])

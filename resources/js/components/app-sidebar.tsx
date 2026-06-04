@@ -21,6 +21,7 @@ import {
     CalendarDays,
     FileText,
     ClipboardList,
+    Settings,
     ChartBar,
     UserCog,
     BadgeDollarSign,
@@ -50,6 +51,12 @@ export function AppSidebar() {
             title: 'Users',
             href: route('users.index'),
             icon: UserCog,
+            hidden: userRole !== 'super_admin'
+        },
+        {
+            title: 'Global Settings',
+            href: route('admin.settings.index'),
+            icon: Settings,
             hidden: userRole !== 'super_admin'
         },
 

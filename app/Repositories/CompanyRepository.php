@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+
+
 use App\Models\Company;
 
 class CompanyRepository
@@ -22,7 +24,7 @@ class CompanyRepository
             }, function ($query) {
                 $query->latest();
             })
-            ->paginate($params['per_page'] ?? 10)
+            ->paginate($params['per_page'] ?? setting('paginated_quantity', 10))
             ->withQueryString();
     }
 

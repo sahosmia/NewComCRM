@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+
+
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -21,7 +23,7 @@ class UserRepository
 
     public function paginateForIndex(array $params): LengthAwarePaginator
     {
-        $perPage = $params['per_page'] ?? 10;
+        $perPage = $params['per_page'] ?? setting('paginated_quantity', 10);
 
         return User::query()
             ->when($params['search'] ?? null, function ($query, $search) {
