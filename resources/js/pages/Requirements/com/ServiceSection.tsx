@@ -1,13 +1,13 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { FormSelect } from "@/components/admin/form/FormSelect";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
 import { RequirementServiceItem, Unit } from "@/types";
 import FormLabel from "@/components/admin/form/FormLabel";
 import { useModal } from "@/contexts/ModalContext";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2 } from "lucide-react";
+import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 
 interface ServiceSectionProps {
     title: string;
@@ -48,7 +48,7 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                 </h3>
                 <div className="flex items-center gap-4">
                     {hasService && (
-                         <Button type="button" variant="outline" size="sm" onClick={addItem} className="h-8 gap-1 bg-background border-slate-200 hover:bg-slate-50">
+                        <Button type="button" variant="outline" size="sm" onClick={addItem} className="h-8 gap-1 bg-background border-slate-200 hover:bg-slate-50">
                             <Plus className="w-3.5 h-3.5" /> Add New
                         </Button>
                     )}
@@ -84,31 +84,35 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                                     <ErrorMessage message={errors[`${prefix}.${index}.quantity`]} />
                                 </div>
                                 <div className="space-y-2 col-span-2">
-                                    <div className="flex gap-2">
-                                        <FormSelect
-                                            required
+                                        <GenericCombobox
                                             label="Unit"
-                                            value={item.unit_id.toString()}
-                                            onChange={(v) => handleItemChange(index, 'unit_id', v)}
-                                            options={units.map(u => ({ label: u.short_form, value: u.id.toString() }))}
+                                            items={units.map(u => ({ ...u, name: u.short_form }))}
+                                             selectedId={item.unit_id}
+                                            onSelect={(id, name) => handleItemChange(index, 'unit_id', id)}
+                                            placeholder="Select Unit"
+                                            searchPlaceholder="Search units..."
+                                            allowManualInput={false}
                                             error={errors[`${prefix}.${index}.unit_id`]}
+                                            renderAction={
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="h-6 w-6"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        openModal('CREATE_UNIT', {
+                                                            onSuccess: (unit: Unit) => {
+                                                                onUnitCreated && onUnitCreated(unit);
+                                                                handleItemChange(index, 'unit_id', unit.id);
+                                                            }
+                                                        });
+                                                    }}
+                                                >
+                                                    <Plus className="h-4 w-4" />
+                                                </Button>
+                                            }
                                         />
-                                        <Button
-                                            type="button"
-                                            variant="outline"
-                                            size="icon"
-                                            className="h-10 w-10 shrink-0"
-                                            onClick={() => openModal('CREATE_UNIT', {
-                                                onSuccess: (newUnit: Unit) => {
-                                                    if (onUnitCreated) onUnitCreated(newUnit);
-                                                    handleItemChange(index, 'unit_id', newUnit.id.toString())
-                                                }
-                                            })}
-                                        >
-                                            <Plus className="h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                    <ErrorMessage message={errors[`${prefix}.${index}.unit_id`]} />
                                 </div>
                             </div>
                             <div className="md:col-span-2 lg:col-span-2 space-y-2">

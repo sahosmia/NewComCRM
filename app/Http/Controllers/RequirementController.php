@@ -10,13 +10,11 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Services\LookupService;
 use App\Services\ExportService;
-
-
-
-
+use App\Traits\HandlesModalResponses;
 
 class RequirementController extends Controller
 {
+    use HandlesModalResponses;
     public function __construct(
         private RequirementService $requirementService,
          private LookupService $lookupService,
@@ -57,10 +55,14 @@ class RequirementController extends Controller
     {
         $this->authorize('create', Requirement::class);
 
-        $this->requirementService->create($request->validated());
+        $requirement = $this->requirementService->create($request->validated());
 
-        return redirect()->route('requirements.index')
-            ->with('success', 'Requirement created successfully');
+        return $this->handleResponse(
+            $request,
+            $requirement,
+            'Requirement created successfully',
+            'requirements.index'
+        );
     }
 
     /**
