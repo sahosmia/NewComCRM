@@ -33,3 +33,4 @@ npm warn Unknown project config "public-hoist-pattern". This will stop working i
   LARAVEL v12.61.0  plugin v2.1.0
 
   ➜  APP_URL: http://localhost:8000
+11:27:24 AM [vite] (client) hmr update /resources/js/pages/Requirements/com/ServiceSection.tsx, /resources/css/app.css

@@ -131,31 +131,36 @@ export const ServiceSection = ({
                                     <ErrorMessage message={errors[`${prefix}.${index}.quantity`]} />
                                 </div>
                                 <div className="space-y-2 col-span-2">
-                                    <div className="flex gap-2">
-                                        <FormSelect
-                                            required
-                                            label="Unit"
-                                            value={item.unit_id.toString()}
-                                            onChange={(v) => handleItemChange(index, 'unit_id', v)}
-                                            options={units.map(u => ({ label: u.short_form, value: u.id.toString() }))}
-                                            error={errors[`${prefix}.${index}.unit_id`]}
-                                        />
-                                        <Button
-                                            type="button"
-                                            variant="outline"
-                                            size="icon"
-                                            className="h-10 w-10 shrink-0"
-                                            onClick={() => openModal('CREATE_UNIT', {
-                                                onSuccess: (newUnit: Unit) => {
-                                                    if (onUnitCreated) onUnitCreated(newUnit);
-                                                    handleItemChange(index, 'unit_id', newUnit.id.toString());
-                                                }
-                                            })}
-                                        >
-                                            <Plus className="h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                    <ErrorMessage message={errors[`${prefix}.${index}.unit_id`]} />
+                                    <GenericCombobox
+                                        required
+                                        label="Unit"
+                                        items={units.map(u => ({ ...u, name: u.short_form }))}
+                                        selectedId={item.unit_id}
+                                        onSelect={(id) => handleItemChange(index, 'unit_id', id.toString())}
+                                        placeholder="Select Unit"
+                                        searchPlaceholder="Search units..."
+                                        allowManualInput={false}
+                                        error={errors[`${prefix}.${index}.unit_id`]}
+                                        renderAction={
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-6 w-6"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    openModal('CREATE_UNIT', {
+                                                        onSuccess: (newUnit: Unit) => {
+                                                            if (onUnitCreated) onUnitCreated(newUnit);
+                                                            handleItemChange(index, 'unit_id', newUnit.id.toString());
+                                                        }
+                                                    });
+                                                }}
+                                            >
+                                                <Plus className="h-4 w-4" />
+                                            </Button>
+                                        }
+                                    />
                                 </div>
                             </div>
                             <div className="md:col-span-2 lg:col-span-2 space-y-2">
