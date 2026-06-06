@@ -1,6 +1,4 @@
 import React from 'react';
-import { useForm, router, usePage } from '@inertiajs/react';
-import { SharedData } from '@/types';
 import {
     Dialog,
     DialogContent,
@@ -13,39 +11,29 @@ import { Input } from '@/components/ui/input';
 import { Loader2 } from 'lucide-react';
 import ErrorMessage from '@/components/admin/form/ErrorMessage';
 import FormLabel from '@/components/admin/form/FormLabel';
+import { useModalForm } from '@/hooks/use-modal-form';
+import { Unit } from '@/types';
 
 interface CreateUnitModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSuccess?: (unitId: number) => void;
+    onSuccess?: (unit: Unit) => void;
 }
 
 export default function CreateUnitModal({ isOpen, onClose, onSuccess }: CreateUnitModalProps) {
-    const { data, setData, post, processing, errors, reset, clearErrors } = useForm({
+    const { data, setData, errors, processing, reset, clearErrors, submit } = useModalForm({
         title: '',
         short_form: '',
+    }, route('units.store'), {
+        onSuccess: (unit: Unit) => {
+            if (onSuccess) onSuccess(unit);
+            onClose();
+        }
     });
-
-    const { props } = usePage<SharedData>();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('units.store'), {
-            onSuccess: () => {
-                // Access the flashed data if available
-                const newUnitId = props.flash.new_id;
-
-                // Partial reload to refresh units list on the current page
-                router.reload({ only: ['units'] });
-
-                if (onSuccess && newUnitId) {
-                    onSuccess(Number(newUnitId));
-                }
-
-                reset();
-                onClose();
-            },
-        });
+        submit();
     };
 
     const handleOpenChange = (open: boolean) => {

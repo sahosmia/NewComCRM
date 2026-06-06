@@ -7,6 +7,7 @@ import { Company, Requirement, RequirementItem, User } from "@/types";
 import { CustomerType } from "@/types";
 import { Product } from "@/types";
 import { Unit } from "@/types";
+import { useState } from "react";
 import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
 import { FormSelect } from "@/components/admin/form/FormSelect";
@@ -29,8 +30,9 @@ interface Props {
 
 }
 
-export default function RequirementForm({ requirement, customers, products, units, users, companies }: Props) {
+export default function RequirementForm({ requirement, customers: initialCustomers, products: initialProducts, units, users, companies }: Props) {
     const { openModal } = useModal();
+    const [customers, setCustomers] = useState<CustomerType[]>(initialCustomers);
     const urlParams = new URLSearchParams(window.location.search);
     const preSelectedCustomerId = urlParams.get('customer_id');
 
@@ -169,7 +171,10 @@ export default function RequirementForm({ requirement, customers, products, unit
                                                     openModal('CREATE_CUSTOMER', {
                                                         users: users,
                                                         companies: companies,
-                                                        onSuccess: (id: number) => setData('customer_id', id)
+                                                        onSuccess: (newCustomer: CustomerType) => {
+                                                            setCustomers(prev => [...prev, newCustomer]);
+                                                            setData('customer_id', newCustomer.id);
+                                                        }
                                                     });
                                                 }}
                                             >
@@ -201,7 +206,10 @@ export default function RequirementForm({ requirement, customers, products, unit
                                                     openModal('CREATE_CUSTOMER', {
                                                         users: users,
                                                         companies: companies,
-                                                        onSuccess: (id: number) => setData('send_qutation_to', id)
+                                                        onSuccess: (newCustomer: CustomerType) => {
+                                                            setCustomers(prev => [...prev, newCustomer]);
+                                                            setData('send_qutation_to', newCustomer.id);
+                                                        }
                                                     });
                                                 }}
                                             >
