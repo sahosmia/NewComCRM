@@ -1,6 +1,4 @@
 import React from 'react';
-import { useForm, router, usePage } from '@inertiajs/react';
-import { SharedData } from '@/types';
 import {
     Dialog,
     DialogContent,
@@ -15,19 +13,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 import ErrorMessage from '@/components/admin/form/ErrorMessage';
-import { GenericCombobox } from '@/components/admin/form/GenericCombobox';
 import FormLabel from '@/components/admin/form/FormLabel';
-import { Unit } from '@/types';
+import { Unit, Product } from '@/types';
+import { useModalForm } from '@/hooks/use-modal-form';
 
 interface CreateProductModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSuccess?: (productId: number) => void;
+    onSuccess?: (product: Product) => void;
     units?: Unit[];
 }
 
 export default function CreateProductModal({ isOpen, onClose, onSuccess, units = [] }: CreateProductModalProps) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, errors, processing, reset, submit } = useModalForm({
         name: "",
         unit_price: "",
         category: "",
@@ -36,21 +34,16 @@ export default function CreateProductModal({ isOpen, onClose, onSuccess, units =
         source: "",
         description: "",
         unit_id: "",
+    }, route('products.store'), {
+        onSuccess: (product: Product) => {
+            if (onSuccess) onSuccess(product);
+            onClose();
+        }
     });
-
-    const { props } = usePage<SharedData>();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('products.store'), {
-            onSuccess: () => {
-                const newId = props.flash.new_id;
-                router.reload({ only: ['products'] });
-                if (onSuccess && newId) onSuccess(Number(newId));
-                reset();
-                onClose();
-            },
-        });
+        submit();
     };
 
     return (

@@ -84,12 +84,12 @@ const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, importRoute,
                         )}
                     </div>
 
-                    {(importErrors.length > 0 || pageErrors.error) && (
+                    {(importErrors.length > 0 || pageErrors?.error) && (
                         <Alert variant="destructive" className="mt-4">
                             <AlertCircle className="h-4 w-4" />
                             <AlertTitle>Import Failed</AlertTitle>
                             <AlertDescription>
-                                {pageErrors.error && <p className="mb-2 font-semibold">{pageErrors.error as string}</p>}
+                                {pageErrors?.error && <p className="mb-2 font-semibold">{pageErrors.error as string}</p>}
                                 {importErrors.length > 0 && (
                                     <div className="max-h-[150px] mt-2 rounded-md border border-destructive/20 p-2 overflow-y-auto">
                                         <ul className="list-disc pl-4 text-xs space-y-1">

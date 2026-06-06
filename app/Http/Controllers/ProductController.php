@@ -6,6 +6,7 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Services\ProductService;
+use App\Traits\HandlesModalResponses;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Exports\GeneralExport;
@@ -14,6 +15,8 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
+    use HandlesModalResponses;
+
     public function __construct(
         private ProductService $productService,
     ) {}
@@ -45,17 +48,13 @@ class ProductController extends Controller
     {
         $product = $this->productService->create($request->validated());
 
-        if ($request->wantsJson()) {
-            return response()->json([
-                'success' => 'Product created successfully',
-                'product' => $product,
-                'new_id' => $product->id,
-            ], 201);
-        }
+        $product->load('unit');
 
-        return back()
-            ->with('success', 'Product created successfully')
-            ->with('new_id', $product->id);
+        return $this->handleResponse(
+            $request,
+            $product,
+            'Product created successfully'
+        );
     }
 
     /**

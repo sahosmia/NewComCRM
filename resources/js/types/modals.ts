@@ -3,7 +3,7 @@ import { CustomerType, Requirement, User } from "@/types";
 export interface BaseModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSuccess?: (id: number) => void;
+    onSuccess?: (data: any) => void;
 }
 
 export interface CreateMeetingModalProps extends BaseModalProps {

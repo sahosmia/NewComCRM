@@ -8,11 +8,14 @@ use App\Models\Customer;
 use App\Services\CustomerService;
 use App\Services\ExportService;
 use App\Services\LookupService;
+use App\Traits\HandlesModalResponses;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CustomerController extends Controller
 {
+    use HandlesModalResponses;
+
     public function __construct(
         private CustomerService $customerService,
         private LookupService $lookupService,
@@ -45,17 +48,14 @@ class CustomerController extends Controller
     {
         $customer = $this->customerService->create($request->validated());
 
-        if ($request->wantsJson()) {
-            return response()->json([
-                'success' => 'Customer created successfully',
-                'customer' => $customer,
-                'new_id' => $customer->id,
-            ], 201);
-        }
+        $customer->load('company');
 
-        return redirect()->route('customers.index')
-            ->with('success', 'Customer created successfully')
-            ->with('new_id', $customer->id);
+        return $this->handleResponse(
+            $request,
+            $customer,
+            'Customer created successfully',
+            'customers.index'
+        );
     }
 
 

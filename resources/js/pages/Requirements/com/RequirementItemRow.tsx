@@ -13,15 +13,15 @@ interface ItemRowProps {
     item: any;
     products: Product[];
     aitFactor: number;
-    onItemChange: (index: number, field: any, value: any) => void;
+    onItemChange: (index: number, field: any, value: any, productFallback?: Product) => void;
     onRemove: (index: number) => void;
     isRemoveDisabled: boolean;
     errors: any;
-        units: Unit[];
-
+    units: Unit[];
+    onProductCreated?: (product: Product) => void;
 }
 
-export const RequirementItemRow = ({ index, item, products, aitFactor, onItemChange, onRemove, isRemoveDisabled, errors, units }: ItemRowProps) => {
+export const RequirementItemRow = ({ index, item, products, aitFactor, onItemChange, onRemove, isRemoveDisabled, errors, units, onProductCreated }: ItemRowProps) => {
     const { openModal } = useModal();
     const calculateGross = () => (parseFloat(item.unit_price) || 0) * aitFactor;
     const calculateTotal = () => ((parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor) + (parseFloat(item.costing_price) || 0);
@@ -77,7 +77,10 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                                         e.stopPropagation();
                                         openModal('CREATE_PRODUCT', {
                                             units: units,
-                                            onSuccess: (id: number) => onItemChange(index, "product_id", id)
+                                            onSuccess: (newProduct: Product) => {
+                                                if (onProductCreated) onProductCreated(newProduct);
+                                                onItemChange(index, "product_id", newProduct.id, newProduct);
+                                            }
                                         });
                                     }}
                                 >
