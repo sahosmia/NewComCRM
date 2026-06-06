@@ -79,17 +79,16 @@ export default function RequirementForm({ requirement, customers: initialCustome
         setData("items", data.items.filter((_: any, i: number) => i !== index));
     };
 
-     const handleItemChange = (index: number, field: keyof RequirementItem | 'description' | 'costing_price', value: string | number, productFallback?: Product) => {
+    const handleItemChange = (index: number, field: keyof RequirementItem | 'description' | 'costing_price', value: string | number, product?: Product) => {
         const newItems = data.items.map((item, i) => {
             if (i !== index) return item;
 
             if (field === "product_id") {
-                const product = productFallback || products.find(p => p.id === parseInt(String(value)));
                 return {
                     ...item,
                     product_id: parseInt(String(value)),
-                    unit_price: product ? product.unit_price : "",
-                    description: product ? (product.description || "") : "",
+                    unit_price: product ? product.unit_price : (item.unit_price || ""),
+                    description: product ? (product.description || "") : (item.description || ""),
                 };
             }
 
@@ -474,10 +473,14 @@ export default function RequirementForm({ requirement, customers: initialCustome
                     items={data.accessories}
                     setItems={(items) => setData("accessories", items)}
                     units={units}
+                    products={products}
                     aitFactor={aitFactor}
                     errors={errors}
                     onUnitCreated={(newUnit: Unit) => {
                         setUnits(prev => [...prev, newUnit]);
+                    }}
+                    onProductCreated={(newProduct: Product) => {
+                        setProducts(prev => [...prev, newProduct]);
                     }}
                 />
 
@@ -491,10 +494,14 @@ export default function RequirementForm({ requirement, customers: initialCustome
                     items={data.installations}
                     setItems={(items) => setData("installations", items)}
                     units={units}
+                    products={products}
                     aitFactor={aitFactor}
                     errors={errors}
                     onUnitCreated={(newUnit: Unit) => {
                         setUnits(prev => [...prev, newUnit]);
+                    }}
+                    onProductCreated={(newProduct: Product) => {
+                        setProducts(prev => [...prev, newProduct]);
                     }}
                 />
             </div>

@@ -3,11 +3,12 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { FormSelect } from "@/components/admin/form/FormSelect";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
-import { RequirementServiceItem, Unit } from "@/types";
+import { RequirementServiceItem, Unit, Product } from "@/types";
 import FormLabel from "@/components/admin/form/FormLabel";
 import { useModal } from "@/contexts/ModalContext";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2 } from "lucide-react";
+import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 
 interface ServiceSectionProps {
     title: string;
@@ -18,12 +19,28 @@ interface ServiceSectionProps {
     items: RequirementServiceItem[];
     setItems: (items: RequirementServiceItem[]) => void;
     units: Unit[];
+    products: Product[];
     aitFactor: number;
     errors: any;
     onUnitCreated?: (unit: Unit) => void;
+    onProductCreated?: (product: Product) => void;
 }
 
-export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefix, items, setItems, units, aitFactor, errors, onUnitCreated }: ServiceSectionProps) => {
+export const ServiceSection = ({
+    title,
+    icon,
+    hasService,
+    onServiceToggle,
+    prefix,
+    items,
+    setItems,
+    units,
+    products,
+    aitFactor,
+    errors,
+    onUnitCreated,
+    onProductCreated
+}: ServiceSectionProps) => {
     const { openModal } = useModal();
 
     const addItem = () => {
@@ -34,9 +51,16 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
         setItems(items.filter((_, i) => i !== index));
     };
 
-    const handleItemChange = (index: number, field: keyof RequirementServiceItem, value: any) => {
+    const handleItemChange = (index: number, field: keyof RequirementServiceItem, value: any, product?: Product) => {
         const newItems = [...items];
-        (newItems[index] as any)[field] = value;
+        const updatedItem = { ...newItems[index], [field]: value };
+
+        if (field === 'title' && product) {
+            updatedItem.price = product.unit_price;
+            updatedItem.unit_id = product.unit_id.toString();
+        }
+
+        newItems[index] = updatedItem as RequirementServiceItem;
         setItems(newItems);
     };
 
@@ -63,14 +87,37 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                     {items.map((item, index) => (
                         <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-6 items-end border-b pb-6 last:border-0 last:pb-0">
                             <div className="md:col-span-4 lg:col-span-4 space-y-2">
-                                <FormLabel required>{title} Service Description</FormLabel>
-                                <Input
-                                    placeholder={`Enter ${title.toLowerCase()} details...`}
-                                    value={item.title}
-                                    onChange={(e) => handleItemChange(index, 'title', e.target.value)}
-                                    className="h-10 border-slate-200 focus:border-primary/50"
+                                <GenericCombobox
+                                    required
+                                    label={`${title} Service Description`}
+                                    items={products}
+                                    selectedId={item.title}
+                                    manualValue={item.title}
+                                    onSelect={(id, name, product) => handleItemChange(index, 'title', name, product)}
+                                    placeholder={`Select or enter ${title.toLowerCase()} details...`}
+                                    searchPlaceholder="Search product..."
+                                    error={errors[`${prefix}.${index}.title`]}
+                                    renderAction={
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-6 w-6"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                openModal('CREATE_PRODUCT', {
+                                                    units: units,
+                                                    onSuccess: (newProduct: Product) => {
+                                                        if (onProductCreated) onProductCreated(newProduct);
+                                                        handleItemChange(index, 'title', newProduct.name, newProduct);
+                                                    }
+                                                });
+                                            }}
+                                        >
+                                            <Plus className="h-4 w-4" />
+                                        </Button>
+                                    }
                                 />
-                                <ErrorMessage message={errors[`${prefix}.${index}.title`]} />
                             </div>
                             <div className="grid grid-cols-3 md:col-span-3 lg:col-span-3 gap-4">
                                 <div className="space-y-2">
@@ -101,7 +148,7 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                                             onClick={() => openModal('CREATE_UNIT', {
                                                 onSuccess: (newUnit: Unit) => {
                                                     if (onUnitCreated) onUnitCreated(newUnit);
-                                                    handleItemChange(index, 'unit_id', newUnit.id.toString())
+                                                    handleItemChange(index, 'unit_id', newUnit.id.toString());
                                                 }
                                             })}
                                         >

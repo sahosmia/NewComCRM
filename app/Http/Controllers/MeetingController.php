@@ -11,9 +11,11 @@ use App\Services\ExportService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Traits\HandlesModalResponses;
 
 class MeetingController extends Controller
 {
+    use HandlesModalResponses;
     public function __construct(
         private MeetingService $meetingService,
         private LookupService $lookupService,
@@ -55,17 +57,12 @@ class MeetingController extends Controller
             (int) Auth::id()
         );
 
-        if ($request->wantsJson()) {
-            return response()->json([
-                'success' => 'Meeting scheduled successfully',
-                'meeting' => $meeting,
-                'new_id' => $meeting->id,
-            ], 201);
-        }
-
-        return redirect()->route('meetings.index')
-            ->with('success', 'Meeting scheduled successfully')
-            ->with('new_id', $meeting->id);
+        return $this->handleResponse(
+            $request,
+            $meeting,
+            'Meeting scheduled successfully',
+            'meetings.index'
+        );
     }
 
     /**
