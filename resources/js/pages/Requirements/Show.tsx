@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
 import StatusBadge from "@/components/shared/StatusBadge";
-import { Requirement } from "@/types";
 import { formatDate } from "@/utils/date-format";
 
 import { Company, CustomerType, Requirement, User } from "@/types";
