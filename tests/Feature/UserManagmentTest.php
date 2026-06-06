@@ -81,7 +81,7 @@ it('can_delete_a_user', function () {
         ->delete(route('users.destroy', $user));
 
     $response->assertRedirect();
-    $this->assertSoftDeleted('users', [
+    $this->assertDatabaseMissing('users', [
         'id' => $user->id,
     ]);
 });

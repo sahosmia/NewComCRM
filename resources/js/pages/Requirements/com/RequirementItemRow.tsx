@@ -13,7 +13,7 @@ interface ItemRowProps {
     item: any;
     products: Product[];
     aitFactor: number;
-    onItemChange: (index: number, field: any, value: any, productFallback?: Product) => void;
+    onItemChange: (index: number, field: any, value: any, product?: Product) => void;
     onRemove: (index: number) => void;
     isRemoveDisabled: boolean;
     errors: any;
@@ -61,9 +61,9 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                         <GenericCombobox
                             required
                             label="Product Name"
-                            items={products.map(p => ({ id: p.id, name: p.name }))}
+                            items={products}
                             selectedId={item.product_id}
-                            onSelect={(id) => onItemChange(index, "product_id", id)}
+                            onSelect={(id, name, product) => onItemChange(index, "product_id", id, product)}
                             placeholder="Select a product..."
                             searchPlaceholder="Search product..."
                             error={productIdError}
@@ -79,7 +79,7 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                                             units: units,
                                             onSuccess: (newProduct: Product) => {
                                                 if (onProductCreated) onProductCreated(newProduct);
-                                                onItemChange(index, "product_id", newProduct.id);
+                                                onItemChange(index, "product_id", newProduct.id, newProduct);
                                             }
                                         });
                                     }}

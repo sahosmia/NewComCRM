@@ -14,21 +14,20 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
 import FormLabel from "./FormLabel";
 import ErrorMessage from "./ErrorMessage";
 
-interface Item {
+interface BaseItem {
     id: string | number;
     name: string;
 }
 
-interface GenericComboboxProps {
+interface GenericComboboxProps<T extends BaseItem> {
     label: string;
-    items: Item[];
+    items: T[];
     selectedId?: string | number;
     manualValue?: string;
-    onSelect: (id: string | number | "", name: string) => void;
+    onSelect: (id: string | number | "", name: string, item?: T) => void;
     placeholder?: string;
     searchPlaceholder?: string;
     emptyText?: string;
@@ -39,7 +38,7 @@ interface GenericComboboxProps {
     error?: string;
 }
 
-export function GenericCombobox({
+export function GenericCombobox<T extends BaseItem>({
     label,
     items,
     selectedId,
@@ -53,7 +52,7 @@ export function GenericCombobox({
     renderAction,
     required = false,
     error
-}: GenericComboboxProps) {
+}: GenericComboboxProps<T>) {
     const [open, setOpen] = React.useState(false);
 
     // Find the current label based on ID or manual fallback
@@ -70,8 +69,9 @@ export function GenericCombobox({
                         <Button
                             variant="outline"
                             role="combobox"
+                            type="button"
                             aria-expanded={open}
-                            className={cn("w-full justify-between font-normal", renderAction && "pr-10", !selectedId && !manualValue && "text-muted-foreground", error && "border-destructive", className)}
+                            className={cn("w-full justify-between font-normal text-left", renderAction && "pr-10", !selectedId && !manualValue && "text-muted-foreground", error && "border-destructive", className)}
                         >
                             <span className="truncate">{displayLabel}</span>
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -88,7 +88,6 @@ export function GenericCombobox({
                             <CommandEmpty>
                                 <div className="p-2 space-y-2">
                                     <p className="text-xs text-muted-foreground">{emptyText}</p>
-
                                 </div>
                             </CommandEmpty>
                             <CommandGroup className="max-h-60 overflow-auto">
@@ -97,7 +96,7 @@ export function GenericCombobox({
                                         key={item.id}
                                         value={item.name}
                                         onSelect={() => {
-                                            onSelect(item.id, item.name);
+                                            onSelect(item.id, item.name, item);
                                             setOpen(false);
                                         }}
                                     >

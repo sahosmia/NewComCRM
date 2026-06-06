@@ -28,6 +28,9 @@ trait HandlesModalResponses
             elseif ($item instanceof \App\Models\Unit) $resourceKey = 'unit';
             elseif ($item instanceof \App\Models\Product) $resourceKey = 'product';
             elseif ($item instanceof \App\Models\Customer) $resourceKey = 'customer';
+            elseif ($item instanceof \App\Models\Requirement) $resourceKey = 'requirement';
+            elseif ($item instanceof \App\Models\Meeting) $resourceKey = 'meeting';
+            elseif ($item instanceof \App\Models\FollowUp) $resourceKey = 'follow_up';
 
             $responseData = [
                 'success' => true,

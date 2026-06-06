@@ -63,7 +63,7 @@ export default function MeetingForm({ meeting, customers, requirements, users, c
                 <GenericCombobox
                     required
                     label="Customer"
-                    items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || c.name }))}
+                    items={customers.map(c => ({ ...c, name: c.full_name_with_company || c.name }))}
                     selectedId={data.customer_id}
                     onSelect={(id) => {
                         setData("customer_id", id as number);
@@ -85,14 +85,13 @@ export default function MeetingForm({ meeting, customers, requirements, users, c
             <div className="space-y-1">
                 <GenericCombobox
                     label="Requirement (Optional)"
-                    items={filteredRequirements.map(r => ({ id: r.id, name: r.title || `Requirement #${r.id}` }))}
+                    items={filteredRequirements.map(r => ({ ...r, name: r.title || `Requirement #${r.id}` }))}
                     selectedId={data.requirement_id}
-                    onSelect={(id) => {
+                    onSelect={(id, name, req) => {
                         setData("requirement_id", id as number);
                         // If requirement is selected, auto-select the customer
-                        if (id) {
-                            const req = requirements.find(r => r.id === id);
-                            if (req && req.customer_id !== data.customer_id) {
+                        if (id && req) {
+                            if (req.customer_id !== data.customer_id) {
                                 setData(d => ({ ...d, requirement_id: id as number, customer_id: req.customer_id }));
                             }
                         }
@@ -112,7 +111,7 @@ export default function MeetingForm({ meeting, customers, requirements, users, c
                                 openModal('CREATE_CUSTOMER', {
                                     users: users,
                                     companies: companies,
-                                    onSuccess: (id: number) => setData('customer_id', id)
+                                    onSuccess: (customer: CustomerType) => setData('customer_id', customer.id)
                                 });
                             }}
                         >

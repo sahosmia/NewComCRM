@@ -1,0 +1,36 @@
+npm warn Unknown project config "public-hoist-pattern". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> dev
+> vite
+
+11:16:24 AM [vite] (client) info: Types generated for actions, routes, form variants
+  Plugin: @laravel/vite-plugin-wayfinder
+
+  VITE v7.3.1  ready in 1819 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+
+  LARAVEL v12.61.0  plugin v2.1.0
+
+  ➜  APP_URL: undefined
+11:22:02 AM [vite] .env changed, restarting server...
+11:22:02 AM [vite] .env changed, restarting server...
+11:22:04 AM [vite] (client) info: Types generated for actions, routes, form variants
+  Plugin: @laravel/vite-plugin-wayfinder
+11:22:04 AM [vite] server restarted.
+
+  LARAVEL v12.61.0  plugin v2.1.0
+
+  ➜  APP_URL: http://localhost
+11:22:05 AM [vite] (client) info: Types generated for actions, routes, form variants
+  Plugin: @laravel/vite-plugin-wayfinder
+11:22:06 AM [vite] server restarted.
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+
+  LARAVEL v12.61.0  plugin v2.1.0
+
+  ➜  APP_URL: http://localhost:8000
+11:27:24 AM [vite] (client) hmr update /resources/js/pages/Requirements/com/ServiceSection.tsx, /resources/css/app.css

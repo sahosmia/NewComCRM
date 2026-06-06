@@ -12,9 +12,11 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use App\Services\LookupService;
 use App\Services\ExportService;
+use App\Traits\HandlesModalResponses;
 
 class FollowUpController extends Controller
 {
+    use HandlesModalResponses;
     public function __construct(
         private FollowUpService $followUpService,
         private LookupService $lookupService,
@@ -53,17 +55,11 @@ class FollowUpController extends Controller
             (int) Auth::id()
         );
 
-        if ($request->wantsJson()) {
-            return response()->json([
-                'success' => 'Follow up scheduled successfully',
-                'follow_up' => $followUp,
-                'new_id' => $followUp->id,
-            ], 201);
-        }
-
-        return back()
-            ->with('success', 'Follow up scheduled successfully.')
-            ->with('new_id', $followUp->id);
+        return $this->handleResponse(
+            $request,
+            $followUp,
+            'Follow up scheduled successfully.'
+        );
     }
 
     public function show(FollowUp $followUp)

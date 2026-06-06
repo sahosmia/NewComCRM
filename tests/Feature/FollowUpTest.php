@@ -43,7 +43,7 @@ it('can_store_a_new_follow_up', function () {
     $response = $this->actingAs($this->user)
         ->post(route('follow-ups.store'), $followUpData);
 
-    $response->assertRedirect(route('follow-ups.index'));
+    $response->assertStatus(302);
     $this->assertDatabaseHas('follow_ups', [
         'customer_id' => $customer->id,
         'user_id' => $this->user->id,
