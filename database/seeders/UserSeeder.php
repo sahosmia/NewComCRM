@@ -10,6 +10,8 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
+        User::flushEventListeners();
+
         // Create 1 Super Admin
         User::updateOrCreate(
             ['email' => 'admin@example.com'],
@@ -21,25 +23,7 @@ class UserSeeder extends Seeder
             ]
         );
 
-        // Create 5 regular Users
-        $users = [
-            ['name' => 'Arif Rahman', 'email' => 'arif@example.com'],
-            ['name' => 'Sultana Ahmed', 'email' => 'sultana@example.com'],
-            ['name' => 'Kamal Hossain', 'email' => 'kamal@example.com'],
-            ['name' => 'Meherun Nesa', 'email' => 'meherun@example.com'],
-            ['name' => 'Tanvir Islam', 'email' => 'tanvir@example.com'],
-        ];
-
-        foreach ($users as $user) {
-            User::updateOrCreate(
-                ['email' => $user['email']],
-                [
-                    'name' => $user['name'],
-                    'password' => Hash::make('password'),
-                    'role' => 'user',
-                    'email_verified_at' => now(),
-                ]
-            );
-        }
+        // Create 500 regular Users
+        User::factory()->count(500)->create(['role' => 'user']);
     }
 }

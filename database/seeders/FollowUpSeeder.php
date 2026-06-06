@@ -11,6 +11,8 @@ class FollowUpSeeder extends Seeder
 {
     public function run(): void
     {
+        FollowUp::flushEventListeners();
+
         $customers = Customer::all();
         $users = User::where('role', 'user')->get();
 
@@ -18,30 +20,16 @@ class FollowUpSeeder extends Seeder
             return;
         }
 
-        foreach ($customers as $customer) {
+        for ($i = 0; $i < 500; $i++) {
+            $customer = $customers->random();
             $requirements = $customer->requirements;
             $requirementId = $requirements->isEmpty() ? null : $requirements->random()->id;
 
-            FollowUp::create([
+            FollowUp::factory()->create([
                 'customer_id' => $customer->id,
-                'user_id' => $customer->assigned_to,
+                'user_id' => $customer->assigned_to ?? $users->random()->id,
                 'requirement_id' => $requirementId,
-                'follow_up_date' => now()->addDays(rand(1, 10)),
-                'notes' => 'Follow up with ' . $customer->name,
-                'status' => 'pending',
-                'priority' => fake()->randomElement(['high', 'medium', 'low']),
-            ]);
-
-            // Add one completed follow up
-            FollowUp::create([
-                'customer_id' => $customer->id,
-                'user_id' => $customer->assigned_to,
-                'requirement_id' => $requirementId,
-                'follow_up_date' => now()->subDays(rand(1, 10)),
-                'notes' => 'Discussed previous requirements',
-                'status' => 'done',
-                'completed_at' => now()->subDays(rand(0, 1)),
-                'priority' => fake()->randomElement(['high', 'medium', 'low']),
+                'created_at' => $customer->created_at->addHours(rand(1, 10)),
             ]);
         }
     }

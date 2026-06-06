@@ -10,14 +10,19 @@ class SaleSeeder extends Seeder
 {
     public function run(): void
     {
+        Sale::flushEventListeners();
+
         $purchasedRequirements = Requirement::where('status', 'purchased')->get();
 
-        foreach ($purchasedRequirements as $requirement) {
+        foreach ($purchasedRequirements->take(500) as $requirement) {
+            $saleDate = $requirement->created_at->addDays(rand(1, 10));
             Sale::create([
                 'requirement_id' => $requirement->id,
                 'customer_id' => $requirement->customer_id,
-                'amount' => $requirement->grand_total,
-                'sale_date' => $requirement->updated_at ?? now(),
+                'amount' => $requirement->grand_total > 0 ? $requirement->grand_total : fake()->randomFloat(2, 1000, 50000),
+                'sale_date' => $saleDate,
+                'created_at' => $saleDate,
+                'updated_at' => $saleDate,
             ]);
         }
     }

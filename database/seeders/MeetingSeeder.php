@@ -11,18 +11,24 @@ class MeetingSeeder extends Seeder
 {
     public function run(): void
     {
+        Meeting::flushEventListeners();
+
         $customers = Customer::all();
+        $users = User::where('role', 'user')->get();
 
         if ($customers->isEmpty()) {
             return;
         }
 
-        foreach ($customers->random(min(5, $customers->count())) as $customer) {
+        for ($i = 0; $i < 500; $i++) {
+            $customer = $customers->random();
             $requirements = $customer->requirements;
-            Meeting::factory()->count(2)->create([
+
+            Meeting::factory()->create([
                 'customer_id' => $customer->id,
-                'user_id' => $customer->assigned_to,
+                'user_id' => $customer->assigned_to ?? $users->random()->id,
                 'requirement_id' => $requirements->isEmpty() ? null : $requirements->random()->id,
+                'created_at' => $customer->created_at->addHours(rand(1, 10)),
             ]);
         }
     }

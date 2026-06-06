@@ -5,15 +5,19 @@ namespace Database\Factories;
 use App\Models\Customer;
 use App\Models\Meeting;
 use App\Models\User;
+use Database\Factories\Concerns\HasTemporalData;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MeetingFactory extends Factory
 {
+    use HasTemporalData;
+
     protected $model = Meeting::class;
 
     public function definition(): array
     {
-        $scheduledAt = $this->faker->dateTimeBetween('-1 month', '+1 month');
+        $createdAt = $this->getRandomTemporalDate(['past_history', 'recent_history', 'current_timeline']);
+        $scheduledAt = $this->getRandomTemporalDate();
 
         return [
             'customer_id'  => Customer::inRandomOrder()->first()?->id ?? Customer::factory(),
@@ -24,7 +28,9 @@ class MeetingFactory extends Factory
             'location'     => $this->faker->address(),
             'agenda'       => $this->faker->paragraph(),
             'notes'        => $this->faker->paragraph(),
-            'status'       => $this->faker->randomElement(['scheduled', 'completed', 'cancelled']),
+            'status'       => $scheduledAt->isPast() ? 'completed' : 'scheduled',
+            'created_at'   => $createdAt,
+            'updated_at'   => $createdAt,
         ];
     }
 }

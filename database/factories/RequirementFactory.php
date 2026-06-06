@@ -5,15 +5,18 @@ use App\Models\Customer;
 use App\Models\Requirement;
 use App\Models\Unit;
 use App\Models\User;
+use Database\Factories\Concerns\HasTemporalData;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class RequirementFactory extends Factory
 {
+    use HasTemporalData;
+
     protected $model = Requirement::class;
 
     public function definition(): array
     {
-        
+        $createdAt = $this->getRandomTemporalDate(['past_history', 'recent_history', 'current_timeline']);
 
         return [
             'customer_id' => Customer::factory(),
@@ -34,6 +37,8 @@ class RequirementFactory extends Factory
             'delivery_location' => $this->faker->address(),
             'send_qutation_to' => Customer::inRandomOrder()->first()?->id ?? Customer::factory(),
             'qutation_send_by' => User::where('role', 'user')->inRandomOrder()->first()?->id ?? User::factory(),
+            'created_at' => $createdAt,
+            'updated_at' => $createdAt,
         ];
     }
 }
