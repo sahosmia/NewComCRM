@@ -20,9 +20,10 @@ interface ServiceSectionProps {
     units: Unit[];
     aitFactor: number;
     errors: any;
+    onUnitCreated?: (unit: Unit) => void;
 }
 
-export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefix, items, setItems, units, aitFactor, errors }: ServiceSectionProps) => {
+export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefix, items, setItems, units, aitFactor, errors, onUnitCreated }: ServiceSectionProps) => {
     const { openModal } = useModal();
 
     const addItem = () => {
@@ -98,7 +99,10 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                                             size="icon"
                                             className="h-10 w-10 shrink-0"
                                             onClick={() => openModal('CREATE_UNIT', {
-                                                onSuccess: (id: number) => handleItemChange(index, 'unit_id', id.toString())
+                                                onSuccess: (newUnit: Unit) => {
+                                                    if (onUnitCreated) onUnitCreated(newUnit);
+                                                    handleItemChange(index, 'unit_id', newUnit.id.toString())
+                                                }
                                             })}
                                         >
                                             <Plus className="h-4 w-4" />

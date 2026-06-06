@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
+use App\Traits\HandlesModalResponses;
 use App\Services\CompanyService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CompanyController extends Controller
 {
+    use HandlesModalResponses;
     public function __construct(protected CompanyService $service) {}
 
     public function index(Request $request)
@@ -30,17 +32,13 @@ class CompanyController extends Controller
 
         $company = $this->service->createCompany($request->validated());
 
-        if ($request->wantsJson()) {
-            return response()->json([
-                'message' => 'Company created successfully.',
-                'company' => $company
-            ], 201);
-        }
+        return $this->handleResponse(
+            $request,
+            $company,
+            'Company created successfully.',
+            'companies.index'
+        );
 
-
-        return redirect()->route('companies.index')
-            ->with('success', 'Company created successfully.')
-            ->with('new_id', $company->id);
     }
 
     public function edit($id)

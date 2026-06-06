@@ -11,12 +11,16 @@ use Inertia\Inertia;
 use App\Exports\GeneralExport;
 use App\Models\Unit;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Traits\HandlesModalResponses;
 
 class ProductController extends Controller
 {
+    use HandlesModalResponses;
+
     public function __construct(
         private ProductService $productService,
-    ) {}
+    ) {
+    }
 
     /**
      * Display a listing of the resource.
@@ -44,18 +48,13 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         $product = $this->productService->create($request->validated());
+        $product->load('unit');
 
-        if ($request->wantsJson()) {
-            return response()->json([
-                'success' => 'Product created successfully',
-                'product' => $product,
-                'new_id' => $product->id,
-            ], 201);
-        }
-
-        return back()
-            ->with('success', 'Product created successfully')
-            ->with('new_id', $product->id);
+        return $this->handleResponse(
+            $request,
+            $product,
+            'Product created successfully'
+        );
     }
 
     /**
@@ -150,7 +149,7 @@ class ProductController extends Controller
         ]);
     }
 
-       public function import(Request $request)
+    public function import(Request $request)
     {
         $request->validate([
             'file' => 'required|mimes:xlsx,xls,csv',

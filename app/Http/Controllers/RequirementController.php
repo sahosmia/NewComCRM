@@ -70,7 +70,7 @@ class RequirementController extends Controller
     {
         return Inertia::render('Requirements/Show', [
             'requirement' => $requirement->load([
-                'customer',
+                'customer.company',
                 'items.product.unit',
                 'accessories.unit',
                 'installations.unit',
@@ -79,6 +79,9 @@ class RequirementController extends Controller
                 'quotationRecipient.company',
                 'quotationSender'
             ]),
+            'customers' => $this->lookupService->getCustomersForRequirementForm(),
+            'requirements' => $this->lookupService->getRequirementsForSelect(),
+
         ]);
     }
 

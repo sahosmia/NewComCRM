@@ -9,6 +9,7 @@ import ErrorMessage from "@/components/admin/form/ErrorMessage";
 import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 import FormLabel from "@/components/admin/form/FormLabel";
 import { useModal } from "@/contexts/ModalContext";
+import { useState } from "react";
 
 
 interface Props {
@@ -18,6 +19,8 @@ interface Props {
 
 export default function ProductForm({ product, units = [] }: Props) {
     const { openModal } = useModal();
+        const [localUnits, setLocalUnits] = useState<Unit[]>(units);
+
 
     const { data, setData, post, put, processing, errors } = useForm({
         name: product?.name || "",
@@ -142,7 +145,7 @@ export default function ProductForm({ product, units = [] }: Props) {
                     <GenericCombobox
                         required
                         label="Unit"
-                        items={units.map(unit => ({
+                        items={localUnits.map(unit => ({
                             id: unit.id,
                             name: unit.short_form ? `${unit.title} (${unit.short_form})` : unit.title
                         }))}
@@ -161,7 +164,10 @@ export default function ProductForm({ product, units = [] }: Props) {
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     openModal('CREATE_UNIT', {
-                                        onSuccess: (id: number) => setData('unit_id', id)
+                                        onSuccess: (newUnit: Unit) => {
+                                            setLocalUnits(prev => [...prev, newUnit]);
+                                            setData("unit_id", newUnit.id);
+                                        }
                                     });
                                 }}
                             >

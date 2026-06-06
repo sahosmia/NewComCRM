@@ -1,6 +1,4 @@
 import React from 'react';
-import { useForm, router, usePage } from '@inertiajs/react';
-import { SharedData } from '@/types';
 import {
     Dialog,
     DialogContent,
@@ -17,18 +15,19 @@ import { Loader2, Plus, X } from 'lucide-react';
 import ErrorMessage from '@/components/admin/form/ErrorMessage';
 import { GenericCombobox } from '@/components/admin/form/GenericCombobox';
 import FormLabel from '@/components/admin/form/FormLabel';
-import { Company, User } from '@/types';
+import { Company, User, CustomerType } from '@/types';
+import { useModalForm } from '@/hooks/use-modal-form';
 
 interface CreateCustomerModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSuccess?: (customerId: number) => void;
+    onSuccess?: (customer: CustomerType) => void;
     companies?: Company[];
     users?: User[];
 }
 
 export default function CreateCustomerModal({ isOpen, onClose, onSuccess, companies = [], users = [] }: CreateCustomerModalProps) {
-    const { data, setData, post, processing, errors, reset, clearErrors } = useForm({
+    const { data, setData, errors, processing, reset, submit } = useModalForm({
         name: "",
         designation: "",
         company_id: "",
@@ -39,21 +38,16 @@ export default function CreateCustomerModal({ isOpen, onClose, onSuccess, compan
         phones: [""],
         addresses: [""],
         remarks: "",
+    }, route('customers.store'), {
+        onSuccess: (customer: CustomerType) => {
+            if (onSuccess) onSuccess(customer);
+            onClose();
+        }
     });
-
-    const { props } = usePage<SharedData>();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('customers.store'), {
-            onSuccess: () => {
-                const newId = props.flash.new_id;
-                router.reload({ only: ['customers'] });
-                if (onSuccess && newId) onSuccess(Number(newId));
-                reset();
-                onClose();
-            },
-        });
+        submit();
     };
 
     const updateListItem = (key: "phones" | "addresses", index: number, value: string) => {

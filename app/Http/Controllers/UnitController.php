@@ -8,12 +8,17 @@ use App\Models\Unit;
 use App\Services\UnitService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Traits\HandlesModalResponses;
+
 
 class UnitController extends Controller
 {
+    use HandlesModalResponses;
+
     public function __construct(
         private UnitService $unitService
-    ) {}
+    ) {
+    }
 
     public function index(Request $request)
     {
@@ -31,17 +36,11 @@ class UnitController extends Controller
     {
         $unit = $this->unitService->create($request->validated());
 
-        if ($request->wantsJson()) {
-            return response()->json([
-                'success' => 'Unit created successfully',
-                'unit' => $unit,
-                'new_id' => $unit->id,
-            ], 201);
-        }
-
-        return back()
-            ->with('success', 'Unit created successfully')
-            ->with('new_id', $unit->id);
+        return $this->handleResponse(
+            $request,
+            $unit,
+            'Unit created successfully'
+        );
     }
 
     public function edit(Unit $unit)

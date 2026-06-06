@@ -37,7 +37,7 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return [
-            // ...parent::share($request),
+            ...parent::share($request),
             'name' => setting('app_name', config('app.name')),
             'settings' => [
                 'app_name' => setting('app_name', config('app.name')),

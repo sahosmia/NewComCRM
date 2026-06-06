@@ -10,9 +10,12 @@ use App\Services\ExportService;
 use App\Services\LookupService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Traits\HandlesModalResponses;
 
 class CustomerController extends Controller
 {
+    use HandlesModalResponses;
+
     public function __construct(
         private CustomerService $customerService,
         private LookupService $lookupService,
@@ -44,18 +47,13 @@ class CustomerController extends Controller
     public function store(StoreCustomerRequest $request)
     {
         $customer = $this->customerService->create($request->validated());
-
-        if ($request->wantsJson()) {
-            return response()->json([
-                'success' => 'Customer created successfully',
-                'customer' => $customer,
-                'new_id' => $customer->id,
-            ], 201);
-        }
-
-        return redirect()->route('customers.index')
-            ->with('success', 'Customer created successfully')
-            ->with('new_id', $customer->id);
+        $customer->load('assignedUser', 'company');
+        return $this->handleResponse(
+            $request,
+            $customer,
+            'Customer created successfully',
+            'customers.index'
+        );
     }
 
 
@@ -118,7 +116,7 @@ class CustomerController extends Controller
     {
         $customers = $this->customerService->getForExport($request->input('ids', []));
 
-         return $this->exportService->excel(
+        return $this->exportService->excel(
             $customers,
             ['Name', 'Email', 'Phone', 'Company', 'Designation', 'Type', 'Status', 'Assigned To'],
             fn($customer) => [
@@ -139,7 +137,7 @@ class CustomerController extends Controller
     {
         $customers = $this->customerService->getForExport($request->input('ids', []));
 
-       return $this->exportService->printView(
+        return $this->exportService->printView(
             $customers,
             ['Name', 'Email', 'Phone', 'Company', 'Designation', 'Type', 'Status', 'Assigned To'],
             fn($customer) => [

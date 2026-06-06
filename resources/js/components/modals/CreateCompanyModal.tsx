@@ -1,6 +1,4 @@
 import React from 'react';
-import { useForm, router, usePage } from '@inertiajs/react';
-import { SharedData } from '@/types';
 import {
     Dialog,
     DialogContent,
@@ -16,6 +14,7 @@ import { Loader2 } from 'lucide-react';
 import ErrorMessage from '@/components/admin/form/ErrorMessage';
 import FormLabel from '@/components/admin/form/FormLabel';
 import { Company } from '@/types';
+import { useModalForm } from '@/hooks/use-modal-form';
 
 interface CreateCompanyModalProps {
     isOpen: boolean;
@@ -24,41 +23,22 @@ interface CreateCompanyModalProps {
 }
 
 export default function CreateCompanyModal({ isOpen, onClose, onSuccess }: CreateCompanyModalProps) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, errors, processing, reset, submit } = useModalForm({
         name: "",
         email: "",
         phone: "",
         website: "",
         address: "",
+    }, route('companies.store'), {
+        onSuccess: (company: Company) => {
+            if (onSuccess) onSuccess(company);
+            onClose();
+        }
     });
-
-    const { props } = usePage<SharedData>();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('companies.store'), {
-            onSuccess: () => {
-                // Since companies might be loaded in multiple places, we might need a full refresh
-                // or just rely on the onSuccess callback for the local component state.
-                const newId = props.flash.new_id;
-
-                router.reload({ only: ['companies'] });
-
-                // We'll trust the caller to handle the update if they passed onSuccess
-                // If they need the full object, we might need to fetch it or pass it via flash
-                // For now, let's assume they just need the ID or the fact that it succeeded.
-                // Actually, CustomerForm needs the full company object.
-                // Let's modify the controller to flash the object too.
-
-                if (onSuccess && newId) {
-                   // We'll pass a partial object since we only have the ID and original data
-                   onSuccess({ id: Number(newId), ...data });
-                }
-
-                reset();
-                onClose();
-            },
-        });
+        submit();
     };
 
     return (

@@ -7,6 +7,7 @@ import { Company, Requirement, RequirementItem, User } from "@/types";
 import { CustomerType } from "@/types";
 import { Product } from "@/types";
 import { Unit } from "@/types";
+import { useState } from "react";
 import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
 import { FormSelect } from "@/components/admin/form/FormSelect";
@@ -25,12 +26,15 @@ interface Props {
     products: Product[];
     units: Unit[];
     users: User[];
-        companies: Company[];
+    companies: Company[];
 
 }
 
-export default function RequirementForm({ requirement, customers, products, units, users, companies }: Props) {
+export default function RequirementForm({ requirement, customers: initialCustomers, products: initialProducts, units: initialUnits, users, companies }: Props) {
     const { openModal } = useModal();
+    const [customers, setCustomers] = useState<CustomerType[]>(initialCustomers);
+    const [products, setProducts] = useState<Product[]>(initialProducts);
+    const [units, setUnits] = useState<Unit[]>(initialUnits);
     const urlParams = new URLSearchParams(window.location.search);
     const preSelectedCustomerId = urlParams.get('customer_id');
 
@@ -75,12 +79,12 @@ export default function RequirementForm({ requirement, customers, products, unit
         setData("items", data.items.filter((_: any, i: number) => i !== index));
     };
 
-    const handleItemChange = (index: number, field: keyof RequirementItem | 'description' | 'costing_price', value: string | number) => {
+    const handleItemChange = (index: number, field: keyof RequirementItem | 'description' | 'costing_price', value: string | number, productFallback?: Product) => {
         const newItems = [...data.items] as (RequirementItem)[];
 
 
         if (field === "product_id") {
-            const product = products.find(p => p.id === parseInt(String(value)));
+            const product = productFallback || products.find(p => p.id === parseInt(String(value)));
             newItems[index].product_id = parseInt(String(value));
             newItems[index].unit_price = product ? product.unit_price : "";
             newItems[index].description = product ? (product.description || "") : "";
@@ -130,13 +134,13 @@ export default function RequirementForm({ requirement, customers, products, unit
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Left Column: Main Details */}
                 <div className="lg:col-span-2 space-y-6">
-                    <Card className="overflow-hidden border-none shadow-sm ring-1 ring-slate-200">
+                    <div className="bg-card border-none shadow-sm ring-1 ring-slate-200 rounded-xl overflow-hidden">
                         <div className="p-4 bg-slate-50/50 border-b border-slate-200">
                             <h3 className="text-sm font-semibold flex items-center gap-2 text-slate-700">
                                 <LayoutList className="w-4 h-4 text-primary" /> Basic Information
                             </h3>
                         </div>
-                        <CardContent className=" space-y-6">
+                        <div className="p-6 space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <FormLabel required>Requirement Title</FormLabel>
@@ -169,7 +173,10 @@ export default function RequirementForm({ requirement, customers, products, unit
                                                     openModal('CREATE_CUSTOMER', {
                                                         users: users,
                                                         companies: companies,
-                                                        onSuccess: (id: number) => setData('customer_id', id)
+                                                        onSuccess: (newCustomer: CustomerType) => {
+                                                            setCustomers(prev => [...prev, newCustomer]);
+                                                            setData('customer_id', newCustomer.id);
+                                                        }
                                                     });
                                                 }}
                                             >
@@ -190,7 +197,7 @@ export default function RequirementForm({ requirement, customers, products, unit
                                         placeholder="Select Recipient (Optional)"
                                         searchPlaceholder="Search customers..."
                                         error={errors.send_qutation_to}
-                                         renderAction={
+                                        renderAction={
                                             <Button
                                                 type="button"
                                                 variant="ghost"
@@ -201,7 +208,10 @@ export default function RequirementForm({ requirement, customers, products, unit
                                                     openModal('CREATE_CUSTOMER', {
                                                         users: users,
                                                         companies: companies,
-                                                        onSuccess: (id: number) => setData('send_qutation_to', id)
+                                                        onSuccess: (newCustomer: CustomerType) => {
+                                                            setCustomers(prev => [...prev, newCustomer]);
+                                                            setData('send_qutation_to', newCustomer.id);
+                                                        }
                                                     });
                                                 }}
                                             >
@@ -219,29 +229,11 @@ export default function RequirementForm({ requirement, customers, products, unit
                                         placeholder="Select Sender (Optional)"
                                         searchPlaceholder="Search users..."
                                         error={errors.qutation_send_by}
-                                         renderAction={
-                                            <Button
-                                                type="button"
-                                                variant="ghost"
-                                                size="icon"
-                                                className="h-6 w-6"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    openModal('CREATE_CUSTOMER', {
-                                                        users: users,
-                                                        companies: companies,
-                                                        onSuccess: (id: number) => setData('qutation_send_by', id)
-                                                    });
-                                                }}
-                                            >
-                                                <Plus className="h-4 w-4" />
-                                            </Button>
-                                        }
                                     />
                                 </div>
                             </div>
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </div>
 
                     {/* Items Section moved inside main column */}
                     <div className="bg-card border-none shadow-sm ring-1 ring-slate-200 rounded-xl overflow-hidden">
@@ -266,7 +258,10 @@ export default function RequirementForm({ requirement, customers, products, unit
                                     onRemove={removeItem}
                                     isRemoveDisabled={data.items.length === 1}
                                     errors={errors}
-                                     units={units}
+                                    units={units}
+                                    onProductCreated={(newProduct: Product) => {
+                                        setProducts(prev => [...prev, newProduct]);
+                                    }}
                                 />
                             ))}
                         </div>
@@ -275,13 +270,13 @@ export default function RequirementForm({ requirement, customers, products, unit
 
                 {/* Right Column: Sidebar Info */}
                 <div className="space-y-6">
-                    <Card className="border-none shadow-sm ring-1 ring-slate-200">
+                    <div className="bg-card border-none shadow-sm ring-1 ring-slate-200 rounded-xl overflow-hidden">
                         <div className="p-4 bg-slate-50/50 border-b border-slate-200">
                             <h3 className="text-sm font-semibold flex items-center gap-2 text-slate-700">
                                 <Settings className="w-4 h-4 text-primary" /> Delivery & Status
                             </h3>
                         </div>
-                        <CardContent className=" space-y-5">
+                        <div className="p-6 space-y-4">
                             <div className="space-y-2">
                                 <FormSelect
                                     required
@@ -328,16 +323,16 @@ export default function RequirementForm({ requirement, customers, products, unit
                                     <ErrorMessage message={errors.price_validity_days} />
                                 </div>
                             </div>
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </div>
 
-                    <Card className="border-none shadow-sm ring-1 ring-slate-200">
+                    <div className="bg-card border-none shadow-sm ring-1 ring-slate-200 rounded-xl overflow-hidden">
                         <div className="p-4 bg-slate-50/50 border-b border-slate-200">
                             <h3 className="text-sm font-semibold flex items-center gap-2 text-slate-700">
                                 <Percent className="w-4 h-4 text-primary" /> Taxes & Payments
                             </h3>
                         </div>
-                        <CardContent className=" space-y-5">
+                        <div className="p-6 space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <FormLabel required>VAT (%)</FormLabel>
@@ -420,16 +415,16 @@ export default function RequirementForm({ requirement, customers, products, unit
                                     <ErrorMessage message={errors.after_payment} />
                                 </div>
                             </div>
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </div>
 
-                    <Card className="border-none shadow-sm ring-1 ring-slate-200">
+                    <div className="bg-card border-none shadow-sm ring-1 ring-slate-200 rounded-xl overflow-hidden">
                         <div className="p-4 bg-slate-50/50 border-b border-slate-200">
                             <h3 className="text-sm font-semibold flex items-center gap-2 text-slate-700">
                                 <LayoutList className="w-4 h-4 text-primary" /> Internal Remarks
                             </h3>
                         </div>
-                        <CardContent className="">
+                        <div className="p-6 space-y-4">
                             <Textarea
                                 className="bg-background resize-none text-sm border-slate-200 focus:border-primary/50"
                                 rows={4}
@@ -438,8 +433,8 @@ export default function RequirementForm({ requirement, customers, products, unit
                                 onChange={(e) => setData("notes", e.target.value)}
                             />
                             <ErrorMessage message={errors.notes} />
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -456,6 +451,9 @@ export default function RequirementForm({ requirement, customers, products, unit
                     units={units}
                     aitFactor={aitFactor}
                     errors={errors}
+                    onUnitCreated={(newUnit: Unit) => {
+                        setUnits(prev => [...prev, newUnit]);
+                    }}
                 />
 
                 {/* Installation Section */}
@@ -470,6 +468,9 @@ export default function RequirementForm({ requirement, customers, products, unit
                     units={units}
                     aitFactor={aitFactor}
                     errors={errors}
+                    onUnitCreated={(newUnit: Unit) => {
+                        setUnits(prev => [...prev, newUnit]);
+                    }}
                 />
             </div>
 
