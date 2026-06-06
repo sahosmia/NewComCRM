@@ -19,7 +19,15 @@ import StatusBadge from "@/components/shared/StatusBadge";
 import { Requirement } from "@/types";
 import { formatDate } from "@/utils/date-format";
 
-export default function Show({ requirement }: { requirement: Requirement }) {
+import { Company, CustomerType, Requirement, User } from "@/types";
+
+interface Props {
+    requirement: Requirement;
+    customers: CustomerType[];
+    requirements: Requirement[];
+}
+
+export default function Show({ requirement, customers, requirements }: Props) {
     const { openModal } = useModal();
 
     const breadcrumbs = [
@@ -122,7 +130,9 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                     className="h-7 text-[10px] uppercase font-bold"
                                     onClick={() => openModal('CREATE_MEETING', {
                                         customer_id: requirement.customer_id,
-                                        requirement_id: requirement.id
+                                    requirement_id: requirement.id,
+                                    customers: customers,
+                                    requirements: requirements
                                     })}
                                 >
                                     Schedule
@@ -156,7 +166,9 @@ export default function Show({ requirement }: { requirement: Requirement }) {
                                     className="h-7 text-[10px] uppercase font-bold"
                                     onClick={() => openModal('CREATE_FOLLOW_UP', {
                                         customer_id: requirement.customer_id,
-                                        requirement_id: requirement.id
+                                    requirement_id: requirement.id,
+                                    customers: customers,
+                                    requirements: requirements
                                     })}
                                 >
                                     Add

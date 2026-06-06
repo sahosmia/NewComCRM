@@ -48,6 +48,8 @@ class CustomerController extends Controller
     {
         $customer = $this->customerService->create($request->validated());
 
+        $customer->load('company');
+
         return $this->handleResponse(
             $request,
             $customer,

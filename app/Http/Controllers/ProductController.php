@@ -48,6 +48,8 @@ class ProductController extends Controller
     {
         $product = $this->productService->create($request->validated());
 
+        $product->load('unit');
+
         return $this->handleResponse(
             $request,
             $product,
