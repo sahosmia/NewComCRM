@@ -7,11 +7,12 @@ interface SummaryProps {
     grandTotal: number;
     vatPercentage: number;
     aitPercentage: number;
+    totalCostingPrice?: number;
     processing: boolean;
     isEdit: boolean;
 }
 
-export const FormSummaryFooter = ({ subTotal, vatAmount, aitAmount, grandTotal, vatPercentage, aitPercentage, processing, isEdit }: SummaryProps) => {
+export const FormSummaryFooter = ({ subTotal, vatAmount, aitAmount, grandTotal, vatPercentage, aitPercentage, totalCostingPrice = 0, processing, isEdit }: SummaryProps) => {
     return (
         <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-t border-slate-200 shadow-[0_-4px_20px_0_rgba(0,0,0,0.05)] py-4 px-6">
             <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
@@ -24,6 +25,11 @@ export const FormSummaryFooter = ({ subTotal, vatAmount, aitAmount, grandTotal, 
                         {vatPercentage > 0 && (
                             <div className="text-xs">
                                 <span className="opacity-70">VAT ({vatPercentage}%):</span> <span className="font-bold">৳{vatAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                            </div>
+                        )}
+                        {totalCostingPrice > 0 && (
+                             <div className="text-xs text-blue-500">
+                                <span className="opacity-70">Internal Costing:</span> <span className="font-bold">৳{totalCostingPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                             </div>
                         )}
                     </div>

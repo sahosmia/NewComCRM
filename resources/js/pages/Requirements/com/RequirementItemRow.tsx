@@ -24,7 +24,7 @@ interface ItemRowProps {
 export const RequirementItemRow = ({ index, item, products, aitFactor, onItemChange, onRemove, isRemoveDisabled, errors, units, onProductCreated }: ItemRowProps) => {
     const { openModal } = useModal();
     const calculateGross = () => (parseFloat(item.unit_price) || 0) * aitFactor;
-    const calculateTotal = () => ((parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor) + (parseFloat(item.costing_price) || 0);
+    const calculateTotal = () => ((parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor);
 
     // Helpers to extract error presence for field-specific conditional classes
     const productIdError = errors && errors[`items.${index}.product_id`];

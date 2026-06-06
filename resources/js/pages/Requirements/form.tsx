@@ -104,7 +104,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
     const aitFactor = (aitPercentage > 0 && aitPercentage < 100) ? (1 / (1 - (aitPercentage / 100))) : 1;
 
     const itemsTotal = data.items.reduce((sum: number, item: any) => {
-        return sum + ((parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor) + (parseFloat(item.costing_price) || 0);
+        return sum + ((parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor);
     }, 0);
 
     const itemsCostingTotal = data.items.reduce((sum: number, item: any) => {
@@ -121,7 +121,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
 
     const subTotal = itemsTotal + accessoriesTotal + installationTotal;
 
-    const taxableAmount = (itemsTotal - itemsCostingTotal) + accessoriesTotal + installationTotal;
+    const taxableAmount = itemsTotal + accessoriesTotal + installationTotal;
 
     const vatAmount = vatPercentage > 0 ? (taxableAmount * vatPercentage / 100) : 0;
 
@@ -510,6 +510,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                 grandTotal={grandTotal}
                 vatPercentage={Number(data.vat_percentage)}
                 aitPercentage={Number(data.ait_percentage)}
+                totalCostingPrice={itemsCostingTotal}
                 processing={processing}
                 isEdit={!!requirement}
             />
