@@ -36,6 +36,7 @@ test('authenticated user can create a customer', function () {
     $company = \App\Models\Company::factory()->create();
     $data = [
         'name'          => 'John Doe',
+        'designation'   => 'Manager',
         'company_id'    => $company->id,
         'email'         => 'john.' . uniqid() . '@example.com',
         'assigned_to'   => $this->user->id,
@@ -67,6 +68,7 @@ test('user can update their own customer', function () {
 
     $updatedData = [
         'name'          => 'Updated Name',
+        'designation'   => 'Manager',
         'company_id'    => $company->id,
         'email'         => $customer->email,
         'assigned_to'   => $this->user->id,
