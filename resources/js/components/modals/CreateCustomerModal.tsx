@@ -26,7 +26,8 @@ interface CreateCustomerModalProps {
     users?: User[];
 }
 
-export default function CreateCustomerModal({ isOpen, onClose, onSuccess, companies = [], users = [] }: CreateCustomerModalProps) {
+export default function CreateCustomerModal({ isOpen, onClose, onSuccess, companies: initialCompanies = [], users = [] }: CreateCustomerModalProps) {
+    const [localCompanies, setLocalCompanies] = React.useState<Company[]>(initialCompanies);
     const { data, setData, errors, processing, reset, submit } = useModalForm({
         name: "",
         designation: "",
@@ -81,11 +82,30 @@ export default function CreateCustomerModal({ isOpen, onClose, onSuccess, compan
                             <GenericCombobox
                                 required={data.type !== 'personal'}
                                 label="Company"
-                                items={companies}
+                                items={localCompanies}
                                 selectedId={data.company_id}
                                 onSelect={(id) => setData("company_id", id as number)}
                                 placeholder="Select company"
                                 error={errors.company_id}
+                                renderAction={
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-6 w-6"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            openModal('CREATE_COMPANY', {
+                                                onSuccess: (newCompany: Company) => {
+                                                    setLocalCompanies(prev => [...prev, newCompany]);
+                                                    setData('company_id', newCompany.id);
+                                                }
+                                            });
+                                        }}
+                                    >
+                                        <Plus className="h-4 w-4" />
+                                    </Button>
+                                }
                             />
                         </div>
                         <div className="space-y-2">

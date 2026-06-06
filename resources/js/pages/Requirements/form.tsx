@@ -80,17 +80,22 @@ export default function RequirementForm({ requirement, customers: initialCustome
     };
 
     const handleItemChange = (index: number, field: keyof RequirementItem | 'description' | 'costing_price', value: string | number, productFallback?: Product) => {
-        const newItems = [...data.items] as (RequirementItem)[];
+        const newItems = data.items.map((item, i) => {
+            if (i !== index) return item;
 
+            if (field === "product_id") {
+                const product = productFallback || products.find(p => p.id === parseInt(String(value)));
+                return {
+                    ...item,
+                    product_id: parseInt(String(value)),
+                    unit_price: product ? product.unit_price : "",
+                    description: product ? (product.description || "") : "",
+                };
+            }
 
-        if (field === "product_id") {
-            const product = productFallback || products.find(p => p.id === parseInt(String(value)));
-            newItems[index].product_id = parseInt(String(value));
-            newItems[index].unit_price = product ? product.unit_price : "";
-            newItems[index].description = product ? (product.description || "") : "";
-        } else {
-            (newItems[index] as any)[field] = value;
-        }
+            return { ...item, [field]: value };
+        }) as RequirementItem[];
+
         setData("items", newItems);
     };
 
@@ -229,6 +234,27 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                         placeholder="Select Sender (Optional)"
                                         searchPlaceholder="Search users..."
                                         error={errors.qutation_send_by}
+                                        renderAction={
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-6 w-6"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    openModal('CREATE_CUSTOMER', {
+                                                        users: users,
+                                                        companies: companies,
+                                                        onSuccess: (newCustomer: CustomerType) => {
+                                                            setCustomers(prev => [...prev, newCustomer]);
+                                                            setData('qutation_send_by', newCustomer.id);
+                                                        }
+                                                    });
+                                                }}
+                                            >
+                                                <Plus className="h-4 w-4" />
+                                            </Button>
+                                        }
                                     />
                                 </div>
                             </div>

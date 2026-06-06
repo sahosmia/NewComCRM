@@ -16,6 +16,8 @@ import ErrorMessage from '@/components/admin/form/ErrorMessage';
 import FormLabel from '@/components/admin/form/FormLabel';
 import { Unit, Product } from '@/types';
 import { useModalForm } from '@/hooks/use-modal-form';
+import { useState } from 'react';
+import { useModal } from '@/contexts/ModalContext';
 
 interface CreateProductModalProps {
     isOpen: boolean;
@@ -24,7 +26,10 @@ interface CreateProductModalProps {
     units?: Unit[];
 }
 
-export default function CreateProductModal({ isOpen, onClose, onSuccess, units = [] }: CreateProductModalProps) {
+export default function CreateProductModal({ isOpen, onClose, onSuccess, units: initialUnits = [] }: CreateProductModalProps) {
+    const { openModal } = useModal();
+    const [localUnits, setLocalUnits] = useState<Unit[]>(initialUnits);
+
     const { data, setData, errors, processing, reset, submit } = useModalForm({
         name: "",
         unit_price: "",
@@ -67,14 +72,38 @@ export default function CreateProductModal({ isOpen, onClose, onSuccess, units =
                             <ErrorMessage message={errors.unit_price} />
                         </div>
                         <div className="space-y-2">
-                            <FormLabel required>Unit</FormLabel>
-                            <Select value={String(data.unit_id)} onValueChange={val => setData("unit_id", val)}>
-                                <SelectTrigger><SelectValue placeholder="Select Unit" /></SelectTrigger>
-                                <SelectContent>
-                                    {units.map(u => <SelectItem key={u.id} value={String(u.id)}>{u.title}</SelectItem>)}
-                                </SelectContent>
-                            </Select>
-                            <ErrorMessage message={errors.unit_id} />
+                            <GenericCombobox
+                                required
+                                label="Unit"
+                                items={localUnits.map(unit => ({
+                                    id: unit.id,
+                                    name: unit.short_form ? `${unit.title} (${unit.short_form})` : unit.title
+                                }))}
+                                selectedId={data.unit_id}
+                                onSelect={(id) => setData("unit_id", id as number)}
+                                placeholder="Select a unit"
+                                allowManualInput={false}
+                                error={errors.unit_id}
+                                renderAction={
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-6 w-6"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            openModal('CREATE_UNIT', {
+                                                onSuccess: (newUnit: Unit) => {
+                                                    setLocalUnits(prev => [...prev, newUnit]);
+                                                    setData('unit_id', newUnit.id);
+                                                }
+                                            });
+                                        }}
+                                    >
+                                        <Plus className="h-4 w-4" />
+                                    </Button>
+                                }
+                            />
                         </div>
                         <div className="space-y-2">
                             <FormLabel>Category</FormLabel>
