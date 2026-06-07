@@ -34,10 +34,12 @@ class Requirement extends Model
         'delivery_location',
         'send_qutation_to',
         'qutation_send_by',
+        'total_costing',
     ];
 
     protected $casts = [
         'grand_total' => 'decimal:2',
+        'total_costing' => 'decimal:2',
         'has_accessories' => 'boolean',
         'has_installation' => 'boolean',
         'ait_percentage' => 'decimal:2',
@@ -98,30 +100,20 @@ class Requirement extends Model
 
     public function calculateGrandTotal(): void
     {
-        $aitFactor = 1;
-        if ($this->ait_percentage > 0 && $this->ait_percentage < 100) {
-            $aitFactor = 1 / (1 - ($this->ait_percentage / 100));
-        }
-
         $itemsTotal = $this->items->sum('total_price');
-        $itemsCostingTotal = $this->items->sum('costing_price');
+        $this->total_costing = $this->items->sum(function ($item) {
+            return $item->quantity * ($item->costing_price ?? 0);
+        });
 
-        // $accessoriesTotal = $this->has_accessories ? ($this->accessories_quantity * $this->accessories_price * $aitFactor) : 0;
-        // $installationTotal = $this->has_installation ? ($this->installation_quantity * $this->installation_price * $aitFactor) : 0;
-
-         $accessoriesTotal = $this->has_accessories ? $this->accessories->sum('total_price') : 0;
+        $accessoriesTotal = $this->has_accessories ? $this->accessories->sum('total_price') : 0;
         $installationTotal = $this->has_installation ? $this->installations->sum('total_price') : 0;
-        
+
         $subTotal = $itemsTotal + $accessoriesTotal + $installationTotal;
 
-        $taxableAmount = ($itemsTotal - $itemsCostingTotal) + $accessoriesTotal + $installationTotal;
+        $taxableAmount = $itemsTotal + $accessoriesTotal + $installationTotal;
 
         // VAT/Tax (Add-on Logic): Total = Subtotal + (TaxableAmount * VAT_Percentage / 100)
         $vatAmount = $this->vat_percentage > 0 ? ($taxableAmount * ($this->vat_percentage / 100)) : 0;
-
-
-        // VAT/Tax (Add-on Logic): Total = Subtotal + (Subtotal * VAT_Percentage / 100)
-        // $vatAmount = $this->vat_percentage > 0 ? ($subTotal * ($this->vat_percentage / 100)) : 0;
 
         $this->grand_total = round($subTotal + $vatAmount, 2);
         $this->save();

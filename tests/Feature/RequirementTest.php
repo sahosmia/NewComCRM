@@ -34,6 +34,7 @@ it('can_store_a_new_requirement', function () {
     $product = Product::factory()->create();
 
     $requirementData = [
+        'title' => 'Test Title',
         'customer_id' => $customer->id,
         'items' => [
             [
@@ -77,6 +78,7 @@ it('can_update_an_existing_requirement', function () {
     $product = Product::factory()->create();
 
     $updatedData = [
+        'title' => 'Updated Title',
         'customer_id' => $requirement->customer_id,
         'items' => [
             [
