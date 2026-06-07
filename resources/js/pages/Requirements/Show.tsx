@@ -45,17 +45,14 @@ export default function Show({ requirement, customers, requirements }: Props) {
     // --- Calculation Logic ---
     const totals = useMemo(() => {
         const itemsTotal = requirement.items?.reduce((sum: number, i: any) => sum + parseFloat(i.total_price), 0) || 0;
-        const itemsCostingTotal = requirement.items?.reduce((sum: number, i: any) => sum + (parseFloat(i.costing_price) || 0), 0) || 0;
-
-        // const accessoriesTotal = requirement.has_accessories ? (requirement.accessories_quantity * (parseFloat(requirement.accessories_price as string) || 0)) : 0;
-        // const installationTotal = requirement.has_installation ? (requirement.installation_quantity * (parseFloat(requirement.installation_price as string) || 0)) : 0;
+        const itemsCostingTotal = requirement.items?.reduce((sum: number, i: any) => sum + ((parseFloat(i.costing_price) || 0) * (i.quantity || 0)), 0) || 0;
 
         const accessoriesTotal = requirement.has_accessories ? requirement.accessories?.reduce((sum: number, i: any) => sum + (parseFloat(i.total_price) || 0), 0) || 0 : 0;
         const installationTotal = requirement.has_installation ? requirement.installations?.reduce((sum: number, i: any) => sum + (parseFloat(i.total_price) || 0), 0) || 0 : 0;
 
         const subTotal = itemsTotal + accessoriesTotal + installationTotal;
 
-        const taxableAmount = (itemsTotal - itemsCostingTotal) + accessoriesTotal + installationTotal;
+        const taxableAmount = itemsTotal + accessoriesTotal + installationTotal;
 
         const vatAmount = (parseFloat(requirement.vat_percentage as string) || 0) > 0 ? taxableAmount * ((parseFloat(requirement.vat_percentage as string) || 0) / 100) : 0;
 
@@ -65,6 +62,7 @@ export default function Show({ requirement, customers, requirements }: Props) {
 
         return {
             subTotal,
+            itemsCostingTotal,
             vatAmount,
             aitAmount,
             grandTotal: requirement.grand_total // Or subTotal + vatAmount + aitAmount if dynamic
@@ -297,12 +295,18 @@ export default function Show({ requirement, customers, requirements }: Props) {
                                     </tbody>
 
                                     <tfoot className="bg-primary/2 border-t-2 border-primary/10">
-                                        {(requirement.has_vat || requirement.has_ait) && (
+                                        {(requirement.has_vat || requirement.has_ait || totals.itemsCostingTotal > 0) && (
                                             <>
                                                 <tr>
                                                     <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">Sub-Total</td>
                                                     <td className="px-6 py-2 text-right font-mono text-sm">{formatCurrency(totals.subTotal)}</td>
                                                 </tr>
+                                                {totals.itemsCostingTotal > 0 && (
+                                                    <tr>
+                                                        <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">Total Costing</td>
+                                                        <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">{formatCurrency(totals.itemsCostingTotal)}</td>
+                                                    </tr>
+                                                )}
                                                 {requirement.has_vat && (
                                                     <tr>
                                                         <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">VAT ({requirement.vat_percentage}%)</td>

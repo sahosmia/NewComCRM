@@ -65,7 +65,7 @@ export default function ProductForm({ product, units = [] }: Props) {
 
                 {/* Unit Price */}
                 <div className="space-y-2">
-                    <FormLabel required>Unit Price</FormLabel>
+                    <FormLabel>Unit Price</FormLabel>
                     <Input
                         id="unit_price"
                         type="number"
