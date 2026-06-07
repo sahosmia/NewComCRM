@@ -47,6 +47,8 @@ interface DashboardProps {
         month_count: number;
     };
     requirements: {
+        today_count: number;
+        upcoming_count: number;
         list: Requirement[];
     };
     chartData: any[];
@@ -101,7 +103,7 @@ export default function Dashboard({ meetings, followUps, sales, customers, birth
                     <StatCard
                         title="Today's Sales"
                         value={formatCurrency(sales.today_amount)}
-                        description={`${sales.today_count} purchased requirements`}
+                        description={`${sales.today_count} Items`}
                         icon="dollar"
                         color="purple"
                         link="/sales"
@@ -109,13 +111,13 @@ export default function Dashboard({ meetings, followUps, sales, customers, birth
                     <StatCard
                         title="Total Sales"
                         value={formatCurrency(sales.total_amount)}
-                        description={`Cumulative: ${sales.total_count} sales`}
+                        description={`Total: ${sales.total_count} Items`}
                         icon="shopping-cart"
                         color="blue"
                         link="/sales"
                     />
                     <StatCard
-                        title="New Customers"
+                        title="New Customer (Today)"
                         value={customers.today_count}
                         description="Registered today"
                         icon="users"
@@ -123,7 +125,7 @@ export default function Dashboard({ meetings, followUps, sales, customers, birth
                         link="/customers"
                     />
                     <StatCard
-                        title="Total Customers"
+                        title="Total Customer (All Time)"
                         value={customers.total_count}
                         description="Lifetime database"
                         icon="users"
@@ -134,8 +136,40 @@ export default function Dashboard({ meetings, followUps, sales, customers, birth
 
                 {/* Second Row: Activity Counts */}
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <StatCard
+                        title="Today Requirements"
+                        value={requirements.today_count}
+                        icon="file-text"
+                        color="cyan"
+                        link="/requirements"
+                    />
+                    <StatCard
+                        title="Upcoming Requirements"
+                        value={requirements.upcoming_count}
+                        icon="calendar"
+                        color="rose"
+                        link="/requirements"
+                    />
+                    <StatCard
+                        title="Today Follow up"
+                        value={followUps.today_count}
+                        icon="clock"
+                        color="yellow"
+                        link="/follow-ups?period=today"
+                    />
+                    <StatCard
+                        title="Upcoming Follow up (All Time)"
+                        value={followUps.upcoming_count}
+                        icon="bell"
+                        color="orange"
+                        link="/follow-ups?period=upcoming"
+                    />
+                </div>
+
+                {/* Third Row: Meetings Activity */}
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
                      <StatCard
-                        title="Today's Meetings"
+                        title="Today Meetings"
                         value={meetings.today_count}
                         icon="video"
                         color="blue"
@@ -147,20 +181,6 @@ export default function Dashboard({ meetings, followUps, sales, customers, birth
                         icon="calendar"
                         color="indigo"
                         link="/meetings?period=upcoming"
-                    />
-                    <StatCard
-                        title="Today's Follow-ups"
-                        value={followUps.today_count}
-                        icon="clock"
-                        color="yellow"
-                        link="/follow-ups?period=today"
-                    />
-                    <StatCard
-                        title="Upcoming Follow-ups"
-                        value={followUps.upcoming_count}
-                        icon="bell"
-                        color="orange"
-                        link="/follow-ups?period=upcoming"
                     />
                 </div>
 

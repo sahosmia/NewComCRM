@@ -27,7 +27,11 @@ const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, importRoute,
     });
 
     const { errors: pageErrors } = usePage().props;
-    const importErrors = (pageErrors?.import_errors as string[]) || [];
+    const importErrors = Array.isArray(pageErrors?.import_errors)
+        ? (pageErrors.import_errors as string[])
+        : typeof pageErrors?.import_errors === 'string'
+          ? [pageErrors.import_errors]
+          : [];
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

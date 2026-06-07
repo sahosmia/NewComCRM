@@ -164,7 +164,13 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                         selectedId={data.customer_id}
                                         placeholder="Select Customer"
                                         searchPlaceholder="Search customers..."
-                                        onSelect={(id) => setData("customer_id", id as number)}
+                                        onSelect={(id) => {
+                                            setData("customer_id", id as number);
+                                            const customer = customers.find(c => c.id === id);
+                                            if (customer && customer.addresses && customer.addresses.length > 0) {
+                                                setData("delivery_location", customer.addresses[0]);
+                                            }
+                                        }}
                                         error={errors.customer_id}
                                         renderAction={
                                             <Button
