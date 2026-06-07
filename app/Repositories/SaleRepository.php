@@ -16,8 +16,6 @@ class SaleRepository
         $userId = $params['user_id'] ?? null;
         $startDate = $params['start_date'] ?? null;
         $endDate = $params['end_date'] ?? null;
-        $sort = $params['sort'] ?? 'sale_date';
-        $direction = $params['direction'] ?? 'desc';
 
         return Sale::query()
             ->with(['customer.assignedUser', 'customer.company', 'requirement.items.product'])
@@ -32,7 +30,11 @@ class SaleRepository
             })
             ->when($startDate, fn($q) => $q->whereDate('sale_date', '>=', $startDate))
             ->when($endDate, fn($q) => $q->whereDate('sale_date', '<=', $endDate))
-            ->orderBy($sort, $direction)
+            ->when($params['sort'] ?? null, function ($query, $sort) use ($params) {
+                $query->orderBy($sort, $params['direction'] ?? 'desc');
+            }, function ($query) {
+                $query->latest();
+            })
             ->paginate($perPage)
             ->withQueryString();
     }
