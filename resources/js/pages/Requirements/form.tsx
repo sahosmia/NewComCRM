@@ -64,6 +64,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
         before_payment: requirement?.before_payment ?? 0,
         after_payment: requirement?.after_payment ?? 0,
         delivery_location: requirement?.delivery_location || "",
+        delivery_date: requirement?.delivery_date || "",
         send_qutation_to: requirement?.send_qutation_to || "",
         qutation_send_by: requirement?.qutation_send_by || "",
 
@@ -332,6 +333,17 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                     className="h-10"
                                 />
                                 <ErrorMessage message={errors.delivery_location} />
+                            </div>
+
+                            <div className="space-y-2">
+                                <FormLabel>Deliver Able Date</FormLabel>
+                                <Input
+                                    type="date"
+                                    value={data.delivery_date}
+                                    onChange={(e) => setData("delivery_date", e.target.value)}
+                                    className="h-10"
+                                />
+                                <ErrorMessage message={errors.delivery_date} />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">

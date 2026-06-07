@@ -32,6 +32,7 @@ class Requirement extends Model
         'before_payment',
         'after_payment',
         'delivery_location',
+        'delivery_date',
         'send_qutation_to',
         'qutation_send_by',
     ];
@@ -42,6 +43,7 @@ class Requirement extends Model
         'has_installation' => 'boolean',
         'ait_percentage' => 'decimal:2',
         'vat_percentage' => 'decimal:2',
+        'delivery_date' => 'date',
     ];
 
     public function items(): HasMany
