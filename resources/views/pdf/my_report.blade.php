@@ -593,7 +593,7 @@
                                 <td class="text-center">{{ str_pad($currentSl + 1, 2, '0', STR_PAD_LEFT) }}</td>
                                 <td> {{ $accessory->title }}</td>
                                 <td class="text-center">{{ $accessory->quantity }}
-                                    {{ $accessory->unit->title ?? ($accessory->unit->short_form ?? 'Unit') }}</td>
+                                    {{ $accessory->unit?->title ?? ($accessory->unit?->short_form ?? 'Unit') }}</td>
                                 <td class="text-right">{{ number_format($accessory->price, 0) }}</td>
                                 <td class="text-right">
                                     {{ number_format($accessory->total_price, 0) }}/=
@@ -610,7 +610,7 @@
                                 <td class="text-center">{{ str_pad($currentSl + 1, 2, '0', STR_PAD_LEFT) }}</td>
                                 <td> {{ $installation->title }}</td>
                                 <td class="text-center">{{ $installation->quantity }}
-                                    {{ $installation->unit->title ?? ($installation->unit->short_form ?? 'Unit') }}</td>
+                                    {{ $installation->unit?->title ?? ($installation->unit?->short_form ?? 'Unit') }}</td>
                                 <td class="text-right">{{ number_format($installation->price, 0) }}</td>
                                 <td class="text-right">
                                     {{ number_format($installation->total_price, 0) }}/=

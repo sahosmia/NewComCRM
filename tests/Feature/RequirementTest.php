@@ -29,12 +29,26 @@ it('can_list_all_requirements', function () {
     );
 });
 
+it('shows_latest_requirements_first_by_default', function () {
+    $r1 = Requirement::factory()->create(['created_at' => now()->subDay()]);
+    $r2 = Requirement::factory()->create(['created_at' => now()]);
+
+    $response = $this->actingAs($this->user)
+        ->get(route('requirements.index'));
+
+    $response->assertInertia(fn ($page) => $page
+        ->where('requirements.data.0.id', $r2->id)
+        ->where('requirements.data.1.id', $r1->id)
+    );
+});
+
 it('can_store_a_new_requirement', function () {
     $customer = Customer::factory()->create();
     $product = Product::factory()->create();
 
     $requirementData = [
         'customer_id' => $customer->id,
+        'title' => 'New Requirement Title',
         'items' => [
             [
                 'product_id' => $product->id,
@@ -78,6 +92,7 @@ it('can_update_an_existing_requirement', function () {
 
     $updatedData = [
         'customer_id' => $requirement->customer_id,
+        'title' => 'Updated Requirement Title',
         'items' => [
             [
                 'product_id' => $product->id,
