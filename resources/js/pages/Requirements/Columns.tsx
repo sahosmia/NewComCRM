@@ -25,6 +25,14 @@ const columns: Column<Requirement>[] = [
         ),
     },
     {
+        header: 'Deliver Date',
+        accessor: (item) => (
+            <div className="font-medium text-xs text-muted-foreground">
+                {item.delivery_date ? new Date(item.delivery_date).toLocaleDateString() : 'N/A'}
+            </div>
+        ),
+    },
+    {
         header: 'Requirement Title',
         accessor: (item) => (
             <div className="font-medium text-sm">

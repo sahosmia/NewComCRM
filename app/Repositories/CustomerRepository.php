@@ -31,6 +31,13 @@ class CustomerRepository
             ->when($params['start_date'] ?? null, function ($q, $start) use ($params) {
                 $q->whereBetween('created_at', [$start, $params['end_date'] ?? $start]);
             })
+            ->when($params['period'] ?? null, function ($query, $period) {
+                match ($period) {
+                    'today' => $query->whereDate('created_at', today()),
+                    'upcoming' => $query->whereDate('created_at', '>', today()),
+                    default => null,
+                };
+            })
             ->latest($params['sort'] ?? 'created_at') // Simplified sorting
             ->paginate($params['per_page'] ?? setting('paginated_quantity', 10))
             ->withQueryString();
