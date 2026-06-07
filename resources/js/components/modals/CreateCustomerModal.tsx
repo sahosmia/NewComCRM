@@ -113,14 +113,16 @@ export default function CreateCustomerModal({ isOpen, onClose, onSuccess, compan
                         </div>
 
                         <div className="space-y-2">
-                            <FormLabel required>Assigned Representative</FormLabel>
-                            <Select value={String(data.assigned_to)} onValueChange={val => setData("assigned_to", parseInt(val))}>
-                                <SelectTrigger><SelectValue placeholder="Select staff" /></SelectTrigger>
-                                <SelectContent>
-                                    {users.map(u => <SelectItem key={u.id} value={String(u.id)}>{u.name}</SelectItem>)}
-                                </SelectContent>
-                            </Select>
-                            <ErrorMessage message={errors.assigned_to} />
+                            <GenericCombobox
+                                required
+                                label="Responsible User"
+                                items={users}
+                                selectedId={data.assigned_to}
+                                onSelect={(id) => setData("assigned_to", id as number)}
+                                placeholder="Select company"
+                                error={errors.assigned_to}
+                            />
+
                         </div>
                     </div>
 

@@ -15,6 +15,7 @@ import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 import FormLabel from "@/components/admin/form/FormLabel";
 import { useModal } from "@/contexts/ModalContext";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 
 interface Props {
     meeting?: Meeting;
@@ -24,8 +25,9 @@ interface Props {
     companies: Company[];
 }
 
-export default function MeetingForm({ meeting, customers, requirements, users, companies }: Props) {
+export default function MeetingForm({ meeting, customers: initialCustomers, requirements, users, companies }: Props) {
     const { openModal } = useModal();
+    const [customers, setCustomers] = useState<CustomerType[]>(initialCustomers);
     const urlParams = new URLSearchParams(window.location.search);
     const preSelectedCustomerId = urlParams.get('customer_id');
     const preSelectedRequirementId = urlParams.get('requirement_id');
@@ -67,7 +69,6 @@ export default function MeetingForm({ meeting, customers, requirements, users, c
                     selectedId={data.customer_id}
                     onSelect={(id) => {
                         setData("customer_id", id as number);
-                        // Optional: Clear requirement if it doesn't belong to the new customer
                         if (data.requirement_id) {
                             const req = requirements.find(r => r.id === data.requirement_id);
                             if (req && req.customer_id !== id) {
@@ -79,6 +80,27 @@ export default function MeetingForm({ meeting, customers, requirements, users, c
                     searchPlaceholder="Search customers..."
                     allowManualInput={false}
                     error={errors.customer_id}
+                    renderAction={
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                openModal('CREATE_CUSTOMER', {
+                                    users: users,
+                                    companies: companies,
+                                    onSuccess: (customer: CustomerType) => {
+                                        setCustomers(prev => [...prev, customer]);
+                                        setData("customer_id", customer.id);
+                                    }
+                                });
+                            }}
+                        >
+                            <Plus className="h-4 w-4" />
+                        </Button>
+                    }
                 />
             </div>
 
@@ -100,24 +122,7 @@ export default function MeetingForm({ meeting, customers, requirements, users, c
                     searchPlaceholder="Search requirements..."
                     allowManualInput={false}
                     error={errors.requirement_id}
-                    renderAction={
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                openModal('CREATE_CUSTOMER', {
-                                    users: users,
-                                    companies: companies,
-                                    onSuccess: (customer: CustomerType) => setData('customer_id', customer.id)
-                                });
-                            }}
-                        >
-                            <Plus className="h-4 w-4" />
-                        </Button>
-                    }
+
                 />
             </div>
 

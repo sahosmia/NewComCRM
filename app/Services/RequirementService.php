@@ -33,12 +33,18 @@ class RequirementService
             $requirement = $this->requirements->create($requirementData);
 
             $requirement->items()->createMany($data['items']);
-            if (!empty($data['accessories'])) {
-                $requirement->accessories()->createMany($data['accessories']);
+            if ($data['has_accessories'] ?? false) {
+                $accessories = collect($data['accessories'] ?? [])->filter(fn($item) => !empty($item['title']))->toArray();
+                if (!empty($accessories)) {
+                    $requirement->accessories()->createMany($accessories);
+                }
             }
 
-            if (!empty($data['installations'])) {
-                $requirement->installations()->createMany($data['installations']);
+            if ($data['has_installation'] ?? false) {
+                $installations = collect($data['installations'] ?? [])->filter(fn($item) => !empty($item['title']))->toArray();
+                if (!empty($installations)) {
+                    $requirement->installations()->createMany($installations);
+                }
             }
 
             // Explicitly calculate to ensure taxes/accessories/installation are included

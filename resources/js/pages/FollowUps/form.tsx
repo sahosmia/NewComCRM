@@ -15,6 +15,7 @@ import FormLabel from "@/components/admin/form/FormLabel";
 import { Company, CustomerType, FollowUp, Requirement, User } from "@/types";
 import { useModal } from "@/contexts/ModalContext";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 
 interface Props {
     followUp?: FollowUp;
@@ -24,8 +25,9 @@ interface Props {
     companies: Company[];
 }
 
-export default function FollowUpForm({ followUp, customers, requirements, users, companies }: Props) {
+export default function FollowUpForm({ followUp, customers: initialCustomers, requirements, users, companies }: Props) {
     const { openModal } = useModal();
+    const [customers, setCustomers] = useState<CustomerType[]>(initialCustomers);
 
     const urlParams = new URLSearchParams(window.location.search);
     const preSelectedCustomerId = urlParams.get('customer_id');
@@ -93,7 +95,10 @@ export default function FollowUpForm({ followUp, customers, requirements, users,
                                 openModal('CREATE_CUSTOMER', {
                                     users: users,
                                     companies: companies,
-                                    onSuccess: (customer: CustomerType) => setData('customer_id', customer.id)
+                                    onSuccess: (customer: CustomerType) => {
+                                        setCustomers(prev => [...prev, customer]);
+                                        setData('customer_id', customer.id);
+                                    }
                                 });
                             }}
                         >

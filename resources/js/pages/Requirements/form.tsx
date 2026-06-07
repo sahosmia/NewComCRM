@@ -18,6 +18,7 @@ import { FormSummaryFooter } from "./com/FormSummaryFooter";
 import { ServiceSection } from "./com/ServiceSection";
 import FormLabel from "@/components/admin/form/FormLabel";
 import { useModal } from "@/contexts/ModalContext";
+import requirements from "@/routes/requirements";
 
 
 interface Props {
@@ -130,6 +131,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
+        // console.log("Submitting Requirement with data:", data);
         requirement ? put(route("requirements.update", requirement.id)) : post(route("requirements.store"));
     };
 
@@ -164,7 +166,13 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                         selectedId={data.customer_id}
                                         placeholder="Select Customer"
                                         searchPlaceholder="Search customers..."
-                                        onSelect={(id) => setData("customer_id", id as number)}
+                                       onSelect={(id) => {
+                                            setData("customer_id", id as number);
+                                            const customer = customers.find(c => c.id === id);
+                                            if (customer && customer.addresses && customer.addresses.length > 0) {
+                                                setData("delivery_location", customer.addresses[0]);
+                                            }
+                                        }}
                                         error={errors.customer_id}
                                         renderAction={
                                             <Button
@@ -180,6 +188,8 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                                         onSuccess: (newCustomer: CustomerType) => {
                                                             setCustomers(prev => [...prev, newCustomer]);
                                                             setData('customer_id', newCustomer.id);
+                                                            setData("delivery_location", newCustomer.addresses[0]);
+
                                                         }
                                                     });
                                                 }}
@@ -233,25 +243,25 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                         placeholder="Select Sender (Optional)"
                                         searchPlaceholder="Search users..."
                                         error={errors.qutation_send_by}
-                                        renderAction={ <Button
-                                                type="button"
-                                                variant="ghost"
-                                                size="icon"
-                                                className="h-6 w-6"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    openModal('CREATE_CUSTOMER', {
-                                                        users: users,
-                                                        companies: companies,
-                                                        onSuccess: (newCustomer: CustomerType) => {
-                                                            setCustomers(prev => [...prev, newCustomer]);
-                                                            setData('qutation_send_by', newCustomer.id);
-                                                        }
-                                                    });
-                                                }}
-                                            >
-                                                <Plus className="h-4 w-4" />
-                                            </Button>
+                                        renderAction={<Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-6 w-6"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                openModal('CREATE_CUSTOMER', {
+                                                    users: users,
+                                                    companies: companies,
+                                                    onSuccess: (newCustomer: CustomerType) => {
+                                                        setCustomers(prev => [...prev, newCustomer]);
+                                                        setData('qutation_send_by', newCustomer.id);
+                                                    }
+                                                });
+                                            }}
+                                        >
+                                            <Plus className="h-4 w-4" />
+                                        </Button>
                                         }
                                     />
                                 </div>
@@ -288,6 +298,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                     }}
                                 />
                             ))}
+                            <ErrorMessage message={errors && errors[`items`]} />
                         </div>
                     </div>
                 </div>

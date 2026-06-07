@@ -11,42 +11,42 @@ trait ValidatesRequirementAttributes
     {
         return [
             'customer_id' => 'required|exists:customers,id',
-            'title'       => 'required|string|max:255',
-            'notes'       => 'nullable|string',
-            'status'      => 'nullable|string',
+            'title' => 'required|string|max:255',
+            'notes' => 'nullable|string',
+            'status' => 'nullable|string',
 
             'ait_percentage' => 'required|numeric|min:0',
             'vat_percentage' => 'required|numeric|min:0',
 
             'has_accessories' => 'nullable|boolean',
             'accessories' => 'required_if:has_accessories,true|array',
-            'accessories.*.title' => 'required_with:has_accessories|string|max:255',
-            'accessories.*.quantity' => 'required_with:has_accessories|integer|min:1',
-            'accessories.*.unit_id' => 'required_with:has_accessories|exists:units,id',
-            'accessories.*.price' => 'required_with:has_accessories|numeric|min:0',
+            'accessories.*.title' => 'required_if:has_accessories,true|string|max:255',
+            'accessories.*.quantity' => 'required_if:has_accessories,true|integer|min:1',
+            'accessories.*.unit_id' => 'required_if:has_accessories,true|exists:units,id',
+            'accessories.*.price' => 'required_if:has_accessories,true|numeric|min:0',
 
             'has_installation' => 'nullable|boolean',
             'installations' => 'required_if:has_installation,true|array',
-            'installations.*.title' => 'required_with:has_installation|string|max:255',
-            'installations.*.quantity' => 'required_with:has_installation|integer|min:1',
-            'installations.*.unit_id' => 'required_with:has_installation|exists:units,id',
-            'installations.*.price' => 'required_with:has_installation|numeric|min:0',
+            'installations.*.title' => 'required_if:has_installation,true|string|max:255',
+            'installations.*.quantity' => 'required_if:has_installation,true|integer|min:1',
+            'installations.*.unit_id' => 'required_if:has_installation,true|exists:units,id',
+            'installations.*.price' => 'required_if:has_installation,true|numeric|min:0',
 
             'price_validity_days' => 'required|integer|min:0',
-            'delivery_time_days'  => 'required|integer|min:0',
-            'advance_payment'     => 'required|integer|min:0|max:100',
-            'before_payment'      => 'nullable|integer|min:0|max:100',
-            'after_payment'       => 'nullable|integer|min:0|max:100',
-            'delivery_location'   => 'nullable|string|max:255',
-            'send_qutation_to'    => 'nullable|exists:customers,id',
-            'qutation_send_by'    => 'nullable|exists:users,id',
-            'items'                 => 'required|array|min:1',
-            'items.*.product_id'    => 'required|exists:products,id',
-            'items.*.quantity'      => 'required|integer|min:1',
-            'items.*.unit_price'    => 'required|numeric|min:0',
+            'delivery_time_days' => 'required|integer|min:0',
+            'advance_payment' => 'required|integer|min:0|max:100',
+            'before_payment' => 'nullable|integer|min:0|max:100',
+            'after_payment' => 'nullable|integer|min:0|max:100',
+            'delivery_location' => 'nullable|string|max:255',
+            'send_qutation_to' => 'nullable|exists:customers,id',
+            'qutation_send_by' => 'nullable|exists:users,id',
+            'items' => 'required|array|min:1',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.unit_price' => 'required|numeric|min:0',
 
             'items.*.costing_price' => 'nullable|numeric|min:0',
-            'items.*.description'   => 'nullable|string',
+            'items.*.description' => 'nullable|string',
         ];
     }
 
@@ -56,12 +56,15 @@ trait ValidatesRequirementAttributes
     protected function requirementAttributeMessages(): array
     {
         return [
-            'customer_id.required'    => 'Please select a customer.',
-            'items.required'          => 'At least one product item is required.',
-            'items.array'             => 'Product items must be provided as a list.',
+            'customer_id.required' => 'Please select a customer.',
+            'items.required' => 'At least one product item is required.',
+            'items.array' => 'Product items must be provided as a list.',
             'items.*.product_id.required' => 'Please select a product for all items.',
-            'items.*.quantity.required'   => 'Quantity is required for all items.',
+            'items.*.quantity.required' => 'Quantity is required for all items.',
             'items.*.unit_price.required' => 'Unit price is required for all items.',
+            'accessories.required_if' => 'Please provide accessory details when "Has Accessories" is checked.',
+            'installations.required_if' => 'Please provide installation details when "Has Installation" is checked.',
+
         ];
     }
 }

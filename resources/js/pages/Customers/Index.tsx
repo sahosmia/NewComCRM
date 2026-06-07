@@ -98,7 +98,7 @@ export default function CustomerIndex({ customers, users, companies }: Props) {
                     printRoute="customers.print"
                     bulkDeleteRoute="customers.bulkDestroy"
                     entityName="Customer"
-                    importRoute="customers.import"
+                    // importRoute="customers.import"
                 />
             </div>
         </AppLayout>

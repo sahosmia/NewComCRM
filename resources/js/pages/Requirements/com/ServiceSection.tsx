@@ -84,35 +84,35 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                                     <ErrorMessage message={errors[`${prefix}.${index}.quantity`]} />
                                 </div>
                                 <div className="space-y-2 col-span-2">
-                                        <GenericCombobox
-                                            label="Unit"
-                                            items={units.map(u => ({ ...u, name: u.short_form }))}
-                                             selectedId={item.unit_id}
-                                            onSelect={(id, name) => handleItemChange(index, 'unit_id', id)}
-                                            placeholder="Select Unit"
-                                            searchPlaceholder="Search units..."
-                                            allowManualInput={false}
-                                            error={errors[`${prefix}.${index}.unit_id`]}
-                                            renderAction={
-                                                <Button
-                                                    type="button"
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    className="h-6 w-6"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        openModal('CREATE_UNIT', {
-                                                            onSuccess: (unit: Unit) => {
-                                                                onUnitCreated && onUnitCreated(unit);
-                                                                handleItemChange(index, 'unit_id', unit.id);
-                                                            }
-                                                        });
-                                                    }}
-                                                >
-                                                    <Plus className="h-4 w-4" />
-                                                </Button>
-                                            }
-                                        />
+                                    <GenericCombobox
+                                        label="Unit"
+                                        items={units.map(u => ({ ...u, name: u.short_form }))}
+                                        selectedId={item.unit_id}
+                                        onSelect={(id, name) => handleItemChange(index, 'unit_id', id)}
+                                        placeholder="Select Unit"
+                                        searchPlaceholder="Search units..."
+                                        allowManualInput={false}
+                                        error={errors[`${prefix}.${index}.unit_id`]}
+                                        renderAction={
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-6 w-6"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    openModal('CREATE_UNIT', {
+                                                        onSuccess: (unit: Unit) => {
+                                                            onUnitCreated && onUnitCreated(unit);
+                                                            handleItemChange(index, 'unit_id', unit.id);
+                                                        }
+                                                    });
+                                                }}
+                                            >
+                                                <Plus className="h-4 w-4" />
+                                            </Button>
+                                        }
+                                    />
                                 </div>
                             </div>
                             <div className="md:col-span-2 lg:col-span-2 space-y-2">
@@ -145,6 +145,7 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                             </div>
                         </div>
                     ))}
+                    <ErrorMessage message={errors[`${prefix}`]} />
                 </div>
             )}
         </div>

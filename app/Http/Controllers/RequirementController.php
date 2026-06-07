@@ -26,6 +26,7 @@ class RequirementController extends Controller
      */
     public function index(Request $request)
     {
+        // return $request->all();
         $this->authorize('viewAny', Requirement::class);
         return Inertia::render('Requirements/Index', [
             'requirements' => $this->requirementService->paginateIndex($request->all()),

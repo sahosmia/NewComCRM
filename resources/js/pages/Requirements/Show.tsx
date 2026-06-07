@@ -1,4 +1,4 @@
-import { Link, Head } from "@inertiajs/react";
+import { Link, Head, router } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/layouts/app-layout";
 import { Badge } from "@/components/ui/badge";
@@ -131,7 +131,10 @@ export default function Show({ requirement, customers, requirements }: Props) {
                                         customer_id: requirement.customer_id,
                                     requirement_id: requirement.id,
                                     customers: customers,
-                                    requirements: requirements
+                                    requirements: requirements,
+                                        onSuccess: () => {
+                                            router.reload({ only: ['requirement'] });
+                                        }
                                     })}
                                 >
                                     Schedule
@@ -167,7 +170,10 @@ export default function Show({ requirement, customers, requirements }: Props) {
                                         customer_id: requirement.customer_id,
                                     requirement_id: requirement.id,
                                     customers: customers,
-                                    requirements: requirements
+                                    requirements: requirements,
+                                        onSuccess: () => {
+                                            router.reload({ only: ['requirement'] });
+                                        }
                                     })}
                                 >
                                     Add

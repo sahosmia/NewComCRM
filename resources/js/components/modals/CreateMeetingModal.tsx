@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useForm, router, usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import {
     Dialog,
     DialogContent,
@@ -17,6 +17,7 @@ import { GenericCombobox } from '@/components/admin/form/GenericCombobox';
 import FormLabel from '@/components/admin/form/FormLabel';
 import { SharedData, Meeting } from '@/types';
 import { CreateMeetingModalProps } from '@/types/modals';
+import { useModalForm } from '@/hooks/use-modal-form';
 
 export default function CreateMeetingModal({
     isOpen,
@@ -33,8 +34,8 @@ export default function CreateMeetingModal({
     const availableCustomers = customers.length > 0 ? customers : (sharedProps.customers || []);
     const availableRequirements = requirements.length > 0 ? requirements : (sharedProps.requirements || []);
 
-    const { data, setData, post, processing, errors, reset, clearErrors } = useForm({
-        customer_id: customer_id || "",
+    const { data, setData, submit, processing, errors, reset } = useModalForm({
+    customer_id: customer_id || "",
         requirement_id: requirement_id || "",
         title: "",
         scheduled_at: "",
@@ -43,6 +44,11 @@ export default function CreateMeetingModal({
         agenda: "",
         notes: "",
         status: "scheduled" as Meeting['status'],
+         }, route('meetings.store'), {
+        onSuccess: (meeting: Meeting) => {
+            if (onSuccess) onSuccess(meeting);
+            onClose();
+        }
     });
 
     useEffect(() => {
@@ -54,15 +60,7 @@ export default function CreateMeetingModal({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('meetings.store'), {
-            onSuccess: () => {
-                const newId = sharedProps.flash.new_id;
-                router.reload({ only: ['meetings', 'customer'] });
-                if (onSuccess && newId) onSuccess(Number(newId));
-                reset();
-                onClose();
-            },
-        });
+        submit();
     };
 
     const filteredRequirements = data.customer_id
@@ -70,6 +68,7 @@ export default function CreateMeetingModal({
         : availableRequirements;
 
     return (
+
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
             <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
@@ -81,7 +80,7 @@ export default function CreateMeetingModal({
                             <GenericCombobox
                                 required
                                 label="Customer"
-                                items={availableCustomers.map(c => ({ id: c.id, name: c.full_name_with_company || c.name }))}
+                                items={availableCustomers.map(c => ({ ...c, name: c.full_name_with_company || c.name }))}
                                 selectedId={data.customer_id}
                                 onSelect={(id) => setData("customer_id", id as number)}
                                 placeholder="Select Customer"
@@ -92,9 +91,14 @@ export default function CreateMeetingModal({
                         <div className="space-y-1">
                             <GenericCombobox
                                 label="Requirement (Optional)"
-                                items={filteredRequirements.map(r => ({ id: r.id, name: r.title || `Requirement #${r.id}` }))}
+                                items={filteredRequirements.map(r => ({ ...r, name: r.title || `Requirement #${r.id}` }))}
                                 selectedId={data.requirement_id}
-                                onSelect={(id) => setData("requirement_id", id as number)}
+                                onSelect={(id, name, req) => {
+                                    setData("requirement_id", id as number);
+                                    if (id && req && req.customer_id !== data.customer_id) {
+                                        setData("customer_id", req.customer_id);
+                                    }
+                                }}
                                 placeholder="Select Requirement"
                                 allowManualInput={false}
                                 error={errors.requirement_id}

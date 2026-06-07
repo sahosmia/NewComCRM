@@ -118,16 +118,19 @@ class CustomerController extends Controller
 
         return $this->exportService->excel(
             $customers,
-            ['Name', 'Email', 'Phone', 'Company', 'Designation', 'Type', 'Status', 'Assigned To'],
+           ['Name', 'Email', 'Phones', 'Addresses', 'Company', 'Designation', 'Type', 'Status', 'Assigned To', 'Date of Birth', 'Remarks'],
             fn($customer) => [
                 $customer->name,
                 $customer->email,
                 $customer->phones ? implode(', ', $customer->phones) : '',
+                $customer->addresses ? implode(', ', $customer->addresses) : '',
                 $customer->company?->name,
                 $customer->designation,
                 $customer->type,
                 $customer->status,
                 $customer->assignedUser ? $customer->assignedUser->name : '',
+                $customer->date_of_birth?->format('Y-m-d'),
+                $customer->remarks,
             ],
             'customers.xlsx'
         );
@@ -139,16 +142,19 @@ class CustomerController extends Controller
 
         return $this->exportService->printView(
             $customers,
-            ['Name', 'Email', 'Phone', 'Company', 'Designation', 'Type', 'Status', 'Assigned To'],
+           ['Name', 'Email', 'Phones', 'Addresses', 'Company', 'Designation', 'Type', 'Status', 'Assigned To', 'Date of Birth', 'Remarks'],
             fn($customer) => [
                 $customer->name,
                 $customer->email,
                 $customer->phones ? implode(', ', $customer->phones) : '',
+                $customer->addresses ? implode(', ', $customer->addresses) : '',
                 $customer->company?->name,
                 $customer->designation,
                 $customer->type,
                 $customer->status,
                 $customer->assignedUser ? $customer->assignedUser->name : '',
+                $customer->date_of_birth?->format('Y-m-d'),
+                $customer->remarks,
             ],
             'Customer List'
         );

@@ -18,10 +18,22 @@ class DashboardService
         return [
             'meetings' => $this->getMeetingMetrics($user),
             'followUps' => $this->getFollowUpMetrics($user),
+            'requirements' => $this->getRequirementMetrics($user),
             'sales' => $this->getSalesMetrics($user),
             'customers' => $this->getCustomerMetrics($user),
             'chartData' => $this->chartData($user),
             'birthdays' => $this->getBirthdayMetrics($user),
+        ];
+    }
+
+    private function getRequirementMetrics(User $user): array
+    {
+        $baseQuery = \App\Models\Requirement::query()
+            ->when(!$user->isSuperAdmin(), fn($q) => $q->whereHas('customer', fn($cq) => $cq->where('assigned_to', $user->id)));
+
+        return [
+            'today_count' => (clone $baseQuery)->whereDate('created_at', today())->count(),
+            'upcoming_count' => (clone $baseQuery)->whereDate('created_at', '>', today())->count(),
         ];
     }
 
