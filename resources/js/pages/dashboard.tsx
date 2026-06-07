@@ -18,7 +18,7 @@ interface DashboardProps {
     meetings: { today: Meeting[]; upcoming: Meeting[]; today_count: number; upcoming_count: number };
     followUps: { today: FollowUp[]; upcoming: FollowUp[]; today_count: number; upcoming_count: number };
     sales: { today_count: number; today_amount: number; upcoming_count: number; upcoming_amount: number; total_count: number; total_amount: number };
-    customers: { today_count: number; upcoming_count: number; total_count: number; list: CustomerType[] };
+    customers: { today_count: number; total_count: number; list: CustomerType[] };
     birthdays: { today: CustomerType[]; this_month: CustomerType[]; today_count: number; month_count: number };
     requirements: { today_count: number; upcoming_count: number; list: Requirement[] };
     chartData: any[];
@@ -77,7 +77,7 @@ export default function Dashboard({ meetings, followUps, sales, customers, birth
                     <StatCard title="Today's Sales" value={formatCurrency(sales.today_amount)} description={`${sales.today_count} Items`} icon="dollar" color="purple" link="/sales?period=today" />
                     <StatCard title="Upcoming Sales" value={formatCurrency(sales.upcoming_amount)} description={`${sales.upcoming_count} Items`} icon="shopping-cart" color="blue" link="/sales?period=upcoming" />
                     <StatCard title="New Customer (Today)" value={customers.today_count} description="Registered today" icon="users" color="green" link="/customers?period=today" />
-                    <StatCard title="Upcoming Customer" value={customers.upcoming_count} description="Registered upcoming" icon="users" color="slate" link="/customers?period=upcoming" />
+                    <StatCard title="All Customer" value={customers.total_count} description="Total registered" icon="users" color="slate" link="/customers" />
                 </div>
 
                 {/* Main Content Layout splits */}

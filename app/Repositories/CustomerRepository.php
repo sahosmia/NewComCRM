@@ -34,7 +34,6 @@ class CustomerRepository
             ->when($params['period'] ?? null, function ($query, $period) {
                 match ($period) {
                     'today' => $query->whereDate('created_at', today()),
-                    'upcoming' => $query->whereDate('created_at', '>', today()),
                     default => null,
                 };
             })
