@@ -55,6 +55,8 @@ class FollowUpController extends Controller
             (int) Auth::id()
         );
 
+        $followUp->load(['customer.company', 'requirement']);
+
         return $this->handleResponse(
             $request,
             $followUp,

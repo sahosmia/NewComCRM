@@ -57,6 +57,8 @@ class MeetingController extends Controller
             (int) Auth::id()
         );
 
+        $meeting->load(['customer.company', 'requirement']);
+
         return $this->handleResponse(
             $request,
             $meeting,

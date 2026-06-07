@@ -1,4 +1,4 @@
-import { Link, Head } from "@inertiajs/react";
+import { Link, Head, router } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/layouts/app-layout";
 import { Badge } from "@/components/ui/badge";
@@ -129,9 +129,12 @@ export default function Show({ requirement, customers, requirements }: Props) {
                                     className="h-7 text-[10px] uppercase font-bold"
                                     onClick={() => openModal('CREATE_MEETING', {
                                         customer_id: requirement.customer_id,
-                                    requirement_id: requirement.id,
-                                    customers: customers,
-                                    requirements: requirements
+                                        requirement_id: requirement.id,
+                                        customers: customers,
+                                        requirements: requirements,
+                                        onSuccess: () => {
+                                            router.reload({ only: ['requirement'] });
+                                        }
                                     })}
                                 >
                                     Schedule
@@ -165,9 +168,12 @@ export default function Show({ requirement, customers, requirements }: Props) {
                                     className="h-7 text-[10px] uppercase font-bold"
                                     onClick={() => openModal('CREATE_FOLLOW_UP', {
                                         customer_id: requirement.customer_id,
-                                    requirement_id: requirement.id,
-                                    customers: customers,
-                                    requirements: requirements
+                                        requirement_id: requirement.id,
+                                        customers: customers,
+                                        requirements: requirements,
+                                        onSuccess: () => {
+                                            router.reload({ only: ['requirement'] });
+                                        }
                                     })}
                                 >
                                     Add

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useForm, router, usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import {
     Dialog,
     DialogContent,
@@ -17,6 +17,7 @@ import { GenericCombobox } from '@/components/admin/form/GenericCombobox';
 import FormLabel from '@/components/admin/form/FormLabel';
 import { SharedData, FollowUp } from '@/types';
 import { CreateFollowUpModalProps } from '@/types/modals';
+import { useModalForm } from '@/hooks/use-modal-form';
 
 export default function CreateFollowUpModal({
     isOpen,
@@ -32,13 +33,18 @@ export default function CreateFollowUpModal({
     const availableCustomers = customers.length > 0 ? customers : (sharedProps.customers || []);
     const availableRequirements = requirements.length > 0 ? requirements : (sharedProps.requirements || []);
 
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, submit, processing, errors, reset } = useModalForm({
         customer_id: customer_id || "",
         requirement_id: requirement_id || "",
         follow_up_date: "",
         notes: "",
         status: "pending" as FollowUp['status'],
         priority: "medium" as FollowUp['priority'],
+    }, route('follow-ups.store'), {
+        onSuccess: (followUp: FollowUp) => {
+            if (onSuccess) onSuccess(followUp);
+            onClose();
+        }
     });
 
     useEffect(() => {
@@ -50,15 +56,7 @@ export default function CreateFollowUpModal({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('follow-ups.store'), {
-            onSuccess: () => {
-                const newId = sharedProps.flash.new_id;
-                router.reload({ only: ['followUps', 'customer'] });
-                if (onSuccess && newId) onSuccess(Number(newId));
-                reset();
-                onClose();
-            },
-        });
+        submit();
     };
 
     const filteredRequirements = data.customer_id
@@ -77,7 +75,7 @@ export default function CreateFollowUpModal({
                             <GenericCombobox
                                 required
                                 label="Customer"
-                                items={availableCustomers.map(c => ({ id: c.id, name: c.full_name_with_company || c.name }))}
+                                items={availableCustomers.map(c => ({ ...c, name: c.full_name_with_company || c.name }))}
                                 selectedId={data.customer_id}
                                 onSelect={(id) => setData("customer_id", id as number)}
                                 placeholder="Select Customer"
@@ -88,9 +86,14 @@ export default function CreateFollowUpModal({
                         <div className="space-y-1">
                             <GenericCombobox
                                 label="Requirement (Optional)"
-                                items={filteredRequirements.map(r => ({ id: r.id, name: r.title || `Requirement #${r.id}` }))}
+                                items={filteredRequirements.map(r => ({ ...r, name: r.title || `Requirement #${r.id}` }))}
                                 selectedId={data.requirement_id}
-                                onSelect={(id) => setData("requirement_id", id as number)}
+                                onSelect={(id, name, req) => {
+                                    setData("requirement_id", id as number);
+                                    if (id && req && req.customer_id !== data.customer_id) {
+                                        setData("customer_id", req.customer_id);
+                                    }
+                                }}
                                 placeholder="Select Requirement"
                                 allowManualInput={false}
                                 error={errors.requirement_id}

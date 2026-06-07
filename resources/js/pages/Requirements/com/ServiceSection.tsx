@@ -136,7 +136,7 @@ export const ServiceSection = ({
                                         label="Unit"
                                         items={units.map(u => ({ ...u, name: u.short_form }))}
                                         selectedId={item.unit_id}
-                                        onSelect={(id) => handleItemChange(index, 'unit_id', id.toString())}
+                                        onSelect={(id, name) => handleItemChange(index, 'unit_id', id.toString())}
                                         placeholder="Select Unit"
                                         searchPlaceholder="Search units..."
                                         allowManualInput={false}
