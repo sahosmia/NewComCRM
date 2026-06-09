@@ -1,8 +1,8 @@
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTableFilters } from '@/hooks/useTableFilters';
-import { PaginationType } from '@/types';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import type { PaginationType } from '@/types';
 
 interface Props<T> {
     data: PaginationType<T>;

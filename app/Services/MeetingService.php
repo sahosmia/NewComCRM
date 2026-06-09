@@ -20,11 +20,9 @@ class MeetingService
 
 
 
-    public function create(array $validated, int $userId): Meeting
+    public function create(array $validated): Meeting
     {
-        return $this->meetings->create(array_merge($validated, [
-            'user_id' => $userId,
-        ]));
+        return $this->meetings->create($validated);
     }
 
     public function update(Meeting $meeting, array $validated): void

@@ -10,6 +10,7 @@ trait ValidatesRequirementAttributes
     protected function requirementAttributeRules(): array
     {
         return [
+            'user_id' => 'nullable|exists:users,id',
             'customer_id' => 'required|exists:customers,id',
             'title' => 'required|string|max:255',
             'notes' => 'nullable|string',

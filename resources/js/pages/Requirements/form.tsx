@@ -1,24 +1,22 @@
-import { useForm } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
+import { Plus, LayoutList, Percent, Settings, Drill, } from "lucide-react";
+import { useState } from "react";
+import ErrorMessage from "@/components/admin/form/ErrorMessage";
+import FormLabel from "@/components/admin/form/FormLabel";
+import { FormSelect } from "@/components/admin/form/FormSelect";
+import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, LayoutList, Percent, Settings, Drill, } from "lucide-react";
-import { Company, Requirement, RequirementItem, User } from "@/types";
-import { CustomerType } from "@/types";
-import { Product } from "@/types";
-import { Unit } from "@/types";
-import { useState } from "react";
-import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
-import ErrorMessage from "@/components/admin/form/ErrorMessage";
-import { FormSelect } from "@/components/admin/form/FormSelect";
-import { RequirementOptions } from "./Columns";
-import { Card, CardContent } from "@/components/ui/card";
-import { RequirementItemRow } from "./com/RequirementItemRow";
-import { FormSummaryFooter } from "./com/FormSummaryFooter";
-import { ServiceSection } from "./com/ServiceSection";
-import FormLabel from "@/components/admin/form/FormLabel";
 import { useModal } from "@/contexts/ModalContext";
-import requirements from "@/routes/requirements";
+import type { Company, Requirement, RequirementItem, User } from "@/types";
+import type { CustomerType } from "@/types";
+import type { Product } from "@/types";
+import type { Unit } from "@/types";
+import { RequirementOptions } from "./Columns";
+import { FormSummaryFooter } from "./com/FormSummaryFooter";
+import { RequirementItemRow } from "./com/RequirementItemRow";
+import { ServiceSection } from "./com/ServiceSection";
 
 
 interface Props {
@@ -32,6 +30,9 @@ interface Props {
 }
 
 export default function RequirementForm({ requirement, customers: initialCustomers, products: initialProducts, units: initialUnits, users, companies }: Props) {
+    const { auth } = usePage().props as any;
+    const isSuperAdmin = auth.user.role === 'super_admin';
+
     const { openModal } = useModal();
     const [customers, setCustomers] = useState<CustomerType[]>(initialCustomers);
     const [products, setProducts] = useState<Product[]>(initialProducts);
@@ -40,6 +41,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
     const preSelectedCustomerId = urlParams.get('customer_id');
 
     const { data, setData, post, put, processing, errors } = useForm({
+        user_id: requirement?.user_id || auth.user.id,
         customer_id: requirement?.customer_id || (preSelectedCustomerId ? parseInt(preSelectedCustomerId) : ""),
         title: requirement?.title || "",
         notes: requirement?.notes || "",
@@ -267,6 +269,24 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                         }
                                     />
                                 </div>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {isSuperAdmin && (
+                                    <div className="space-y-2">
+                                        <GenericCombobox
+                                            required
+                                            label="Assign To"
+                                            items={users.map(u => ({ id: u.id, name: u.name }))}
+                                            selectedId={data.user_id}
+                                            onSelect={(id) => setData("user_id", id as number)}
+                                            placeholder="Select User"
+                                            searchPlaceholder="Search users..."
+                                            allowManualInput={false}
+                                            error={errors.user_id}
+                                        />
+                                    </div>
+                                )}
+
                             </div>
                         </div>
                     </div>

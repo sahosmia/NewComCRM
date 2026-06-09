@@ -1,7 +1,11 @@
-import { useForm } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
+import { Plus } from "lucide-react";
+import { useState } from "react";
+import ErrorMessage from "@/components/admin/form/ErrorMessage";
+import FormLabel from "@/components/admin/form/FormLabel";
+import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
     Select,
     SelectContent,
@@ -9,13 +13,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import ErrorMessage from "@/components/admin/form/ErrorMessage";
-import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
-import FormLabel from "@/components/admin/form/FormLabel";
-import { Company, CustomerType, FollowUp, Requirement, User } from "@/types";
+import { Textarea } from "@/components/ui/textarea";
 import { useModal } from "@/contexts/ModalContext";
-import { Plus } from "lucide-react";
-import { useState } from "react";
+import type { Company, CustomerType, FollowUp, Requirement, User } from "@/types";
 
 interface Props {
     followUp?: FollowUp;
@@ -26,6 +26,9 @@ interface Props {
 }
 
 export default function FollowUpForm({ followUp, customers: initialCustomers, requirements, users, companies }: Props) {
+    const { auth } = usePage().props as any;
+    const isSuperAdmin = auth.user.role === 'super_admin';
+
     const { openModal } = useModal();
     const [customers, setCustomers] = useState<CustomerType[]>(initialCustomers);
 
@@ -34,6 +37,7 @@ export default function FollowUpForm({ followUp, customers: initialCustomers, re
     const preSelectedRequirementId = urlParams.get('requirement_id');
 
     const { data, setData, post, put, processing, errors } = useForm<{
+        user_id: number;
         customer_id: number | string;
         requirement_id: number | string;
         follow_up_date: string;
@@ -41,6 +45,7 @@ export default function FollowUpForm({ followUp, customers: initialCustomers, re
         status: string;
         priority: string;
     }>({
+        user_id: followUp?.user_id || auth.user.id,
         customer_id: followUp?.customer_id || (preSelectedCustomerId ? parseInt(preSelectedCustomerId) : ""),
         requirement_id: followUp?.requirement_id || (preSelectedRequirementId ? parseInt(preSelectedRequirementId) : ""),
         follow_up_date: followUp?.follow_up_date ? new Date(followUp.follow_up_date).toISOString().slice(0, 16) : "",
@@ -65,6 +70,21 @@ export default function FollowUpForm({ followUp, customers: initialCustomers, re
 
     return (
         <form onSubmit={submit} className="space-y-4">
+            {isSuperAdmin && (
+                <div className="space-y-1">
+                    <GenericCombobox
+                        required
+                        label="Assign To"
+                        items={users.map(u => ({ id: u.id, name: u.name }))}
+                        selectedId={data.user_id}
+                        onSelect={(id) => setData("user_id", id as number)}
+                        placeholder="Select User"
+                        searchPlaceholder="Search users..."
+                        allowManualInput={false}
+                        error={errors.user_id}
+                    />
+                </div>
+            )}
             <div className="space-y-1">
                 <GenericCombobox
                     required

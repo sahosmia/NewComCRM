@@ -1,12 +1,12 @@
-import type { Column } from '@/types';
-import { Badge } from '@/components/ui/badge';
-import { TableRowActions } from '@/components/table/TableRowActions';
-import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
-import { formatDate } from '@/utils/date-format';
-import { FollowUp } from '@/types';
-import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { Video } from 'lucide-react';
 import { Link } from '@inertiajs/react';
+import { Video } from 'lucide-react';
+import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
+import { TableRowActions } from '@/components/table/TableRowActions';
+import { Badge } from '@/components/ui/badge';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import type { Column } from '@/types';
+import type { FollowUp } from '@/types';
+import { formatDate } from '@/utils/date-format';
 
 
 

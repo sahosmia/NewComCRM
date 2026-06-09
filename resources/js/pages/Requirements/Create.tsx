@@ -1,7 +1,7 @@
-import AppLayout from "@/layouts/app-layout";
 import { Head } from "@inertiajs/react";
-import { Company, CustomerType, Product, Requirement, User } from "@/types";
-import { Unit } from "@/types";
+import AppLayout from "@/layouts/app-layout";
+import { Requirement } from "@/types";
+import type { Unit , Company, CustomerType, Product, User } from "@/types";
 import RequirementForm from "./form";
 
 interface Props {

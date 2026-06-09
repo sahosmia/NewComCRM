@@ -1,5 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { FileText, MoreHorizontal, SquarePen, Trash2 } from 'lucide-react';
+import { memo } from 'react';
+import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -8,9 +10,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
 import { handleDelete } from '@/utils/table';
-import { memo } from 'react';
 
 interface RowActionsProps<T extends { id: number | string; name?: string }> {
     item: T;

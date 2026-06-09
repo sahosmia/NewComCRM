@@ -1,4 +1,5 @@
-import { CustomerType, Requirement, User } from "@/types";
+import type { CustomerType, Requirement} from "@/types";
+import { User } from "@/types";
 
 export interface BaseModalProps {
     isOpen: boolean;
@@ -9,13 +10,17 @@ export interface BaseModalProps {
 export interface CreateMeetingModalProps extends BaseModalProps {
     customer_id?: number;
     requirement_id?: number;
+    user_id?: number;
     customers?: CustomerType[];
     requirements?: Requirement[];
+    users?: User[];
 }
 
 export interface CreateFollowUpModalProps extends BaseModalProps {
     customer_id?: number;
     requirement_id?: number;
+    user_id?: number;
     customers?: CustomerType[];
     requirements?: Requirement[];
+    users?: User[];
 }

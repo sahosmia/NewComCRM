@@ -19,6 +19,7 @@ class RequirementFactory extends Factory
         $createdAt = $this->getRandomTemporalDate(['past_history', 'recent_history', 'current_timeline']);
 
         return [
+            'user_id' => User::inRandomOrder()->first()?->id ?? User::factory(),
             'customer_id' => Customer::factory(),
             'title' => $this->faker->sentence(4),
             'grand_total' => 0,

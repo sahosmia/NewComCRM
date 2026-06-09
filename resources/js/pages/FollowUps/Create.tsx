@@ -1,7 +1,7 @@
-import AppLayout from "@/layouts/app-layout";
-import FollowUpForm from "./form";
 import { Head } from "@inertiajs/react";
-import { Company, CustomerType, Requirement, User } from "@/types";
+import AppLayout from "@/layouts/app-layout";
+import type { Company, CustomerType, Requirement, User } from "@/types";
+import FollowUpForm from "./form";
 
 interface Props {
     customers: CustomerType[];

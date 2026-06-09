@@ -1,5 +1,8 @@
-import * as React from "react";
 import { Loader2, Plus } from "lucide-react";
+import * as React from "react";
+import { toast } from "sonner";
+import ErrorMessage from "@/components/admin/form/ErrorMessage";
+import FormLabel from "@/components/admin/form/FormLabel";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -12,10 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import FormLabel from "@/components/admin/form/FormLabel";
-import ErrorMessage from "@/components/admin/form/ErrorMessage";
-import { Company } from "@/types";
-import { toast } from "sonner";
+import type { Company } from "@/types";
 
 interface CompanyModalProps {
     onSuccess: (company: Company) => void;

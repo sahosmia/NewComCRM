@@ -17,7 +17,7 @@ it('protects_routes_from_unauthorized_users', function () {
 });
 
 it('can_list_all_requirements', function () {
-    Requirement::factory()->count(3)->create();
+    Requirement::factory()->count(3)->create(['user_id' => $this->user->id]);
 
     $response = $this->actingAs($this->user)
         ->get(route('requirements.index'));
@@ -34,6 +34,7 @@ it('can_store_a_new_requirement', function () {
     $product = Product::factory()->create();
 
     $requirementData = [
+        'title' => 'Test Requirement',
         'customer_id' => $customer->id,
         'items' => [
             [
@@ -73,10 +74,11 @@ it('validates_required_fields_on_store', function () {
 });
 
 it('can_update_an_existing_requirement', function () {
-    $requirement = Requirement::factory()->create();
+    $requirement = Requirement::factory()->create(['user_id' => $this->user->id]);
     $product = Product::factory()->create();
 
     $updatedData = [
+        'title' => 'Updated Title',
         'customer_id' => $requirement->customer_id,
         'items' => [
             [
@@ -105,7 +107,7 @@ it('can_update_an_existing_requirement', function () {
 });
 
 it('can_delete_a_requirement', function () {
-    $requirement = Requirement::factory()->create();
+    $requirement = Requirement::factory()->create(['user_id' => $this->user->id]);
 
     $response = $this->actingAs($this->user)
         ->delete(route('requirements.destroy', $requirement));
@@ -117,7 +119,7 @@ it('can_delete_a_requirement', function () {
 });
 
 it('can_update_status_of_a_requirement', function () {
-    $requirement = Requirement::factory()->create(['status' => 'pending']);
+    $requirement = Requirement::factory()->create(['status' => 'pending', 'user_id' => $this->user->id]);
 
     $response = $this->actingAs($this->user)
         ->patch(route('requirements.update-status', $requirement), [

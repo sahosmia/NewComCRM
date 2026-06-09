@@ -1,7 +1,7 @@
+import { FlashMessage } from '@/components/flash-message';
+import { ModalRegistry } from '@/components/modals/ModalRegistry';
 import AppLayoutTemplate from '@/layouts/app/app-sidebar-layout';
 import type { AppLayoutProps } from '@/types';
-import { ModalRegistry } from '@/components/modals/ModalRegistry';
-import { FlashMessage } from '@/components/flash-message';
 
 export default function AppLayout({ children, breadcrumbs, ...props }: AppLayoutProps) {
 

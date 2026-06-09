@@ -1,7 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { Building2, Globe, Mail, Phone, MapPin } from 'lucide-react';
-import type { Column, Company } from '@/types';
 import { TableRowActions } from '@/components/table/TableRowActions';
+import type { Column, Company } from '@/types';
 
 const columns: Column<Company>[] = [
   {

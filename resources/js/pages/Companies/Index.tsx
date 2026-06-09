@@ -1,8 +1,8 @@
-import AppLayout from '@/layouts/app-layout';
-import { Company, PaginationType, SortOption } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
+import AppLayout from '@/layouts/app-layout';
+import type { Company, PaginationType, SortOption } from '@/types';
 import { columns } from './columns';
 
 

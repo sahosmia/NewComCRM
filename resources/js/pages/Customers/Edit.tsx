@@ -1,8 +1,8 @@
-import AppLayout from "@/layouts/app-layout";
-import CustomerForm from "./form";
 import { Head } from "@inertiajs/react";
-import { Company, CustomerType, User } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import AppLayout from "@/layouts/app-layout";
+import type { Company, CustomerType, User } from "@/types";
+import CustomerForm from "./form";
 
 interface Props {
     customer: CustomerType;

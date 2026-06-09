@@ -1,8 +1,8 @@
-import AppLayout from '@/layouts/app-layout';
-import Heading from '@/components/admin/heading';
 import { Head } from '@inertiajs/react';
+import Heading from '@/components/admin/heading';
+import AppLayout from '@/layouts/app-layout';
+import type { Company } from '@/types';
 import CompanyForm from './form';
-import { Company } from '@/types';
 
 interface Props {
     company: Company;

@@ -1,9 +1,4 @@
 import { Link, Head, router } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import AppLayout from "@/layouts/app-layout";
-import { Badge } from "@/components/ui/badge";
-import { useMemo } from "react";
-import { useModal } from "@/contexts/ModalContext";
 
 import {
     Calendar,
@@ -14,19 +9,26 @@ import {
     Video,
     History
 } from "lucide-react";
+import { useMemo } from "react";
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
 import StatusBadge from "@/components/shared/StatusBadge";
-import { formatDate } from "@/utils/date-format";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useModal } from "@/contexts/ModalContext";
+import AppLayout from "@/layouts/app-layout";
 
-import { Company, CustomerType, Requirement, User } from "@/types";
+import type { CustomerType, Requirement } from "@/types";
+import { User } from "@/types";
+import { formatDate } from "@/utils/date-format";
 
 interface Props {
     requirement: Requirement;
     customers: CustomerType[];
     requirements: Requirement[];
+    users: User[];
 }
 
-export default function Show({ requirement, customers, requirements }: Props) {
+export default function Show({ requirement, customers, requirements, users }: Props) {
     const { openModal } = useModal();
 
     const breadcrumbs = [
@@ -62,8 +64,7 @@ export default function Show({ requirement, customers, requirements }: Props) {
 
         return {
             subTotal,
-                        itemsCostingTotal,
-
+            itemsCostingTotal,
             vatAmount,
             aitAmount,
             grandTotal: requirement.grand_total // Or subTotal + vatAmount + aitAmount if dynamic
@@ -129,6 +130,8 @@ export default function Show({ requirement, customers, requirements }: Props) {
                                     onClick={() => openModal('CREATE_MEETING', {
                                         customer_id: requirement.customer_id,
                                         requirement_id: requirement.id,
+                                        user_id: requirement.user_id,
+                                        users: users,
                                         customers: customers,
                                         requirements: requirements,
                                         onSuccess: () => {
@@ -168,6 +171,8 @@ export default function Show({ requirement, customers, requirements }: Props) {
                                     onClick={() => openModal('CREATE_FOLLOW_UP', {
                                         customer_id: requirement.customer_id,
                                         requirement_id: requirement.id,
+                                        user_id: requirement.user_id,
+                                        users: users,
                                         customers: customers,
                                         requirements: requirements,
                                         onSuccess: () => {

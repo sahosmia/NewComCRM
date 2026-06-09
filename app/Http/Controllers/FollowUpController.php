@@ -51,8 +51,7 @@ class FollowUpController extends Controller
     public function store(StoreFollowUpRequest $request)
     {
         $followUp = $this->followUpService->create(
-            $request->validated(),
-            (int) Auth::id()
+            $request->validated()
         );
 
         return $this->handleResponse(

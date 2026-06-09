@@ -39,16 +39,16 @@ const iconMap = {
 };
 
 const colorClasses = {
-  blue: { text: 'text-blue-600', bg: 'bg-blue-50/50 dark:bg-blue-950/20', border: 'hover:border-blue-300' },
-  green: { text: 'text-green-600', bg: 'bg-green-50/50 dark:bg-green-950/20', border: 'hover:border-green-300' },
-  yellow: { text: 'text-amber-600', bg: 'bg-amber-50/50 dark:bg-amber-950/20', border: 'hover:border-amber-300' },
-  red: { text: 'text-red-600', bg: 'bg-red-50/50 dark:bg-red-950/20', border: 'hover:border-red-300' },
-  purple: { text: 'text-purple-600', bg: 'bg-purple-50/50 dark:bg-purple-950/20', border: 'hover:border-purple-300' },
-  indigo: { text: 'text-indigo-600', bg: 'bg-indigo-50/50 dark:bg-indigo-950/20', border: 'hover:border-indigo-300' },
-  cyan: { text: 'text-cyan-600', bg: 'bg-cyan-50/50 dark:bg-cyan-950/20', border: 'hover:border-cyan-300' },
-  rose: { text: 'text-rose-600', bg: 'bg-rose-50/50 dark:bg-rose-950/20', border: 'hover:border-rose-300' },
-  orange: { text: 'text-orange-600', bg: 'bg-orange-50/50 dark:bg-orange-950/20', border: 'hover:border-orange-300' },
-  slate: { text: 'text-slate-600', bg: 'bg-slate-50/50 dark:bg-slate-950/20', border: 'hover:border-slate-300' },
+  blue: { text: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50/50 dark:bg-blue-950/30', border: 'hover:border-blue-300 dark:hover:border-blue-800' },
+  green: { text: 'text-green-600 dark:text-green-400', bg: 'bg-green-50/50 dark:bg-green-950/30', border: 'hover:border-green-300 dark:hover:border-green-800' },
+  yellow: { text: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50/50 dark:bg-amber-950/30', border: 'hover:border-amber-300 dark:hover:border-amber-800' },
+  red: { text: 'text-red-600 dark:text-red-400', bg: 'bg-red-50/50 dark:bg-red-950/30', border: 'hover:border-red-300 dark:hover:border-red-800' },
+  purple: { text: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50/50 dark:bg-purple-950/30', border: 'hover:border-purple-300 dark:hover:border-purple-800' },
+  indigo: { text: 'text-indigo-600 dark:text-indigo-400', bg: 'bg-indigo-50/50 dark:bg-indigo-950/30', border: 'hover:border-indigo-300 dark:hover:border-indigo-800' },
+  cyan: { text: 'text-cyan-600 dark:text-cyan-400', bg: 'bg-cyan-50/50 dark:bg-cyan-950/30', border: 'hover:border-cyan-300 dark:hover:border-cyan-800' },
+  rose: { text: 'text-rose-600 dark:text-rose-400', bg: 'bg-rose-50/50 dark:bg-rose-950/30', border: 'hover:border-rose-300 dark:hover:border-rose-800' },
+  orange: { text: 'text-orange-600 dark:text-orange-400', bg: 'bg-orange-50/50 dark:bg-orange-950/30', border: 'hover:border-orange-300 dark:hover:border-orange-800' },
+  slate: { text: 'text-slate-600 dark:text-slate-400', bg: 'bg-slate-50/50 dark:bg-slate-950/30', border: 'hover:border-slate-300 dark:hover:border-slate-800' },
 };
 
 export default function StatCard({ title, value, icon, color, link, description, trend }: StatCardProps) {

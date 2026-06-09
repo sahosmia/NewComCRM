@@ -1,10 +1,10 @@
-import AppLayout from '@/layouts/app-layout';
-import { PaginationType, SortOption } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
-import { Unit } from '@/types/unit';
+import AppLayout from '@/layouts/app-layout';
+import type { PaginationType, SortOption } from '@/types';
 import { columns } from './columns';
+import type { Unit } from '@/types/unit';
 
 interface Props {
     units: PaginationType<Unit>;

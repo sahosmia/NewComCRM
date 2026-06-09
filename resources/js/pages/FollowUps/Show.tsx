@@ -1,16 +1,16 @@
-import AppLayout from "@/layouts/app-layout";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Head, Link } from "@inertiajs/react";
 import {
     User, Calendar, ArrowLeft, MessageSquare,
     Clock, CheckCircle2, Briefcase, Video
 } from "lucide-react";
-import { Head, Link } from "@inertiajs/react";
-import { cn } from "@/lib/utils";
-import { formatDateTime } from "@/utils/date-format";
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
-import { FollowUp } from "@/types";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import AppLayout from "@/layouts/app-layout";
+import { cn } from "@/lib/utils";
+import type { FollowUp } from "@/types";
+import { formatDateTime } from "@/utils/date-format";
 
 
 export default function Show({ followUp }: { followUp: FollowUp }) {

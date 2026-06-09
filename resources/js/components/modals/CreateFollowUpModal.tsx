@@ -1,5 +1,10 @@
-import React, { useEffect } from 'react';
 import { usePage } from '@inertiajs/react';
+import { Loader2 } from 'lucide-react';
+import React, { useEffect } from 'react';
+import ErrorMessage from '@/components/admin/form/ErrorMessage';
+import FormLabel from '@/components/admin/form/FormLabel';
+import { GenericCombobox } from '@/components/admin/form/GenericCombobox';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -7,17 +12,12 @@ import {
     DialogTitle,
     DialogFooter,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2 } from 'lucide-react';
-import ErrorMessage from '@/components/admin/form/ErrorMessage';
-import { GenericCombobox } from '@/components/admin/form/GenericCombobox';
-import FormLabel from '@/components/admin/form/FormLabel';
-import { SharedData, FollowUp } from '@/types';
-import { CreateFollowUpModalProps } from '@/types/modals';
+import { Textarea } from '@/components/ui/textarea';
 import { useModalForm } from '@/hooks/use-modal-form';
+import type { SharedData, FollowUp } from '@/types';
+import type { CreateFollowUpModalProps } from '@/types/modals';
 
 
 export default function CreateFollowUpModal({
@@ -26,15 +26,22 @@ export default function CreateFollowUpModal({
     onSuccess,
     customer_id,
     requirement_id,
+    user_id,
     customers = [],
-    requirements = []
+    requirements = [],
+    users = []
+
 }: CreateFollowUpModalProps) {
     const { props: sharedProps } = usePage<SharedData>();
+    const { auth } = sharedProps;
+    const isSuperAdmin = auth.user.role === 'super_admin';
 
     const availableCustomers = customers.length > 0 ? customers : (sharedProps.customers || []);
     const availableRequirements = requirements.length > 0 ? requirements : (sharedProps.requirements || []);
+        const availableUsers = users.length > 0 ? users : (sharedProps.users || []);
 
     const { data, setData, submit, processing, errors, reset } = useModalForm({
+        user_id: user_id || auth.user.id,
         customer_id: customer_id || "",
         requirement_id: requirement_id || "",
         follow_up_date: "",
@@ -71,6 +78,20 @@ export default function CreateFollowUpModal({
                     <DialogTitle>Schedule Follow Up</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4 py-4">
+                       {isSuperAdmin && (
+                        <div className="space-y-1">
+                            <GenericCombobox
+                                required
+                                label="Assign To"
+                                items={availableUsers.map(u => ({ id: u.id, name: u.name }))}
+                                selectedId={data.user_id}
+                                onSelect={(id) => setData("user_id", id as number)}
+                                placeholder="Select User"
+                                allowManualInput={false}
+                                error={errors.user_id}
+                            />
+                        </div>
+                    )}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1">
                             <GenericCombobox

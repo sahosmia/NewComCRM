@@ -1,6 +1,4 @@
 import { Head, Link } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import AppLayout from "@/layouts/app-layout";
 import {
     Calendar,
     ArrowLeft,
@@ -8,6 +6,8 @@ import {
     ArrowRight
 } from "lucide-react";
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
+import { Button } from "@/components/ui/button";
+import AppLayout from "@/layouts/app-layout";
 import { formatDate } from "@/utils/date-format";
 import { formatCurrency } from "@/utils/number-format";
 

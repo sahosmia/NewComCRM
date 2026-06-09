@@ -1,16 +1,4 @@
-import AppLayout from "@/layouts/app-layout";
 import { Head, router } from "@inertiajs/react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import { useState } from "react";
 import {
     Users,
     Calendar,
@@ -20,11 +8,23 @@ import {
     Filter,
     FileText,
 } from "lucide-react";
-import { CustomerType, FollowUp, Meeting, Sale, User, Requirement, PaginationType } from "@/types";
+import { useState } from "react";
+import Pagination from "@/components/admin/Pagination";
+import StatusBadge from "@/components/shared/StatusBadge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import AppLayout from "@/layouts/app-layout";
+import type { CustomerType, FollowUp, Meeting, Sale, User, Requirement, PaginationType } from "@/types";
 import { formatDate } from "@/utils/date-format";
 import { formatCurrency } from "@/utils/number-format";
-import StatusBadge from "@/components/shared/StatusBadge";
-import Pagination from "@/components/admin/Pagination";
 
 interface Props {
     stats: {

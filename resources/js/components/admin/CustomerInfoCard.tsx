@@ -1,7 +1,7 @@
 import { Link } from "@inertiajs/react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Mail, Phone, MapPin, MessageCircle } from "lucide-react";
-import { CustomerType } from "@/types";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { CustomerType } from "@/types";
 
 
 

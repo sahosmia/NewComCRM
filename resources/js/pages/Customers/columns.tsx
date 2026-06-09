@@ -1,8 +1,8 @@
 import { Building2, Phone, MapPin } from 'lucide-react';
-import type { Column, CustomerType } from '@/types';
-import { Badge } from '@/components/ui/badge';
-import { TableRowActions } from '@/components/table/TableRowActions';
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
+import { TableRowActions } from '@/components/table/TableRowActions';
+import { Badge } from '@/components/ui/badge';
+import type { Column, CustomerType } from '@/types';
 
 const CUSTOMER_STATUS_OPTIONS = [
     { value: 'active', label: 'Active', colorClass: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' },

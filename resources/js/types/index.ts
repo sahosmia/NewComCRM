@@ -1,7 +1,7 @@
 export type * from './auth';
 export type * from './navigation';
 export type * from './ui';
-import { LucideIcon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import type { Config } from 'ziggy-js';
 
 export interface Auth {
@@ -58,6 +58,7 @@ export interface User {
     id: number;
     name: string;
     email: string;
+    role: string;
     email_verified_at: string | null;
     phone?: string | null;
     designation?: string | null;
@@ -171,6 +172,7 @@ export interface Requirement {
     id: number;
     customer_id: number;
     title: string | null;
+    user_id: number;
     grand_total: string | number;
     status: 'pending' | 'approved' | 'processing' | 'purchased' | 'cancel';
     notes: string | null;

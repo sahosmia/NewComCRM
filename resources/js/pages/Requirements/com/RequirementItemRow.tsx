@@ -1,12 +1,12 @@
 import { Plus, Trash2 } from "lucide-react";
+import ErrorMessage from "@/components/admin/form/ErrorMessage";
+import FormLabel from "@/components/admin/form/FormLabel";
+import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
-import ErrorMessage from "@/components/admin/form/ErrorMessage";
-import { Product, Unit } from "@/types";
-import FormLabel from "@/components/admin/form/FormLabel";
 import { useModal } from "@/contexts/ModalContext";
+import type { Product, Unit } from "@/types";
 
 interface ItemRowProps {
     index: number;

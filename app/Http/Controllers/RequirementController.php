@@ -84,6 +84,7 @@ class RequirementController extends Controller
             ]),
             'customers' => $this->lookupService->getCustomersForRequirementForm(),
             'requirements' => $this->lookupService->getRequirementsForSelect(),
+            'users'     => $this->lookupService->getUsersForSelect(),
 
         ]);
     }
