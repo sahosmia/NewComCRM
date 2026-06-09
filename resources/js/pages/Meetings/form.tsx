@@ -26,7 +26,7 @@ interface Props {
 }
 
 export default function MeetingForm({ meeting, customers: initialCustomers, requirements, users, companies }: Props) {
-    const { auth } = usePage().props as any;
+    const { auth } = usePage<any>().props;
     const isSuperAdmin = auth.user.role === 'super_admin';
 
     const { openModal } = useModal();

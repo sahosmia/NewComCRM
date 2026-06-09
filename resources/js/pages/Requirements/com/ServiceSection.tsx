@@ -34,9 +34,11 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
         setItems(items.filter((_, i) => i !== index));
     };
 
-    const handleItemChange = (index: number, field: keyof RequirementServiceItem, value: any) => {
-        const newItems = [...items];
-        (newItems[index] as any)[field] = value;
+    const handleItemChange = (index: number, field: keyof RequirementServiceItem, value: string | number) => {
+        const newItems = items.map((item, i) => {
+            if (i !== index) return item;
+            return { ...item, [field]: value };
+        });
         setItems(newItems);
     };
 

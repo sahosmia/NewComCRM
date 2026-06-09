@@ -35,15 +35,16 @@ export default function CreateMeetingModal({
     const availableRequirements = requirements.length > 0 ? requirements : (sharedProps.requirements || []);
 
     const { data, setData, submit, processing, errors, reset } = useModalForm({
-    customer_id: customer_id || "",
+        customer_id: customer_id || "",
+        user_id: sharedProps.auth.user.id,
         requirement_id: requirement_id || "",
         title: "",
         scheduled_at: "",
-        meeting_type: "virtual" as Meeting['meeting_type'],
+        meeting_type: "virtual" as const,
         location: "",
         agenda: "",
         notes: "",
-        status: "scheduled" as Meeting['status'],
+        status: "scheduled" as const,
          }, route('meetings.store'), {
         onSuccess: (meeting: Meeting) => {
             if (onSuccess) onSuccess(meeting);
@@ -75,6 +76,21 @@ export default function CreateMeetingModal({
                     <DialogTitle>Schedule Meeting</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4 py-4">
+                    {sharedProps.auth.user.role === 'super_admin' && (
+                        <div className="space-y-1">
+                            <GenericCombobox
+                                required
+                                label="Assign To"
+                                items={sharedProps.users || []}
+                                selectedId={data.user_id}
+                                onSelect={(id) => setData("user_id", id as number)}
+                                placeholder="Select User"
+                                allowManualInput={false}
+                                error={errors.user_id}
+                            />
+                        </div>
+                    )}
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1">
                             <GenericCombobox

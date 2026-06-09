@@ -15,7 +15,14 @@ trait MapsRoleBasedUserAssignment
 
     public function validated($key = null, $default = null)
     {
-        $validated = parent::validated($key, $default);
+        if ($key) {
+            if ($key === 'user_id' && !auth()->user()?->isSuperAdmin()) {
+                return auth()->id();
+            }
+            return parent::validated($key, $default);
+        }
+
+        $validated = parent::validated();
 
         if (!auth()->user()?->isSuperAdmin()) {
             $validated['user_id'] = auth()->id();

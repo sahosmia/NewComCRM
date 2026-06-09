@@ -32,7 +32,7 @@ interface Props {
 }
 
 export default function RequirementForm({ requirement, customers: initialCustomers, products: initialProducts, units: initialUnits, users, companies }: Props) {
-    const { auth } = usePage().props as any;
+    const { auth } = usePage<any>().props; // usePage from inertia is notoriously hard to type without a global PageProps
     const isSuperAdmin = auth.user.role === 'super_admin';
 
     const { openModal } = useModal();

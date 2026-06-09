@@ -36,11 +36,12 @@ export default function CreateFollowUpModal({
 
     const { data, setData, submit, processing, errors, reset } = useModalForm({
         customer_id: customer_id || "",
+        user_id: sharedProps.auth.user.id,
         requirement_id: requirement_id || "",
         follow_up_date: "",
         notes: "",
-        status: "pending" as FollowUp['status'],
-        priority: "medium" as FollowUp['priority'],
+        status: "pending" as const,
+        priority: "medium" as const,
     }, route('follow-ups.store'), {
         onSuccess: (followUp: FollowUp) => {
             if (onSuccess) onSuccess(followUp);
@@ -71,6 +72,21 @@ export default function CreateFollowUpModal({
                     <DialogTitle>Schedule Follow Up</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4 py-4">
+                    {sharedProps.auth.user.role === 'super_admin' && (
+                        <div className="space-y-1">
+                            <GenericCombobox
+                                required
+                                label="Assign To"
+                                items={sharedProps.users || []}
+                                selectedId={data.user_id}
+                                onSelect={(id) => setData("user_id", id as number)}
+                                placeholder="Select User"
+                                allowManualInput={false}
+                                error={errors.user_id}
+                            />
+                        </div>
+                    )}
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1">
                             <GenericCombobox
