@@ -32,6 +32,13 @@ class SaleRepository
             })
             ->when($startDate, fn($q) => $q->whereDate('sale_date', '>=', $startDate))
             ->when($endDate, fn($q) => $q->whereDate('sale_date', '<=', $endDate))
+            ->when($params['period'] ?? null, function ($query, $period) {
+                match ($period) {
+                    'today' => $query->whereDate('sale_date', today()),
+                    'upcoming' => $query->whereDate('sale_date', '>', today()),
+                    default => null,
+                };
+            })
             ->orderBy($sort, $direction)
             ->paginate($perPage)
             ->withQueryString();

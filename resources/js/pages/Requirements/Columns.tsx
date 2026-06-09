@@ -68,6 +68,14 @@ const columns: Column<Requirement>[] = [
         ),
     },
     {
+        header: 'Deliver Date',
+        accessor: (item) => (
+            <div className="font-medium text-xs text-muted-foreground">
+                {item.delivery_date ? new Date(item.delivery_date).toLocaleDateString() : 'N/A'}
+            </div>
+        ),
+    },
+    {
         header: 'Notes',
         accessor: (item) => (
             <div className="max-w-50">

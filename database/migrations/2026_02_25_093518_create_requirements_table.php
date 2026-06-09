@@ -38,6 +38,8 @@ return new class extends Migration
             $table->integer('advance_payment')->default(0);
             $table->integer('before_payment')->default(100);
             $table->string('delivery_location')->nullable();
+                        $table->date('delivery_date')->nullable();
+
             $table->integer('after_payment')->default(0);
 
             $table->foreignId('customer_id')->constrained()->onDelete('cascade');
@@ -45,6 +47,7 @@ return new class extends Migration
             $table->foreignId('qutation_send_by')->nullable()->constrained('users')->onDelete('set null');
 
             $table->decimal('grand_total', 12, 2)->default(0);
+            $table->decimal('total_costing', 12, 2)->default(0);
             $table->text('notes')->nullable();
             $table->enum('status', ['pending', 'processing', 'purchased', 'cancel'])->default('pending');
             $table->timestamps();

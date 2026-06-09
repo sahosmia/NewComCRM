@@ -64,6 +64,8 @@ export default function RequirementForm({ requirement, customers: initialCustome
         before_payment: requirement?.before_payment ?? 0,
         after_payment: requirement?.after_payment ?? 0,
         delivery_location: requirement?.delivery_location || "",
+        delivery_date: requirement?.delivery_date || "",
+
         send_qutation_to: requirement?.send_qutation_to || "",
         qutation_send_by: requirement?.qutation_send_by || "",
 
@@ -104,11 +106,11 @@ export default function RequirementForm({ requirement, customers: initialCustome
     const aitFactor = (aitPercentage > 0 && aitPercentage < 100) ? (1 / (1 - (aitPercentage / 100))) : 1;
 
     const itemsTotal = data.items.reduce((sum: number, item: any) => {
-        return sum + ((parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor) + (parseFloat(item.costing_price) || 0);
+        return sum + ((parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor);
     }, 0);
 
     const itemsCostingTotal = data.items.reduce((sum: number, item: any) => {
-        return sum + (parseFloat(item.costing_price) || 0);
+        return sum + ((parseFloat(item.costing_price) || 0) * (item.quantity || 0));
     }, 0);
 
     const accessoriesTotal = data.has_accessories ? data.accessories.reduce((sum: number, item: any) => {
@@ -121,7 +123,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
 
     const subTotal = itemsTotal + accessoriesTotal + installationTotal;
 
-    const taxableAmount = (itemsTotal - itemsCostingTotal) + accessoriesTotal + installationTotal;
+    const taxableAmount = itemsTotal + accessoriesTotal + installationTotal;
 
     const vatAmount = vatPercentage > 0 ? (taxableAmount * vatPercentage / 100) : 0;
 
@@ -166,7 +168,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                         selectedId={data.customer_id}
                                         placeholder="Select Customer"
                                         searchPlaceholder="Search customers..."
-                                       onSelect={(id) => {
+                                        onSelect={(id) => {
                                             setData("customer_id", id as number);
                                             const customer = customers.find(c => c.id === id);
                                             if (customer && customer.addresses && customer.addresses.length > 0) {
@@ -332,6 +334,17 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                     className="h-10"
                                 />
                                 <ErrorMessage message={errors.delivery_location} />
+                            </div>
+
+                            <div className="space-y-2">
+                                <FormLabel>Deliver Able Date</FormLabel>
+                                <Input
+                                    type="date"
+                                    value={data.delivery_date}
+                                    onChange={(e) => setData("delivery_date", e.target.value)}
+                                    className="h-10"
+                                />
+                                <ErrorMessage message={errors.delivery_date} />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
@@ -517,6 +530,8 @@ export default function RequirementForm({ requirement, customers: initialCustome
                 vatAmount={vatAmount}
                 aitAmount={aitAmount}
                 grandTotal={grandTotal}
+                totalCosting={itemsCostingTotal}
+
                 vatPercentage={Number(data.vat_percentage)}
                 aitPercentage={Number(data.ait_percentage)}
                 processing={processing}

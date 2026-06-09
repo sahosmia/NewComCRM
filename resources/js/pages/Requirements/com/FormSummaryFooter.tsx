@@ -3,15 +3,14 @@ import { Button } from "@/components/ui/button";
 interface SummaryProps {
     subTotal: number;
     vatAmount: number;
-    aitAmount: number;
     grandTotal: number;
+    totalCosting?: number;
     vatPercentage: number;
-    aitPercentage: number;
     processing: boolean;
     isEdit: boolean;
 }
 
-export const FormSummaryFooter = ({ subTotal, vatAmount, aitAmount, grandTotal, vatPercentage, aitPercentage, processing, isEdit }: SummaryProps) => {
+export const FormSummaryFooter = ({ subTotal, vatAmount, grandTotal, totalCosting = 0, vatPercentage, processing, isEdit }: SummaryProps) => {
     return (
         <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-t border-slate-200 shadow-[0_-4px_20px_0_rgba(0,0,0,0.05)] py-4 px-6">
             <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
@@ -21,6 +20,11 @@ export const FormSummaryFooter = ({ subTotal, vatAmount, aitAmount, grandTotal, 
                         <div className="text-xs">
                             <span className="opacity-70">Sub-Total:</span> <span className="font-bold">৳{subTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                         </div>
+                         {totalCosting > 0 && (
+                            <div className="text-xs">
+                                <span className="opacity-70">Total Costing:</span> <span className="font-bold">৳{totalCosting.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                            </div>
+                        )}
                         {vatPercentage > 0 && (
                             <div className="text-xs">
                                 <span className="opacity-70">VAT ({vatPercentage}%):</span> <span className="font-bold">৳{vatAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>

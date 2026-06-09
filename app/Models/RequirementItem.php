@@ -30,7 +30,9 @@ class RequirementItem extends Model
                 $aitFactor = 1 / (1 - ($requirement->ait_percentage / 100));
             }
             // $item->total_price = $item->quantity * ($item->unit_price * $aitFactor);
-            $item->total_price = ($item->quantity * ($item->unit_price * $aitFactor)) + ($item->costing_price ?? 0);
+            // $item->total_price = ($item->quantity * ($item->unit_price * $aitFactor)) + ($item->costing_price ?? 0);
+                        $item->total_price = $item->quantity * ($item->unit_price * $aitFactor);
+
 
         });
 

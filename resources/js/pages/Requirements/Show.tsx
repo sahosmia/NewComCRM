@@ -45,17 +45,14 @@ export default function Show({ requirement, customers, requirements }: Props) {
     // --- Calculation Logic ---
     const totals = useMemo(() => {
         const itemsTotal = requirement.items?.reduce((sum: number, i: any) => sum + parseFloat(i.total_price), 0) || 0;
-        const itemsCostingTotal = requirement.items?.reduce((sum: number, i: any) => sum + (parseFloat(i.costing_price) || 0), 0) || 0;
-
-        // const accessoriesTotal = requirement.has_accessories ? (requirement.accessories_quantity * (parseFloat(requirement.accessories_price as string) || 0)) : 0;
-        // const installationTotal = requirement.has_installation ? (requirement.installation_quantity * (parseFloat(requirement.installation_price as string) || 0)) : 0;
+        const itemsCostingTotal = requirement.items?.reduce((sum: number, i: any) => sum + ((parseFloat(i.costing_price) || 0) * (i.quantity || 0)), 0) || 0;
 
         const accessoriesTotal = requirement.has_accessories ? requirement.accessories?.reduce((sum: number, i: any) => sum + (parseFloat(i.total_price) || 0), 0) || 0 : 0;
         const installationTotal = requirement.has_installation ? requirement.installations?.reduce((sum: number, i: any) => sum + (parseFloat(i.total_price) || 0), 0) || 0 : 0;
 
         const subTotal = itemsTotal + accessoriesTotal + installationTotal;
 
-        const taxableAmount = (itemsTotal - itemsCostingTotal) + accessoriesTotal + installationTotal;
+        const taxableAmount = itemsTotal + accessoriesTotal + installationTotal;
 
         const vatAmount = (parseFloat(requirement.vat_percentage as string) || 0) > 0 ? taxableAmount * ((parseFloat(requirement.vat_percentage as string) || 0) / 100) : 0;
 
@@ -65,6 +62,8 @@ export default function Show({ requirement, customers, requirements }: Props) {
 
         return {
             subTotal,
+                        itemsCostingTotal,
+
             vatAmount,
             aitAmount,
             grandTotal: requirement.grand_total // Or subTotal + vatAmount + aitAmount if dynamic
@@ -129,9 +128,9 @@ export default function Show({ requirement, customers, requirements }: Props) {
                                     className="h-7 text-[10px] uppercase font-bold"
                                     onClick={() => openModal('CREATE_MEETING', {
                                         customer_id: requirement.customer_id,
-                                    requirement_id: requirement.id,
-                                    customers: customers,
-                                    requirements: requirements,
+                                        requirement_id: requirement.id,
+                                        customers: customers,
+                                        requirements: requirements,
                                         onSuccess: () => {
                                             router.reload({ only: ['requirement'] });
                                         }
@@ -168,9 +167,9 @@ export default function Show({ requirement, customers, requirements }: Props) {
                                     className="h-7 text-[10px] uppercase font-bold"
                                     onClick={() => openModal('CREATE_FOLLOW_UP', {
                                         customer_id: requirement.customer_id,
-                                    requirement_id: requirement.id,
-                                    customers: customers,
-                                    requirements: requirements,
+                                        requirement_id: requirement.id,
+                                        customers: customers,
+                                        requirements: requirements,
                                         onSuccess: () => {
                                             router.reload({ only: ['requirement'] });
                                         }
@@ -267,7 +266,7 @@ export default function Show({ requirement, customers, requirements }: Props) {
                                             </tr>
                                         )} */}
 
-                                         {requirement.has_accessories && requirement.accessories?.map((accessory: any) => (
+                                        {requirement.has_accessories && requirement.accessories?.map((accessory: any) => (
                                             <tr key={`acc-${accessory.id}`} className="bg-muted/5">
                                                 <td className="px-6 py-4 font-semibold">{accessory.title}</td>
                                                 <td className="px-6 py-4">
@@ -297,16 +296,16 @@ export default function Show({ requirement, customers, requirements }: Props) {
                                     </tbody>
 
                                     <tfoot className="bg-primary/2 border-t-2 border-primary/10">
-                                        {(requirement.has_vat || requirement.has_ait) && (
+                                        {(requirement.has_vat || requirement.has_ait || totals.itemsCostingTotal > 0) && (
                                             <>
                                                 <tr>
                                                     <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">Sub-Total</td>
                                                     <td className="px-6 py-2 text-right font-mono text-sm">{formatCurrency(totals.subTotal)}</td>
                                                 </tr>
-                                                {requirement.has_vat && (
+                                                {totals.itemsCostingTotal > 0 && (
                                                     <tr>
-                                                        <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">VAT ({requirement.vat_percentage}%)</td>
-                                                        <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">+ {formatCurrency(totals.vatAmount)}</td>
+                                                        <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">Total Costing</td>
+                                                        <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">{formatCurrency(totals.itemsCostingTotal)}</td>
                                                     </tr>
                                                 )}
                                                 {/* {requirement.has_ait && (
@@ -349,6 +348,8 @@ export default function Show({ requirement, customers, requirements }: Props) {
                                 )}
                                 <div><p className="text-muted-foreground mb-1">Price Validity</p><p className="font-bold">{requirement.price_validity_days || 'N/A'} Days</p></div>
                                 <div><p className="text-muted-foreground mb-1">Delivery Time</p><p className="font-bold">{requirement.delivery_time_days || 'N/A'} Days</p></div>
+                                {requirement.delivery_date && <div><p className="text-muted-foreground mb-1">Deliver Able Date</p><p className="font-bold">{formatDate(requirement.delivery_date)}</p></div>}
+
                                 <div><p className="text-muted-foreground mb-1">Advance Pay</p><p className="font-bold">{requirement.advance_payment}%</p></div>
                                 {requirement.before_payment > 0 && <div><p className="text-muted-foreground mb-1">Before Delivery</p><p className="font-bold">{requirement.before_payment}%</p></div>}
                                 {requirement.after_payment > 0 && <div><p className="text-muted-foreground mb-1">After Delivery</p><p className="font-bold">{requirement.after_payment}%</p></div>}

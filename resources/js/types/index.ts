@@ -193,6 +193,7 @@ export interface Requirement {
     before_payment: number;
     after_payment: number;
     delivery_location: string | null;
+    delivery_date: string | null;
     send_qutation_to: number | null;
     qutation_send_by: number | null;
 

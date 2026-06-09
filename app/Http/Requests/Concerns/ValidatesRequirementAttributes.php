@@ -43,7 +43,7 @@ trait ValidatesRequirementAttributes
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1',
-            'items.*.unit_price' => 'required|numeric|min:0',
+            'items.*.unit_price' => 'nullable|numeric|min:0',
 
             'items.*.costing_price' => 'nullable|numeric|min:0',
             'items.*.description' => 'nullable|string',
@@ -61,7 +61,6 @@ trait ValidatesRequirementAttributes
             'items.array' => 'Product items must be provided as a list.',
             'items.*.product_id.required' => 'Please select a product for all items.',
             'items.*.quantity.required' => 'Quantity is required for all items.',
-            'items.*.unit_price.required' => 'Unit price is required for all items.',
             'accessories.required_if' => 'Please provide accessory details when "Has Accessories" is checked.',
             'installations.required_if' => 'Please provide installation details when "Has Installation" is checked.',
 

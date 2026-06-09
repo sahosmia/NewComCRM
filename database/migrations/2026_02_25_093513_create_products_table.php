@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('category')->nullable()->index();
             $table->integer('stock_quantity')->default(0);
-            $table->decimal('unit_price', 10, 2);
+            $table->decimal('unit_price', 10, 2)->nullable();
             $table->string('supplier_name')->nullable()->index();
             $table->foreignId('unit_id')->nullable()->constrained('units')->onDelete('set null');
             $table->text('source')->nullable();

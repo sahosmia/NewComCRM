@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Customer;
 use App\Models\FollowUp;
 use App\Models\Meeting;
+use App\Models\Requirement;
 use App\Models\Sale;
 use App\Models\User;
 
@@ -28,16 +29,16 @@ class DashboardService
 
     private function getRequirementMetrics(User $user): array
     {
-        $baseQuery = \App\Models\Requirement::query()
+        $baseQuery = Requirement::query()
             ->when(!$user->isSuperAdmin(), fn($q) => $q->whereHas('customer', fn($cq) => $cq->where('assigned_to', $user->id)));
 
         return [
-            'today_count' => (clone $baseQuery)->whereDate('created_at', today())->count(),
-            'upcoming_count' => (clone $baseQuery)->whereDate('created_at', '>', today())->count(),
+            'today_count' => (clone $baseQuery)->whereDate('delivery_date', today())->count(),
+            'upcoming_count' => (clone $baseQuery)->whereDate('delivery_date', '>', today())->count(),
         ];
     }
 
-        private function getBirthdayMetrics(User $user): array
+    private function getBirthdayMetrics(User $user): array
     {
         $baseQuery = Customer::query()
             ->when(!$user->isSuperAdmin(), fn($q) => $q->where('assigned_to', $user->id));
@@ -48,9 +49,9 @@ class DashboardService
                 ->get(),
             'this_month' => (clone $baseQuery)->whereMonth('date_of_birth', now()->month)
                 ->whereDay('date_of_birth', '>', now()->day)
-                ->when(config('database.default') === 'sqlite', function($q) {
+                ->when(config('database.default') === 'sqlite', function ($q) {
                     $q->orderByRaw("strftime('%d', date_of_birth) ASC");
-                }, function($q) {
+                }, function ($q) {
                     $q->orderByRaw('DAY(date_of_birth) ASC');
                 })
                 ->limit(5)
@@ -87,8 +88,8 @@ class DashboardService
         return [
             'today' => (clone $baseQuery)->whereDate('follow_up_date', today())->pending()->orderBy('follow_up_date')->get(),
             'upcoming' => (clone $baseQuery)->whereDate('follow_up_date', '>', today())->pending()->orderBy('follow_up_date')->limit(5)->get(),
-            'today_count' => (clone $baseQuery)->whereDate('follow_up_date', today())->pending()->count(),
-            'upcoming_count' => (clone $baseQuery)->whereDate('follow_up_date', '>', today())->pending()->count(),
+            'today_count' => (clone $baseQuery)->whereDate('follow_up_date', today())->count(),
+            'upcoming_count' => (clone $baseQuery)->whereDate('follow_up_date', '>', today())->count(),
         ];
     }
 
@@ -102,6 +103,8 @@ class DashboardService
         return [
             'today_count' => (clone $baseQuery)->whereDate('sale_date', today())->count(),
             'today_amount' => (clone $baseQuery)->whereDate('sale_date', today())->sum('amount'),
+            'upcoming_count' => (clone $baseQuery)->whereDate('sale_date', '>', today())->count(),
+            'upcoming_amount' => (clone $baseQuery)->whereDate('sale_date', '>', today())->sum('amount'),
             'total_count' => (clone $baseQuery)->count(),
             'total_amount' => (clone $baseQuery)->sum('amount'),
         ];
@@ -114,6 +117,7 @@ class DashboardService
 
         return [
             'today_count' => (clone $baseQuery)->whereDate('created_at', today())->count(),
+
             'total_count' => (clone $baseQuery)->count(),
         ];
     }

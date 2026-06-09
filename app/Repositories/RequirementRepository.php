@@ -41,13 +41,14 @@ class RequirementRepository
 
             ->when($params['start_date'] ?? null, fn($query, $startDate) => $query->whereDate('created_at', '>=', $startDate))
             ->when($params['end_date'] ?? null, fn($query, $endDate) => $query->whereDate('created_at', '<=', $endDate))
-
-            ->when(!empty($params['sort']), function ($query) use ($params) {
-                $query->orderBy($params['sort'], $params['direction'] ?? 'desc');
-            }, function ($query) {
-                $query->latest();
+            ->when($params['period'] ?? null, function ($query, $period) {
+                match ($period) {
+                    'today' => $query->whereDate('delivery_date', today()),
+                    'upcoming' => $query->whereDate('delivery_date', '>', today()),
+                    default => null,
+                };
             })
-
+            ->latest($params['sort'] ?? 'created_at') // Simplified sorting
             ->paginate($perPage)
             ->withQueryString();
     }
