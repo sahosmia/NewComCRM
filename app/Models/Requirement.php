@@ -31,6 +31,7 @@ class Requirement extends Model
         'advance_payment',
         'before_payment',
         'after_payment',
+        'user_id',
         'delivery_location',
         'delivery_date',
         'send_qutation_to',
@@ -58,6 +59,11 @@ class Requirement extends Model
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function quotationRecipient(): BelongsTo

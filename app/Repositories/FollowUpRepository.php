@@ -14,7 +14,6 @@ class FollowUpRepository
 
         return FollowUp::query()
             ->with(['customer.company', 'user', 'requirement'])
-            ->when(! $user->isSuperAdmin(), fn ($query) => $query->where('user_id', $user->id))
             ->when($params['search'] ?? null, function ($query, $search) {
                 $query->whereHas('customer', function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%");
@@ -73,9 +72,7 @@ class FollowUpRepository
 
     public function bulkDelete(array $ids): void
     {
-        $user = auth()->user();
-        $query = FollowUp::query()
-            ->when(!$user->isSuperAdmin(), fn($q) => $q->where('user_id', $user->id));
+        $query = FollowUp::query();
 
         if (!empty($ids)) {
             $query->whereIn('id', $ids);
@@ -86,10 +83,8 @@ class FollowUpRepository
 
     public function getForExport(array $ids): \Illuminate\Database\Eloquent\Collection
     {
-        $user = auth()->user();
         return FollowUp::query()
             ->with(['customer.company', 'user', 'requirement'])
-            ->when(!$user->isSuperAdmin(), fn($q) => $q->where('user_id', $user->id))
             ->when(!empty($ids), fn($q) => $q->whereIn('id', $ids))
             ->get();
     }

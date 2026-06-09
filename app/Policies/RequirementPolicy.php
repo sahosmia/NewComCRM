@@ -24,7 +24,7 @@ class RequirementPolicy
 
     public function view(User $user, Requirement $requirement): bool
     {
-        return $user->id === $requirement->customer->assigned_to;
+        return (int) $user->id === (int) $requirement->user_id;
     }
 
     public function create(User $user): bool
@@ -34,11 +34,11 @@ class RequirementPolicy
 
     public function update(User $user, Requirement $requirement): bool
     {
-        return $user->id === $requirement->customer->assigned_to;
+        return (int) $user->id === (int) $requirement->user_id;
     }
 
     public function delete(User $user, Requirement $requirement): bool
     {
-        return $user->id === $requirement->customer->assigned_to;
+        return (int) $user->id === (int) $requirement->user_id;
     }
 }

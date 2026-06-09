@@ -1,4 +1,4 @@
-import { useForm } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -32,6 +32,9 @@ interface Props {
 }
 
 export default function RequirementForm({ requirement, customers: initialCustomers, products: initialProducts, units: initialUnits, users, companies }: Props) {
+    const { auth } = usePage().props as any;
+    const isSuperAdmin = auth.user.role === 'super_admin';
+
     const { openModal } = useModal();
     const [customers, setCustomers] = useState<CustomerType[]>(initialCustomers);
     const [products, setProducts] = useState<Product[]>(initialProducts);
@@ -40,6 +43,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
     const preSelectedCustomerId = urlParams.get('customer_id');
 
     const { data, setData, post, put, processing, errors } = useForm({
+        user_id: requirement?.user_id || auth.user.id,
         customer_id: requirement?.customer_id || (preSelectedCustomerId ? parseInt(preSelectedCustomerId) : ""),
         title: requirement?.title || "",
         notes: requirement?.notes || "",
@@ -149,6 +153,21 @@ export default function RequirementForm({ requirement, customers: initialCustome
                             </h3>
                         </div>
                         <div className="p-6 space-y-4">
+                            {isSuperAdmin && (
+                                <div className="space-y-2">
+                                    <GenericCombobox
+                                        required
+                                        label="Assign To"
+                                        items={users.map(u => ({ id: u.id, name: u.name }))}
+                                        selectedId={data.user_id}
+                                        onSelect={(id) => setData("user_id", id as number)}
+                                        placeholder="Select User"
+                                        searchPlaceholder="Search users..."
+                                        allowManualInput={false}
+                                        error={errors.user_id}
+                                    />
+                                </div>
+                            )}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <FormLabel required>Requirement Title</FormLabel>

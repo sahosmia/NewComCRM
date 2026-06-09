@@ -10,6 +10,7 @@ trait ValidatesFollowUpAttributes
     protected function followUpAttributeRules(): array
     {
         return [
+            'user_id'        => 'nullable|exists:users,id',
             'customer_id'    => 'required|exists:customers,id',
             'requirement_id' => 'nullable|exists:requirements,id',
             'follow_up_date' => 'required|date',

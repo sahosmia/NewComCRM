@@ -3,12 +3,13 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Concerns\ValidatesRequirementAttributes;
+use App\Http\Requests\Concerns\MapsRoleBasedUserAssignment;
 use App\Models\Requirement;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequirementRequest extends FormRequest
 {
-    use ValidatesRequirementAttributes;
+    use ValidatesRequirementAttributes, MapsRoleBasedUserAssignment;
 
     public function authorize(): bool
     {
