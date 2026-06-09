@@ -10,6 +10,7 @@ trait ValidatesMeetingAttributes
     protected function meetingAttributeRules(): array
     {
         return [
+            'user_id'        => 'nullable|exists:users,id',
             'customer_id'    => 'required|exists:customers,id',
             'requirement_id' => 'nullable|exists:requirements,id',
             'title'          => 'required|string|max:255',

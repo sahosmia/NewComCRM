@@ -19,12 +19,6 @@ class RequirementRepository
                 'items.product.unit'
             ])
 
-            ->when(!$user->isSuperAdmin(), function ($query) use ($user) {
-                $query->whereHas('customer', function ($q) use ($user) {
-                    $q->where('assigned_to', $user->id);
-                });
-            })
-
             ->when($params['search'] ?? null, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->whereHas('customer', function ($sub) use ($search) {
@@ -70,13 +64,7 @@ class RequirementRepository
 
     public function bulkDelete(array $ids): void
     {
-        $user = auth()->user();
-        $query = Requirement::query()
-            ->when(!$user->isSuperAdmin(), function ($query) use ($user) {
-                $query->whereHas('customer', function ($q) use ($user) {
-                    $q->where('assigned_to', $user->id);
-                });
-            });
+        $query = Requirement::query();
 
         if (!empty($ids)) {
             $query->whereIn('id', $ids);
@@ -87,28 +75,16 @@ class RequirementRepository
 
     public function getForExport(array $ids): \Illuminate\Database\Eloquent\Collection
     {
-        $user = auth()->user();
         return Requirement::query()
             ->with(['customer', 'items.product'])
-            ->when(!$user->isSuperAdmin(), function ($query) use ($user) {
-                $query->whereHas('customer', function ($q) use ($user) {
-                    $q->where('assigned_to', $user->id);
-                });
-            })
             ->when(!empty($ids), fn($q) => $q->whereIn('id', $ids))
             ->get();
     }
 
     public function selectOptions(): \Illuminate\Database\Eloquent\Collection
     {
-        $user = auth()->user();
         return Requirement::query()
             ->select('id', 'title', 'customer_id')
-            ->when(!$user->isSuperAdmin(), function ($query) use ($user) {
-                $query->whereHas('customer', function ($q) use ($user) {
-                    $q->where('assigned_to', $user->id);
-                });
-            })
             ->get();
     }
 

@@ -53,8 +53,7 @@ class MeetingController extends Controller
     public function store(StoreMeetingRequest $request)
     {
         $meeting = $this->meetingService->create(
-            $request->validated(),
-            (int) Auth::id()
+            $request->validated()
         );
 
         return $this->handleResponse(

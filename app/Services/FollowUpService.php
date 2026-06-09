@@ -4,34 +4,30 @@ namespace App\Services;
 
 use App\Models\FollowUp;
 use App\Models\User;
-use App\Repositories\CustomerRepository;
 use App\Repositories\FollowUpRepository;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class FollowUpService
 {
     public function __construct(
         private FollowUpRepository $followUps,
-        private CustomerRepository $customers,
-        private RequirementService $requirementService,
-    ) {}
+    ) {
+    }
 
-    public function paginateIndex(array $filters, User $user)
+    public function paginateIndex(array $filters, User $user): LengthAwarePaginator
     {
         return $this->followUps->paginateForIndex($filters, $user);
     }
 
-    public function stats(): array
+    public function indexStats(): array
     {
         return $this->followUps->indexStats();
     }
 
-    public function create(array $validated, int $userId): FollowUp
+    public function create(array $validated): FollowUp
     {
-        return $this->followUps->create(array_merge($validated, [
-            'user_id' => $userId,
-        ]));
+        return $this->followUps->create($validated);
     }
 
     public function update(FollowUp $followUp, array $validated): void
@@ -49,15 +45,13 @@ class FollowUpService
         $this->followUps->bulkDelete($ids);
     }
 
-    public function getForExport(array $ids): \Illuminate\Support\Collection
+    public function complete(FollowUp $followUp, string $status): void
+    {
+        $this->followUps->complete($followUp, $status);
+    }
+
+    public function getForExport(array $ids): Collection
     {
         return $this->followUps->getForExport($ids);
     }
-
-    public function complete(FollowUp $followUp, string $status): void
-    {
-        $this->followUps->markComplete($followUp, $status);
-    }
-
-  
 }

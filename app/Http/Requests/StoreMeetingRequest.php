@@ -3,11 +3,12 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Concerns\ValidatesMeetingAttributes;
+use App\Http\Requests\Concerns\MapsRoleBasedUserAssignment;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreMeetingRequest extends FormRequest
 {
-    use ValidatesMeetingAttributes;
+    use ValidatesMeetingAttributes, MapsRoleBasedUserAssignment;
 
     public function authorize(): bool
     {

@@ -71,9 +71,7 @@ class MeetingRepository
 
     public function bulkDelete(array $ids): void
     {
-        $user = auth()->user();
-        $query = Meeting::query()
-            ->when(!$user->isSuperAdmin(), fn($q) => $q->where('user_id', $user->id));
+        $query = Meeting::query();
 
         if (!empty($ids)) {
             $query->whereIn('id', $ids);
@@ -84,10 +82,8 @@ class MeetingRepository
 
     public function getForExport(array $ids): \Illuminate\Database\Eloquent\Collection
     {
-        $user = auth()->user();
         return Meeting::query()
             ->with(['customer.company', 'user', 'requirement'])
-            ->when(!$user->isSuperAdmin(), fn($q) => $q->where('user_id', $user->id))
             ->when(!empty($ids), fn($q) => $q->whereIn('id', $ids))
             ->get();
     }

@@ -19,11 +19,11 @@ trait HasServiceItemCalculations
         });
 
         static::saved(function ($item) {
-            $item->requirement->calculateGrandTotal();
+            $item->requirement?->calculateGrandTotal();
         });
 
         static::deleted(function ($item) {
-            $item->requirement->calculateGrandTotal();
+            $item->requirement?->calculateGrandTotal();
         });
     }
 
