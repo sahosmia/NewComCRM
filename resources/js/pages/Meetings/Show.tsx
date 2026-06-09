@@ -1,13 +1,13 @@
 import { Link, Head } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import AppLayout from "@/layouts/app-layout";
-import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     Calendar, MapPin, ClipboardList, Briefcase
 } from "lucide-react";
+import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
 import StatusBadge from "@/components/shared/StatusBadge";
-import { Meeting } from "@/types";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import AppLayout from "@/layouts/app-layout";
+import type { Meeting } from "@/types";
 
 export default function Show({ meeting }: { meeting: Meeting }) {
     const breadcrumbs = [

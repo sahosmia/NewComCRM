@@ -1,8 +1,4 @@
 import { Head, Link } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import AppLayout from "@/layouts/app-layout";
 import {
     Edit,
     Package,
@@ -15,7 +11,11 @@ import {
     ExternalLink,
     ShieldCheck
 } from "lucide-react";
-import { Product } from "@/types";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import AppLayout from "@/layouts/app-layout";
+import type { Product } from "@/types";
 
 export default function Show({ product }: { product: Product }) {
     return (

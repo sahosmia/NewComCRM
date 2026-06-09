@@ -1,18 +1,18 @@
 import { useForm } from "@inertiajs/react";
 import { Check, ChevronsUpDown, Loader2, Plus, X } from "lucide-react";
 import { useState, useCallback } from "react";
+import ErrorMessage from "@/components/admin/form/ErrorMessage";
+import FormLabel from "@/components/admin/form/FormLabel";
+import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useModal } from "@/contexts/ModalContext";
 import { cn } from "@/lib/utils";
 import type { Company, CustomerType, User } from "@/types";
-import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
-import FormLabel from "@/components/admin/form/FormLabel";
-import ErrorMessage from "@/components/admin/form/ErrorMessage";
-import { useModal } from "@/contexts/ModalContext";
 
 
 
@@ -62,12 +62,16 @@ export default function CustomerForm({ customer, users, companies: initialCompan
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
         const routeName = customer ? route("customers.update", customer.id) : route("customers.store");
-        customer ? put(routeName) : post(routeName);
+        if (customer) {
+            put(routeName);
+        } else {
+            post(routeName);
+        }
     };
 
     return (
-        <form onSubmit={submit} className="space-y-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <form onSubmit={submit} className="space-y-6 md:space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
 
                 {/* Section 1: Identity & Contact */}
                 <div className="space-y-6">
@@ -76,7 +80,7 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                     <div className="grid gap-4">
                         <div className="grid gap-2">
                             <FormLabel required>Full Name</FormLabel>
-                            <Input value={data.name} onChange={e => setData("name", e.target.value)} placeholder="e.g. John Doe" />
+                            <Input value={data.name} onChange={e => setData("name", e.target.value)} placeholder="e.g. John Doe" className="h-11 md:h-10" />
                             <ErrorMessage message={errors.name} />
                         </div>
 
@@ -127,12 +131,12 @@ export default function CustomerForm({ customer, users, companies: initialCompan
 
                         <div className="grid gap-2">
                             <FormLabel required={data.type !== "personal"}>Email Address</FormLabel>
-                            <Input type="email" value={data.email} onChange={e => setData("email", e.target.value)} placeholder="john@example.com" />
+                            <Input type="email" value={data.email} onChange={e => setData("email", e.target.value)} placeholder="john@example.com" className="h-11 md:h-10" />
                             <ErrorMessage message={errors.email} />
                         </div>
                         <div className="grid gap-2">
                             <FormLabel required={data.type !== "personal"}>Designation</FormLabel>
-                            <Input value={data.designation} onChange={e => setData("designation", e.target.value)} placeholder="Manager" />
+                            <Input value={data.designation} onChange={e => setData("designation", e.target.value)} placeholder="Manager" className="h-11 md:h-10" />
                             <ErrorMessage message={errors.designation} />
                         </div>
 
@@ -147,10 +151,10 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                                             value={phone}
                                             onChange={e => updateListItem("phones", i, e.target.value.replace(/\D/g, '').slice(0, 11))}
                                             placeholder="017XXXXXXXX"
-                                            className={cn("pl-14", errors[`phones.${i}` as keyof typeof errors] && "border-destructive")}
+                                            className={cn("pl-14 h-11 md:h-10", errors[`phones.${i}` as keyof typeof errors] && "border-destructive")}
                                         />
                                         {data.phones.length > 1 && (
-                                            <Button type="button" variant="ghost" size="icon" onClick={() => removeListItem("phones", i)} className="h-9 w-9 text-muted-foreground hover:text-destructive">
+                                            <Button type="button" variant="ghost" size="icon" onClick={() => removeListItem("phones", i)} className="h-11 w-11 md:h-9 md:w-9 text-muted-foreground hover:text-destructive shrink-0">
                                                 <X className="w-4 h-4" />
                                             </Button>
                                         )}
@@ -158,7 +162,7 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                                     <ErrorMessage message={errors[`phones.${i}` as keyof typeof errors] as string} />
                                 </div>
                             ))}
-                            <Button type="button" variant="outline" size="sm" onClick={() => addListItem("phones")} className="w-full border-dashed">
+                            <Button type="button" variant="outline" size="sm" onClick={() => addListItem("phones")} className="w-full border-dashed h-11 md:h-9">
                                 <Plus className="w-4 h-4 mr-2" /> Add Phone Number
                             </Button>
                         </div>
@@ -172,8 +176,8 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                         <div className="grid sm:grid-cols-2 gap-4">
                             <div className="grid gap-2">
                                 <FormLabel required>Customer Type</FormLabel>
-                                <Select value={data.type} onValueChange={val => setData("type", val as any)}>
-                                    <SelectTrigger className={errors.type ? "border-destructive" : ""}><SelectValue /></SelectTrigger>
+                                <Select value={data.type} onValueChange={val => setData("type", val as CustomerType['type'])}>
+                                    <SelectTrigger className={cn("h-11 md:h-10", errors.type ? "border-destructive" : "")}><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="corporate">Corporate</SelectItem>
                                         <SelectItem value="reseller">Reseller</SelectItem>
@@ -184,8 +188,8 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                             </div>
                             <div className="grid gap-2">
                                 <FormLabel required>Status</FormLabel>
-                                <Select value={data.status} onValueChange={val => setData("status", val as any)}>
-                                    <SelectTrigger className={errors.status ? "border-destructive" : ""}><SelectValue /></SelectTrigger>
+                                <Select value={data.status} onValueChange={val => setData("status", val as CustomerType['status'])}>
+                                    <SelectTrigger className={cn("h-11 md:h-10", errors.status ? "border-destructive" : "")}><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="active">Active</SelectItem>
                                         <SelectItem value="inactive">Inactive</SelectItem>
@@ -199,7 +203,7 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                             <FormLabel required>Assigned Representative</FormLabel>
                             <Popover open={openPopover} onOpenChange={setOpenPopover}>
                                 <PopoverTrigger asChild>
-                                    <Button variant="outline" className={cn("w-full justify-between font-normal", !data.assigned_to && "text-muted-foreground")}>
+                                    <Button variant="outline" className={cn("w-full justify-between font-normal h-11 md:h-10", !data.assigned_to && "text-muted-foreground")}>
                                         {data.assigned_to ? users.find(u => u.id === Number(data.assigned_to))?.name : "Select staff member"}
                                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                     </Button>
@@ -254,7 +258,7 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                         </div>
                         <div className="grid gap-2">
                             <FormLabel>Date of Birth</FormLabel>
-                            <Input type="date" value={data.date_of_birth} onChange={e => setData("date_of_birth", e.target.value)} />
+                            <Input type="date" value={data.date_of_birth} onChange={e => setData("date_of_birth", e.target.value)} className="h-11 md:h-10" />
                             <ErrorMessage message={errors.date_of_birth} />
                         </div>
                     </div>
@@ -262,11 +266,11 @@ export default function CustomerForm({ customer, users, companies: initialCompan
             </div>
 
             {/* Form Actions */}
-            <footer className="flex items-center justify-end gap-4 pt-8 border-t">
-                <Button variant="outline" type="button" onClick={() => window.history.back()} disabled={processing}>
+            <footer className="flex flex-col-reverse md:flex-row items-center justify-end gap-3 pt-6 md:pt-8 border-t">
+                <Button variant="outline" type="button" onClick={() => window.history.back()} disabled={processing} className="w-full md:w-auto h-12 md:h-10">
                     Cancel
                 </Button>
-                <Button type="submit" disabled={processing} className="min-w-35">
+                <Button type="submit" disabled={processing} className="w-full md:min-w-35 h-12 md:h-10">
                     {processing ? (
                         <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />

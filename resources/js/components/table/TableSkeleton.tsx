@@ -1,5 +1,5 @@
-import { TableRow, TableCell } from "@/components/ui/table";
 import { memo } from "react";
+import { TableRow, TableCell } from "@/components/ui/table";
 
 interface Props {
     columns: number;

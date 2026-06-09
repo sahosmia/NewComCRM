@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 
 export type ModalType = 'CREATE_UNIT' | 'CREATE_COMPANY' | 'CREATE_CUSTOMER' | 'CREATE_PRODUCT' | 'CREATE_MEETING' | 'CREATE_FOLLOW_UP';
 

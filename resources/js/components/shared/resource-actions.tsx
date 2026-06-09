@@ -1,10 +1,10 @@
 import { Link } from '@inertiajs/react';
 import { Plus, SquarePen, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import type { ComponentPropsWithoutRef } from 'react';
 import { AlertDialogDestructive } from '@/components/admin/AlertDialogDestructive';
-import { handleDelete } from '@/utils/table';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { handleDelete } from '@/utils/table';
 
 type ButtonProps = ComponentPropsWithoutRef<typeof Button>;
 

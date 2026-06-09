@@ -1,6 +1,5 @@
-import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
     Command,
@@ -14,8 +13,9 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import FormLabel from "./FormLabel";
+import { cn } from "@/lib/utils";
 import ErrorMessage from "./ErrorMessage";
+import FormLabel from "./FormLabel";
 
 interface BaseItem {
     id: string | number;
@@ -71,7 +71,7 @@ export function GenericCombobox<T extends BaseItem>({
                             role="combobox"
                             type="button"
                             aria-expanded={open}
-                            className={cn("w-full justify-between font-normal text-left", renderAction && "pr-10", !selectedId && !manualValue && "text-muted-foreground", error && "border-destructive", className)}
+                            className={cn("w-full justify-between font-normal text-left h-11 md:h-10", renderAction && "pr-10", !selectedId && !manualValue && "text-muted-foreground", error && "border-destructive", className)}
                         >
                             <span className="truncate">{displayLabel}</span>
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />

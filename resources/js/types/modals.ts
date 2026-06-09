@@ -1,4 +1,5 @@
-import { CustomerType, Requirement, User } from "@/types";
+import type { CustomerType, Requirement} from "@/types";
+import { User } from "@/types";
 
 export interface BaseModalProps {
     isOpen: boolean;

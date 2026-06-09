@@ -1,7 +1,11 @@
 import { useForm } from "@inertiajs/react";
+import { Plus } from "lucide-react";
+import { useState } from "react";
+import ErrorMessage from "@/components/admin/form/ErrorMessage";
+import FormLabel from "@/components/admin/form/FormLabel";
+import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
     Select,
     SelectContent,
@@ -9,13 +13,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import ErrorMessage from "@/components/admin/form/ErrorMessage";
-import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
-import FormLabel from "@/components/admin/form/FormLabel";
-import { Company, CustomerType, FollowUp, Requirement, User } from "@/types";
+import { Textarea } from "@/components/ui/textarea";
 import { useModal } from "@/contexts/ModalContext";
-import { Plus } from "lucide-react";
-import { useState } from "react";
+import type { Company, CustomerType, FollowUp, Requirement, User } from "@/types";
 
 interface Props {
     followUp?: FollowUp;

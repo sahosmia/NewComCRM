@@ -1,18 +1,4 @@
 import { Link, usePage } from '@inertiajs/react';
-import { NavMain } from '@/components/nav-main';
-import { NavUser } from '@/components/nav-user';
-import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarHeader,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-} from '@/components/ui/sidebar';
-import type { NavItem } from '@/types';
-import AppLogo from './app-logo';
-
 import {
     LayoutDashboard,
     Users,
@@ -28,6 +14,20 @@ import {
     Ruler,
     Settings
 } from 'lucide-react';
+import { NavMain } from '@/components/nav-main';
+import { NavUser } from '@/components/nav-user';
+import {
+    Sidebar,
+    SidebarContent,
+    SidebarFooter,
+    SidebarHeader,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
+} from '@/components/ui/sidebar';
+import type { NavItem } from '@/types';
+import AppLogo from './app-logo';
+
 
 export function AppSidebar() {
 
@@ -66,7 +66,7 @@ export function AppSidebar() {
     const visibleNavItems = mainNavItems.filter(item => !item.hidden);
 
     return (
-        <Sidebar collapsible="icon" variant="inset">
+        <Sidebar collapsible="icon" variant="sidebar">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>

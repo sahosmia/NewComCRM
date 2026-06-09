@@ -43,6 +43,7 @@ test('authenticated user can create a customer', function () {
         'status'        => 'active',
         'phones'        => ['01700000000'],
         'addresses'     => ['Dhaka'],
+        'designation'   => 'Manager',
     ];
 
     $this->actingAs($this->user)
@@ -74,6 +75,7 @@ test('user can update their own customer', function () {
         'status'        => 'active',
         'phones'        => ['01900000000'],
         'addresses'     => ['Chittagong'],
+        'designation'   => 'General Manager',
     ];
 
     $this->actingAs($this->user)

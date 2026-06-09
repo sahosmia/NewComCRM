@@ -1,26 +1,28 @@
+import { Link } from '@inertiajs/react';
+import { router } from "@inertiajs/react";
+import { RotateCcw, Plus, FileUp } from 'lucide-react';
+import type { ReactNode } from 'react';
+import React from 'react';
+import { useEffect, useState } from "react";
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useTableFilters } from '@/hooks/useTableFilters';
-import { CommonTableProps } from '@/types';
-import { Link } from '@inertiajs/react';
-import React, { ReactNode } from 'react';
-import { Input } from '@/components/ui/input';
-import { TableFilters } from '../table/TableFilters';
-import { RotateCcw, Plus, FileUp } from 'lucide-react';
-import { router } from "@inertiajs/react";
-import Pagination from './Pagination';
-import { useEffect, useState } from "react";
-import TableSkeleton from '../table/TableSkeleton';
-import { handleBulkDelete } from '@/utils/table';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { TableBulkActions } from '../table/TableBulkActions';
+import type { CommonTableProps } from '@/types';
+import { handleBulkDelete } from '@/utils/table';
 import ImportModal from '../modals/ImportModal';
+import { TableBulkActions } from '../table/TableBulkActions';
+import { TableFilters } from '../table/TableFilters';
+import TableSkeleton from '../table/TableSkeleton';
+import Pagination from './Pagination';
 
 
 
-const CommonTable = <T extends { id: number }>({
+function CommonTable<T extends { id: number }>({
     data,
     columns,
     create_route,
@@ -33,10 +35,11 @@ const CommonTable = <T extends { id: number }>({
     exportRoute,
     printRoute,
     importRoute
-}: CommonTableProps<T> & { exportRoute?: string, printRoute?: string }) => {
+}: CommonTableProps<T> & { exportRoute?: string, printRoute?: string }) {
 
     const [loading, setLoading] = useState(false);
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+    const isMobile = useIsMobile();
 
     useEffect(() => {
         const start = () => setLoading(true);
@@ -114,99 +117,157 @@ const CommonTable = <T extends { id: number }>({
         <div className="space-y-4">
             {/* Toolbar */}
 
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex flex-1 items-center space-x-2">
-                    <Input
-                        type="text"
-                        placeholder="Search..."
-                        value={search}
-                        onChange={handleSearchChange}
-                        className="w-64 h-9 px-3 text-sm"
-                    />
-                    {filters && <TableFilters filters={filters} queryParams={queryParams || {}} routeName={routeName}
-                    />}
+            <div className="flex flex-col gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="flex flex-1 items-center gap-2">
+                        <Input
+                            type="text"
+                            placeholder="Search..."
+                            value={search}
+                            onChange={handleSearchChange}
+                            className="w-full sm:w-64 h-10 sm:h-9 px-3 text-sm"
+                        />
+                        <div className="flex items-center gap-2">
+                             {filters && <TableFilters filters={filters} queryParams={queryParams || {}} routeName={routeName} />}
+                             <Button variant="ghost" size="sm" onClick={resetFilters} className="h-9 px-2 text-xs text-destructive sm:h-8">
+                                <RotateCcw className="mr-1 h-3 w-3" />
+                                <span className="hidden xs:inline">Reset</span>
+                            </Button>
+                        </div>
+                    </div>
 
-                    {sortOptions && sortOptions.length > 0 && (
-
-                        <Select
-                            value={currentSort?.label || ""}
-                            onValueChange={handleSortChange}
-                        >
-                            <SelectTrigger className="h-9 w-45 text-xs bg-background">
-                                <SelectValue placeholder="Sort By" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {sortOptions.map((option) => (
-                                    <SelectItem key={option.label} value={option.label}>
-                                        {option.label}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    )}
-                    <Button variant="ghost" size="sm" onClick={resetFilters} className="h-8 px-2 text-xs text-destructive">
-                        <RotateCcw className="mr-1 h-3 w-3" />
-                        Reset
-                    </Button>
+                    <div className="flex items-center gap-2 self-end sm:self-auto">
+                         {sortOptions && sortOptions.length > 0 && (
+                            <Select
+                                value={currentSort?.label || ""}
+                                onValueChange={handleSortChange}
+                            >
+                                <SelectTrigger className="h-10 sm:h-9 w-40 sm:w-45 text-xs bg-background">
+                                    <SelectValue placeholder="Sort By" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {sortOptions.map((option) => (
+                                        <SelectItem key={option.label} value={option.label}>
+                                            {option.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        )}
+                    </div>
                 </div>
-                <div className="flex items-center gap-3">
-                    {/* Selection Status - Uses a Badge for better visual weight */}
-                    {selectedItems.length > 0 && (
-                        <Badge variant="secondary" className="font-medium animate-in fade-in zoom-in duration-200">
-                            {selectedItems.length} selected
-                        </Badge>
-                    )}
 
-                      {/* Import Action */}
-                    {importRoute && (
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="gap-2"
-                            onClick={() => setIsImportModalOpen(true)}
-                        >
-                            <FileUp className="h-4 w-4" />
-                            <span>Import</span>
-                        </Button>
-                    )}
+                <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                         {/* Selection Status - Uses a Badge for better visual weight */}
+                        {selectedItems.length > 0 && (
+                            <Badge variant="secondary" className="font-medium animate-in fade-in zoom-in duration-200 h-9 sm:h-7 px-3">
+                                {selectedItems.length} <span className="hidden xs:inline ml-1">selected</span>
+                            </Badge>
+                        )}
+                    </div>
 
-                    {/* Primary Action: Create */}
-                    {create_route && (
-                        <Button size="sm" asChild className="gap-2">
-                            <Link href={route(create_route)}>
-                                <Plus className="h-4 w-4" />
-                                <span>Add {entityName}</span>
-                            </Link>
-                        </Button>
-                    )}
+                    <div className="flex items-center gap-2">
+                        {/* Import Action */}
+                        {importRoute && (
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-10 sm:h-9 gap-2"
+                                onClick={() => setIsImportModalOpen(true)}
+                            >
+                                <FileUp className="h-4 w-4" />
+                                <span className="hidden sm:inline">Import</span>
+                            </Button>
+                        )}
 
-                    {/* Secondary Actions: Dropdown */}
-                    <TableBulkActions
-                        selectedItems={selectedItems}
-                        entityName={entityName}
-                        exportRoute={exportRoute}
-                        printRoute={printRoute}
-                        bulkDeleteRoute={bulkDeleteRoute}
-                        handleExport={handleExport}
-                        handlePrint={handlePrint}
-                        handleBulkDelete={(ids, bulkRoute) => {
-                            handleBulkDelete(ids, bulkRoute, {
-                                onSuccess: () => setSelectedItems(new Set()),
-                            });
-                        }}
-                    />
+                        {/* Primary Action: Create */}
+                        {create_route && (
+                            <Button size="sm" asChild className="h-10 sm:h-9 gap-2">
+                                <Link href={route(create_route)}>
+                                    <Plus className="h-4 w-4" />
+                                    <span>Add <span className="hidden sm:inline">{entityName}</span></span>
+                                </Link>
+                            </Button>
+                        )}
+
+                        {/* Secondary Actions: Dropdown */}
+                        <TableBulkActions
+                            selectedItems={selectedItems}
+                            entityName={entityName}
+                            exportRoute={exportRoute}
+                            printRoute={printRoute}
+                            bulkDeleteRoute={bulkDeleteRoute}
+                            handleExport={handleExport}
+                            handlePrint={handlePrint}
+                            handleBulkDelete={(ids, bulkRoute) => {
+                                handleBulkDelete(ids, bulkRoute, {
+                                    onSuccess: () => setSelectedItems(new Set()),
+                                });
+                            }}
+                        />
+                    </div>
                 </div>
             </div>
 
             {/* Table Container */}
-            {/* 1. Added horizontal scroll wrapper and removed 'table-fixed' */}
+            {isMobile ? (
+                 <div className="space-y-4">
+                    {loading ? (
+                        <div className="space-y-4">
+                            {[...Array(5)].map((_, i) => (
+                                <div key={i} className="h-32 w-full animate-pulse bg-muted rounded-lg" />
+                            ))}
+                        </div>
+                    ) : data.data.length === 0 ? (
+                        <div className="h-32 flex items-center justify-center text-muted-foreground bg-card border rounded-lg">
+                            No data found matching your criteria.
+                        </div>
+                    ) : (
+                        data.data.map((item, i) => (
+                            <div key={item.id} className="bg-card border rounded-lg p-4 space-y-3 relative shadow-sm">
+                                <div className="flex items-start justify-between border-b pb-2">
+                                    <div className="flex items-center gap-3">
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedItems.includes(item.id)}
+                                            onChange={() => handleSelectItem(item.id)}
+                                            className="w-5 h-5 rounded border-gray-300 text-primary"
+                                        />
+                                        <span className="text-xs font-bold text-muted-foreground">#{data.from + i}</span>
+                                    </div>
+                                    {/* Action column is usually the last one, let's try to find it */}
+                                    <div className="flex gap-2">
+                                        {columns.find(c => c.header === 'Actions' || c.className?.includes('action'))?.accessor(item)}
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-y-3 gap-x-4">
+                                    {columns.filter(c => c.header !== 'Actions' && !c.className?.includes('action')).map((column, colIndex) => (
+                                        <div key={colIndex} className={cn("space-y-1", colIndex === 0 ? "col-span-2" : "")}>
+                                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                                                {typeof column.header === 'string' ? column.header : ''}
+                                            </p>
+                                            <div className="text-sm">
+                                                {typeof column.accessor === 'function'
+                                                    ? column.accessor(item)
+                                                    : (item[column.accessor as keyof T] as ReactNode)
+                                                }
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))
+                    )}
+                 </div>
+            ) : (
             <div className="border rounded-lg bg-card text-card-foreground shadow-sm">
                 <div className="overflow-x-auto overflow-y-hidden">
-                    <Table className='w-full min-w-200 md:min-w-full'>
+                    <Table className='w-full min-w-[800px] md:min-w-full table-fixed'>
                         <TableHeader className="bg-muted/50">
                             <TableRow>
                                 {/* Fixed widths for small utility columns */}
-                                <TableHead className="w-10 px-4">
+                                <TableHead className="w-12 px-4">
                                     <input
                                         type="checkbox"
                                         checked={data.data.length > 0 && selectedItems.length === data.data.length}
@@ -214,15 +275,16 @@ const CommonTable = <T extends { id: number }>({
                                         className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary align-middle"
                                     />
                                 </TableHead>
-                                <TableHead className="w-12.5 font-bold text-xs">#</TableHead>
+                                <TableHead className="w-16 font-bold text-xs">#</TableHead>
 
                                 {columns.map((column, index) => (
                                     <TableHead
                                         key={index}
                                         className={cn(
-                                            "font-bold whitespace-nowrap",
+                                            "font-bold overflow-hidden text-ellipsis truncate",
                                             column.className
                                         )}
+                                        title={typeof column.header === 'string' ? column.header : undefined}
                                     >
                                         {column.header}
                                     </TableHead>
@@ -253,7 +315,7 @@ const CommonTable = <T extends { id: number }>({
                                             />
                                         </TableCell>
 
-                                        <TableCell className="text-xs text-muted-foreground">
+                                        <TableCell className="text-xs text-muted-foreground overflow-hidden text-ellipsis truncate">
                                             {data.from + i}
                                         </TableCell>
 
@@ -262,7 +324,7 @@ const CommonTable = <T extends { id: number }>({
                                                 key={colIndex}
                                                 className={cn("py-3", column.className)}
                                             >
-                                                <div className="max-w-full">
+                                                <div className="w-full truncate" title={undefined}>
                                                     {typeof column.accessor === 'function'
                                                         ? column.accessor(item)
                                                         : (item[column.accessor as keyof T] as ReactNode)
@@ -277,9 +339,10 @@ const CommonTable = <T extends { id: number }>({
                     </Table>
                 </div>
             </div>
+            )}
 
             <Pagination routeName={routeName} data={data} />
-              {importRoute && (
+            {importRoute && (
                 <ImportModal
                     isOpen={isImportModalOpen}
                     onClose={() => setIsImportModalOpen(false)}
@@ -289,6 +352,6 @@ const CommonTable = <T extends { id: number }>({
             )}
         </div>
     );
-};
+}
 
 export default CommonTable;

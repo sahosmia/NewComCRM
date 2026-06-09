@@ -1,11 +1,11 @@
-import AppLayout from "@/layouts/app-layout";
+import { Head, Link } from "@inertiajs/react";
+import { Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare, LayoutList, Plus, Video, Building2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, Phone, MapPin, User, Calendar, Edit, ArrowLeft, MessageSquare, LayoutList, Plus, Video, Building2 } from "lucide-react";
-import { Head, Link } from "@inertiajs/react";
-import { CustomerType, FollowUp, Meeting, Requirement } from "@/types";
 import { useModal } from "@/contexts/ModalContext";
+import AppLayout from "@/layouts/app-layout";
+import type { CustomerType, FollowUp, Meeting, Requirement } from "@/types";
 
 interface ShowProps {
     customer: CustomerType & {

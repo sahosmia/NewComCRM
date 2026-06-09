@@ -1,18 +1,18 @@
-import AppLayout from '@/layouts/app-layout';
 import { Head } from '@inertiajs/react';
-import type { BreadcrumbItem } from '@/types';
-import { dashboard } from '@/routes';
 import { Video, Cake, Plus } from 'lucide-react';
-import StatCard from '@/components/admin/dashboard/StatCard';
-import FollowUpList from '@/components/admin/dashboard/FollowUpList';
-import MeetingList from '@/components/admin/dashboard/UpcomingMeetings';
-import SalesChart from '@/components/admin/dashboard/ChartData';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Meeting, FollowUp, CustomerType, Requirement } from '@/types';
-import { useModal } from '@/contexts/ModalContext';
-import { Button } from '@/components/ui/button';
 import BirthdayList from '@/components/admin/dashboard/BirthdayList';
+import SalesChart from '@/components/admin/dashboard/ChartData';
+import FollowUpList from '@/components/admin/dashboard/FollowUpList';
+import StatCard from '@/components/admin/dashboard/StatCard';
+import MeetingList from '@/components/admin/dashboard/UpcomingMeetings';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useModal } from '@/contexts/ModalContext';
+import AppLayout from '@/layouts/app-layout';
+import { dashboard } from '@/routes';
+import type { BreadcrumbItem } from '@/types';
+import type { Meeting, FollowUp, CustomerType, Requirement } from '@/types';
 
 interface DashboardProps {
     meetings: { today: Meeting[]; upcoming: Meeting[]; today_count: number; upcoming_count: number };
@@ -54,7 +54,7 @@ export default function Dashboard({ meetings, followUps, sales, customers, birth
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
 
-            <div className='p-4 md:p-8 space-y-8 max-w-[1600px] mx-auto'>
+            <div className='space-y-8 max-w-[1600px] mx-auto'>
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-card p-6 rounded-2xl border shadow-sm">
                     <div className="space-y-1">

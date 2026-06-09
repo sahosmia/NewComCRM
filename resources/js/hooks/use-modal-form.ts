@@ -1,7 +1,7 @@
 import { useForm } from '@inertiajs/react';
 import axios from 'axios';
-import { toast } from 'sonner';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 export function useModalForm<TForm extends Record<string, any>>(
     initialData: TForm,

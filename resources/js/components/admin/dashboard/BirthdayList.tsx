@@ -1,6 +1,6 @@
 import { Link } from "@inertiajs/react";
 import { Cake, ChevronRight } from "lucide-react";
-import { CustomerType } from "@/types";
+import type { CustomerType } from "@/types";
 
 interface BirthdayListProps {
     customers: CustomerType[];
