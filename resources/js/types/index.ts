@@ -1,7 +1,7 @@
 export type * from './auth';
 export type * from './navigation';
 export type * from './ui';
-import { LucideIcon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import type { Config } from 'ziggy-js';
 
 export interface Auth {

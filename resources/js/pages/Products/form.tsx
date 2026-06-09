@@ -1,15 +1,15 @@
 import { useForm } from "@inertiajs/react";
+import { Loader2, Plus } from "lucide-react";
+import { useState } from "react";
+import ErrorMessage from "@/components/admin/form/ErrorMessage";
+import FormLabel from "@/components/admin/form/FormLabel";
+import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-import { Product, Unit } from "@/types";
-import { Loader2, Plus } from "lucide-react";
-import ErrorMessage from "@/components/admin/form/ErrorMessage";
-import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
-import FormLabel from "@/components/admin/form/FormLabel";
 import { useModal } from "@/contexts/ModalContext";
-import { useState } from "react";
+import type { Product, Unit } from "@/types";
 
 
 interface Props {

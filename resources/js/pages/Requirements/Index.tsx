@@ -1,8 +1,8 @@
-import AppLayout from '@/layouts/app-layout';
-import { FilterOption, PaginationType, Requirement, SortOption } from '@/types';
 import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
+import AppLayout from '@/layouts/app-layout';
+import type { FilterOption, PaginationType, Requirement, SortOption } from '@/types';
 import { columns } from './Columns';
 
 interface Props {

@@ -1,12 +1,13 @@
-import AppLayout from "@/layouts/app-layout";
+import { Head, Link } from "@inertiajs/react";
+import { Building2, Mail, Phone, User, Calendar, ArrowLeft } from "lucide-react";
+import { DeleteResourceButton, EditResourceButton } from "@/components/shared/resource-actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2, Mail, Phone, User, Calendar, ArrowLeft } from "lucide-react";
-import { Head, Link } from "@inertiajs/react";
-import { DeleteResourceButton, EditResourceButton } from "@/components/shared/resource-actions";
+import AppLayout from "@/layouts/app-layout";
+import type { User as UserType } from "@/types";
 
-export default function Show({ user }: { user: any }) {
+export default function Show({ user }: { user: UserType }) {
     return (
         <AppLayout
             breadcrumbs={[

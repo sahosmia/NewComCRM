@@ -1,24 +1,24 @@
 import { useForm } from "@inertiajs/react";
+import { Plus, LayoutList, Percent, Settings, Drill, } from "lucide-react";
+import { useState } from "react";
+import ErrorMessage from "@/components/admin/form/ErrorMessage";
+import FormLabel from "@/components/admin/form/FormLabel";
+import { FormSelect } from "@/components/admin/form/FormSelect";
+import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, LayoutList, Percent, Settings, Drill, } from "lucide-react";
-import { Company, Requirement, RequirementItem, User } from "@/types";
-import { CustomerType } from "@/types";
-import { Product } from "@/types";
-import { Unit } from "@/types";
-import { useState } from "react";
-import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
-import ErrorMessage from "@/components/admin/form/ErrorMessage";
-import { FormSelect } from "@/components/admin/form/FormSelect";
-import { RequirementOptions } from "./Columns";
-import { Card, CardContent } from "@/components/ui/card";
-import { RequirementItemRow } from "./com/RequirementItemRow";
-import { FormSummaryFooter } from "./com/FormSummaryFooter";
-import { ServiceSection } from "./com/ServiceSection";
-import FormLabel from "@/components/admin/form/FormLabel";
 import { useModal } from "@/contexts/ModalContext";
 import requirements from "@/routes/requirements";
+import type { Company, Requirement, RequirementItem, User } from "@/types";
+import type { CustomerType } from "@/types";
+import type { Product } from "@/types";
+import type { Unit } from "@/types";
+import { RequirementOptions } from "./Columns";
+import { FormSummaryFooter } from "./com/FormSummaryFooter";
+import { RequirementItemRow } from "./com/RequirementItemRow";
+import { ServiceSection } from "./com/ServiceSection";
 
 
 interface Props {

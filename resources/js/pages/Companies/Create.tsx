@@ -1,6 +1,6 @@
-import AppLayout from '@/layouts/app-layout';
-import Heading from '@/components/admin/heading';
 import { Head } from '@inertiajs/react';
+import Heading from '@/components/admin/heading';
+import AppLayout from '@/layouts/app-layout';
 import CompanyForm from './form';
 
 export default function Create() {

@@ -1,11 +1,11 @@
 import { useForm } from "@inertiajs/react";
 import { Loader2 } from "lucide-react";
+import ErrorMessage from "@/components/admin/form/ErrorMessage";
+import FormLabel from "@/components/admin/form/FormLabel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import ErrorMessage from "@/components/admin/form/ErrorMessage";
-import { Company } from "@/types";
-import FormLabel from "@/components/admin/form/FormLabel";
+import type { Company } from "@/types";
 
 interface Props {
     company?: Company;

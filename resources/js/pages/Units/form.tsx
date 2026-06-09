@@ -1,10 +1,10 @@
 import { useForm } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
 import FormLabel from "@/components/admin/form/FormLabel";
-import { Unit } from "@/types";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import type { Unit } from "@/types";
 
 interface Props {
     unit?: Unit;

@@ -1,11 +1,11 @@
-import AppLayout from '@/layouts/app-layout';
-import { PaginationType, SortOption } from '@/types';
 import { Head, Link } from '@inertiajs/react';
+import { Eye } from 'lucide-react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import { Badge } from '@/components/ui/badge';
-import { Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import AppLayout from '@/layouts/app-layout';
+import type { PaginationType, SortOption } from '@/types';
 import { formatDate } from '@/utils/date-format';
 
 interface Props {

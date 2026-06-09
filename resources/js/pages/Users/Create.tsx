@@ -1,7 +1,7 @@
-import AppLayout from "@/layouts/app-layout";
-import UserForm from "./form";
 import { Head } from "@inertiajs/react";
-import { UserType } from "@/types";
+import AppLayout from "@/layouts/app-layout";
+import type { UserType } from "@/types";
+import UserForm from "./form";
 
 export default function Create({ user }: {user:UserType}) {
     return (

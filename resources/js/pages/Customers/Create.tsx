@@ -1,8 +1,8 @@
-import AppLayout from "@/layouts/app-layout";
-import CustomerForm from "./form";
 import { Head } from "@inertiajs/react";
-import { Company, User } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import AppLayout from "@/layouts/app-layout";
+import type { Company, User } from "@/types";
+import CustomerForm from "./form";
 
 interface CreateProps {
     users: User[];
@@ -19,9 +19,9 @@ export default function Create({ users, companies }: CreateProps) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Create Customer" />
 
-            <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
+            <div className="flex-1 space-y-4">
                 <div className="flex items-center justify-between space-y-2">
-                    <h2 className="text-3xl font-bold tracking-tight">Create Customer</h2>
+                    <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Create Customer</h2>
                 </div>
 
                 <Card className="max-w-4xl mx-auto shadow-sm">

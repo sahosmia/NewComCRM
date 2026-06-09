@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
 import { router, usePage } from '@inertiajs/react';
-import { PaginationType } from '@/types';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import type { PaginationType } from '@/types';
 
 interface UseTableFiltersProps<T> {
     data: PaginationType<T>;

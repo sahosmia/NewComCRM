@@ -1,5 +1,10 @@
-import React, { useEffect } from 'react';
 import { usePage } from '@inertiajs/react';
+import { Loader2 } from 'lucide-react';
+import React, { useEffect } from 'react';
+import ErrorMessage from '@/components/admin/form/ErrorMessage';
+import FormLabel from '@/components/admin/form/FormLabel';
+import { GenericCombobox } from '@/components/admin/form/GenericCombobox';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -7,17 +12,12 @@ import {
     DialogTitle,
     DialogFooter,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2 } from 'lucide-react';
-import ErrorMessage from '@/components/admin/form/ErrorMessage';
-import { GenericCombobox } from '@/components/admin/form/GenericCombobox';
-import FormLabel from '@/components/admin/form/FormLabel';
-import { SharedData, FollowUp } from '@/types';
-import { CreateFollowUpModalProps } from '@/types/modals';
+import { Textarea } from '@/components/ui/textarea';
 import { useModalForm } from '@/hooks/use-modal-form';
+import type { SharedData, FollowUp } from '@/types';
+import type { CreateFollowUpModalProps } from '@/types/modals';
 
 
 export default function CreateFollowUpModal({

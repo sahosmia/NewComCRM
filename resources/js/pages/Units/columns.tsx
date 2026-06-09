@@ -1,6 +1,6 @@
-import type { Column } from '@/types';
 import { TableRowActions } from '@/components/table/TableRowActions';
-import { Unit } from '@/types/unit';
+import type { Column } from '@/types';
+import type { Unit } from '@/types/unit';
 
 const columns: Column<Unit>[] = [
     {

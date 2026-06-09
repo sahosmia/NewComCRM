@@ -1,7 +1,7 @@
-import AppLayout from "@/layouts/app-layout";
-import UserForm from "./form";
-import type { UserType } from "@/types";
 import { Head } from "@inertiajs/react";
+import AppLayout from "@/layouts/app-layout";
+import type { UserType } from "@/types";
+import UserForm from "./form";
 
 
 

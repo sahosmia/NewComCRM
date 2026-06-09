@@ -1,9 +1,9 @@
 import { router } from '@inertiajs/react';
-import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
-import { useState, memo } from 'react';
 import { Loader2 } from 'lucide-react';
+import { useState, memo } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 
 // Define a type for the status configuration
 export interface StatusOption {

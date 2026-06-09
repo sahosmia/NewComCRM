@@ -1,9 +1,4 @@
 import { Link, Head, router } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import AppLayout from "@/layouts/app-layout";
-import { Badge } from "@/components/ui/badge";
-import { useMemo } from "react";
-import { useModal } from "@/contexts/ModalContext";
 
 import {
     Calendar,
@@ -14,11 +9,17 @@ import {
     Video,
     History
 } from "lucide-react";
+import { useMemo } from "react";
 import CustomerInfoCard from "@/components/admin/CustomerInfoCard";
 import StatusBadge from "@/components/shared/StatusBadge";
-import { formatDate } from "@/utils/date-format";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useModal } from "@/contexts/ModalContext";
+import AppLayout from "@/layouts/app-layout";
 
-import { Company, CustomerType, Requirement, User } from "@/types";
+import type { CustomerType, Requirement} from "@/types";
+import { Company, User } from "@/types";
+import { formatDate } from "@/utils/date-format";
 
 interface Props {
     requirement: Requirement;

@@ -1,9 +1,9 @@
+import { Link } from '@inertiajs/react';
+import { FileDown, History, Video } from 'lucide-react';
 import { InlineStatusUpdate } from '@/components/table/InlineStatusUpdate';
 import { TableRowActions } from '@/components/table/TableRowActions';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { Column, Requirement } from '@/types';
-import { FileDown, History, Video } from 'lucide-react';
-import { Link } from '@inertiajs/react';
+import type { Column, Requirement } from '@/types';
 
 const RequirementOptions = [
     { value: 'pending', label: "Pending", colorClass: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20' },

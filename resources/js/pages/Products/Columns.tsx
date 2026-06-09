@@ -1,5 +1,5 @@
-import type { Column, Product } from '@/types';
 import { TableRowActions } from '@/components/table/TableRowActions';
+import type { Column, Product } from '@/types';
 
 const columns: Column<Product>[] = [
     {
