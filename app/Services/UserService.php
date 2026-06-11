@@ -39,6 +39,8 @@ class UserService
                 Storage::disk('public')->delete($user->signature);
             }
             $data['signature'] = $data['signature']->store('signatures', 'public');
+        } else {
+            unset($data['signature']);
         }
 
         $this->users->update($user, $data);

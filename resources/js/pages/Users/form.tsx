@@ -15,7 +15,7 @@ export default function UserForm({ user }: Props) {
         name: user?.name || "",
         email: user?.email || "",
         phone: user?.phone || "",
-        designations: user?.designations || "",
+        designation: user?.designation || "",
         role: user?.role || "user",
         password: "",
         signature: null as File | null,
@@ -55,9 +55,9 @@ export default function UserForm({ user }: Props) {
                     </div>
 
                     <div className="space-y-1">
-                        <FormLabel>Designations</FormLabel>
-                        <Input value={data.designations} onChange={e => setData("designations", e.target.value)} placeholder="Software Engineer" />
-                        <ErrorMessage message={errors.designations} />
+                        <FormLabel>Designation</FormLabel>
+                        <Input value={data.designation} onChange={e => setData("designation", e.target.value)} placeholder="Software Engineer" />
+                        <ErrorMessage message={errors.designation} />
                     </div>
 
                     <div className="space-y-1">
