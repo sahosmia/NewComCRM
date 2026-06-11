@@ -143,8 +143,8 @@ class RequirementService
         if (!file_exists($fullPath))
             return null;
 
-        $type = pathinfo($fullPath, PATHINFO_EXTENSION);
+        $mime = mime_content_type($fullPath);
         $data = file_get_contents($fullPath);
-        return 'data:image/' . $type . ';base64,' . base64_encode($data);
+        return 'data:' . $mime . ';base64,' . base64_encode($data);
     }
 }

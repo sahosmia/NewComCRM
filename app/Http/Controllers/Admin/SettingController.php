@@ -46,7 +46,6 @@ class SettingController extends Controller
             'office_address_2' => ['nullable', 'string'],
             'office_address_3' => ['nullable', 'string'],
             'footer_contact_info' => ['nullable', 'string'],
-            'pdf_sender_office_info' => ['nullable', 'string'],
             'paginated_quantity' => ['required', 'integer', 'min:1'],
         ]);
 
