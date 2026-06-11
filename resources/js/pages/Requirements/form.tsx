@@ -176,7 +176,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                                 ...d,
                                                 customer_id: id as number,
                                                 delivery_location: (customer && customer.addresses && customer.addresses.length > 0) ? customer.addresses[0] : d.delivery_location,
-                                                user_id: customer?.assigned_to ? Number(customer.assigned_to) : d.user_id
+                                                user_id: customer?.assigned_to ? Number(customer.assigned_to) : auth.user.id
                                             }));
                                         }}
                                         error={errors.customer_id}
@@ -197,7 +197,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                                                 ...d,
                                                                 customer_id: newCustomer.id,
                                                                 delivery_location: (newCustomer.addresses && newCustomer.addresses.length > 0) ? newCustomer.addresses[0] : d.delivery_location,
-                                                                user_id: newCustomer.assigned_to ? Number(newCustomer.assigned_to) : d.user_id
+                                                                user_id: newCustomer.assigned_to ? Number(newCustomer.assigned_to) : auth.user.id
                                                             }));
                                                         }
                                                     });

@@ -96,7 +96,7 @@ export default function FollowUpForm({ followUp, customers: initialCustomers, re
                         setData(d => ({
                             ...d,
                             customer_id: id as number,
-                            user_id: customer?.assigned_to ? Number(customer.assigned_to) : d.user_id,
+                            user_id: customer?.assigned_to ? Number(customer.assigned_to) : auth.user.id,
                             requirement_id: (d.requirement_id && requirements.find(r => r.id === d.requirement_id)?.customer_id !== id) ? "" : d.requirement_id
                         }));
                     }}
@@ -120,7 +120,7 @@ export default function FollowUpForm({ followUp, customers: initialCustomers, re
                                         setData(d => ({
                                             ...d,
                                             customer_id: customer.id,
-                                            user_id: customer.assigned_to ? Number(customer.assigned_to) : d.user_id
+                                            user_id: customer.assigned_to ? Number(customer.assigned_to) : auth.user.id
                                         }));
                                     }
                                 });

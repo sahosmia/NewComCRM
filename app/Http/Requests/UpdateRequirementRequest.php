@@ -29,8 +29,31 @@ class UpdateRequirementRequest extends FormRequest
                 if (!isset($item['costing_price']) || $item['costing_price'] === '' || $item['costing_price'] === null) {
                     $items[$key]['costing_price'] = 0;
                 }
+                if (!isset($item['unit_price']) || $item['unit_price'] === '' || $item['unit_price'] === null) {
+                    $items[$key]['unit_price'] = 0;
+                }
             }
             $this->merge(['items' => $items]);
+        }
+
+        if ($this->has('accessories')) {
+            $accessories = $this->accessories;
+            foreach ($accessories as $key => $accessory) {
+                if (!isset($accessory['price']) || $accessory['price'] === '' || $accessory['price'] === null) {
+                    $accessories[$key]['price'] = 0;
+                }
+            }
+            $this->merge(['accessories' => $accessories]);
+        }
+
+        if ($this->has('installations')) {
+            $installations = $this->installations;
+            foreach ($installations as $key => $installation) {
+                if (!isset($installation['price']) || $installation['price'] === '' || $installation['price'] === null) {
+                    $installations[$key]['price'] = 0;
+                }
+            }
+            $this->merge(['installations' => $installations]);
         }
 
         $this->merge([
