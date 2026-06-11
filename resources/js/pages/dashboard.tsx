@@ -28,8 +28,6 @@ const breadcrumbs: BreadcrumbItem[] = [{ title: 'Dashboard', href: dashboard().u
 
 export default function Dashboard({ meetings, followUps, sales, customers, birthdays, requirements, chartData }: DashboardProps) {
     const { openModal } = useModal();
-    
-
 
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('en-BD', {
@@ -54,14 +52,14 @@ export default function Dashboard({ meetings, followUps, sales, customers, birth
                         <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Dashboard Overview</h1>
                         <p className="text-sm text-muted-foreground">Real-time metrics and operational updates for today.</p>
                     </div>
-                    <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                    {/* <div className="flex items-center gap-2.5 w-full sm:w-auto">
                         <Button size="default" className="shadow-sm flex-1 sm:flex-none" onClick={() => openQuickModal('CREATE_FOLLOW_UP')}>
                             <Plus className="h-4 w-4 mr-2" /> Follow-up
                         </Button>
                         <Button size="default" variant="outline" className="shadow-sm flex-1 sm:flex-none" onClick={() => openQuickModal('CREATE_MEETING')}>
                             <Plus className="h-4 w-4 mr-2" /> Meeting
                         </Button>
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Operations Counters Grid (Balanced 6 columns grid) */}

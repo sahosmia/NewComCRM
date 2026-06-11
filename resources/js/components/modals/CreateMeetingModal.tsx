@@ -1,6 +1,6 @@
 import { usePage } from '@inertiajs/react';
 import { Loader2 } from 'lucide-react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ErrorMessage from '@/components/admin/form/ErrorMessage';
 import FormLabel from '@/components/admin/form/FormLabel';
 import { GenericCombobox } from '@/components/admin/form/GenericCombobox';
@@ -16,8 +16,9 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useModalForm } from '@/hooks/use-modal-form';
-import type { SharedData, Meeting } from '@/types';
+import type { SharedData, Meeting, CustomerType } from '@/types';
 import type { CreateMeetingModalProps } from '@/types/modals';
+import CRMAssignmentSection from '../admin/form/CRMAssignmentSection';
 
 export default function CreateMeetingModal({
     isOpen,
@@ -38,6 +39,14 @@ export default function CreateMeetingModal({
     const availableCustomers = customers.length > 0 ? customers : (sharedProps.customers || []);
     const availableRequirements = requirements.length > 0 ? requirements : (sharedProps.requirements || []);
     const availableUsers = users.length > 0 ? users : (sharedProps.users || []);
+
+    const availableCompanies = sharedProps.companies || [];
+    const [localCustomers, setLocalCustomers] = useState<CustomerType[]>(availableCustomers);
+    useEffect(() => {
+        if (availableCustomers.length > 0) {
+            setLocalCustomers(availableCustomers);
+        }
+    }, [customers, sharedProps.customers]);
     const { data, setData, submit, processing, errors, reset } = useModalForm({
     customer_id: customer_id || "",
             user_id: user_id || auth.user.id,
@@ -81,49 +90,18 @@ export default function CreateMeetingModal({
                     <DialogTitle>Schedule Meeting</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4 py-4">
-                     {isSuperAdmin && (
-                        <div className="space-y-1">
-                            <GenericCombobox
-                                required
-                                label="Assign To"
-                                items={availableUsers.map(u => ({ id: u.id, name: u.name }))}
-                                selectedId={data.user_id}
-                                onSelect={(id) => setData("user_id", id as number)}
-                                placeholder="Select User"
-                                allowManualInput={false}
-                                error={errors.user_id}
-                            />
-                        </div>
-                    )}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-1">
-                            <GenericCombobox
-                                required
-                                label="Customer"
-                                items={availableCustomers.map(c => ({ ...c, name: c.full_name_with_company || c.name }))}
-                                selectedId={data.customer_id}
-                                onSelect={(id) => setData("customer_id", id as number)}
-                                placeholder="Select Customer"
-                                allowManualInput={false}
-                                error={errors.customer_id}
-                            />
-                        </div>
-                        <div className="space-y-1">
-                            <GenericCombobox
-                                label="Requirement (Optional)"
-                                items={filteredRequirements.map(r => ({ ...r, name: r.title || `Requirement #${r.id}` }))}
-                                selectedId={data.requirement_id}
-                                onSelect={(id, name, req) => {
-                                    setData("requirement_id", id as number);
-                                    if (id && req && req.customer_id !== data.customer_id) {
-                                        setData("customer_id", req.customer_id);
-                                    }
-                                }}
-                                placeholder="Select Requirement"
-                                allowManualInput={false}
-                                error={errors.requirement_id}
-                            />
-                        </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+                        <CRMAssignmentSection
+                            isSuperAdmin={isSuperAdmin}
+                            users={availableUsers}
+                            customers={localCustomers}
+                            requirements={availableRequirements}
+                            companies={availableCompanies}
+                            data={data}
+                            setData={setData}
+                            setCustomers={setLocalCustomers}
+                            errors={errors}
+                        />
                     </div>
 
                     <div className="space-y-2">

@@ -16,7 +16,7 @@ class FollowUpObserver
                 $followUp->completed_at = now();
             } else {
                 // If status is not 'done', update the follow_up_date to current date time
-                $followUp->follow_up_date = now();
+                // $followUp->follow_up_date = now();
                 $followUp->completed_at = null;
             }
         }

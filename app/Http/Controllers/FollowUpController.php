@@ -50,6 +50,7 @@ class FollowUpController extends Controller
 
     public function store(StoreFollowUpRequest $request)
     {
+        // return $request;
         $followUp = $this->followUpService->create(
             $request->validated()
         );
@@ -57,7 +58,8 @@ class FollowUpController extends Controller
         return $this->handleResponse(
             $request,
             $followUp,
-            'Follow up scheduled successfully.'
+            'Follow up scheduled successfully.',
+            'follow-ups.index'
         );
     }
 

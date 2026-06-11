@@ -16,6 +16,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useModal } from "@/contexts/ModalContext";
 import type { Company, CustomerType, FollowUp, Requirement, User } from "@/types";
+import CRMAssignmentSection from "@/components/admin/form/CRMAssignmentSection";
 
 interface Props {
     followUp?: FollowUp;
@@ -70,83 +71,17 @@ export default function FollowUpForm({ followUp, customers: initialCustomers, re
 
     return (
         <form onSubmit={submit} className="space-y-4">
-            {isSuperAdmin && (
-                <div className="space-y-1">
-                    <GenericCombobox
-                        required
-                        label="Assign To"
-                        items={users.map(u => ({ id: u.id, name: u.name }))}
-                        selectedId={data.user_id}
-                        onSelect={(id) => setData("user_id", id as number)}
-                        placeholder="Select User"
-                        searchPlaceholder="Search users..."
-                        allowManualInput={false}
-                        error={errors.user_id}
-                    />
-                </div>
-            )}
-            <div className="space-y-1">
-                <GenericCombobox
-                    required
-                    label="Customer"
-                    items={customers.map(c => ({ ...c, name: c.full_name_with_company || c.name }))}
-                    selectedId={data.customer_id}
-                    onSelect={(id) => {
-                        setData("customer_id", id as number);
-                        if (data.requirement_id) {
-                            const req = requirements.find(r => r.id === data.requirement_id);
-                            if (req && req.customer_id !== id) {
-                                setData(d => ({ ...d, customer_id: id as number, requirement_id: "" }));
-                            }
-                        }
-                    }}
-                    placeholder="Select Customer"
-                    searchPlaceholder="Search customers..."
-                    allowManualInput={false}
-                    error={errors.customer_id}
-                    renderAction={
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                openModal('CREATE_CUSTOMER', {
-                                    users: users,
-                                    companies: companies,
-                                    onSuccess: (customer: CustomerType) => {
-                                        setCustomers(prev => [...prev, customer]);
-                                        setData('customer_id', customer.id);
-                                    }
-                                });
-                            }}
-                        >
-                            <Plus className="h-4 w-4" />
-                        </Button>
-                    }
-                />
-            </div>
-
-            <div className="space-y-1">
-                <GenericCombobox
-                    label="Requirement (Optional)"
-                    items={filteredRequirements.map(r => ({ ...r, name: r.title || `Requirement #${r.id}` }))}
-                    selectedId={data.requirement_id}
-                    onSelect={(id, name, req) => {
-                        setData("requirement_id", id as number);
-                        if (id && req) {
-                            if (req.customer_id !== data.customer_id) {
-                                setData(d => ({ ...d, requirement_id: id as number, customer_id: req.customer_id }));
-                            }
-                        }
-                    }}
-                    placeholder="Select Requirement"
-                    searchPlaceholder="Search requirements..."
-                    allowManualInput={false}
-                    error={errors.requirement_id}
-                />
-            </div>
+            <CRMAssignmentSection
+                isSuperAdmin={isSuperAdmin}
+                users={users}
+                customers={customers}
+                requirements={requirements}
+                companies={companies}
+                data={data}
+                setData={setData}
+                setCustomers={setCustomers}
+                errors={errors}
+            />
 
             <div>
                 <FormLabel required>Follow Up Date</FormLabel>
