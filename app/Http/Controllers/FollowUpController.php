@@ -35,6 +35,7 @@ class FollowUpController extends Controller
             'followUps' => $this->followUpService->paginateIndex($request->all(), $user),
             'customers' => $this->lookupService->getCustomersForSelect(),
             'requirements' => $this->lookupService->getRequirementsForSelect(),
+            'users' => $this->lookupService->getUsersForSelect(),
         ]);
     }
 
