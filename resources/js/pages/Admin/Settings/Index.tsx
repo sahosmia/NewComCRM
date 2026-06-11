@@ -43,7 +43,6 @@ export default function Index({ settings }: Props) {
         office_address_2: (settings.office_address_2 as string) || '',
         office_address_3: (settings.office_address_3 as string) || '',
         footer_contact_info: (settings.footer_contact_info as string) || '',
-        pdf_sender_office_info: (settings.pdf_sender_office_info as string) || '',
         paginated_quantity: (settings.paginated_quantity as string) || '10',
     });
 
@@ -330,23 +329,6 @@ export default function Index({ settings }: Props) {
                                 />
                                 <p className="text-xs text-muted-foreground">This bar appears below the header in Quotation PDFs.</p>
                                 <InputError message={errors.branding_services_bar} />
-                            </div>
-
-                            <div className="space-y-2">
-                                <FormLabel>
-                                    <div className="flex items-center gap-1">
-                                        <UserCheck className="h-3 w-3" />
-                                        PDF Sender Info (Below Signature)
-                                    </div>
-                                </FormLabel>
-                                <Textarea
-                                    value={data.pdf_sender_office_info}
-                                    onChange={(e) => setData('pdf_sender_office_info', e.target.value)}
-                                    placeholder="Enter HTML or text for office info below sender signature..."
-                                    rows={2}
-                                />
-                                <p className="text-xs text-muted-foreground">This info appears below the sender's name and designation in PDFs.</p>
-                                <InputError message={errors.pdf_sender_office_info} />
                             </div>
 
                             <div className="grid gap-6 md:grid-cols-3">

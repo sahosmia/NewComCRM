@@ -28,7 +28,6 @@ class SettingSeeder extends Seeder
             'office_name_3' => 'Service Centre',
             'office_address_3' => "Tabas Building (Level-5), 53/2 New Elephant Road\nDhaka-1205, Bangladesh",
             'footer_contact_info' => 'E-mail: info@crystalcomputers.com.bd, Hunting: 09666733744, Mobile: 01730-495650, 01730-495651',
-            'pdf_sender_office_info' => "<strong>Corporate Office:</strong> Tower 71, Level-8, Near ECB Circle, Dhaka Cantonment, Dhaka-1206",
             'paginated_quantity' => '10',
         ];
 
