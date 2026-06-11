@@ -171,14 +171,13 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                         placeholder="Select Customer"
                                         searchPlaceholder="Search customers..."
                                         onSelect={(id) => {
-                                            setData("customer_id", id as number);
                                             const customer = customers.find(c => c.id === id);
-                                            if (customer && customer.addresses && customer.addresses.length > 0) {
-                                                setData("delivery_location", customer.addresses[0]);
-                                            }
-                                            if(customer && customer.assigned_to){
-                                                setData("user_id", customer.assigned_to);
-                                            }
+                                            setData(d => ({
+                                                ...d,
+                                                customer_id: id as number,
+                                                delivery_location: (customer && customer.addresses && customer.addresses.length > 0) ? customer.addresses[0] : d.delivery_location,
+                                                user_id: customer?.assigned_to ? Number(customer.assigned_to) : d.user_id
+                                            }));
                                         }}
                                         error={errors.customer_id}
                                         renderAction={
@@ -194,9 +193,12 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                                         companies: companies,
                                                         onSuccess: (newCustomer: CustomerType) => {
                                                             setCustomers(prev => [...prev, newCustomer]);
-                                                            setData('customer_id', newCustomer.id);
-                                                            setData("delivery_location", newCustomer.addresses[0]);
-
+                                                            setData(d => ({
+                                                                ...d,
+                                                                customer_id: newCustomer.id,
+                                                                delivery_location: (newCustomer.addresses && newCustomer.addresses.length > 0) ? newCustomer.addresses[0] : d.delivery_location,
+                                                                user_id: newCustomer.assigned_to ? Number(newCustomer.assigned_to) : d.user_id
+                                                            }));
                                                         }
                                                     });
                                                 }}
