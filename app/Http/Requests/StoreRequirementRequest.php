@@ -26,7 +26,7 @@ class StoreRequirementRequest extends FormRequest
         if ($this->has('items')) {
             $items = $this->items;
             foreach ($items as $key => $item) {
-                if (isset($item['costing_price']) && $item['costing_price'] === '') {
+                if (!isset($item['costing_price']) || $item['costing_price'] === '' || $item['costing_price'] === null) {
                     $items[$key]['costing_price'] = 0;
                 }
             }

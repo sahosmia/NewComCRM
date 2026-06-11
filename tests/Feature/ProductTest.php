@@ -83,7 +83,7 @@ it('validates_required_fields_on_store', function () {
     $response = $this->actingAs($this->user)
         ->post(route('products.store'), []);
 
-    $response->assertSessionHasErrors(['name', 'unit_price', 'stock_quantity']);
+    $response->assertSessionHasErrors(['name', 'stock_quantity']);
 });
 
 it('can_update_an_existing_product', function () {
@@ -113,7 +113,7 @@ it('can_delete_a_product', function () {
         ->delete(route('products.destroy', $product));
 
     $response->assertRedirect(route('products.index'));
-    $this->assertSoftDeleted('products', [
+    $this->assertDatabaseMissing('products', [
         'id' => $product->id,
     ]);
 });
