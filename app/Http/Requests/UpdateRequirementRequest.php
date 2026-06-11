@@ -33,6 +33,27 @@ class UpdateRequirementRequest extends FormRequest
             $this->merge(['items' => $items]);
         }
 
+
+        if ($this->has('accessories')) {
+            $accessories = $this->accessories;
+            foreach ($accessories as $key => $accessory) {
+                if (!isset($accessory['price']) || $accessory['price'] === '' || $accessory['price'] === null) {
+                    $accessories[$key]['price'] = 0;
+                }
+            }
+            $this->merge(['accessories' => $accessories]);
+        }
+
+        if ($this->has('installations')) {
+            $installations = $this->installations;
+            foreach ($installations as $key => $installation) {
+                if (!isset($installation['price']) || $installation['price'] === '' || $installation['price'] === null) {
+                    $installations[$key]['price'] = 0;
+                }
+            }
+            $this->merge(['installations' => $installations]);
+        }
+
         $this->merge([
             'costing_price' => ($this->costing_price === '' || is_null($this->costing_price)) ? 0 : $this->costing_price,
             'ait_percentage' => ($this->ait_percentage === '' || is_null($this->ait_percentage)) ? 0 : $this->ait_percentage,

@@ -85,6 +85,7 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                                 </div>
                                 <div className="space-y-2 col-span-2">
                                     <GenericCombobox
+                                    required
                                         label="Unit"
                                         items={units.map(u => ({ ...u, name: u.short_form }))}
                                         selectedId={item.unit_id}

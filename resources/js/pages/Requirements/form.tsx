@@ -136,6 +136,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
+        console.log(data);
         requirement ? put(route("requirements.update", requirement.id)) : post(route("requirements.store"));
     };
 
