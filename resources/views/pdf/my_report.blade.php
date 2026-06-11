@@ -82,39 +82,69 @@
 
 
         .signature-wrapper {
-            margin-top: 20px;
+            margin-top: 30px;
             position: relative;
-            font-family: Arial, sans-serif;
-            font-size: 13px;
-            line-height: 1.5;
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            font-size: 14px;
+            line-height: 1.35;
             color: #000;
         }
 
-        .signature-container {
-            position: relative;
-            height: 100px;
+        .regards-text {
+            margin: 0 0 15px 0;
+            font-size: 14px;
+        }
+
+        /* This structural wrapper layer lets assets float beneath the textual structure */
+        .graphics-container {
+            position: absolute;
+            top: 15px;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            pointer-events: none;
+            /* Keeps text selectable in browser viewports */
         }
 
         .sig-img {
             position: absolute;
-            left: 0;
-            top: 20px;
-            width: 150px;
-            z-index: 2;
+            left: 5px;
+            top: 5px;
+            width: 100px;
+            z-index: 1;
         }
 
         .seal-img {
             position: absolute;
             left: 80px;
-            top: 0px;
-            width: 110px;
-            z-index: 1;
-            opacity: 0.8;
+            /* Aligned precisely near the designation text start shift */
+            top: -15px;
+            /* Raised slightly upward to bleed behind 'With Thanks' and the name */
+            width: 100px;
+            /* Expanded scaling size to correctly bleed edge to edge across elements */
+            z-index: 2;
+            opacity: 0.85;
         }
 
         .info-text {
-            margin-top: 10px;
-            clear: both;
+            position: relative;
+            z-index: 5;
+            /* Forces text to explicitly render dynamically above image layers */
+            margin-top: 40px;
+        }
+
+        /* Typography specifics matching the weight patterns in the image */
+        .sender-name {
+            font-size: 15px;
+            font-weight: normal;
+        }
+
+        .sender-designation {
+            font-weight: normal;
+        }
+
+        .company-name {
+            font-weight: normal;
         }
 
         .office-info {
@@ -145,13 +175,8 @@
 
         .subject-red {
             color: #C00000;
-            /* গাঢ় লাল */
             font-weight: bold;
         }
-
-
-
-
 
         .terms-section {
             font-family: 'Helvetica', 'Arial', sans-serif;
@@ -169,14 +194,16 @@
         }
 
         .terms-list {
-            list-style-type: none;
-            padding: 0;
+            /* list-style-type: none; */
+            padding-left: 20px;
             margin: 0;
         }
 
         .terms-list li {
-            margin-bottom: 8px;
+            margin-bottom: 2px;
             text-align: justify;
+            font-size: 14px;
+
         }
 
         .terms-list span.term-head {
@@ -213,7 +240,6 @@
 
         .product-table th {
             background-color: #595959;
-            /* ধূসর ব্যাকগ্রাউন্ড */
             color: white;
             border: 1px solid #000;
             padding: 8px;
@@ -234,7 +260,6 @@
             text-align: right;
         }
 
-        /* টোটাল সেকশনের জন্য বিশেষ স্টাইল */
         .total-row td {
             font-weight: bold;
             background-color: #f9f9f9;
@@ -290,7 +315,7 @@
             color: white;
             text-align: center;
             padding: 5px 0;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: bold;
             border: 1px solid rgb(168, 168, 168);
             border-right: none;
@@ -319,31 +344,35 @@
         <table class="header-top">
             <tr>
                 <td class="logo-section">
-                    @if($header_logo_1)
-                    <img src="{{ $header_logo_1 }}" style="width: 100;">
+                    @if ($header_logo_1)
+                        <img src="{{ $header_logo_1 }}" style="width: 100;">
                     @endif
                 </td>
                 <td class="company-name-section">
-                    @if($header_logo_2)
-                    <img src="{{ $header_logo_2 }}" style="width: 100%;">
+                    @if ($header_logo_2)
+                        <img src="{{ $header_logo_2 }}" style="width: 100%;">
                     @else
-                    <h1 style="color: #A52A2A; margin: 0;">{{ setting('app_name', 'Crystal Vision Solutions') }}</h1>
+                        <h1 style="color: #A52A2A; margin: 0;">{{ setting('app_name', 'Crystal Vision Solutions') }}</h1>
                     @endif
                 </td>
                 <td class="contact-section">
-                    <a href="{{ setting('website_url', 'http://www.crystalcomputers.com.bd') }}">{{ str_replace(['http://', 'https://'], '', setting('website_url', 'www.crystalcomputers.com.bd')) }}</a><br>
-                    <span style="color: #A52A2A; font-weight: bold; letter-spacing: -1px;">{{ setting('branding_slogan', 'LEADING ICT AND SECURITY SERVICES PROVIDER') }}</span>
+                    <a
+                        href="{{ setting('website_url', 'http://www.crystalcomputers.com.bd') }}">{{ str_replace(['http://', 'https://'], '', setting('website_url', 'www.crystalcomputers.com.bd')) }}</a><br>
+                    <span
+                        style="color: #A52A2A; font-weight: bold; letter-spacing: -1px;">{{ setting('branding_slogan', 'LEADING ICT AND SECURITY SERVICES PROVIDER') }}</span>
                 </td>
             </tr>
         </table>
 
         <div class="service-bar">
-            @if(setting('branding_services_bar'))
+            @if (setting('branding_services_bar'))
                 @php
                     $services = explode('|', setting('branding_services_bar'));
                 @endphp
-                @foreach($services as $index => $service)
-                    {{ trim($service) }}@if($index < count($services) - 1) <span>|</span> @endif
+                @foreach ($services as $index => $service)
+                    {{ trim($service) }}@if ($index < count($services) - 1)
+                        <span>|</span>
+                    @endif
                 @endforeach
             @else
                 Server <span>|</span>
@@ -374,7 +403,9 @@
             </div>
 
             <div class="subject-line">
-                <span>Subject: Technical & Comercial Proposal for Supply {{ $requirement->has_installation ? 'and Installation' : '' }} {{ $requirement->title ?? 'Required Items' }}</span>.
+                <span>Subject: Technical & Comercial Proposal for Supply
+                    {{ $requirement->has_installation ? 'and Installation' : '' }}
+                    {{ $requirement->title ?? 'Required Items' }}</span>.
             </div>
             <p>Dear Sir,
                 <br />
@@ -383,7 +414,8 @@
                 requirements.
                 <br /><br />
 
-                We, {{ setting('app_name', 'Crystal Vision Solutions') }}, are an experienced and trusted importer, supplier, and system integrator
+                We, {{ setting('app_name', 'Crystal Vision Solutions') }}, are an experienced and trusted importer,
+                supplier, and system integrator
                 of IT, networking equipment, and server solutions in Bangladesh. We are committed to delivering
                 genuine branded products, ensuring quality, reliability, and comprehensive after-sales service
                 support.
@@ -403,37 +435,34 @@
             </p>
 
             <div class="signature-wrapper">
-                <p style="margin-bottom: 5px;">With Thanks and Best Regards,</p>
+                <p class="regards-text">With Thanks and Best Regards</p>
 
-                <div class="signature-container">
+                <div class="graphics-container">
                     @if ($signature)
-                        <img src="{{ $signature }}" class="sig-img">
+                        <img src="{{ $signature }}" class="sig-img" alt="Signature">
                     @endif
 
                     @if ($seal)
-                        <img src="{{ $seal }}" class="seal-img">
+                        <img src="{{ $seal }}" class="seal-img" alt="Seal">
                     @endif
                 </div>
 
                 <div class="info-text">
                     @php
-                        $sender = $requirement->quotationSender ?? $requirement->customer->assignedUser;
+                        $sender = $requirement->quotationSender ?? $requirement->user;
                     @endphp
-                    <strong>{{ $sender->name }}</strong><br>
-                    {{ $sender->designation }}<br>
-                    <strong>{{ setting('app_name', 'Crystal Vision Solutions') }}</strong><br>
-                    M: +88{{ $sender->phone }} | +88{{ setting('support_whatsapp', '01911-561554') }}
-                    (WhatsApp);<br>
-                    E-mail: {{ $sender->email }} |
-                    {{ setting('email', 'crystalsolutionsbd@gmail.com') }}
+                    <span class="sender-name">{{ $sender->name }}</span><br>
+                    @if ($sender->designation)
+                        <span class="sender-designation">{{ $sender->designation }}</span><br>
+                    @endif
+                    <span class="company-name">{{ setting('app_name', 'Crystal Vision Solutions') }}</span><br>
 
-                    <div class="office-info">
-                        @if(setting('pdf_sender_office_info'))
-                            {!! nl2br(setting('pdf_sender_office_info')) !!}
-                        @else
-                            <strong>Corporate Office:</strong> Tower 71, Level-8, Near ECB Circle, Dhaka Cantonment, Dhaka-1206
-                        @endif
-                    </div>
+                    M:
+                    {{ $sender->phone ? '+88' . $sender->phone . ' | ' : '' }}+88{{ setting('support_whatsapp', '01911-561554') }}
+                    (WhatsApp)<br>
+
+                    Mail: {{ $sender->email }} | {{ setting('email', 'crystalsolutionsbd@gmail.com') }}<br>
+                    Website: {{ setting('website', 'crystalcomputers.com.bd') }}
                 </div>
             </div>
 
@@ -443,6 +472,15 @@
         <div class="page-break"></div> <!-- Forced Page Break -->
 
         <div style="margin: -20px 28px 0; text-align: justify; font-size: 15px;">
+
+            <div>
+                <div>
+Quotation No: CVS/QTN/{{ date('Y') }}/{{ date('m') }}/{{ str_pad($requirement->id, 4, '0', STR_PAD_LEFT) }}                </div>
+                <div>
+                    Date: {{ date('d F Y', strtotime($date)) }}
+                </div>
+
+            </div>
 
             <div class="pricing-header">Product Details & Pricing</div>
 
@@ -588,7 +626,7 @@
                         $currentSl = count($requirement->items);
                     @endphp
                     @if ($requirement->has_accessories)
-                        @foreach($requirement->accessories as $accessory)
+                        @foreach ($requirement->accessories as $accessory)
                             <tr>
                                 <td class="text-center">{{ str_pad($currentSl + 1, 2, '0', STR_PAD_LEFT) }}</td>
                                 <td> {{ $accessory->title }}</td>
@@ -605,12 +643,13 @@
                         @endforeach
                     @endif
                     @if ($requirement->has_installation)
-                        @foreach($requirement->installations as $installation)
+                        @foreach ($requirement->installations as $installation)
                             <tr>
                                 <td class="text-center">{{ str_pad($currentSl + 1, 2, '0', STR_PAD_LEFT) }}</td>
                                 <td> {{ $installation->title }}</td>
                                 <td class="text-center">{{ $installation->quantity }}
-                                    {{ $installation->unit->title ?? ($installation->unit->short_form ?? 'Unit') }}</td>
+                                    {{ $installation->unit->title ?? ($installation->unit->short_form ?? 'Unit') }}
+                                </td>
                                 <td class="text-right">{{ number_format($installation->price, 0) }}</td>
                                 <td class="text-right">
                                     {{ number_format($installation->total_price, 0) }}/=
@@ -639,7 +678,8 @@
                     </tr>
                     <tr class="total-row">
                         <td class="text-right">VAT Amount</td>
-                        <td class="text-right">{{ number_format($grandTotal * ($requirement->vat_percentage / 100), 0) }}/=</td>
+                        <td class="text-right">
+                            {{ number_format($grandTotal * ($requirement->vat_percentage / 100), 0) }}/=</td>
                     </tr>
                     <tr class="total-row">
                         <td class="text-right">Grand Total</td>
@@ -650,26 +690,34 @@
                 </tbody>
             </table>
             <div class="signature-wrapper">
-                <p style="margin-bottom: 5px; font-weight: bold;">Thanks & Regards</p>
+                <p class="regards-text">With Thanks and Best Regards</p>
 
-                <div class="signature-container">
+                <div class="graphics-container">
                     @if ($signature)
-                        <img src="{{ $signature }}" class="sig-img">
+                        <img src="{{ $signature }}" class="sig-img" alt="Signature">
                     @endif
 
                     @if ($seal)
-                        <img src="{{ $seal }}" class="seal-img">
+                        <img src="{{ $seal }}" class="seal-img" alt="Seal">
                     @endif
                 </div>
 
                 <div class="info-text">
                     @php
-                        $sender = $requirement->quotationSender ?? $requirement->customer->assignedUser;
+                        $sender = $requirement->quotationSender ?? $requirement->user;
                     @endphp
-                    <strong>{{ $sender->name }}</strong><br>
-                    {{ $sender->designation }}<br>
-                    <strong>{{ setting('app_name', 'Crystal Vision Solutions') }}</strong><br>
+                    <span class="sender-name">{{ $sender->name }}</span><br>
+                    @if ($sender->designation)
+                        <span class="sender-designation">{{ $sender->designation }}</span><br>
+                    @endif
+                    <span class="company-name">{{ setting('app_name', 'Crystal Vision Solutions') }}</span><br>
 
+                    M:
+                    {{ $sender->phone ? '+88' . $sender->phone . ' | ' : '' }}+88{{ setting('support_whatsapp', '01911-561554') }}
+                    (WhatsApp)<br>
+
+                    Mail: {{ $sender->email }} | {{ setting('email', 'crystalsolutionsbd@gmail.com') }}<br>
+                    Website: {{ setting('website', 'crystalcomputers.com.bd') }}
                 </div>
             </div>
         </div>
@@ -682,79 +730,81 @@
                 <div class="terms-title">Terms & Condition:</div>
 
                 <ol class="terms-list">
-                    <li>
-                        <span class="term-head">1. Price Validity:</span> This quotation is valid for
-                        {{ $requirement->price_validity_days ?? '______' }} days from the
+                    <li>Price Validity:This quotation is valid for
+                        <span class="term-head">{{ $requirement->price_validity_days ?? '______' }} days </span> from
+                        the
                         date of issue.
                     </li>
                     <li>
-                        <span class="term-head">2. Price Change:</span> Price may be changed based on the currency
-                        conversion rate (Global USD and RMB) at any time by {{ setting('app_name', 'Crystal Vision Solutions') }}.
+                        Price Change: Price may be changed based on the currency
+                        conversion rate (Global USD and RMB) at any time by
+                        {{ setting('app_name', 'Crystal Vision Solutions') }}.
                     </li>
                     <li>
-                        <span class="term-head">3. Delivery Time:</span> Delivery will be completed within
-                        {{ $requirement->delivery_time_days ?? '______' }} days/weeks
+                        Delivery Time: Delivery will be completed within
+                        <span class="term-head">{{ $requirement->delivery_time_days ?? '______' }} days</span>
                         after receiving confirmed Purchase Order (PO) and advance payment (if applicable).
                     </li>
                     <li>
-                        <span class="term-head">4. Payment Terms:</span>
-                        {{ $requirement->advance_payment ?? '______' }}% Advance with Purchase Order
+                        Payment Terms:
+                        <span class="term-head"> {{ $requirement->advance_payment ?? '______' }}% Advance </span> with
+                        Purchase Order
+
                         @if ($requirement->before_payment > 0)
-                            {{ $requirement->before_payment }}% Before Delivery.
+                            <span class="term-head"> {{ $requirement->before_payment }}% Before
+                                Delivery/Installation</span> (Or as mutually agreed).
                         @elseif($requirement->after_payment > 0)
-                            {{ $requirement->after_payment }}% After Installation / Delivery.
+                            <span class="term-head"> {{ $requirement->after_payment }}% After Installation / Delivery.
+                            </span>
                         @else
-                            ______% Before Delivery / After Installation (Or as mutually agreed).
+                            <span class="term-head"> ______% Before Delivery / After Installation (Or as mutually
+                                agreed). </span>
                         @endif
                     </li>
-                    <li>
-                        <span class="term-head">5. Payment Method:</span> Cash / Bank transfer / Cheque to be made
-                        favoring
-                        "{{ setting('app_name', 'Crystal Vision Solutions') }}".
+                    <li>Payment Method: Cash / Bank transfer to be made favoring
+                        "{{ setting('app_name', 'Crystal Vision Solutions') }}".</li>
+                    <li>Order Confirmation Policy: No order will be processed, confirmed, or scheduled for
+                        delivery until the agreed advance payment is received. Delivery timelines will be counted
+                        from the date of advance payment realization</li>
+                    <li>Warranty: Standard Manufacturer Warranty covers as per Brand/OEM.</li>
+                    <li>Installation & Commissioning: Installation and configuration will be provided (if included).
                     </li>
-                    <li>
-                        <span class="term-head">6. Order Confirmation Policy:</span> No order will be processed,
-                        confirmed,
-                        or scheduled for delivery until the agreed advance payment is received. Delivery timelines will
-                        be
-                        counted from the date of advance payment realization.
-                    </li>
-                    <li>
-                        <span class="term-head">7. Warranty:</span> Standard Manufacturer Warranty covers as per
-                        Brand/OEM.
-                    </li>
-                    <li>
-                        <span class="term-head">8. Installation & Commissioning:</span> Installation and configuration
-                        will
-                        be provided (if applicable).
-                    </li>
-                    <li>
-                        <span class="term-head">9. After Sales Support:</span> We ensure technical support and service
-                        during the warranty period.
-                    </li>
-                    <li>
-                        <span class="term-head">10. Delivery Location:</span> Delivery will be made at your <span
-                            class="red-text"> {{ $requirement->delivery_location ?? 'specified location' }} </span>.
+                    <li>After Sales Support: We ensure technical support and service during the warranty period.</li>
+                    <li>Delivery Location: Delivery will be made at your <span
+                            class="term-head">{{ $requirement->delivery_location ?? 'specified location' }} </span>.
                     </li>
 
-                    <li>
-                        <span class="term-head">11. Taxes & Duties:</span> All prices are <span
+                    <li>Taxes & Duties: All prices are <span
                             class="red-text">{{ $requirement->vat_percentage > 0 ? 'inclusive' : 'exclusive' }} of VAT,
-                            AIT,</span> and duties (mention clearly).
-                    </li>
-                    <li>
-                        <span class="term-head">12. Cancellation Policy:</span> Order once confirmed cannot be canceled
-                        without mutual agreement.
-                    </li>
-                    <li>
-                        <span class="term-head">13. Change Policy:</span> Overseas Items as per customer demand cannot
-                        be
-                        Changeable.
-                    </li>
-                    <li>
-                        <span class="term-head">14. Force Majeure:</span> Delivery may be delayed due to circumstances
+                            AIT,</span> and duties (mention clearly).</li>
+                    <li>Cancellation Policy: Order once confirmed cannot be canceled without mutual agreement.</li>
+                    <li>Change Policy: Overseas Items as per customer demand cannot be Changeable. </li>
+                    <li>Force Majeure: Delivery may be delayed due to circumstances
                         beyond our control, including customs delays, freight issues, weather conditions, or other
                         unforeseen events.
+                    </li>
+                    <li>Warranty Process:
+
+                        <ul>
+                            <li> Customer must report the issue with detailed description or video through email.
+                            </li>
+                            <li> Physical/remote diagnostics may be conducted to confirm the fault.
+                            </li>
+                            <li> Once confirmed, replacement/repair process will begin based on availability.
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        16. Exclusions:
+                        <br>
+                        The warranty does not cover:
+                        <br>
+                        <ul>
+                            <li>Damage caused by misuse, improper installation, or external factors </li>
+                            <li>Unauthorized modifications or repairs </li>
+                            <li>Software-related issues</li>
+                            <li>Physical damage, power surges, or environmental damage </li>
+                        </ul>
                     </li>
                 </ol>
 
@@ -780,15 +830,24 @@
             <tr>
                 <td>
                     <span class="branch-name">{{ setting('office_name_1', 'Elephant Road Branch') }}</span>
-                    {!! nl2br(setting('office_address_1', "Tabas Building (Level-5), 53/2 New Elephant Road\nDhaka-1205, Bangladesh")) !!}
+                    {!! nl2br(
+                        setting('office_address_1', "Tabas Building (Level-5), 53/2 New Elephant Road\nDhaka-1205, Bangladesh"),
+                    ) !!}
                 </td>
                 <td>
                     <span class="branch-name">{{ setting('office_name_2', 'Corporate Office') }}</span>
-                    {!! nl2br(setting('office_address_2', "Tower 71 (Level-8, C-9), 516/3 South Manikdi, Near ECB Circle\nDhaka Cantonment, Dhaka-1206, Bangladesh")) !!}
+                    {!! nl2br(
+                        setting(
+                            'office_address_2',
+                            "Tower 71 (Level-8, C-9), 516/3 South Manikdi, Near ECB Circle\nDhaka Cantonment, Dhaka-1206, Bangladesh",
+                        ),
+                    ) !!}
                 </td>
                 <td>
                     <span class="branch-name">{{ setting('office_name_3', 'Service Centre') }}</span>
-                    {!! nl2br(setting('office_address_3', "Tabas Building (Level-5), 53/2 New Elephant Road\nDhaka-1205, Bangladesh")) !!}
+                    {!! nl2br(
+                        setting('office_address_3', "Tabas Building (Level-5), 53/2 New Elephant Road\nDhaka-1205, Bangladesh"),
+                    ) !!}
                 </td>
             </tr>
         </table>

@@ -115,7 +115,8 @@ class RequirementService
             'accessories.unit',
             'installations.unit',
             'quotationRecipient.company',
-            'quotationSender'
+            'quotationSender',
+            'user',
         ]);
 
         $data = [

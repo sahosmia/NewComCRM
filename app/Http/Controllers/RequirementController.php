@@ -147,6 +147,7 @@ class RequirementController extends Controller
 
     public function downloadPdf(Requirement $requirement)
     {
+        // return setting('secondary_logo');
         return $this->requirementService->generatePdf($requirement)
             ->stream('Quotation_' . $requirement->id . '.pdf');
     }
