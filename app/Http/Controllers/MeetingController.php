@@ -31,6 +31,7 @@ class MeetingController extends Controller
             'meetings' => $this->meetingService->paginateIndex($request->all()),
             'customers' => $this->lookupService->getCustomersForSelect(),
             'requirements' => $this->lookupService->getRequirementsForSelect(),
+            'users' => $this->lookupService->getUsersForSelect(),
         ]);
     }
 

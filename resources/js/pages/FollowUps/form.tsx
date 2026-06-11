@@ -92,13 +92,13 @@ export default function FollowUpForm({ followUp, customers: initialCustomers, re
                     items={customers.map(c => ({ ...c, name: c.full_name_with_company || c.name }))}
                     selectedId={data.customer_id}
                     onSelect={(id) => {
-                        setData("customer_id", id as number);
-                        if (data.requirement_id) {
-                            const req = requirements.find(r => r.id === data.requirement_id);
-                            if (req && req.customer_id !== id) {
-                                setData(d => ({ ...d, customer_id: id as number, requirement_id: "" }));
-                            }
-                        }
+                        const customer = customers.find(c => c.id === id);
+                        setData(d => ({
+                            ...d,
+                            customer_id: id as number,
+                            user_id: customer?.assigned_to ? Number(customer.assigned_to) : d.user_id,
+                            requirement_id: (d.requirement_id && requirements.find(r => r.id === d.requirement_id)?.customer_id !== id) ? "" : d.requirement_id
+                        }));
                     }}
                     placeholder="Select Customer"
                     searchPlaceholder="Search customers..."
@@ -117,7 +117,11 @@ export default function FollowUpForm({ followUp, customers: initialCustomers, re
                                     companies: companies,
                                     onSuccess: (customer: CustomerType) => {
                                         setCustomers(prev => [...prev, customer]);
-                                        setData('customer_id', customer.id);
+                                        setData(d => ({
+                                            ...d,
+                                            customer_id: customer.id,
+                                            user_id: customer.assigned_to ? Number(customer.assigned_to) : d.user_id
+                                        }));
                                     }
                                 });
                             }}
