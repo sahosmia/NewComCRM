@@ -14,7 +14,7 @@ class SaleSeeder extends Seeder
 
         $purchasedRequirements = Requirement::where('status', 'purchased')->get();
 
-        foreach ($purchasedRequirements->take(500) as $requirement) {
+        foreach ($purchasedRequirements->take(50) as $requirement) {
             $saleDate = $requirement->created_at->addDays(rand(1, 10));
             Sale::create([
                 'requirement_id' => $requirement->id,

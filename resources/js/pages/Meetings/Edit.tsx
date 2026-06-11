@@ -18,12 +18,12 @@ export default function Edit({ meeting, customers, requirements, users, companie
 
             <div className="p-6">
                 <h1 className="text-xl font-bold mb-4">Edit Meeting</h1>
-                <div className="bg-card p-6 border rounded-lg shadow-sm  max-w-2xl mx-auto">
-                    <MeetingForm 
-                        meeting={meeting} 
-                        customers={customers} 
-                        requirements={requirements} 
-                        users={users} 
+                <div className="bg-card p-6 border rounded-lg shadow-sm  max-w-2xl">
+                    <MeetingForm
+                        meeting={meeting}
+                        customers={customers}
+                        requirements={requirements}
+                        users={users}
                         companies={companies}
                     />
                 </div>

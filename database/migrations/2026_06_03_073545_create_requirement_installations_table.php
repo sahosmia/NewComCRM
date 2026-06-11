@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('title');
             $table->integer('quantity');
             $table->foreignId('unit_id')->nullable()->constrained('units')->onDelete('set null');
-            $table->decimal('price', 12, 2);
+            $table->decimal('price', 12, 2)->nulable();
             $table->decimal('total_price', 12, 2);
             $table->timestamps();
         });

@@ -80,11 +80,27 @@ export default function CreateProductModal({ isOpen, onClose, onSuccess, units =
                             <Input value={data.category} onChange={e => setData("category", e.target.value)} placeholder="Category" />
                             <ErrorMessage message={errors.category} />
                         </div>
-                        <div className="space-y-2">
+                        
+                         <div className="space-y-2">
                             <FormLabel required>Stock Quantity</FormLabel>
                             <Input type="number" value={data.stock_quantity} onChange={e => setData("stock_quantity", e.target.value)} placeholder="0" />
                             <ErrorMessage message={errors.stock_quantity} />
                         </div>
+
+                        {/* Supplier name  */}
+                        <div className="space-y-2">
+                            <FormLabel>Supplier Name</FormLabel>
+                            <Input value={data.supplier_name} onChange={e => setData("supplier_name", e.target.value)} placeholder="Supplier Name" />
+                            <ErrorMessage message={errors.supplier_name} />
+                        </div>
+
+                        {/* Source */}
+                        <div className="space-y-2">
+                            <FormLabel>Source</FormLabel>
+                            <Input value={data.source} onChange={e => setData("source", e.target.value)} placeholder="Source" />
+                            <ErrorMessage message={errors.source} />
+                        </div>
+
                     </div>
                     <div className="space-y-2">
                         <FormLabel>Description</FormLabel>

@@ -17,10 +17,10 @@ import type { Meeting, FollowUp, CustomerType, Requirement } from '@/types';
 interface DashboardProps {
     meetings: { today: Meeting[]; upcoming: Meeting[]; today_count: number; upcoming_count: number };
     followUps: { today: FollowUp[]; upcoming: FollowUp[]; today_count: number; upcoming_count: number };
-    sales: { today_count: number; today_amount: number; upcoming_count: number; upcoming_amount: number; total_count: number; total_amount: number };
+    sales: { today_count: number; today_amount: number; total_count: number; total_amount: number };
     customers: { today_count: number; total_count: number; list: CustomerType[] };
     birthdays: { today: CustomerType[]; this_month: CustomerType[]; today_count: number; month_count: number };
-    requirements: { today_count: number; upcoming_count: number; list: Requirement[] };
+    requirements: { today_count: number; total_count: number; list: Requirement[] };
     chartData: any[];
 }
 
@@ -28,14 +28,7 @@ const breadcrumbs: BreadcrumbItem[] = [{ title: 'Dashboard', href: dashboard().u
 
 export default function Dashboard({ meetings, followUps, sales, customers, birthdays, requirements, chartData }: DashboardProps) {
     const { openModal } = useModal();
-    console.log(
-        "meeting:", meetings,
-        "followUps:", followUps,
-        "sales:", sales,
-        "customers:", customers,
-        "birthdays:", birthdays,
-        "requirements:", requirements,
-    );
+    
 
 
     const formatCurrency = (amount: number) => {
@@ -72,9 +65,9 @@ export default function Dashboard({ meetings, followUps, sales, customers, birth
                 </div>
 
                 {/* Operations Counters Grid (Balanced 6 columns grid) */}
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     <StatCard title="Today Requirements" value={requirements.today_count} icon="file-text" color="cyan" link="/requirements?period=today" />
-                    <StatCard title="Upcoming Requirements" value={requirements.upcoming_count} icon="calendar" color="rose" link="/requirements?period=upcoming" />
+                    <StatCard title="Total Requirements" value={requirements.total_count} icon="calendar" color="rose" link="/requirements?period=total" />
                     <StatCard title="Today Follow up" value={followUps.today_count} icon="clock" color="yellow" link="/follow-ups?period=today" />
                     <StatCard title="Upcoming Follow up" value={followUps.upcoming_count} icon="bell" color="orange" link="/follow-ups?period=upcoming" />
                     <StatCard title="Today Meetings" value={meetings.today_count} icon="shopping-cart" color="blue" link="/meetings?period=today" />
@@ -84,7 +77,7 @@ export default function Dashboard({ meetings, followUps, sales, customers, birth
                 {/* Financial & Customer Core Metrics */}
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     <StatCard title="Today's Sales" value={formatCurrency(sales.today_amount)} description={`${sales.today_count} Items`} icon="dollar" color="purple" link="/sales?period=today" />
-                    <StatCard title="Upcoming Sales" value={formatCurrency(sales.upcoming_amount)} description={`${sales.upcoming_count} Items`} icon="shopping-cart" color="blue" link="/sales?period=upcoming" />
+                    <StatCard title="Total Sales" value={formatCurrency(sales.total_amount)} description={`${sales.total_count} Items`} icon="shopping-cart" color="blue" link="/sales?period=total" />
                     <StatCard title="New Customer (Today)" value={customers.today_count} description="Registered today" icon="users" color="green" link="/customers?period=today" />
                     <StatCard title="Total Customer" value={customers.total_count} description="Registered total" icon="users" color="slate" link="/customers?period=total" />
                 </div>

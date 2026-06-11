@@ -16,6 +16,8 @@ export default function RequirementIndex({ requirements }: Props) {
     ];
 
 
+
+
     const filters: FilterOption[] = [
         {
             name: 'date_range',
@@ -26,8 +28,8 @@ export default function RequirementIndex({ requirements }: Props) {
 
     const sortOptions: SortOption[] = [
         { label: 'Newest First', sort: 'created_at', direction: 'desc' },
-        { label: 'Quantity', sort: 'quantity', direction: 'desc' },
-        { label: 'Total Price', sort: 'total_price', direction: 'desc' },
+        // { label: 'Quantity', sort: 'quantity', direction: 'desc' },
+        { label: 'Total Price', sort: 'grand_total', direction: 'desc' },
     ];
 
     return (

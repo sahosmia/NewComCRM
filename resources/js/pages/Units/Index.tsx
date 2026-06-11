@@ -2,9 +2,8 @@ import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import AppLayout from '@/layouts/app-layout';
-import type { PaginationType, SortOption } from '@/types';
+import type { PaginationType, SortOption, Unit } from '@/types';
 import { columns } from './columns';
-import type { Unit } from '@/types/unit';
 
 interface Props {
     units: PaginationType<Unit>;
@@ -39,7 +38,7 @@ export default function UnitIndex({ units }: Props) {
                     sortOptions={sortOptions}
                     routeName="units.index"
                     create_route="units.create"
-                                        bulkDeleteRoute="units.bulkDestroy"
+                    bulkDeleteRoute="units.bulkDestroy"
 
                 />
             </div>

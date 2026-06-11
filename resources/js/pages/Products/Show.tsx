@@ -1,16 +1,5 @@
 import { Head, Link } from "@inertiajs/react";
-import {
-    Edit,
-    Package,
-    Layers,
-    Tag,
-    Truck,
-    CircleDollarSign,
-    Box,
-    FileText,
-    ExternalLink,
-    ShieldCheck
-} from "lucide-react";
+import { Edit, Layers, Truck, CircleDollarSign, Box, FileText, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -53,7 +42,7 @@ export default function Show({ product }: { product: Product }) {
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
-                            
+
                             <div className="space-y-4">
                                 <InfoItem icon={<Layers className="w-4 h-4" />} label="Category" value={product.category} />
                                 <InfoItem icon={<Truck className="w-4 h-4" />} label="Supplier" value={product.supplier_name} />

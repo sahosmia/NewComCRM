@@ -26,7 +26,7 @@ interface Props {
 }
 
 export default function MeetingForm({ meeting, customers: initialCustomers, requirements, users, companies }: Props) {
-     const { auth } = usePage().props as any;
+    const { auth } = usePage().props as any;
     const isSuperAdmin = auth.user.role === 'super_admin';
 
     const { openModal } = useModal();
@@ -65,21 +65,7 @@ export default function MeetingForm({ meeting, customers: initialCustomers, requ
 
     return (
         <form onSubmit={submit} className="space-y-4">
-               {isSuperAdmin && (
-                <div className="space-y-1">
-                    <GenericCombobox
-                        required
-                        label="Assign To"
-                        items={users.map(u => ({ id: u.id, name: u.name }))}
-                        selectedId={data.user_id}
-                        onSelect={(id) => setData("user_id", id as number)}
-                        placeholder="Select User"
-                        searchPlaceholder="Search users..."
-                        allowManualInput={false}
-                        error={errors.user_id}
-                    />
-                </div>
-            )}
+
             <div className="space-y-1">
                 <GenericCombobox
                     required
@@ -88,12 +74,16 @@ export default function MeetingForm({ meeting, customers: initialCustomers, requ
                     selectedId={data.customer_id}
                     onSelect={(id) => {
                         setData("customer_id", id as number);
+
                         if (data.requirement_id) {
                             const req = requirements.find(r => r.id === data.requirement_id);
                             if (req && req.customer_id !== id) {
                                 setData(d => ({ ...d, customer_id: id as number, requirement_id: "" }));
                             }
                         }
+                        
+
+
                     }}
                     placeholder="Select Customer"
                     searchPlaceholder="Search customers..."
@@ -123,6 +113,8 @@ export default function MeetingForm({ meeting, customers: initialCustomers, requ
                 />
             </div>
 
+
+
             <div className="space-y-1">
                 <GenericCombobox
                     label="Requirement (Optional)"
@@ -144,6 +136,22 @@ export default function MeetingForm({ meeting, customers: initialCustomers, requ
 
                 />
             </div>
+
+            {isSuperAdmin && (
+                <div className="space-y-1">
+                    <GenericCombobox
+                        required
+                        label="Assign To"
+                        items={users.map(u => ({ id: u.id, name: u.name }))}
+                        selectedId={data.user_id}
+                        onSelect={(id) => setData("user_id", id as number)}
+                        placeholder="Select User"
+                        searchPlaceholder="Search users..."
+                        allowManualInput={false}
+                        error={errors.user_id}
+                    />
+                </div>
+            )}
 
             <div>
                 <FormLabel required>Title</FormLabel>

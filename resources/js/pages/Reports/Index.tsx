@@ -1,13 +1,5 @@
 import { Head, router } from "@inertiajs/react";
-import {
-    Users,
-    Calendar,
-    MessageSquare,
-    Video,
-    TrendingUp,
-    Filter,
-    FileText,
-} from "lucide-react";
+import { Users, MessageSquare, Video, TrendingUp, Filter, FileText } from "lucide-react";
 import { useState } from "react";
 import Pagination from "@/components/admin/Pagination";
 import StatusBadge from "@/components/shared/StatusBadge";

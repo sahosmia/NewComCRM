@@ -114,7 +114,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::delete('bulk-destroy', 'bulkDestroy')->name('bulkDestroy');
         });
     });
-    Route::resource('companies', CompanyController::class)->except(['show']);
+    Route::resource('companies', CompanyController::class);
 
     Route::prefix('units')->name('units.')->group(function () {
         Route::controller(UnitController::class)->group(function () {

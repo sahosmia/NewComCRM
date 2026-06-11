@@ -40,7 +40,6 @@ class RequirementController extends Controller
     {
         $this->authorize('create', Requirement::class);
 
-
    return Inertia::render('Requirements/Create', [
             'customers' => $this->lookupService->getCustomersForRequirementForm(),
             'products'  => $this->lookupService->getProductsForSelect(),

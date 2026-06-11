@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Concerns;
 
+use Illuminate\Validation\Rule;
+
 trait ValidatesCompanyAttributes
 {
     /**
@@ -9,11 +11,19 @@ trait ValidatesCompanyAttributes
      */
     protected function companyAttributeRules(): array
     {
-        $companyId = $this->route('company') ? $this->route('company')->id : null;
+        // $companyId = $this->route('company') ? $this->route('company')->id : null;
+        $company = $this->route('company');
+
+        $companyId = is_object($company) ? $company->id : $company;
 
 
-        return [
-            'name' => 'required|string|max:255|unique:companies,name,' . $companyId,
+       return [
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('companies', 'name')->ignore($companyId),
+            ],
             'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:255',
             'website' => 'nullable|url|max:255',

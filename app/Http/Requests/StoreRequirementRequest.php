@@ -33,9 +33,14 @@ class StoreRequirementRequest extends FormRequest
             $this->merge(['items' => $items]);
         }
 
-        if ($this->has('costing_price') && $this->costing_price === '') {
-            $this->merge(['costing_price' => 0]);
-        }
+      $this->merge([
+        'costing_price'       => ($this->costing_price === '' || is_null($this->costing_price)) ? 0 : $this->costing_price,
+        'ait_percentage'      => ($this->ait_percentage === '' || is_null($this->ait_percentage)) ? 0 : $this->ait_percentage,
+        'vat_percentage'      => ($this->vat_percentage === '' || is_null($this->vat_percentage)) ? 0 : $this->vat_percentage,
+        'delivery_time_days'  => ($this->delivery_time_days === '' || is_null($this->delivery_time_days)) ? 0 : $this->delivery_time_days,
+        'price_validity_days' => ($this->price_validity_days === '' || is_null($this->price_validity_days)) ? 0 : $this->price_validity_days,
+    ]);
+
     }
 
     public function messages(): array

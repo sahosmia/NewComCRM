@@ -116,7 +116,7 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                                 </div>
                             </div>
                             <div className="md:col-span-2 lg:col-span-2 space-y-2">
-                                <FormLabel required>Unit Price</FormLabel>
+                                <FormLabel >Unit Price</FormLabel>
                                 <Input
                                     type="number"
                                     value={item.price}

@@ -11,6 +11,6 @@ class CompanySeeder extends Seeder
     {
         Company::flushEventListeners();
 
-        Company::factory()->count(500)->create();
+        Company::factory()->count(50)->create();
     }
 }

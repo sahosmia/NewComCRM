@@ -21,7 +21,7 @@ const columns: Column<CustomerType>[] = [
                 <span className="text-xs text-muted-foreground truncate">{item.designation || 'No Designation'}</span>
             </div>
         ),
-        className: 'w-[25%]',
+        className: 'w-[20%]',
     },
     {
         header: 'Company',
@@ -91,7 +91,7 @@ const columns: Column<CustomerType>[] = [
                 </Badge>
             </div>
         ),
-        className: 'w-[10%]',
+        className: 'w-[8%]',
     },
     {
         header: '',

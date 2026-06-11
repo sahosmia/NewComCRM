@@ -39,7 +39,8 @@ class UnitController extends Controller
         return $this->handleResponse(
             $request,
             $unit,
-            'Unit created successfully'
+            'Unit created successfully',
+            'units.index'
         );
     }
 

@@ -22,7 +22,7 @@ class RequirementSeeder extends Seeder
 
         // Generate 1000 requirements
         // 600 will be 'purchased' to satisfy the Sale requirement
-        for ($i = 0; $i < 600; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $customer = $customers->random();
             Requirement::factory()->create([
                 'customer_id' => $customer->id,
@@ -33,7 +33,7 @@ class RequirementSeeder extends Seeder
             ]);
         }
 
-        for ($i = 0; $i < 400; $i++) {
+        for ($i = 0; $i < 8; $i++) {
             $customer = $customers->random();
             Requirement::factory()->create([
                 'customer_id' => $customer->id,

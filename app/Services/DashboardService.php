@@ -33,8 +33,8 @@ class DashboardService
             ->when(!$user->isSuperAdmin(), fn($q) => $q->whereHas('customer', fn($cq) => $cq->where('assigned_to', $user->id)));
 
         return [
-            'today_count' => (clone $baseQuery)->whereDate('delivery_date', today())->count(),
-            'upcoming_count' => (clone $baseQuery)->whereDate('delivery_date', '>', today())->count(),
+            'today_count' => (clone $baseQuery)->whereDate('created_at', today())->count(),
+            'total_count' => (clone $baseQuery)->count(),
         ];
     }
 
@@ -103,8 +103,6 @@ class DashboardService
         return [
             'today_count' => (clone $baseQuery)->whereDate('sale_date', today())->count(),
             'today_amount' => (clone $baseQuery)->whereDate('sale_date', today())->sum('amount'),
-            'upcoming_count' => (clone $baseQuery)->whereDate('sale_date', '>', today())->count(),
-            'upcoming_amount' => (clone $baseQuery)->whereDate('sale_date', '>', today())->sum('amount'),
             'total_count' => (clone $baseQuery)->count(),
             'total_amount' => (clone $baseQuery)->sum('amount'),
         ];

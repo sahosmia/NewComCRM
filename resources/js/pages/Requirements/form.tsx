@@ -66,7 +66,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
         before_payment: requirement?.before_payment ?? 0,
         after_payment: requirement?.after_payment ?? 0,
         delivery_location: requirement?.delivery_location || "",
-        delivery_date: requirement?.delivery_date || "",
+        // delivery_date: requirement?.delivery_date || "",
 
         send_qutation_to: requirement?.send_qutation_to || "",
         qutation_send_by: requirement?.qutation_send_by || "",
@@ -75,6 +75,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
             { product_id: 0, quantity: 1, unit_price: "", costing_price: 0, description: "" }
         ],
     });
+
 
     const addItem = () => {
         setData("items", [...data.items, { product_id: 0, quantity: 1, unit_price: "", costing_price: 0, description: "" }]);
@@ -135,7 +136,6 @@ export default function RequirementForm({ requirement, customers: initialCustome
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        // console.log("Submitting Requirement with data:", data);
         requirement ? put(route("requirements.update", requirement.id)) : post(route("requirements.store"));
     };
 
@@ -175,6 +175,9 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                             const customer = customers.find(c => c.id === id);
                                             if (customer && customer.addresses && customer.addresses.length > 0) {
                                                 setData("delivery_location", customer.addresses[0]);
+                                            }
+                                            if(customer && customer.assigned_to){
+                                                setData("user_id", customer.assigned_to);
                                             }
                                         }}
                                         error={errors.customer_id}
@@ -356,7 +359,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                 <ErrorMessage message={errors.delivery_location} />
                             </div>
 
-                            <div className="space-y-2">
+                            {/* <div className="space-y-2">
                                 <FormLabel>Deliver Able Date</FormLabel>
                                 <Input
                                     type="date"
@@ -365,11 +368,11 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                     className="h-10"
                                 />
                                 <ErrorMessage message={errors.delivery_date} />
-                            </div>
+                            </div> */}
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <FormLabel required>Timeline (Days)</FormLabel>
+                                    <FormLabel>Timeline (Days)</FormLabel>
                                     <Input
                                         type="number"
                                         value={data.delivery_time_days}
@@ -380,7 +383,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                     <ErrorMessage message={errors.delivery_time_days} />
                                 </div>
                                 <div className="space-y-2">
-                                    <FormLabel required>Validity (Days)</FormLabel>
+                                    <FormLabel>Validity (Days)</FormLabel>
                                     <Input
                                         type="number"
                                         placeholder="0"
@@ -403,7 +406,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                         <div className="p-6 space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <FormLabel required>VAT (%)</FormLabel>
+                                    <FormLabel>VAT (%)</FormLabel>
                                     <div className="relative">
                                         <Input
                                             type="number"
@@ -416,7 +419,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                     <ErrorMessage message={errors.vat_percentage} />
                                 </div>
                                 <div className="space-y-2">
-                                    <FormLabel required>AIT (%)</FormLabel>
+                                    <FormLabel>AIT (%)</FormLabel>
                                     <div className="relative">
                                         <Input
                                             type="number"
@@ -433,7 +436,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                             <div className="space-y-4 pt-2">
                                 <div className="space-y-2">
                                     <div className="flex justify-between items-center">
-                                        <FormLabel required>Advance (%)</FormLabel>
+                                        <FormLabel>Advance (%)</FormLabel>
                                         <span className="text-[10px] font-medium text-slate-500">{data.advance_payment}%</span>
                                     </div>
                                     <Input
@@ -553,7 +556,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                 totalCosting={itemsCostingTotal}
 
                 vatPercentage={Number(data.vat_percentage)}
-                aitPercentage={Number(data.ait_percentage)}
+                // aitPercentage={Number(data.ait_percentage)}
                 processing={processing}
                 isEdit={!!requirement}
             />

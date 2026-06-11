@@ -24,6 +24,6 @@ class UserSeeder extends Seeder
         );
 
         // Create 500 regular Users
-        User::factory()->count(500)->create(['role' => 'user']);
+        User::factory()->count(50)->create(['role' => 'user']);
     }
 }

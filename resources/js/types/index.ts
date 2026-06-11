@@ -195,7 +195,7 @@ export interface Requirement {
     before_payment: number;
     after_payment: number;
     delivery_location: string | null;
-    delivery_date: string | null;
+    // delivery_date: string | null;
     send_qutation_to: number | null;
     qutation_send_by: number | null;
 
@@ -210,6 +210,7 @@ export interface Requirement {
     follow_ups?: FollowUp[];
     quotation_recipient?: CustomerType;
     quotation_sender?: User;
+    user:User;
 }
 
 export interface FollowUp {

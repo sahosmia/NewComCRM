@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Scopes\AssignedDataScope;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 
@@ -33,7 +31,7 @@ class Requirement extends Model
         'after_payment',
         'user_id',
         'delivery_location',
-        'delivery_date',
+        // 'delivery_date',
         'send_qutation_to',
         'qutation_send_by',
         'total_costing'
@@ -46,13 +44,18 @@ class Requirement extends Model
         'ait_percentage' => 'decimal:2',
         'vat_percentage' => 'decimal:2',
         'total_costing' => 'decimal:2',
-        'delivery_date' => 'date',
+        // 'delivery_date' => 'date',
 
     ];
 
     public function items(): HasMany
     {
         return $this->hasMany(RequirementItem::class);
+    }
+
+    public function sales()
+    {
+        return $this->hasOne(Sale::class, 'requirement_id');
     }
 
 

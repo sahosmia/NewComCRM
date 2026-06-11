@@ -24,7 +24,7 @@ export default function Create({ users, companies }: CreateProps) {
                     <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Create Customer</h2>
                 </div>
 
-                <Card className="max-w-4xl mx-auto shadow-sm">
+                <Card className="max-w-5xl shadow-sm">
                     <CardHeader>
                         <CardTitle className="text-lg font-medium">
                             Customer Information

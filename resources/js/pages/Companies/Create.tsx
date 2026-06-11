@@ -13,14 +13,12 @@ export default function Create() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Create Company" />
-            <div className="p-4 md:p-8">
-                <div className="max-w-2xl mx-auto">
-                    <Heading
-                        title="Create New Company"
-                        description="Add a new company to manage its details and associated customers."
-                    />
-                    <CompanyForm />
-                </div>
+            <div className="p-4 md:p-8 max-w-2xl border rounded-2xl">
+                <Heading
+                    title="Create New Company"
+                    description="Add a new company to manage its details and associated customers."
+                />
+                <CompanyForm />
             </div>
         </AppLayout>
     );

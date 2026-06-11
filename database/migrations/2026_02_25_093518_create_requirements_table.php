@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title')->nullable();
             // Taxes
-            $table->decimal('ait_percentage', 5, 2)->default(5);
+            $table->decimal('ait_percentage', 5, 2)->default(0);
             $table->decimal('vat_percentage', 5, 2)->default(0);
 
             // Accessories
@@ -33,12 +33,12 @@ return new class extends Migration
             $table->decimal('installation_price', 12, 2)->nullable();
 
             // Terms & Delivery
-            $table->integer('price_validity_days')->nullable();
-            $table->integer('delivery_time_days')->nullable();
+            $table->integer('price_validity_days')->default(0);
+            $table->integer('delivery_time_days')->default(0);
             $table->integer('advance_payment')->default(0);
             $table->integer('before_payment')->default(100);
             $table->string('delivery_location')->nullable();
-                        $table->date('delivery_date')->nullable();
+                        // $table->date('delivery_date')->nullable();
 
             $table->integer('after_payment')->default(0);
 

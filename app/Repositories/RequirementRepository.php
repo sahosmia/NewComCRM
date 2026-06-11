@@ -12,11 +12,13 @@ class RequirementRepository
         $perPage = $params['per_page'] ?? setting('paginated_quantity', 10);
         $user = auth()->user();
 
+
         return Requirement::query()
             ->with([
                 'customer.assignedUser',
                 'customer.company',
-                'items.product.unit'
+                'items.product.unit',
+                'user'
             ])
 
             ->when($params['search'] ?? null, function ($query, $search) {
@@ -37,12 +39,13 @@ class RequirementRepository
             ->when($params['end_date'] ?? null, fn($query, $endDate) => $query->whereDate('created_at', '<=', $endDate))
             ->when($params['period'] ?? null, function ($query, $period) {
                 match ($period) {
-                    'today' => $query->whereDate('delivery_date', today()),
-                    'upcoming' => $query->whereDate('delivery_date', '>', today()),
+                    'today' => $query->whereDate('created_at', today()),
+                    'total' => $query,
                     default => null,
                 };
             })
             ->latest($params['sort'] ?? 'created_at') // Simplified sorting
+
             ->paginate($perPage)
             ->withQueryString();
     }

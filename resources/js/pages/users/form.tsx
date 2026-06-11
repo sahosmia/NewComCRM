@@ -1,17 +1,15 @@
 import { useForm } from "@inertiajs/react";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
 import FormLabel from "@/components/admin/form/FormLabel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import type { UserType } from "@/types";
+import type { User } from "@/types";
 
-interface Props { user?: UserType;}
+interface Props { user?: User;}
 
 export default function UserForm({ user }: Props) {
-    const [open, setOpen] = useState(false);
 
     const { data, setData, post, processing, errors } = useForm({
         name: user?.name || "",

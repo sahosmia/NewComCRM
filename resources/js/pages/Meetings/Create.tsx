@@ -17,11 +17,11 @@ export default function Create({ customers, requirements, users, companies }: Pr
 
             <div className="p-6">
                 <h1 className="text-xl font-bold mb-4">Schedule Meeting</h1>
-                <div className="bg-card p-6 border rounded-lg shadow-sm  max-w-2xl mx-auto">
-                    <MeetingForm 
-                        customers={customers} 
-                        requirements={requirements} 
-                        users={users} 
+                <div className="bg-card p-6 border rounded-lg shadow-sm  max-w-2xl">
+                    <MeetingForm
+                        customers={customers}
+                        requirements={requirements}
+                        users={users}
                         companies={companies}
                     />
                 </div>

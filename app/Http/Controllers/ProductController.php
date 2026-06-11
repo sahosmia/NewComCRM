@@ -53,7 +53,8 @@ class ProductController extends Controller
         return $this->handleResponse(
             $request,
             $product,
-            'Product created successfully'
+            'Product created successfully',
+            'products.index'
         );
     }
 

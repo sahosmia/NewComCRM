@@ -22,7 +22,7 @@ class CustomerSeeder extends Seeder
         }
 
         // Create 500 customers using factory
-        Customer::factory()->count(500)->create([
+        Customer::factory()->count(50)->create([
             'company_id' => fn() => $companies->random()->id,
             'assigned_to' => fn() => $users->random()->id,
         ]);

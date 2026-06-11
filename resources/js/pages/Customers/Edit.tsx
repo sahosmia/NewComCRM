@@ -11,7 +11,6 @@ interface Props {
 }
 
 export default function Edit({ customer, users, companies }: Props) {
-console.log(customer);
 
     const breadcrumbs = [
         { title: "Customers", href: route("customers.index") },
@@ -25,7 +24,7 @@ console.log(customer);
                 <div className="flex items-center justify-between space-y-2">
                     <h2 className="text-3xl font-bold tracking-tight">Edit Customer</h2>
                 </div>
-                <Card className="max-w-4xl mx-auto shadow-sm">
+                <Card className="max-w-5xl  shadow-sm">
                     <CardHeader>
                         <CardTitle className="text-lg font-medium">
                             Customer Information

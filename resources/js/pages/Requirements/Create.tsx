@@ -1,6 +1,5 @@
 import { Head } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
-import { Requirement } from "@/types";
 import type { Unit , Company, CustomerType, Product, User } from "@/types";
 import RequirementForm from "./form";
 

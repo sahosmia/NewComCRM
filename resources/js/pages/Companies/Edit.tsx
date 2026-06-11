@@ -18,14 +18,12 @@ export default function Edit({ company }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Edit ${company.name}`} />
-            <div className="p-4 md:p-8">
-                <div className="max-w-2xl mx-auto">
-                    <Heading
-                        title="Edit Company"
-                        description="Update company information and details."
-                    />
-                    <CompanyForm company={company} />
-                </div>
+            <div className="p-4 md:p-8 max-w-2xl border rounded-2xl">
+                <Heading
+                    title="Edit Company"
+                    description="Update company information and details."
+                />
+                <CompanyForm company={company} />
             </div>
         </AppLayout>
     );
