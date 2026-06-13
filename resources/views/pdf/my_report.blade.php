@@ -252,6 +252,10 @@
             vertical-align: middle;
         }
 
+        .product-table tr {
+            page-break-inside: avoid;
+        }
+
         .text-center {
             text-align: center;
         }
@@ -821,7 +825,7 @@ Quotation No: CVS/QTN/{{ date('Y') }}/{{ date('m') }}/{{ str_pad($requirement->i
             <script type="text/php">
             if ( isset($pdf) ) {
                 $font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "normal");
-                $pdf->page_text(500, 730, "Page {PAGE_NUM} of 3", $font, 9, array(0,0,0));
+                $pdf->page_text(500, 730, "Page {PAGE_NUM} of {PAGE_COUNT}", $font, 9, array(0,0,0));
             }
         </script>
         </div>
