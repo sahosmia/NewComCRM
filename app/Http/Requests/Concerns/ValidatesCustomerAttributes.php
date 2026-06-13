@@ -25,7 +25,7 @@ trait ValidatesCustomerAttributes
             'addresses'     => 'nullable|array',
             'addresses.*'   => 'nullable|string',
             'remarks'       => 'nullable|string',
-            'assigned_to'   => 'required|exists:users,id',
+            'assigned_to'   => auth()->user()?->role === 'super_admin' ? 'required|exists:users,id' : 'nullable',
             'status'        => 'required|in:active,inactive',
         ];
     }

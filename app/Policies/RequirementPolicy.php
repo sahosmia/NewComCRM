@@ -24,7 +24,10 @@ class RequirementPolicy
 
     public function view(User $user, Requirement $requirement): bool
     {
-        return (int) $user->id === (int) $requirement->user_id;
+        return (int) $user->id === (int) $requirement->user_id
+            || (int) $user->id === (int) $requirement->customer?->assigned_to
+            || $requirement->meetings()->where('user_id', $user->id)->exists()
+            || $requirement->followUps()->where('user_id', $user->id)->exists();
     }
 
     public function create(User $user): bool
