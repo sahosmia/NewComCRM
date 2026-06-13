@@ -22,9 +22,13 @@ class FollowUpPolicy
     }
 
 
-    public function view(User $user, FollowUp $followUp): bool
+  public function view(User $user, FollowUp $followUp): bool
     {
-        return $user->id === $followUp->user_id;
+        return $user->id === $followUp->user_id
+            || $user->id === $followUp->customer?->assigned_to
+            || $followUp->customer->meetings()->where('user_id', $user->id)->exists()
+            || $followUp->customer->followUps()->where('user_id', $user->id)->exists()
+            || $followUp->customer->requirements()->where('user_id', $user->id)->exists();
     }
 
 

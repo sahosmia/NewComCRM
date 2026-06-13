@@ -4,11 +4,12 @@
 <head>
     <style>
         * {
+            box-sizing: border-box;
             font-family: Arial, sans-serif;
         }
 
         @page {
-            margin: 150px 30px 0px;
+            margin: 160px 30px 120px;
 
         }
 
@@ -22,7 +23,7 @@
             top: -160px;
             left: 0px;
             right: 0px;
-            height: 60px;
+            height: 50px;
             font-family: Arial, sans-serif;
         }
 
@@ -251,6 +252,9 @@
             padding: 6px;
             vertical-align: middle;
         }
+        .product-table tr {
+            page-break-inside: avoid !important;
+        }
 
         .text-center {
             text-align: center;
@@ -276,10 +280,10 @@
 
         footer {
             position: fixed;
-            bottom: 0px;
+            bottom: -140px;
             left: -30px;
             right: -30px;
-            height: 120px;
+            height: 125px;
             font-family: Arial, sans-serif;
             background-color: #8B1A1A;
         }
@@ -320,6 +324,15 @@
             border: 1px solid rgb(168, 168, 168);
             border-right: none;
             border-left: none
+        }
+
+        .page-counter-container {
+            position: absolute;
+            top: -25px;
+            right: 35px;
+            font-size: 10px;
+            font-style: italic;
+            color: #333;
         }
 
         .empty-bar {
@@ -386,53 +399,81 @@
         </div>
     </header>
 
+
+
     <main>
         <div style="margin: -20px 28px 0; text-align: justify; font-size: 15px;">
             <div class="recipient-info">
                 @php
                     $recipient = $requirement->quotationRecipient ?? $requirement->customer;
                 @endphp
-                Date: {{ date('d F Y', strtotime($date)) }}<br><br>
+
+                Date: {{ $date ? \Carbon\Carbon::parse($date)->format('d F Y') : now()->format('d F Y') }}<br><br>
 
                 To,<br>
-                <strong>{{ $recipient->name }}</strong><br>
-                {{ $recipient->designation }}<br>
-                {{ $recipient->company->name ?? 'N/A' }}<br>
-                {{ $recipient->company->address ?? 'N/A' }}<br>
-                Cell: +88{{ $recipient->phones[0] ?? '' }} | E-mail: {{ $recipient->email }}
+                @if ($recipient)
+                    {{ $recipient->name }}
+
+                    @if (!empty($recipient->designation))
+                        {{ $recipient->designation }}<br>
+                    @endif
+
+                    @if ($recipient->company?->name)
+                        {{ $recipient->company->name }}<br>
+                        @if ($recipient->company->address)
+                            {{ $recipient->company->address }}<br>
+                        @endif
+                    @endif
+
+                    @if (!empty($recipient->phones) && isset($recipient->phones[0]))
+                        Cell: +88{{ $recipient->phones[0] }}
+                        @if (!empty($recipient->email))
+                            |
+                        @endif
+                    @endif
+
+                    @if (!empty($recipient->email))
+                        E-mail: {{ $recipient->email }}
+                    @endif
+                @else
+                    <strong>Valued Customer</strong><br>
+                    <span>Customer Details Not Specified</span>
+                @endif
             </div>
 
-            <div class="subject-line">
-                <span>Subject: Technical & Comercial Proposal for Supply
-                    {{ $requirement->has_installation ? 'and Installation' : '' }}
-                    {{ $requirement->title ?? 'Required Items' }}</span>.
+            <div class="subject-line" style="margin-bottom: 15px;">
+                Subject: Technical & Commercial Proposal for Financial
+                {{ $requirement->has_installation ? ' and Installation' : '' }}
+                of {{ $requirement->title ?? 'Required Items' }}.
             </div>
-            <p>Dear Sir,
-                <br />
+            <p>Dear Sir,</p>
+
+            <p>
                 With due respect and reference to your recent inquiry, we are pleased to submit our Technical and
                 Financial Offer for the above-mentioned items to your esteemed organization as per your
                 requirements.
-                <br /><br />
+            </p>
 
+            <p>
                 We, {{ setting('app_name', 'Crystal Vision Solutions') }}, are an experienced and trusted importer,
-                supplier, and system integrator
-                of IT, networking equipment, and server solutions in Bangladesh. We are committed to delivering
+                supplier, and system integrator of IT, networking equipment, and server solutions in Bangladesh. We are
+                committed to delivering
                 genuine branded products, ensuring quality, reliability, and comprehensive after-sales service
                 support.
-                <br /><br />
+            </p>
 
+            <p>
                 Please find the enclosed Technical and Financial Proposal for your kind evaluation and necessary
                 action. We assure you of our best cooperation, competitive pricing, and timely delivery for this
                 requirement.
-                <br /><br />
+            </p>
 
+            <p>
                 Should you require any further information or clarification, please feel free to contact us at your
                 convenience.
-                <br /><br />
-
-                Thanking you and assuring you of our best cooperation at all times.
-
             </p>
+
+            <p>Thanking you and assuring you of our best cooperation at all times.</p>
 
             <div class="signature-wrapper">
                 <p class="regards-text">With Thanks and Best Regards</p>
@@ -473,13 +514,15 @@
 
         <div style="margin: -20px 28px 0; text-align: justify; font-size: 15px;">
 
-            <div>
-                <div>
-Quotation No: CVS/QTN/{{ date('Y') }}/{{ date('m') }}/{{ str_pad($requirement->id, 4, '0', STR_PAD_LEFT) }}                </div>
-                <div>
-                    Date: {{ date('d F Y', strtotime($date)) }}
+            <div style="padding-bottom:20px; width: 100%; content: ''; display: table; clear: both; font-size: 15px;">
+                <div style="float: left; width: 60%;">
+                    Quotation No:
+                    CVS/QTN/{{ date('Y') }}/{{ date('m') }}/{{ str_pad($requirement->id, 4, '0', STR_PAD_LEFT) }}
                 </div>
-
+                <div style="float: right; width: 40%; text-align: right;">
+                    Date:
+                    {{ $date ? \Carbon\Carbon::parse($date)->format('d F Y') : now()->format('d F Y') }}
+                </div>
             </div>
 
             <div class="pricing-header">Product Details & Pricing</div>
@@ -488,8 +531,8 @@ Quotation No: CVS/QTN/{{ date('Y') }}/{{ date('m') }}/{{ str_pad($requirement->i
                 <thead>
                     <tr>
                         <th style="width: 5%;">SL</th>
-                        <th style="width: 55%;">Description of Goods</th>
-                        <th style="width: 12%;">Quantity</th>
+                        <th style="width: 55%;">Description</th>
+                        <th style="width: 12%;">Qty</th>
                         <th style="width: 13%;">Unit Price</th>
                         <th style="width: 15%;">Total</th>
                     </tr>
@@ -502,14 +545,14 @@ Quotation No: CVS/QTN/{{ date('Y') }}/{{ date('m') }}/{{ str_pad($requirement->i
                             <td>
                                 <strong>{{ $item->product->name }}</strong>
                                 <br>
-                                {{ $item->description ?? $item->product->description }}
+                                {{ $item->description}}
 
                             </td>
                             <td class="text-center">{{ $item->quantity }}
-                                {{ $item->product->unit->short_form ?? ($item->product->unit->title ?? 'Unit') }}
+                                {{ $item->product->unit?->short_form ?? ($item->product->unit?->title ?? 'Unit') }}
                             </td>
-                            <td class="text-right">{{ number_format($item->unit_price, 0) }}</td>
-                            <td class="text-right">{{ number_format($item->total_price, 0) }}/=</td>
+                            <td class="text-right">{{ number_format($item->total_price/$item->quantity, 2) }}</td>
+                            <td class="text-right">{{ number_format($item->total_price, 0) }}</td>
                         </tr>
                         @php $grandTotal += $item->total_price; @endphp
                     @endforeach
@@ -631,10 +674,10 @@ Quotation No: CVS/QTN/{{ date('Y') }}/{{ date('m') }}/{{ str_pad($requirement->i
                                 <td class="text-center">{{ str_pad($currentSl + 1, 2, '0', STR_PAD_LEFT) }}</td>
                                 <td> {{ $accessory->title }}</td>
                                 <td class="text-center">{{ $accessory->quantity }}
-                                    {{ $accessory->unit->title ?? ($accessory->unit->short_form ?? 'Unit') }}</td>
-                                <td class="text-right">{{ number_format($accessory->price, 0) }}</td>
+                                    {{ $accessory->unit?->short_form ?? ($accessory->unit?->title ?? 'Unit') }} </td>
+                                <td class="text-right">{{ number_format($accessory->total_price / $accessory->quantity, 2) }}</td>
                                 <td class="text-right">
-                                    {{ number_format($accessory->total_price, 0) }}/=
+                                    {{ number_format($accessory->total_price, 0) }}
                                 </td>
 
                             </tr>
@@ -648,13 +691,13 @@ Quotation No: CVS/QTN/{{ date('Y') }}/{{ date('m') }}/{{ str_pad($requirement->i
                                 <td class="text-center">{{ str_pad($currentSl + 1, 2, '0', STR_PAD_LEFT) }}</td>
                                 <td> {{ $installation->title }}</td>
                                 <td class="text-center">{{ $installation->quantity }}
-                                    {{ $installation->unit->title ?? ($installation->unit->short_form ?? 'Unit') }}
-                                </td>
-                                <td class="text-right">{{ number_format($installation->price, 0) }}</td>
-                                <td class="text-right">
-                                    {{ number_format($installation->total_price, 0) }}/=
+                                    {{ $installation->unit?->short_form ?? ($installation->unit?->title ?? 'Unit') }}
                                 </td>
 
+                                <td class="text-right">{{ $installation->total_price / $installation->quantity}}</td>
+                                <td class="text-right">
+                                    {{ number_format($installation->total_price, 0) }}
+                                </td>
                             </tr>
                             @php $grandTotal += $installation->total_price; @endphp
                             @php $currentSl++; @endphp
@@ -674,52 +717,22 @@ Quotation No: CVS/QTN/{{ date('Y') }}/{{ date('m') }}/{{ str_pad($requirement->i
                             </div>
                         </td>
                         <td class="text-right">Total</td>
-                        <td class="text-right">{{ number_format($grandTotal, 0) }}/=</td>
+                        <td class="text-right">{{ number_format($grandTotal, 0) }}</td>
                     </tr>
                     <tr class="total-row">
                         <td class="text-right">VAT Amount</td>
                         <td class="text-right">
-                            {{ number_format($grandTotal * ($requirement->vat_percentage / 100), 0) }}/=</td>
+                            {{ number_format($grandTotal * ($requirement->vat_percentage / 100), 0) }}</td>
                     </tr>
                     <tr class="total-row">
                         <td class="text-right">Grand Total</td>
                         <td class="text-right">
-                            {{ number_format($grandTotal + $grandTotal * ($requirement->vat_percentage / 100), 0) }}/=
+                            {{ number_format($grandTotal + $grandTotal * ($requirement->vat_percentage / 100), 0) }}/-
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <div class="signature-wrapper">
-                <p class="regards-text">With Thanks and Best Regards</p>
 
-                <div class="graphics-container">
-                    @if ($signature)
-                        <img src="{{ $signature }}" class="sig-img" alt="Signature">
-                    @endif
-
-                    @if ($seal)
-                        <img src="{{ $seal }}" class="seal-img" alt="Seal">
-                    @endif
-                </div>
-
-                <div class="info-text">
-                    @php
-                        $sender = $requirement->quotationSender ?? $requirement->user;
-                    @endphp
-                    <span class="sender-name">{{ $sender->name }}</span><br>
-                    @if ($sender->designation)
-                        <span class="sender-designation">{{ $sender->designation }}</span><br>
-                    @endif
-                    <span class="company-name">{{ setting('app_name', 'Crystal Vision Solutions') }}</span><br>
-
-                    M:
-                    {{ $sender->phone ? '+88' . $sender->phone . ' | ' : '' }}+88{{ setting('support_whatsapp', '01911-561554') }}
-                    (WhatsApp)<br>
-
-                    Mail: {{ $sender->email }} | {{ setting('email', 'crystalsolutionsbd@gmail.com') }}<br>
-                    Website: {{ setting('website', 'crystalcomputers.com.bd') }}
-                </div>
-            </div>
         </div>
 
 
@@ -774,9 +787,20 @@ Quotation No: CVS/QTN/{{ date('Y') }}/{{ date('m') }}/{{ str_pad($requirement->i
                             class="term-head">{{ $requirement->delivery_location ?? 'specified location' }} </span>.
                     </li>
 
-                    <li>Taxes & Duties: All prices are <span
-                            class="red-text">{{ $requirement->vat_percentage > 0 ? 'inclusive' : 'exclusive' }} of VAT,
-                            AIT,</span> and duties (mention clearly).</li>
+                    <li>
+                        Taxes & Duties: All prices are
+                        <span class="term-head">
+                            @if ($requirement->vat_percentage > 0 && $requirement->ait_percentage > 0)
+                                inclusive of VAT and AIT
+                            @elseif($requirement->vat_percentage == 0 && $requirement->ait_percentage > 0)
+                                inclusive of AIT only (VAT not applicable)
+                            @else
+                                exclusive of VAT and AIT
+                            @endif
+                            ,
+                        </span> and duties (mention clearly).If
+                        VAT & AIT applicable, shall be added by the customer in their Purchase Order (PO)
+                    </li>
                     <li>Cancellation Policy: Order once confirmed cannot be canceled without mutual agreement.</li>
                     <li>Change Policy: Overseas Items as per customer demand cannot be Changeable. </li>
                     <li>Force Majeure: Delivery may be delayed due to circumstances
@@ -794,8 +818,7 @@ Quotation No: CVS/QTN/{{ date('Y') }}/{{ date('m') }}/{{ str_pad($requirement->i
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        16. Exclusions:
+                    <li>Exclusions:
                         <br>
                         The warranty does not cover:
                         <br>
@@ -817,14 +840,7 @@ Quotation No: CVS/QTN/{{ date('Y') }}/{{ date('m') }}/{{ str_pad($requirement->i
     </main>
 
     <footer>
-        <div class="page-number-text">
-            <script type="text/php">
-            if ( isset($pdf) ) {
-                $font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "normal");
-                $pdf->page_text(500, 730, "Page {PAGE_NUM} of 3", $font, 9, array(0,0,0));
-            }
-        </script>
-        </div>
+
 
         <table class="footer-address-table">
             <tr>
@@ -859,6 +875,26 @@ Quotation No: CVS/QTN/{{ date('Y') }}/{{ date('m') }}/{{ str_pad($requirement->i
 
         </div>
     </footer>
+
+<script type="text/php">
+        if (isset($pdf)) {
+            $font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "normal");
+
+            // DomPDF window size optimization
+            $w = $pdf->get_width();
+            $h = $pdf->get_height();
+
+            // X axis coordinate setup (Dan dike alignment margin layout ensure korbe)
+            $x = $w - 105;
+
+            // Y axis height coordinate setup (Footer block structure layer clear kore dynamic gap maintain hobe)
+            // 680 to 695 pixel axis position footer layer bound bounds border box logic maintain kore height setup kore
+            $y = $h - 100;
+
+            $pdf->page_text($x, $y, "Page {PAGE_NUM} of {PAGE_COUNT}", $font, 9, array(0,0,0));
+        }
+    </script>
+</body>
 
 </body>
 

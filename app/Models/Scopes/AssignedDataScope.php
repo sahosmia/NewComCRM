@@ -14,23 +14,60 @@ class AssignedDataScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        if (Auth::check() && !Auth::user()->isSuperAdmin()) {
-            $column = $this->getAssignedColumn($model);
-            if ($column) {
-                $builder->where($column, Auth::id());
-            }
+        // 1. Super admin hole kono restriction thakbe na
+        if (!Auth::check() || Auth::user()->isSuperAdmin()) {
+            return;
         }
-    }
 
-    protected function getAssignedColumn(Model $model): ?string
-    {
-        return match (get_class($model)) {
-            \App\Models\Customer::class => 'assigned_to',
-            \App\Models\Meeting::class,
-            \App\Models\FollowUp::class,
-            \App\Models\Requirement::class => 'user_id',
+        $userId = Auth::id();
+        $currentScope = static::class;
 
-            default => null,
-        };
+        // 2. Model onusare complete bidirectional condition apply
+        if ($model instanceof \App\Models\Customer) {
+            $builder->where(function ($query) use ($userId, $currentScope) {
+                $query->where('assigned_to', $userId)
+                    ->orWhereHas('requirements', fn($q) => $q->withoutGlobalScope($currentScope)->where('user_id', $userId))
+                    ->orWhereHas('meetings', fn($q) => $q->withoutGlobalScope($currentScope)->where('user_id', $userId))
+                    ->orWhereHas('followUps', fn($q) => $q->withoutGlobalScope($currentScope)->where('user_id', $userId));
+            });
+        }
+
+        elseif ($model instanceof \App\Models\Requirement) {
+            $builder->where(function ($query) use ($userId, $currentScope) {
+                $query->where('user_id', $userId)
+                    ->orWhereHas('customer', fn($q) => $q->withoutGlobalScope($currentScope)->where('assigned_to', $userId))
+                    ->orWhereHas('meetings', fn($q) => $q->withoutGlobalScope($currentScope)->where('user_id', $userId))
+                    ->orWhereHas('followUps', fn($q) => $q->withoutGlobalScope($currentScope)->where('user_id', $userId));
+            });
+        }
+
+        elseif ($model instanceof \App\Models\Meeting) {
+            $builder->where(function ($query) use ($userId, $currentScope) {
+                $query->where('user_id', $userId)
+                    ->orWhereHas('customer', fn($q) => $q->withoutGlobalScope($currentScope)->where('assigned_to', $userId))
+                    ->orWhereHas('requirement', fn($q) => $q->withoutGlobalScope($currentScope)->where('user_id', $userId))
+                    // jodi eirokom hoy j eita jekono vabe ei user er sathe linked followUp er shathei connected
+                    ->orWhereHas('requirement.followUps', fn($q) => $q->withoutGlobalScope($currentScope)->where('user_id', $userId));
+            });
+        }
+
+        elseif ($model instanceof \App\Models\FollowUp) {
+            $builder->where(function ($query) use ($userId, $currentScope) {
+                $query->where('user_id', $userId)
+                    ->orWhereHas('customer', fn($q) => $q->withoutGlobalScope($currentScope)->where('assigned_to', $userId))
+                    ->orWhereHas('requirement', fn($q) => $q->withoutGlobalScope($currentScope)->where('user_id', $userId))
+                    ->orWhereHas('requirement.meetings', fn($q) => $q->withoutGlobalScope($currentScope)->where('user_id', $userId));
+            });
+        }
+
+        elseif ($model instanceof \App\Models\Sale) {
+            $builder->where(function ($query) use ($userId, $currentScope) {
+                // sales table e user_id direct na thakle tar parent relation check korbe
+                $query->whereHas('requirement', fn($q) => $q->withoutGlobalScope($currentScope)->where('user_id', $userId))
+                    ->orWhereHas('customer', fn($q) => $q->withoutGlobalScope($currentScope)->where('assigned_to', $userId))
+                    ->orWhereHas('requirement.meetings', fn($q) => $q->withoutGlobalScope($currentScope)->where('user_id', $userId))
+                    ->orWhereHas('requirement.followUps', fn($q) => $q->withoutGlobalScope($currentScope)->where('user_id', $userId));
+            });
+        }
     }
 }

@@ -47,11 +47,13 @@ class SaleController extends Controller
 
         return $this->exportService->excel(
             $sales,
-            ['Customer', 'Amount', 'Sale Date'],
+            ['Customer', 'Requirement', 'Amount', 'Sale Date', 'Assigned'],
             fn($sale) => [
                 $sale->customer ? $sale->customer->name : 'N/A',
+                $sale->requirement->title,
                 $sale->amount,
                 $sale->sale_date->toDateTimeString(),
+                $sale->requirement->user ? $sale->requirement->user->name : 'N/A',
             ],
             'sales.xlsx'
         );
@@ -63,11 +65,14 @@ class SaleController extends Controller
 
         return $this->exportService->printView(
             $sales,
-            ['Customer', 'Amount', 'Sale Date'],
+            ['Customer', 'Requirement', 'Amount', 'Sale Date', 'Assigned'],
             fn($sale) => [
                 $sale->customer ? $sale->customer->name : 'N/A',
+                $sale->requirement->title,
                 $sale->amount,
                 $sale->sale_date->toDateTimeString(),
+                                $sale->requirement->user ? $sale->requirement->user->name : 'N/A',
+
             ],
             'Sale List'
         );

@@ -5,7 +5,7 @@ import AppLogoIcon from './app-logo-icon';
 export default function AppLogo() {
     const { settings } = usePage<SharedData>().props;
     const appName = (settings?.app_name as string) || 'Crystal Vision Solutions';
-    const logoUrl = settings?.logo ? `/storage/${settings.logo}` : '/logo.png';
+    const logoUrl = settings?.site_logo ? `/storage/${settings.site_logo}` : '/logo.png';
 
     return (
         <>

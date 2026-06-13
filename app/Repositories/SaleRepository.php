@@ -20,7 +20,7 @@ class SaleRepository
         $direction = $params['direction'] ?? 'desc';
 
         return Sale::query()
-            ->with(['customer.assignedUser', 'customer.company', 'requirement.items.product'])
+            ->with(['customer.assignedUser', 'customer.company', 'requirement.items.product', 'requirement.user'])
             ->when($search, function ($query, $search) {
                 $query->whereHas('requirement', function ($q) use ($search) {
                     $q->where('title', 'like', "%{$search}%");
@@ -60,6 +60,7 @@ class SaleRepository
         return Sale::query()
             ->with(['customer.assignedUser', 'customer.company', 'requirement.items.product'])
             ->when(!empty($ids), fn($q) => $q->whereIn('id', $ids))
+            ->latest()
             ->get();
     }
 }

@@ -24,6 +24,7 @@ const PAGINATION_OPTIONS = ['5', '10', '20', '50', '100'];
 
 export default function Index({ settings }: Props) {
     const { data, setData, post, processing, errors } = useForm<SettingsForm>({
+        site_logo: null,
         logo: null,
         secondary_logo: null,
         favicon: null,
@@ -48,6 +49,7 @@ export default function Index({ settings }: Props) {
     });
 
     const [previews, setPreviews] = useState({
+        site_logo: settings.site_logo ? `/storage/${settings.site_logo}` : null,
         logo: settings.logo ? `/storage/${settings.logo}` : null,
         secondary_logo: settings.secondary_logo ? `/storage/${settings.secondary_logo}` : null,
         favicon: settings.favicon ? `/storage/${settings.favicon}` : null,
@@ -110,10 +112,59 @@ export default function Index({ settings }: Props) {
                                 </div>
                             </div>
 
-                            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-                                {/* Logo */}
+                            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
+                                {/* site Logo */}
                                 <div className="space-y-2">
-                                    <FormLabel>Primary Logo</FormLabel>
+                                    <FormLabel>Site Logo</FormLabel>
+                                    <div className="flex flex-col gap-4">
+                                        <div className="relative h-32 w-full overflow-hidden rounded-lg border bg-muted flex items-center justify-center">
+                                            {previews.site_logo ? (
+                                                <img
+                                                    src={previews.site_logo}
+                                                    alt="Logo preview"
+                                                    className="max-h-full max-w-full object-contain"
+                                                />
+                                            ) : (
+                                                <ImageIcon className="h-10 w-10 text-muted-foreground" />
+                                            )}
+                                        </div>
+                                        <Input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={(e) => handleFileChange('site_logo', e)}
+                                        />
+                                        <InputError message={errors.site_logo} />
+                                    </div>
+                                </div>
+
+                                {/* Favicon */}
+                                <div className="space-y-2">
+                                    <FormLabel>Favicon</FormLabel>
+                                    <div className="flex flex-col gap-4">
+                                        <div className="relative h-32 w-full overflow-hidden rounded-lg border bg-muted flex items-center justify-center">
+                                            {previews.favicon ? (
+                                                <img
+                                                    src={previews.favicon}
+                                                    alt="Favicon preview"
+                                                    className="h-10 w-10 object-contain"
+                                                />
+                                            ) : (
+                                                <ImageIcon className="h-10 w-10 text-muted-foreground" />
+                                            )}
+                                        </div>
+                                        <Input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={(e) => handleFileChange('favicon', e)}
+                                        />
+                                        <InputError message={errors.favicon} />
+                                    </div>
+                                </div>
+
+
+                                {/* Primary Logo */}
+                                <div className="space-y-2">
+                                    <FormLabel>Primary Logo (PDF Header)</FormLabel>
                                     <div className="flex flex-col gap-4">
                                         <div className="relative h-32 w-full overflow-hidden rounded-lg border bg-muted flex items-center justify-center">
                                             {previews.logo ? (
@@ -159,29 +210,6 @@ export default function Index({ settings }: Props) {
                                     </div>
                                 </div>
 
-                                {/* Favicon */}
-                                <div className="space-y-2">
-                                    <FormLabel>Favicon</FormLabel>
-                                    <div className="flex flex-col gap-4">
-                                        <div className="relative h-32 w-full overflow-hidden rounded-lg border bg-muted flex items-center justify-center">
-                                            {previews.favicon ? (
-                                                <img
-                                                    src={previews.favicon}
-                                                    alt="Favicon preview"
-                                                    className="h-10 w-10 object-contain"
-                                                />
-                                            ) : (
-                                                <ImageIcon className="h-10 w-10 text-muted-foreground" />
-                                            )}
-                                        </div>
-                                        <Input
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={(e) => handleFileChange('favicon', e)}
-                                        />
-                                        <InputError message={errors.favicon} />
-                                    </div>
-                                </div>
 
                                 {/* Company Seal */}
                                 <div className="space-y-2">

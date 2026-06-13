@@ -48,10 +48,10 @@ const columns: any[] = [
         header: 'Representative',
         accessor: (item: any) => (
             <div className="flex flex-col">
-                {item.customer?.assigned_user ? (
+                {item.requirement?.user ? (
                     <>
-                        <span className="text-xs font-medium">{item.customer.assigned_user.name}</span>
-                        <span className="text-[10px] text-muted-foreground">{item.customer.assigned_user.email}</span>
+                        <span className="text-xs font-medium">{item.requirement.user.name}</span>
+                        <span className="text-[10px] text-muted-foreground">{item.requirement.user.email}</span>
                     </>
                 ) : (
                     <span className="text-xs text-muted-foreground italic">N/A</span>

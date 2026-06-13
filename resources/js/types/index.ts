@@ -210,7 +210,7 @@ export interface Requirement {
     follow_ups?: FollowUp[];
     quotation_recipient?: CustomerType;
     quotation_sender?: User;
-    user:User;
+    user: User;
 }
 
 export interface FollowUp {
@@ -368,6 +368,7 @@ export interface SettingType {
 }
 
 export interface SettingsForm {
+    site_logo: File | string | null;
     logo: File | string | null;
     secondary_logo: File | string | null;
     favicon: File | string | null;

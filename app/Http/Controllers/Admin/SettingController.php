@@ -27,6 +27,7 @@ class SettingController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
+            'site_logo' => ['nullable', 'image', 'max:2048'],
             'logo' => ['nullable', 'image', 'max:2048'],
             'secondary_logo' => ['nullable', 'image', 'max:2048'],
             'favicon' => ['nullable', 'image', 'max:1024'],

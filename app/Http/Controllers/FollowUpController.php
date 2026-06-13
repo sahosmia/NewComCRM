@@ -31,6 +31,8 @@ class FollowUpController extends Controller
             abort(401);
         }
 
+
+        // return $this->followUpService->paginateIndex($request->all(), $user);
         return Inertia::render('FollowUps/Index', [
             'followUps' => $this->followUpService->paginateIndex($request->all(), $user),
             'customers' => $this->lookupService->getCustomersForSelect(),
