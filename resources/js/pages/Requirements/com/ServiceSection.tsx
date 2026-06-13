@@ -127,6 +127,12 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                                 <ErrorMessage message={errors[`${prefix}.${index}.price`]} />
                             </div>
                             <div className="md:col-span-2 lg:col-span-2 space-y-2">
+                                <FormLabel>Gross Unit</FormLabel>
+                                <div className="h-10 flex items-center px-4 bg-slate-50 rounded-lg border border-slate-200 font-mono font-bold text-xs text-slate-700 shadow-inner">
+                                    ৳{(Number(item.price || 0) * aitFactor).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                                </div>
+                            </div>
+                            <div className="md:col-span-2 lg:col-span-2 space-y-2">
                                 <FormLabel>Total (Incl. AIT)</FormLabel>
                                 <div className="h-10 flex items-center px-4 bg-primary/5 rounded-lg border border-primary/20 font-mono font-black text-sm text-primary shadow-inner">
                                     ৳{(Number(item.quantity || 0) * Number(item.price || 0) * aitFactor).toLocaleString(undefined, { minimumFractionDigits: 2 })}

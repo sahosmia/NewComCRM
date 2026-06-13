@@ -37,6 +37,7 @@ test('authenticated user can create a customer', function () {
     $data = [
         'name'          => 'John Doe',
         'company_id'    => $company->id,
+        'designation'   => 'Manager',
         'email'         => 'john.' . uniqid() . '@example.com',
         'assigned_to'   => $this->user->id,
         'type'          => 'corporate',
@@ -68,6 +69,7 @@ test('user can update their own customer', function () {
     $updatedData = [
         'name'          => 'Updated Name',
         'company_id'    => $company->id,
+        'designation'   => 'Updated Designation',
         'email'         => $customer->email,
         'assigned_to'   => $this->user->id,
         'type'          => 'reseller',

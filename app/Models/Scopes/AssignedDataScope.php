@@ -15,22 +15,33 @@ class AssignedDataScope implements Scope
     public function apply(Builder $builder, Model $model): void
     {
         if (Auth::check() && !Auth::user()->isSuperAdmin()) {
-            $column = $this->getAssignedColumn($model);
-            if ($column) {
-                $builder->where($column, Auth::id());
-            }
+            $userId = Auth::id();
+            $customerColumn = $model instanceof \App\Models\Customer ? 'id' : 'customer_id';
+
+            // All related entities (Requirement, Meeting, FollowUp, Sale) have a customer_id.
+            // We scope visibility based on the entire "Customer Chain".
+            // A user sees everything in the chain if they are assigned to the Customer
+            // OR any Requirement, Meeting, or FollowUp linked to that Customer.
+            $builder->whereIn($customerColumn, function ($query) use ($userId) {
+                $query->select('id')
+                    ->from('customers')
+                    ->where('assigned_to', $userId)
+                    ->union(
+                        \Illuminate\Support\Facades\DB::table('requirements')
+                            ->select('customer_id')
+                            ->where('user_id', $userId)
+                    )
+                    ->union(
+                        \Illuminate\Support\Facades\DB::table('meetings')
+                            ->select('customer_id')
+                            ->where('user_id', $userId)
+                    )
+                    ->union(
+                        \Illuminate\Support\Facades\DB::table('follow_ups')
+                            ->select('customer_id')
+                            ->where('user_id', $userId)
+                    );
+            });
         }
-    }
-
-    protected function getAssignedColumn(Model $model): ?string
-    {
-        return match (get_class($model)) {
-            \App\Models\Customer::class => 'assigned_to',
-            \App\Models\Meeting::class,
-            \App\Models\FollowUp::class,
-            \App\Models\Requirement::class => 'user_id',
-
-            default => null,
-        };
     }
 }

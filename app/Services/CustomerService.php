@@ -39,6 +39,9 @@ class CustomerService
 
     public function update(Customer $customer, array $data): void
     {
+        if (!auth()->user()->isSuperAdmin()) {
+            unset($data['assigned_to']);
+        }
         $this->customers->update($customer, $data);
     }
 

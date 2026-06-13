@@ -1,4 +1,4 @@
-import { useForm } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
 import { Check, ChevronsUpDown, Loader2, Plus, X } from "lucide-react";
 import { useState, useCallback } from "react";
 import ErrorMessage from "@/components/admin/form/ErrorMessage";
@@ -26,6 +26,8 @@ interface Props {
 
 
 export default function CustomerForm({ customer, users, companies: initialCompanies }: Props) {
+    const { auth } = usePage().props as any;
+    const isSuperAdmin = auth.user.role === 'super_admin';
     const { openModal } = useModal();
 
     const [openPopover, setOpenPopover] = useState(false);
@@ -199,32 +201,34 @@ export default function CustomerForm({ customer, users, companies: initialCompan
                             </div>
                         </div>
 
-                        <div className="grid gap-2">
-                            <FormLabel required>Assigned Representative</FormLabel>
-                            <Popover open={openPopover} onOpenChange={setOpenPopover}>
-                                <PopoverTrigger asChild>
-                                    <Button variant="outline" className={cn("w-full justify-between font-normal h-11 md:h-10", !data.assigned_to && "text-muted-foreground")}>
-                                        {data.assigned_to ? users.find(u => u.id === Number(data.assigned_to))?.name : "Select staff member"}
-                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
-                                    <Command>
-                                        <CommandInput placeholder="Search staff..." />
-                                        <CommandEmpty>No results found.</CommandEmpty>
-                                        <CommandGroup className="max-h-60 overflow-auto">
-                                            {users.map(user => (
-                                                <CommandItem key={user.id} onSelect={() => { setData("assigned_to", user.id); setOpenPopover(false); }}>
-                                                    <Check className={cn("mr-2 h-4 w-4", data.assigned_to === user.id ? "opacity-100" : "opacity-0")} />
-                                                    {user.name}
-                                                </CommandItem>
-                                            ))}
-                                        </CommandGroup>
-                                    </Command>
-                                </PopoverContent>
-                            </Popover>
-                            <ErrorMessage message={errors.assigned_to} />
-                        </div>
+                        {isSuperAdmin && (
+                            <div className="grid gap-2">
+                                <FormLabel required>Assigned Representative</FormLabel>
+                                <Popover open={openPopover} onOpenChange={setOpenPopover}>
+                                    <PopoverTrigger asChild>
+                                        <Button variant="outline" className={cn("w-full justify-between font-normal h-11 md:h-10", !data.assigned_to && "text-muted-foreground")}>
+                                            {data.assigned_to ? users.find(u => u.id === Number(data.assigned_to))?.name : "Select staff member"}
+                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                                        <Command>
+                                            <CommandInput placeholder="Search staff..." />
+                                            <CommandEmpty>No results found.</CommandEmpty>
+                                            <CommandGroup className="max-h-60 overflow-auto">
+                                                {users.map(user => (
+                                                    <CommandItem key={user.id} onSelect={() => { setData("assigned_to", user.id); setOpenPopover(false); }}>
+                                                        <Check className={cn("mr-2 h-4 w-4", data.assigned_to === user.id ? "opacity-100" : "opacity-0")} />
+                                                        {user.name}
+                                                    </CommandItem>
+                                                ))}
+                                            </CommandGroup>
+                                        </Command>
+                                    </PopoverContent>
+                                </Popover>
+                                <ErrorMessage message={errors.assigned_to} />
+                            </div>
+                        )}
 
                         <div className="grid gap-2">
                             <FormLabel>Addresses</FormLabel>
