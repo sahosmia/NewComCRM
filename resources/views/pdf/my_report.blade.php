@@ -446,6 +446,11 @@
 
             <div class="pricing-header">Product Details & Pricing</div>
 
+            @php
+                $aitPercentage = $requirement->ait_percentage ?? 0;
+                $aitFactor = ($aitPercentage > 0 && $aitPercentage < 100) ? (1 / (1 - ($aitPercentage / 100))) : 1;
+            @endphp
+
             <table class="product-table">
                 <thead>
                     <tr>
@@ -470,7 +475,7 @@
                             <td class="text-center">{{ $item->quantity }}
                                 {{ $item->product->unit->short_form ?? ($item->product->unit->title ?? 'Unit') }}
                             </td>
-                            <td class="text-right">{{ number_format($item->unit_price, 0) }}</td>
+                            <td class="text-right">{{ number_format($item->unit_price * $aitFactor, 0) }}</td>
                             <td class="text-right">{{ number_format($item->total_price, 0) }}/=</td>
                         </tr>
                         @php $grandTotal += $item->total_price; @endphp
@@ -594,7 +599,7 @@
                                 <td> {{ $accessory->title }}</td>
                                 <td class="text-center">{{ $accessory->quantity }}
                                     {{ $accessory->unit->title ?? ($accessory->unit->short_form ?? 'Unit') }}</td>
-                                <td class="text-right">{{ number_format($accessory->price, 0) }}</td>
+                                <td class="text-right">{{ number_format($accessory->price * $aitFactor, 0) }}</td>
                                 <td class="text-right">
                                     {{ number_format($accessory->total_price, 0) }}/=
                                 </td>
@@ -611,7 +616,7 @@
                                 <td> {{ $installation->title }}</td>
                                 <td class="text-center">{{ $installation->quantity }}
                                     {{ $installation->unit->title ?? ($installation->unit->short_form ?? 'Unit') }}</td>
-                                <td class="text-right">{{ number_format($installation->price, 0) }}</td>
+                                <td class="text-right">{{ number_format($installation->price * $aitFactor, 0) }}</td>
                                 <td class="text-right">
                                     {{ number_format($installation->total_price, 0) }}/=
                                 </td>
