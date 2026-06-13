@@ -25,7 +25,11 @@ class MeetingPolicy
 
     public function view(User $user, Meeting $meeting): bool
     {
-        return $user->id === $meeting->user_id;
+        return $user->id === $meeting->user_id
+            || $user->id === $meeting->customer?->assigned_to
+            || $meeting->customer->meetings()->where('user_id', $user->id)->exists()
+            || $meeting->customer->followUps()->where('user_id', $user->id)->exists()
+            || $meeting->customer->requirements()->where('user_id', $user->id)->exists();
     }
 
 

@@ -26,8 +26,9 @@ class RequirementPolicy
     {
         return (int) $user->id === (int) $requirement->user_id
             || (int) $user->id === (int) $requirement->customer?->assigned_to
-            || $requirement->meetings()->where('user_id', $user->id)->exists()
-            || $requirement->followUps()->where('user_id', $user->id)->exists();
+            || $requirement->customer->meetings()->where('user_id', $user->id)->exists()
+            || $requirement->customer->followUps()->where('user_id', $user->id)->exists()
+            || $requirement->customer->requirements()->where('user_id', $user->id)->exists();
     }
 
     public function create(User $user): bool

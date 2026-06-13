@@ -15,48 +15,33 @@ class AssignedDataScope implements Scope
     public function apply(Builder $builder, Model $model): void
     {
         if (Auth::check() && !Auth::user()->isSuperAdmin()) {
-            if ($model instanceof \App\Models\Customer) {
-                $builder->where(function ($query) {
-                    $query->where('assigned_to', Auth::id())
-                        ->orWhereHas('followUps', fn($q) => $q->where('user_id', Auth::id()))
-                        ->orWhereHas('meetings', fn($q) => $q->where('user_id', Auth::id()))
-                        ->orWhereHas('requirements', fn($q) => $q->where('user_id', Auth::id()));
-                });
-            } elseif ($model instanceof \App\Models\Requirement) {
-                $builder->where(function ($query) {
-                    $query->where('user_id', Auth::id())
-                        ->orWhereHas('customer', fn($q) => $q->where('assigned_to', Auth::id()))
-                        ->orWhereHas('meetings', fn($q) => $q->where('user_id', Auth::id()))
-                        ->orWhereHas('followUps', fn($q) => $q->where('user_id', Auth::id()));
-                });
-            } elseif ($model instanceof \App\Models\Meeting || $model instanceof \App\Models\FollowUp) {
-                $builder->where(function ($query) {
-                    $query->where('user_id', Auth::id())
-                        ->orWhereHas('customer', fn($q) => $q->where('assigned_to', Auth::id()))
-                        ->orWhereHas('requirement', fn($q) => $q->where('user_id', Auth::id()));
-                });
-            } elseif ($model instanceof \App\Models\Sale) {
-                $builder->where(function ($query) {
-                    $query->whereHas('customer', fn($q) => $q->where('assigned_to', Auth::id()))
-                        ->orWhereHas('requirement', fn($q) => $q->where('user_id', Auth::id()));
-                });
-            } else {
-                $column = $this->getAssignedColumn($model);
-                if ($column) {
-                    $builder->where($column, Auth::id());
-                }
-            }
+            $userId = Auth::id();
+            $customerColumn = $model instanceof \App\Models\Customer ? 'id' : 'customer_id';
+
+            // All related entities (Requirement, Meeting, FollowUp, Sale) have a customer_id.
+            // We scope visibility based on the entire "Customer Chain".
+            // A user sees everything in the chain if they are assigned to the Customer
+            // OR any Requirement, Meeting, or FollowUp linked to that Customer.
+            $builder->whereIn($customerColumn, function ($query) use ($userId) {
+                $query->select('id')
+                    ->from('customers')
+                    ->where('assigned_to', $userId)
+                    ->union(
+                        \Illuminate\Support\Facades\DB::table('requirements')
+                            ->select('customer_id')
+                            ->where('user_id', $userId)
+                    )
+                    ->union(
+                        \Illuminate\Support\Facades\DB::table('meetings')
+                            ->select('customer_id')
+                            ->where('user_id', $userId)
+                    )
+                    ->union(
+                        \Illuminate\Support\Facades\DB::table('follow_ups')
+                            ->select('customer_id')
+                            ->where('user_id', $userId)
+                    );
+            });
         }
-    }
-
-    protected function getAssignedColumn(Model $model): ?string
-    {
-        return match (get_class($model)) {
-            \App\Models\Meeting::class,
-            \App\Models\FollowUp::class,
-            \App\Models\Requirement::class => 'user_id',
-
-            default => null,
-        };
     }
 }
