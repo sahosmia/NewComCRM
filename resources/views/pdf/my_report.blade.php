@@ -506,9 +506,9 @@ Quotation No: CVS/QTN/{{ date('Y') }}/{{ date('m') }}/{{ str_pad($requirement->i
 
                             </td>
                             <td class="text-center">{{ $item->quantity }}
-                                {{ $item->product->unit->short_form ?? ($item->product->unit->title ?? 'Unit') }}
+                                {{ $item->product?->unit?->short_form ?? ($item->product?->unit?->title ?? 'Unit') }}
                             </td>
-                            <td class="text-right">{{ number_format($item->unit_price, 0) }}</td>
+                            <td class="text-right">{{ number_format($item->total_price / ($item->quantity ?: 1), 0) }}</td>
                             <td class="text-right">{{ number_format($item->total_price, 0) }}/=</td>
                         </tr>
                         @php $grandTotal += $item->total_price; @endphp
@@ -631,8 +631,8 @@ Quotation No: CVS/QTN/{{ date('Y') }}/{{ date('m') }}/{{ str_pad($requirement->i
                                 <td class="text-center">{{ str_pad($currentSl + 1, 2, '0', STR_PAD_LEFT) }}</td>
                                 <td> {{ $accessory->title }}</td>
                                 <td class="text-center">{{ $accessory->quantity }}
-                                    {{ $accessory->unit->title ?? ($accessory->unit->short_form ?? 'Unit') }}</td>
-                                <td class="text-right">{{ number_format($accessory->price, 0) }}</td>
+                                    {{ $accessory->unit?->short_form ?? ($accessory->unit?->title ?? 'Unit') }}</td>
+                                <td class="text-right">{{ number_format($accessory->total_price / ($accessory->quantity ?: 1), 0) }}</td>
                                 <td class="text-right">
                                     {{ number_format($accessory->total_price, 0) }}/=
                                 </td>
@@ -648,9 +648,9 @@ Quotation No: CVS/QTN/{{ date('Y') }}/{{ date('m') }}/{{ str_pad($requirement->i
                                 <td class="text-center">{{ str_pad($currentSl + 1, 2, '0', STR_PAD_LEFT) }}</td>
                                 <td> {{ $installation->title }}</td>
                                 <td class="text-center">{{ $installation->quantity }}
-                                    {{ $installation->unit->title ?? ($installation->unit->short_form ?? 'Unit') }}
+                                    {{ $installation->unit?->short_form ?? ($installation->unit?->title ?? 'Unit') }}
                                 </td>
-                                <td class="text-right">{{ number_format($installation->price, 0) }}</td>
+                                <td class="text-right">{{ number_format($installation->total_price / ($installation->quantity ?: 1), 0) }}</td>
                                 <td class="text-right">
                                     {{ number_format($installation->total_price, 0) }}/=
                                 </td>

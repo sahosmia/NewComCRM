@@ -238,7 +238,7 @@ export default function Show({ requirement, customers, requirements, users }: Pr
                                                     )}
                                                 </td>
                                                 <td className="px-6 py-4 font-mono">{item.quantity} {item.product?.unit?.short_form}</td>
-                                                <td className="px-6 py-4 text-right font-mono text-xs text-muted-foreground">{formatCurrency(item.unit_price)}</td>
+                                                <td className="px-6 py-4 text-right font-mono text-xs text-muted-foreground">{formatCurrency(item.total_price / (item.quantity || 1))}</td>
                                                 <td className="px-6 py-4 text-right font-bold text-primary">{formatCurrency(item.total_price)}</td>
                                             </tr>
                                         ))}
@@ -278,9 +278,9 @@ export default function Show({ requirement, customers, requirements, users }: Pr
                                                     {accessory.quantity}{' '}
                                                     {accessory.unit?.short_form || accessory.unit?.title || 'Unit'}
                                                 </td>
-                                                <td className="px-6 py-4 text-right">{formatCurrency(Number(accessory.price))}</td>
+                                                <td className="px-6 py-4 text-right">{formatCurrency(Number(accessory.total_price) / (Number(accessory.quantity) || 1))}</td>
                                                 <td className="px-6 py-4 text-right font-bold text-primary">
-                                                    {formatCurrency(Number(accessory.quantity) * Number(accessory.price))}
+                                                    {formatCurrency(Number(accessory.total_price))}
                                                 </td>
                                             </tr>
                                         ))}
@@ -292,9 +292,9 @@ export default function Show({ requirement, customers, requirements, users }: Pr
                                                     {installation.quantity}{' '}
                                                     {installation.unit?.short_form || installation.unit?.title || 'Unit'}
                                                 </td>
-                                                <td className="px-6 py-4 text-right">{formatCurrency(Number(installation.price))}</td>
+                                                <td className="px-6 py-4 text-right">{formatCurrency(Number(installation.total_price) / (Number(installation.quantity) || 1))}</td>
                                                 <td className="px-6 py-4 text-right font-bold text-primary">
-                                                    {formatCurrency(Number(installation.quantity) * Number(installation.price))}
+                                                    {formatCurrency(Number(installation.total_price))}
                                                 </td>
                                             </tr>
                                         ))}
