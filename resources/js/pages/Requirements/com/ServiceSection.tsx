@@ -47,11 +47,6 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                     {icon} {title}
                 </h3>
                 <div className="flex items-center gap-4">
-                    {hasService && (
-                        <Button type="button" variant="outline" size="sm" onClick={addItem} className="h-8 gap-1 bg-background border-slate-200 hover:bg-slate-50">
-                            <Plus className="w-3.5 h-3.5" /> Add New
-                        </Button>
-                    )}
                     <div className="flex items-center space-x-3 bg-white/50 px-3 py-1.5 rounded-full border border-slate-200/60 shadow-sm">
                         <Checkbox id={`has_${prefix}`} checked={hasService} onCheckedChange={onServiceToggle} className="data-[state=checked]:bg-primary data-[state=checked]:border-primary" />
                         <Label htmlFor={`has_${prefix}`} className="text-xs font-bold cursor-pointer text-slate-600">Include {title}</Label>
@@ -146,6 +141,11 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                             </div>
                         </div>
                     ))}
+                    <div className="flex justify-center pt-2">
+                        <Button type="button" variant="outline" size="sm" onClick={addItem} className="gap-2 px-6 h-9 bg-background border-slate-200 hover:bg-slate-50 hover:border-primary/50 hover:text-primary transition-all">
+                            <Plus className="w-4 h-4" /> Add New
+                        </Button>
+                    </div>
                     <ErrorMessage message={errors[`${prefix}`]} />
                 </div>
             )}

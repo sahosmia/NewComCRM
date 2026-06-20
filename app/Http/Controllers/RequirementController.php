@@ -30,6 +30,9 @@ class RequirementController extends Controller
         $this->authorize('viewAny', Requirement::class);
         return Inertia::render('Requirements/Index', [
             'requirements' => $this->requirementService->paginateIndex($request->all()),
+            'customers' => $this->lookupService->getCustomersForSelect(),
+            'users'     => $this->lookupService->getUsersForSelect(),
+            'companies' => $this->lookupService->getCompanies(),
         ]);
     }
 

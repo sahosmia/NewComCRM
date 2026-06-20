@@ -32,9 +32,23 @@ problem:
 
 
 Requirement:
-2. add cost price and sale price
-3. product name, description,  qty, qty type, cost price, vendor, sell price, Total
-4. Accessories & installation title not needed
-5. need to add vat tax in Accessories & installation
-7. requested products will be requirement title
-admin access
+1. Vat, Tax default 0 thakbe, jeta age chilo vat 10 tax (AIT) 5 (1hour)
+2. unit price hoye jabe sale price ar new costing price add hobe ar ata requierment e show korbe. (2h)
+3. product name, description,  qty, qty type, costing price, sell price, supplier_name source, Total ai gulo show korbe requierment form er add product items e (1h)
+4.  3 er information gulo abar requierment details e show korbe, sathe product list show kora card ta full width hobe, sidebar er soto card gulo upore jabe, akta sundor layout hobe (1hour)
+5. 3 er information gulo requirement form e show koranor jonno width full kora lagbe  (1 hours)
+6. 3 er information gulo edit able hobe requirement form e (New requierment, work next delivary) (4 hours)
+7. Thik mark option: jodi requierment form theke "update to product table" chackbox e tik mark dei tahole product table oo oi  product update hobe. (need to discuss more, becasue sob data aksathe update hobe naki alada aladha update hobe ata niye)(new requierment, next delivary)(4 hours probably)
+
+8. Dashborad e today requierment will show today created all requierments number, status doesn't matter( 30 minits)
+9. Dashboard e total requierment will be total pending requierment count depend on the status is pendding(0.5hour)
+10. Designation will next line , description enter will next line, getting spaling will fixed in qutaions(30 minites)
+11. Add pay terms for addvance delivary, before delivary, qutaion 4th point add pay terms condition wise text.
+13. Shipping charge (New Requierment, need to discuss),
+14. Add  filter on requirement table by status, company, customer, repensative or assign to (1 hour)
+15. Serchable representative and  customer dropdown and add company filter on Sales (50 minites)
+16. Add new button niche cole jabe product, accesories, installation e multiple add er jonno, akon add new button ta upore show kore. (20 minites)
+
+
+
+

@@ -112,51 +112,151 @@ export default function Show({ requirement, customers, requirements, users }: Pr
                     </div>
                 </div>
 
+                <div>
+                    <div className="bg-card border rounded-xl shadow-sm overflow-hidden mt-6">
+                        <div className="p-5 border-b bg-muted/20 flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                                <Package className="w-4 h-4 text-primary" />
+                                <h2 className="font-bold text-sm tracking-tight uppercase">Requirement Items</h2>
+                            </div>
+                            <Badge variant="secondary" className="font-mono text-[10px]">
+                                {requirement.items?.length || 0} Total Items
+                            </Badge>
+                        </div>
+
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left text-sm">
+                                <thead className="bg-muted/30 text-muted-foreground uppercase text-[10px] font-bold tracking-wider border-b">
+                                    <tr>
+                                        <th className="px-6 py-4">Product Description</th>
+                                        <th className="px-6 py-4">Qty</th>
+                                        <th className="px-6 py-4 text-right">Unit Price</th>
+                                        <th className="px-6 py-4 text-right">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-border/50">
+                                    {requirement.items?.map((item: any) => (
+                                        <tr key={item.id} className="hover:bg-muted/5 transition-colors">
+                                            <td className="px-6 py-4">
+                                                <p className="font-semibold">{item.product?.name}</p>
+
+                                                {item.description && (
+                                                    <p className="text-[10px] text-muted-foreground mt-1 italic whitespace-pre-wrap">{item.description}</p>
+                                                )}
+                                            </td>
+                                            <td className="px-6 py-4 font-mono">{item.quantity} {item.product?.unit?.short_form}</td>
+                                            <td className="px-6 py-4 text-right font-mono text-xs text-muted-foreground">{formatCurrency(item.unit_price)}</td>
+                                            <td className="px-6 py-4 text-right font-bold text-primary">{formatCurrency(item.total_price)}</td>
+                                        </tr>
+                                    ))}
+
+                                    {/* {requirement.has_accessories && (
+                                            <tr className="bg-muted/5">
+                                                <td className="px-6 py-4 font-semibold">{requirement.accessories_title}</td>
+                                                <td className="px-6 py-4">
+                                                    {requirement.accessories_quantity}{' '}
+                                                    {requirement.accessories_unit?.title || requirement.accessories_unit?.short_form}
+                                                </td>
+                                                <td className="px-6 py-4 text-right">{formatCurrency(Number(requirement.accessories_price))}</td>
+                                                <td className="px-6 py-4 text-right font-bold text-primary">
+                                                    {formatCurrency(Number(requirement.accessories_quantity) * Number(requirement.accessories_price))}
+                                                </td>
+                                            </tr>
+                                        )}
+
+                                        {requirement.has_installation && (
+                                            <tr className="bg-muted/5">
+                                                <td className="px-6 py-4 font-semibold">{requirement.installation_title}</td>
+                                                <td className="px-6 py-4">
+                                                    {requirement.installation_quantity}{' '}
+                                                    {requirement.installation_unit?.title || requirement.installation_unit?.short_form}
+                                                </td>
+                                                <td className="px-6 py-4 text-right">{formatCurrency(Number(requirement.installation_price))}</td>
+                                                <td className="px-6 py-4 text-right font-bold text-primary">
+                                                    {formatCurrency(Number(requirement.installation_quantity) * Number(requirement.installation_price))}
+                                                </td>
+                                            </tr>
+                                        )} */}
+
+                                    {requirement.has_accessories && requirement.accessories?.map((accessory: any) => (
+                                        <tr key={`acc-${accessory.id}`} className="bg-muted/5">
+                                            <td className="px-6 py-4 font-semibold">{accessory.title}</td>
+                                            <td className="px-6 py-4">
+                                                {accessory.quantity}{' '}
+                                                {accessory.unit?.short_form || accessory.unit?.title || 'Unit'}
+                                            </td>
+                                            <td className="px-6 py-4 text-right">{formatCurrency(Number(accessory.price))}</td>
+                                            <td className="px-6 py-4 text-right font-bold text-primary">
+                                                {formatCurrency(Number(accessory.quantity) * Number(accessory.price))}
+                                            </td>
+                                        </tr>
+                                    ))}
+
+                                    {requirement.has_installation && requirement.installations?.map((installation: any) => (
+                                        <tr key={`inst-${installation.id}`} className="bg-muted/5">
+                                            <td className="px-6 py-4 font-semibold">{installation.title}</td>
+                                            <td className="px-6 py-4">
+                                                {installation.quantity}{' '}
+                                                {installation.unit?.short_form || installation.unit?.title || 'Unit'}
+                                            </td>
+                                            <td className="px-6 py-4 text-right">{formatCurrency(Number(installation.price))}</td>
+                                            <td className="px-6 py-4 text-right font-bold text-primary">
+                                                {formatCurrency(Number(installation.quantity) * Number(installation.price))}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+
+                                <tfoot className="bg-primary/2 border-t-2 border-primary/10">
+                                    {(requirement.has_vat || requirement.has_ait || totals.itemsCostingTotal > 0) && (
+                                        <>
+                                            <tr>
+                                                <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">Sub-Total</td>
+                                                <td className="px-6 py-2 text-right font-mono text-sm">{formatCurrency(totals.subTotal)}</td>
+                                            </tr>
+                                            {totals.itemsCostingTotal > 0 && (
+                                                <tr>
+                                                    <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">Total Costing</td>
+                                                    <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">{formatCurrency(totals.itemsCostingTotal)}</td>
+                                                </tr>
+                                            )}
+                                            {requirement.has_ait && (
+                                                    <tr>
+                                                        <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">AIT Adjustment ({requirement.ait_percentage}%)</td>
+                                                        <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">+ {formatCurrency(totals.aitAmount)}</td>
+                                                    </tr>
+                                                )}
+                                        </>
+                                    )}
+                                    <tr>
+                                        <td colSpan={3} className="px-6 py-5 text-right uppercase text-[10px] font-black tracking-[0.2em] text-muted-foreground">Grand Total Amount</td>
+                                        <td className="px-6 py-5 text-right">
+                                            <span className="text-xl font-black text-primary tracking-tighter">
+                                                {formatCurrency(totals.grandTotal)}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     {/* Left Side: Customer & Terms (Remains same) */}
                     <div className="lg:col-span-4 space-y-6">
                         {requirement.customer && <CustomerInfoCard customer={requirement.customer} />}
 
-                        {/* Meetings Section */}
-                        <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
-                            <div className="p-4 border-b bg-muted/20 flex justify-between items-center">
-                                <h2 className="font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
-                                    <Video className="w-3 h-3 text-primary" /> Meetings
-                                </h2>
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-7 text-[10px] uppercase font-bold"
-                                    onClick={() => openModal('CREATE_MEETING', {
-                                        customer_id: requirement.customer_id,
-                                        requirement_id: requirement.id,
-                                        user_id: requirement.user_id,
-                                        users: users,
-                                        customers: customers,
-                                        requirements: requirements,
-                                        onSuccess: () => {
-                                            router.reload({ only: ['requirement'] });
-                                        }
-                                    })}
-                                >
-                                    Schedule
-                                </Button>
-                            </div>
-                            <div className="p-4 space-y-3">
-                                {requirement.meetings && requirement.meetings.length > 0 ? (
-                                    requirement.meetings.map(meeting => (
-                                        <Link key={meeting.id} href={route('meetings.show', meeting.id)} className="block">
-                                            <div className="text-xs p-2 rounded border hover:bg-muted/50 transition-colors">
-                                                <p className="font-bold truncate">{meeting.title}</p>
-                                                <p className="text-[10px] text-muted-foreground">{new Date(meeting.scheduled_at).toLocaleString()}</p>
-                                            </div>
-                                        </Link>
-                                    ))
-                                ) : (
-                                    <p className="text-[10px] text-muted-foreground italic text-center py-2">No meetings scheduled</p>
-                                )}
-                            </div>
-                        </div>
+
+
+
+
+
+                    </div>
+
+                    {/* Right Side: Items Table */}
+
+                    <div className="lg:col-span-8">
 
                         {/* Followups Section */}
                         <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
@@ -199,140 +299,48 @@ export default function Show({ requirement, customers, requirements, users }: Pr
                             </div>
                         </div>
 
-
-                    </div>
-
-                    {/* Right Side: Items Table */}
-
-                    <div className="lg:col-span-8">
-
-                        <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
-                            <div className="p-5 border-b bg-muted/20 flex justify-between items-center">
-                                <div className="flex items-center gap-2">
-                                    <Package className="w-4 h-4 text-primary" />
-                                    <h2 className="font-bold text-sm tracking-tight uppercase">Requirement Items</h2>
-                                </div>
-                                <Badge variant="secondary" className="font-mono text-[10px]">
-                                    {requirement.items?.length || 0} Total Items
-                                </Badge>
+                        {/* Meetings Section */}
+                        <div className="bg-card border rounded-xl shadow-sm overflow-hidden mt-6">
+                            <div className="p-4 border-b bg-muted/20 flex justify-between items-center">
+                                <h2 className="font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
+                                    <Video className="w-3 h-3 text-primary" /> Meetings
+                                </h2>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-7 text-[10px] uppercase font-bold"
+                                    onClick={() => openModal('CREATE_MEETING', {
+                                        customer_id: requirement.customer_id,
+                                        requirement_id: requirement.id,
+                                        user_id: requirement.user_id,
+                                        users: users,
+                                        customers: customers,
+                                        requirements: requirements,
+                                        onSuccess: () => {
+                                            router.reload({ only: ['requirement'] });
+                                        }
+                                    })}
+                                >
+                                    Schedule
+                                </Button>
                             </div>
-
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-left text-sm">
-                                    <thead className="bg-muted/30 text-muted-foreground uppercase text-[10px] font-bold tracking-wider border-b">
-                                        <tr>
-                                            <th className="px-6 py-4">Product Description</th>
-                                            <th className="px-6 py-4">Qty</th>
-                                            <th className="px-6 py-4 text-right">Unit Price</th>
-                                            <th className="px-6 py-4 text-right">Subtotal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-border/50">
-                                        {requirement.items?.map((item: any) => (
-                                            <tr key={item.id} className="hover:bg-muted/5 transition-colors">
-                                                <td className="px-6 py-4">
-                                                    <p className="font-semibold">{item.product?.name}</p>
-
-                                                    {item.description && (
-                                                        <p className="text-[10px] text-muted-foreground mt-1 italic whitespace-pre-wrap">{item.description}</p>
-                                                    )}
-                                                </td>
-                                                <td className="px-6 py-4 font-mono">{item.quantity} {item.product?.unit?.short_form}</td>
-                                                <td className="px-6 py-4 text-right font-mono text-xs text-muted-foreground">{formatCurrency(item.unit_price)}</td>
-                                                <td className="px-6 py-4 text-right font-bold text-primary">{formatCurrency(item.total_price)}</td>
-                                            </tr>
-                                        ))}
-
-                                        {/* {requirement.has_accessories && (
-                                            <tr className="bg-muted/5">
-                                                <td className="px-6 py-4 font-semibold">{requirement.accessories_title}</td>
-                                                <td className="px-6 py-4">
-                                                    {requirement.accessories_quantity}{' '}
-                                                    {requirement.accessories_unit?.title || requirement.accessories_unit?.short_form}
-                                                </td>
-                                                <td className="px-6 py-4 text-right">{formatCurrency(Number(requirement.accessories_price))}</td>
-                                                <td className="px-6 py-4 text-right font-bold text-primary">
-                                                    {formatCurrency(Number(requirement.accessories_quantity) * Number(requirement.accessories_price))}
-                                                </td>
-                                            </tr>
-                                        )}
-
-                                        {requirement.has_installation && (
-                                            <tr className="bg-muted/5">
-                                                <td className="px-6 py-4 font-semibold">{requirement.installation_title}</td>
-                                                <td className="px-6 py-4">
-                                                    {requirement.installation_quantity}{' '}
-                                                    {requirement.installation_unit?.title || requirement.installation_unit?.short_form}
-                                                </td>
-                                                <td className="px-6 py-4 text-right">{formatCurrency(Number(requirement.installation_price))}</td>
-                                                <td className="px-6 py-4 text-right font-bold text-primary">
-                                                    {formatCurrency(Number(requirement.installation_quantity) * Number(requirement.installation_price))}
-                                                </td>
-                                            </tr>
-                                        )} */}
-
-                                        {requirement.has_accessories && requirement.accessories?.map((accessory: any) => (
-                                            <tr key={`acc-${accessory.id}`} className="bg-muted/5">
-                                                <td className="px-6 py-4 font-semibold">{accessory.title}</td>
-                                                <td className="px-6 py-4">
-                                                    {accessory.quantity}{' '}
-                                                    {accessory.unit?.short_form || accessory.unit?.title || 'Unit'}
-                                                </td>
-                                                <td className="px-6 py-4 text-right">{formatCurrency(Number(accessory.price))}</td>
-                                                <td className="px-6 py-4 text-right font-bold text-primary">
-                                                    {formatCurrency(Number(accessory.quantity) * Number(accessory.price))}
-                                                </td>
-                                            </tr>
-                                        ))}
-
-                                        {requirement.has_installation && requirement.installations?.map((installation: any) => (
-                                            <tr key={`inst-${installation.id}`} className="bg-muted/5">
-                                                <td className="px-6 py-4 font-semibold">{installation.title}</td>
-                                                <td className="px-6 py-4">
-                                                    {installation.quantity}{' '}
-                                                    {installation.unit?.short_form || installation.unit?.title || 'Unit'}
-                                                </td>
-                                                <td className="px-6 py-4 text-right">{formatCurrency(Number(installation.price))}</td>
-                                                <td className="px-6 py-4 text-right font-bold text-primary">
-                                                    {formatCurrency(Number(installation.quantity) * Number(installation.price))}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-
-                                    <tfoot className="bg-primary/2 border-t-2 border-primary/10">
-                                        {(requirement.has_vat || requirement.has_ait || totals.itemsCostingTotal > 0) && (
-                                            <>
-                                                <tr>
-                                                    <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">Sub-Total</td>
-                                                    <td className="px-6 py-2 text-right font-mono text-sm">{formatCurrency(totals.subTotal)}</td>
-                                                </tr>
-                                                {totals.itemsCostingTotal > 0 && (
-                                                    <tr>
-                                                        <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">Total Costing</td>
-                                                        <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">{formatCurrency(totals.itemsCostingTotal)}</td>
-                                                    </tr>
-                                                )}
-                                                {/* {requirement.has_ait && (
-                                                    <tr>
-                                                        <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">AIT Adjustment ({requirement.ait_percentage}%)</td>
-                                                        <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">+ {formatCurrency(totals.aitAmount)}</td>
-                                                    </tr>
-                                                )} */}
-                                            </>
-                                        )}
-                                        <tr>
-                                            <td colSpan={3} className="px-6 py-5 text-right uppercase text-[10px] font-black tracking-[0.2em] text-muted-foreground">Grand Total Amount</td>
-                                            <td className="px-6 py-5 text-right">
-                                                <span className="text-xl font-black text-primary tracking-tighter">
-                                                    {formatCurrency(totals.grandTotal)}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                            <div className="p-4 space-y-3">
+                                {requirement.meetings && requirement.meetings.length > 0 ? (
+                                    requirement.meetings.map(meeting => (
+                                        <Link key={meeting.id} href={route('meetings.show', meeting.id)} className="block">
+                                            <div className="text-xs p-2 rounded border hover:bg-muted/50 transition-colors">
+                                                <p className="font-bold truncate">{meeting.title}</p>
+                                                <p className="text-[10px] text-muted-foreground">{new Date(meeting.scheduled_at).toLocaleString()}</p>
+                                            </div>
+                                        </Link>
+                                    ))
+                                ) : (
+                                    <p className="text-[10px] text-muted-foreground italic text-center py-2">No meetings scheduled</p>
+                                )}
                             </div>
                         </div>
+
+
 
                         <div className="bg-card border rounded-xl p-5 shadow-sm space-y-4 mt-6">
                             <h2 className="font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
@@ -361,7 +369,11 @@ export default function Show({ requirement, customers, requirements, users }: Pr
                             </div>
                         </div>
                     </div>
+
+
                 </div>
+
+
             </div>
         </AppLayout>
     );

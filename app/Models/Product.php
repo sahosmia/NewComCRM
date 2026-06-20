@@ -17,6 +17,7 @@ class Product extends Model
         'category',
         'stock_quantity',
         'unit_price',
+        'costing_price',
         'supplier_name',
         'source',
         'unit_id'
@@ -24,6 +25,7 @@ class Product extends Model
 
     protected $casts = [
         'unit_price' => 'decimal:2',
+        'costing_price' => 'decimal:2',
         'stock_quantity' => 'integer',
     ];
 

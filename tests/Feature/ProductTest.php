@@ -61,12 +61,14 @@ it('can_filter_products_by_category', function () {
 });
 
 it('can_store_a_new_product', function () {
+    $unit = \App\Models\Unit::factory()->create();
     $productData = [
         'name' => 'New Product',
         'unit_price' => 150.50,
         'description' => 'Product description',
         'category' => 'Software',
         'stock_quantity' => 10,
+        'unit_id' => $unit->id,
     ];
 
     $response = $this->actingAs($this->user)
@@ -83,16 +85,18 @@ it('validates_required_fields_on_store', function () {
     $response = $this->actingAs($this->user)
         ->post(route('products.store'), []);
 
-    $response->assertSessionHasErrors(['name', 'unit_price', 'stock_quantity']);
+    $response->assertSessionHasErrors(['name', 'stock_quantity', 'unit_id']);
 });
 
 it('can_update_an_existing_product', function () {
-    $product = Product::factory()->create();
+    $unit = \App\Models\Unit::factory()->create();
+    $product = Product::factory()->create(['unit_id' => $unit->id]);
 
     $updatedData = [
         'name' => 'Updated Name',
         'unit_price' => 200.00,
         'stock_quantity' => 50,
+        'unit_id' => $unit->id,
     ];
 
     $response = $this->actingAs($this->user)
@@ -113,7 +117,7 @@ it('can_delete_a_product', function () {
         ->delete(route('products.destroy', $product));
 
     $response->assertRedirect(route('products.index'));
-    $this->assertSoftDeleted('products', [
+    $this->assertDatabaseMissing('products', [
         'id' => $product->id,
     ]);
 });

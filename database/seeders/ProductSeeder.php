@@ -21,6 +21,7 @@ class ProductSeeder extends Seeder
             [
                 'name' => 'Cat6 Network Cable',
                 'category' => 'Cable',
+                'costing_price' => 8000,
                 'unit_price' => 15000,
                 'unit_id' => $units->where('short_form', 'Roll')->first()?->id ?? $units->random()->id,
                 'stock_quantity' => 50,
@@ -28,6 +29,7 @@ class ProductSeeder extends Seeder
             [
                 'name' => '24 Port Gigabit Switch',
                 'category' => 'Switch',
+                'costing_price' => 30000,
                 'unit_price' => 35000,
                 'unit_id' => $units->where('short_form', 'Pcs')->first()?->id ?? $units->random()->id,
                 'stock_quantity' => 20,
@@ -35,6 +37,7 @@ class ProductSeeder extends Seeder
             [
                 'name' => 'Optical Fiber Patch Cord',
                 'category' => 'Accessories',
+                'costing_price' => 1000,
                 'unit_price' => 1200,
                 'unit_id' => $units->where('short_form', 'Pcs')->first()?->id ?? $units->random()->id,
                 'stock_quantity' => 100,

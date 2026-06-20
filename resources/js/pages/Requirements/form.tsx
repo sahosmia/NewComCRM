@@ -30,7 +30,7 @@ interface Props {
 }
 
 export default function RequirementForm({ requirement, customers: initialCustomers, products: initialProducts, units: initialUnits, users, companies }: Props) {
-    const { auth } = usePage().props as any;
+    const { auth, settings } = usePage().props as any;
     const isSuperAdmin = auth.user.role === 'super_admin';
 
     const { openModal } = useModal();
@@ -46,9 +46,8 @@ export default function RequirementForm({ requirement, customers: initialCustome
         title: requirement?.title || "",
         notes: requirement?.notes || "",
         status: requirement?.status || "pending",
-
-        ait_percentage: requirement?.ait_percentage ?? (requirement ? 0 : 5),
-        vat_percentage: requirement?.vat_percentage ?? (requirement ? 0 : 10),
+        ait_percentage: requirement?.ait_percentage ?? (requirement ? 0 : (settings?.default_ait ?? 0)),
+        vat_percentage: requirement?.vat_percentage ?? (requirement ? 0 : (settings?.default_vat ?? 0)),
 
         has_accessories: !!(requirement?.has_accessories ?? false),
         accessories: requirement?.accessories || [
@@ -78,7 +77,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
 
 
     const addItem = () => {
-        setData("items", [...data.items, { product_id: 0, quantity: 1, unit_price: "", costing_price: 0, description: "" }]);
+        setData("items", [...data.items, { product_id: 0, quantity: 1, unit_price: "", costing_price: 0, description: "", unit_id: 0, supplier: "", source: "" }]);
     };
 
     const removeItem = (index: number) => {
@@ -94,6 +93,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                     ...item,
                     product_id: parseInt(String(value)),
                     unit_price: product ? product.unit_price : (item.unit_price || ""),
+                    costing_price: product ? product.costing_price : (item.costing_price || 0),
                     description: product ? (product.description || "") : (item.description || ""),
                 };
             }
@@ -172,14 +172,17 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                         placeholder="Select Customer"
                                         searchPlaceholder="Search customers..."
                                         onSelect={(id) => {
-                                            setData("customer_id", id as number);
                                             const customer = customers.find(c => c.id === id);
-                                            if (customer && customer.addresses && customer.addresses.length > 0) {
-                                                setData("delivery_location", customer.addresses[0]);
-                                            }
-                                            if(customer && customer.assigned_to){
-                                                setData("user_id", customer.assigned_to);
-                                            }
+                                            setData(prev => ({
+                                                ...prev,
+                                                customer_id: id as number,
+                                                delivery_location: (customer && customer.addresses && customer.addresses.length > 0)
+                                                    ? customer.addresses[0]
+                                                    : prev.delivery_location,
+                                                user_id: (customer && customer.assigned_to)
+                                                    ? Number(customer.assigned_to)
+                                                    : prev.user_id
+                                            }));
                                         }}
                                         error={errors.customer_id}
                                         renderAction={
@@ -295,36 +298,109 @@ export default function RequirementForm({ requirement, customers: initialCustome
                         </div>
                     </div>
 
-                    {/* Items Section moved inside main column */}
                     <div className="bg-card border-none shadow-sm ring-1 ring-slate-200 rounded-xl overflow-hidden">
-                        <div className="p-4 bg-slate-50/50 flex justify-between items-center border-b border-slate-200">
+                        <div className="p-4 bg-slate-50/50 border-b border-slate-200">
                             <h3 className="text-sm font-semibold flex items-center gap-2 text-slate-700">
-                                <Plus className="w-4 h-4 text-primary" /> Requirement Items
+                                <Percent className="w-4 h-4 text-primary" /> Taxes & Payments
                             </h3>
-                            <Button type="button" variant="outline" size="sm" onClick={addItem} className="h-8 gap-1 bg-background border-slate-200 hover:bg-slate-50">
-                                <Plus className="w-3.5 h-3.5" /> Add New Item
-                            </Button>
                         </div>
-
                         <div className="p-6 space-y-4">
-                            {data.items.map((item, index) => (
-                                <RequirementItemRow
-                                    key={index}
-                                    index={index}
-                                    item={item}
-                                    products={products}
-                                    aitFactor={aitFactor}
-                                    onItemChange={handleItemChange}
-                                    onRemove={removeItem}
-                                    isRemoveDisabled={data.items.length === 1}
-                                    errors={errors}
-                                    units={units}
-                                    onProductCreated={(newProduct: Product) => {
-                                        setProducts(prev => [...prev, newProduct]);
-                                    }}
-                                />
-                            ))}
-                            <ErrorMessage message={errors && errors[`items`]} />
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <FormLabel>VAT</FormLabel>
+                                    <div className="relative">
+                                        <Input
+                                            type="number"
+                                            className="pr-8 h-10"
+                                            value={data.vat_percentage}
+                                            onChange={(e) => setData("vat_percentage", e.target.value)}
+                                        />
+                                        <Percent className="w-3.5 h-3.5 absolute right-3 top-3.5 text-slate-400" />
+                                    </div>
+                                    <ErrorMessage message={errors.vat_percentage} />
+                                </div>
+                                <div className="space-y-2">
+                                    <FormLabel>AIT (%)</FormLabel>
+                                    <div className="relative">
+                                        <Input
+                                            type="number"
+                                            className="pr-8 h-10"
+                                            value={data.ait_percentage}
+                                            onChange={(e) => setData("ait_percentage", e.target.value)}
+                                        />
+                                        <Percent className="w-3.5 h-3.5 absolute right-3 top-3.5 text-slate-400" />
+                                    </div>
+                                    <ErrorMessage message={errors.ait_percentage} />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-4">
+
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <FormLabel>Advance</FormLabel>
+                                    </div>
+
+                                    <div className="relative">
+
+                                        <Input
+                                            type="number"
+                                            value={data.advance_payment === 0 ? "" : data.advance_payment}
+                                            onChange={(e) => setData("advance_payment", e.target.value === "" ? 0 : Number(e.target.value))}
+                                            className="h-10"
+                                        />
+                                        <Percent className="w-3.5 h-3.5 absolute right-3 top-3.5 text-slate-400" />
+
+                                    </div>
+                                    <ErrorMessage message={errors.advance_payment} />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <FormLabel>Before Delivery (%)</FormLabel>
+                                    <div className="relative">
+
+                                        <Input
+                                            type="number"
+                                            value={data.before_payment === 0 ? "" : data.before_payment}
+                                            onChange={(e) => {
+                                                const val = e.target.value === "" ? 0 : Number(e.target.value);
+                                                setData(d => ({
+                                                    ...d,
+                                                    before_payment: val,
+                                                    after_payment: val > 0 ? 0 : d.after_payment
+                                                }));
+                                            }}
+                                            disabled={Number(data.after_payment) > 0}
+                                            className="h-10"
+                                        />
+                                        <Percent className="w-3.5 h-3.5 absolute right-3 top-3.5 text-slate-400" />
+                                    </div>
+                                    <ErrorMessage message={errors.before_payment} />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <FormLabel>After Delivery </FormLabel>
+                                    <div className="relative">
+
+                                        <Input
+                                            type="number"
+                                            value={data.after_payment === 0 ? "" : data.after_payment}
+                                            onChange={(e) => {
+                                                const val = e.target.value === "" ? 0 : Number(e.target.value);
+                                                setData(d => ({
+                                                    ...d,
+                                                    after_payment: val,
+                                                    before_payment: val > 0 ? 0 : d.before_payment
+                                                }));
+                                            }}
+                                            disabled={Number(data.before_payment) > 0}
+                                            className="h-10"
+                                        />
+                                        <Percent className="w-3.5 h-3.5 absolute right-3 top-3.5 text-slate-400" />
+                                    </div>
+                                    <ErrorMessage message={errors.after_payment} />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -398,97 +474,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                         </div>
                     </div>
 
-                    <div className="bg-card border-none shadow-sm ring-1 ring-slate-200 rounded-xl overflow-hidden">
-                        <div className="p-4 bg-slate-50/50 border-b border-slate-200">
-                            <h3 className="text-sm font-semibold flex items-center gap-2 text-slate-700">
-                                <Percent className="w-4 h-4 text-primary" /> Taxes & Payments
-                            </h3>
-                        </div>
-                        <div className="p-6 space-y-4">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <FormLabel>VAT (%)</FormLabel>
-                                    <div className="relative">
-                                        <Input
-                                            type="number"
-                                            className="pr-8 h-10"
-                                            value={data.vat_percentage}
-                                            onChange={(e) => setData("vat_percentage", e.target.value)}
-                                        />
-                                        <Percent className="w-3.5 h-3.5 absolute right-3 top-3.5 text-slate-400" />
-                                    </div>
-                                    <ErrorMessage message={errors.vat_percentage} />
-                                </div>
-                                <div className="space-y-2">
-                                    <FormLabel>AIT (%)</FormLabel>
-                                    <div className="relative">
-                                        <Input
-                                            type="number"
-                                            className="pr-8 h-10"
-                                            value={data.ait_percentage}
-                                            onChange={(e) => setData("ait_percentage", e.target.value)}
-                                        />
-                                        <Percent className="w-3.5 h-3.5 absolute right-3 top-3.5 text-slate-400" />
-                                    </div>
-                                    <ErrorMessage message={errors.ait_percentage} />
-                                </div>
-                            </div>
 
-                            <div className="space-y-4 pt-2">
-                                <div className="space-y-2">
-                                    <div className="flex justify-between items-center">
-                                        <FormLabel>Advance (%)</FormLabel>
-                                        <span className="text-[10px] font-medium text-slate-500">{data.advance_payment}%</span>
-                                    </div>
-                                    <Input
-                                        type="number"
-                                        value={data.advance_payment === 0 ? "" : data.advance_payment}
-                                        onChange={(e) => setData("advance_payment", e.target.value === "" ? 0 : Number(e.target.value))}
-                                        className="h-10"
-                                    />
-                                    <ErrorMessage message={errors.advance_payment} />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <FormLabel>Before Delivery (%)</FormLabel>
-                                    <Input
-                                        type="number"
-                                        value={data.before_payment === 0 ? "" : data.before_payment}
-                                        onChange={(e) => {
-                                            const val = e.target.value === "" ? 0 : Number(e.target.value);
-                                            setData(d => ({
-                                                ...d,
-                                                before_payment: val,
-                                                after_payment: val > 0 ? 0 : d.after_payment
-                                            }));
-                                        }}
-                                        disabled={Number(data.after_payment) > 0}
-                                        className="h-10"
-                                    />
-                                    <ErrorMessage message={errors.before_payment} />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <FormLabel>After Delivery (%)</FormLabel>
-                                    <Input
-                                        type="number"
-                                        value={data.after_payment === 0 ? "" : data.after_payment}
-                                        onChange={(e) => {
-                                            const val = e.target.value === "" ? 0 : Number(e.target.value);
-                                            setData(d => ({
-                                                ...d,
-                                                after_payment: val,
-                                                before_payment: val > 0 ? 0 : d.before_payment
-                                            }));
-                                        }}
-                                        disabled={Number(data.before_payment) > 0}
-                                        className="h-10"
-                                    />
-                                    <ErrorMessage message={errors.after_payment} />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <div className="bg-card border-none shadow-sm ring-1 ring-slate-200 rounded-xl overflow-hidden">
                         <div className="p-4 bg-slate-50/50 border-b border-slate-200">
@@ -497,9 +483,11 @@ export default function RequirementForm({ requirement, customers: initialCustome
                             </h3>
                         </div>
                         <div className="p-6 space-y-4">
+                            <FormLabel>Internal Remarks</FormLabel>
+
                             <Textarea
-                                className="bg-background resize-none text-sm border-slate-200 focus:border-primary/50"
-                                rows={4}
+                                className="bg-background resize-none text-sm border-slate-200 focus:border-primary/50 min-h-32"
+                                rows={5}
                                 placeholder="Add special instructions for team..."
                                 value={data.notes}
                                 onChange={(e) => setData("notes", e.target.value)}
@@ -507,6 +495,41 @@ export default function RequirementForm({ requirement, customers: initialCustome
                             <ErrorMessage message={errors.notes} />
                         </div>
                     </div>
+                </div>
+            </div>
+
+            {/* Items Section moved inside main column */}
+            <div className="bg-card border-none shadow-sm ring-1 ring-slate-200 rounded-xl overflow-hidden">
+                <div className="p-4 bg-slate-50/50 flex justify-between items-center border-b border-slate-200">
+                    <h3 className="text-sm font-semibold flex items-center gap-2 text-slate-700">
+                        <Plus className="w-4 h-4 text-primary" /> Requirement Items
+                    </h3>
+                </div>
+
+                <div className="p-6 space-y-4">
+                    {data.items.map((item, index) => (
+                        <RequirementItemRow
+                            key={index}
+                            index={index}
+                            item={item}
+                            products={products}
+                            aitFactor={aitFactor}
+                            onItemChange={handleItemChange}
+                            onRemove={removeItem}
+                            isRemoveDisabled={data.items.length === 1}
+                            errors={errors}
+                            units={units}
+                            onProductCreated={(newProduct: Product) => {
+                                setProducts(prev => [...prev, newProduct]);
+                            }}
+                        />
+                    ))}
+                    <div className="flex justify-center pt-2">
+                        <Button type="button" variant="outline" size="sm" onClick={addItem} className="gap-2 px-6 h-9 bg-background border-slate-200 hover:bg-slate-50 hover:border-primary/50 hover:text-primary transition-all">
+                            <Plus className="w-4 h-4" /> Add New Item
+                        </Button>
+                    </div>
+                    <ErrorMessage message={errors && errors[`items`]} />
                 </div>
             </div>
 

@@ -32,13 +32,13 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
     const quantityError = errors && errors[`items.${index}.quantity`];
     const unitPriceError = errors && errors[`items.${index}.unit_price`];
     const costingPriceError = errors && errors[`items.${index}.costing_price`];
+    const sourceError = errors && errors[`items.${index}.source`];
 
     return (
-        <div className={`group relative bg-white border rounded-xl p-4 md:p-6 transition-all hover:shadow-lg mb-6 ${
-            errors && Object.keys(errors).some(key => key.startsWith(`items.${index}.`))
-                ? 'border-destructive/40 bg-destructive/[0.01] shadow-sm shadow-destructive/5'
-                : 'border-slate-200 hover:border-primary/40'
-        }`}>
+        <div className={`group relative bg-white border rounded-xl p-4 md:p-6 transition-all hover:shadow-lg mb-6 ${errors && Object.keys(errors).some(key => key.startsWith(`items.${index}.`))
+            ? 'border-destructive/40 bg-destructive/[0.01] shadow-sm shadow-destructive/5'
+            : 'border-slate-200 hover:border-primary/40'
+            }`}>
 
             {/* Remove Row Button */}
             <div className="absolute -top-3 -right-3 z-10">
@@ -57,7 +57,7 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
             <div className="flex flex-col gap-6">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
                     {/* Product Selection */}
-                    <div className="col-span-1 md:col-span-5 lg:col-span-4 space-y-2">
+                    <div className="col-span-1 md:col-span-4 lg:col-span-3 space-y-2">
                         <GenericCombobox
                             required
                             label="Product Name"
@@ -91,76 +91,113 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                     </div>
 
                     {/* Quantity */}
-                    <div className="col-span-1 md:col-span-2 lg:col-span-2 space-y-2">
+                    <div className="col-span-1 space-y-2">
                         <FormLabel required>QTY</FormLabel>
                         <Input
                             type="number"
                             min="1"
                             value={item.quantity}
                             onChange={(e) => onItemChange(index, "quantity", e.target.value)}
-                            className={`text-center font-bold h-10 transition-colors ${
-                                quantityError
-                                    ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/[0.02]'
-                                    : 'border-slate-200 focus-visible:ring-primary/20'
-                            }`}
+                            className={`text-center font-bold h-10 transition-colors ${quantityError
+                                ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/[0.02]'
+                                : 'border-slate-200 focus-visible:ring-primary/20'
+                                }`}
                         />
                         <ErrorMessage message={quantityError} />
                     </div>
-
-                    {/* Unit Price Input */}
-                    <div className="col-span-1 md:col-span-3 lg:col-span-3 space-y-2">
-                        <FormLabel>Unit Price</FormLabel>
-                        <div className="relative">
-                            <Input
-                                type="number"
-                                value={item.unit_price}
-                                onChange={(e) => onItemChange(index, "unit_price", e.target.value)}
-                                className={`font-bold h-10 text-sm transition-colors ${
-                                    unitPriceError
-                                        ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/[0.02]'
-                                        : 'border-slate-200 focus-visible:ring-primary/20'
-                                }`}
-                            />
-                        </div>
-                        <ErrorMessage message={unitPriceError} />
+                    {/* Unit */}
+                    <div className="col-span-1 space-y-2">
+                        <FormLabel >Unit</FormLabel>
+                        <Input
+                            type="number"
+                            min="1"
+                            readOnly
+                            value={item.unit_id}
+                            onChange={(e) => onItemChange(index, "unit_id", e.target.value)}
+                            className={`text-center font-bold h-10 transition-colors border-slate-100 focus-visible:ring-primary/10}`}
+                        />
+                        {/* <ErrorMessage message={quantityError} /> */}
+                        <span>{item.unit_id}</span>
                     </div>
-
                     {/* Costing Price Input */}
-                    <div className="col-span-1 md:col-span-3 lg:col-span-3 space-y-2">
+                    <div className="col-span-1 md:col-span-2 lg:col-span-2 space-y-2">
                         <FormLabel>Costing (Flat)</FormLabel>
                         <div className="relative">
                             <Input
                                 type="number"
                                 value={item.costing_price}
                                 onChange={(e) => onItemChange(index, "costing_price", e.target.value)}
-                                className={`font-bold h-10 text-sm transition-colors ${
-                                    costingPriceError
-                                        ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/[0.02]'
-                                        : 'border-slate-200 focus-visible:ring-primary/20'
-                                }`}
+                                className={`font-bold h-10 text-sm transition-colors ${costingPriceError
+                                    ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/[0.02]'
+                                    : 'border-slate-200 focus-visible:ring-primary/20'
+                                    }`}
                             />
                         </div>
                         <ErrorMessage message={costingPriceError} />
                     </div>
+
+                    {/* Unit Price Input */}
+                    <div className="col-span-1 md:col-span-2 lg:col-span-2 space-y-2">
+                        <FormLabel>Sell Price</FormLabel>
+                        <div className="relative">
+                            <Input
+                                type="number"
+                                value={item.unit_price}
+                                onChange={(e) => onItemChange(index, "unit_price", e.target.value)}
+                                className={`font-bold h-10 text-sm transition-colors ${unitPriceError
+                                    ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/[0.02]'
+                                    : 'border-slate-200 focus-visible:ring-primary/20'
+                                    }`}
+                            />
+                        </div>
+                        <ErrorMessage message={unitPriceError} />
+                    </div>
+
+                    <div className="col-span-2 space-y-2">
+                        <FormLabel>Supplier</FormLabel>
+                        <Input
+                            type="text"
+                            readOnly
+                            min="1"
+                            value={item.supplier}
+                            onChange={(e) => onItemChange(index, "supplier", e.target.value)}
+                            className={`text-center font-bold h-10 transition-colors border-slate-200 focus-visible:ring-primary/20}`}
+                        />
+                        <span>{item.supplier}</span>
+                    </div>
+
+
+
 
 
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-end">
                     {/* Description/Specifications */}
-                    <div className="lg:col-span-9 space-y-2">
+                    <div className="lg:col-span-5 space-y-2">
                         <FormLabel>Specifications / Description</FormLabel>
                         <Textarea
                             value={item.description || ""}
                             onChange={(e) => onItemChange(index, "description", e.target.value)}
                             placeholder="Add detailed product specifications here..."
-                            className={`text-sm min-h-20 leading-relaxed resize-none transition-colors ${
-                                descriptionError
-                                    ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/[0.02]'
-                                    : 'border-slate-200 focus-visible:ring-primary/20'
-                            }`}
+                            className={`text-sm min-h-20 leading-relaxed resize-none transition-colors ${descriptionError
+                                ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/[0.02]'
+                                : 'border-slate-200 focus-visible:ring-primary/20'
+                                }`}
                         />
                         <ErrorMessage message={descriptionError} />
+                    </div>
+                    <div className="col-span-4 space-y-2">
+                        <FormLabel>Source</FormLabel>
+                        <Textarea
+                            readOnly
+                            value={item.source || ""}
+                            onChange={(e) => onItemChange(index, "source", e.target.value)}
+                            className={`text-sm min-h-20 leading-relaxed resize-none transition-colors ${sourceError
+                                ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/[0.02]'
+                                : 'border-slate-200 focus-visible:ring-primary/20'
+                                }`} />
+                        <span>{item.source}</span>
                     </div>
 
                     {/* Total Calculation Display - Desktop (shown on lg+) */}

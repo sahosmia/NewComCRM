@@ -65,7 +65,7 @@ export default function Dashboard({ meetings, followUps, sales, customers, birth
                 {/* Operations Counters Grid (Balanced 6 columns grid) */}
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     <StatCard title="Today Requirements" value={requirements.today_count} icon="file-text" color="cyan" link="/requirements?period=today" />
-                    <StatCard title="Total Requirements" value={requirements.total_count} icon="calendar" color="rose" link="/requirements?period=total" />
+                    <StatCard title="Total Pending Requirements" value={requirements.total_count} icon="calendar" color="rose" link="/requirements?period=total&status=pending" />
                     <StatCard title="Today Follow up" value={followUps.today_count} icon="clock" color="yellow" link="/follow-ups?period=today" />
                     <StatCard title="Upcoming Follow up" value={followUps.upcoming_count} icon="bell" color="orange" link="/follow-ups?period=upcoming" />
                     <StatCard title="Today Meetings" value={meetings.today_count} icon="shopping-cart" color="blue" link="/meetings?period=today" />

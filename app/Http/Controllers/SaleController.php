@@ -20,10 +20,9 @@ class SaleController extends Controller
     {
         return Inertia::render('Sales/Index', [
             'sales' => $this->saleService->paginateIndex($request->all()),
-            'filters' => [
-                'users' => $this->lookupService->getUsersForSelect(),
-                'customers' => $this->lookupService->getCustomersForSelect(),
-            ]
+            'customers' => $this->lookupService->getCustomersForSelect(),
+            'users'     => $this->lookupService->getUsersForSelect(),
+            'companies' => $this->lookupService->getCompanies(),
         ]);
     }
 

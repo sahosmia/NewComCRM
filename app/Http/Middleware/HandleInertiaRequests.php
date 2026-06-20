@@ -42,6 +42,9 @@ class HandleInertiaRequests extends Middleware
             'settings' => [
                 'app_name' => setting('app_name', config('app.name')),
                 'logo' => setting('logo'),
+                'default_vat' => setting('default_vat', 0),
+                'default_ait' => setting('default_ait', 0),
+                'quotation_thanks_text' => setting('quotation_thanks_text'),
             ],
             'auth' => [
                 'user' => $request->user(),

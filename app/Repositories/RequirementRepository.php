@@ -23,16 +23,26 @@ class RequirementRepository
 
             ->when($params['search'] ?? null, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
-                    $q->whereHas('customer', function ($sub) use ($search) {
-                        $sub->where('name', 'like', "%{$search}%");
-                    })->orWhereHas('items.product', function ($sub) use ($search) {
-                        $sub->where('name', 'like', "%{$search}%");
-                    });
+                    $q->where('title', 'like', "%{$search}%")
+                        ->orWhereHas('customer', function ($sub) use ($search) {
+                            $sub->where('name', 'like', "%{$search}%");
+                        });
                 });
             })
 
             ->when($params['customer_id'] ?? null, function ($query, $customer_id) {
                 $query->where('customer_id', $customer_id);
+            })
+            ->when($params['status'] ?? null, function ($query, $status) {
+                $query->where('status', $status);
+            })
+            ->when($params['user_id'] ?? null, function ($query, $user_id) {
+                $query->where('user_id', $user_id);
+            })
+            ->when($params['company_id'] ?? null, function ($query, $company_id) {
+                $query->whereHas('customer', function ($q) use ($company_id) {
+                    $q->where('company_id', $company_id);
+                });
             })
 
             ->when($params['start_date'] ?? null, fn($query, $startDate) => $query->whereDate('created_at', '>=', $startDate))

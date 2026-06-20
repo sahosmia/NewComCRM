@@ -30,11 +30,11 @@ class DashboardService
     private function getRequirementMetrics(User $user): array
     {
         $baseQuery = Requirement::query()
-            ->when(!$user->isSuperAdmin(), fn($q) => $q->whereHas('customer', fn($cq) => $cq->where('assigned_to', $user->id)));
+            ->when(!$user->isSuperAdmin(), fn($q) => $q->where('user_id', $user->id));
 
         return [
             'today_count' => (clone $baseQuery)->whereDate('created_at', today())->count(),
-            'total_count' => (clone $baseQuery)->count(),
+            'total_count' => (clone $baseQuery)->where('status', 'pending')->count(),
         ];
     }
 

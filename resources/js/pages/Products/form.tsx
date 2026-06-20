@@ -25,6 +25,7 @@ export default function ProductForm({ product, units = [] }: Props) {
     const { data, setData, post, put, processing, errors } = useForm({
         name: product?.name || "",
         unit_price: product?.unit_price || "",
+        costing_price: product?.costing_price || "",
         category: product?.category || "",
         stock_quantity: product?.stock_quantity || "",
         supplier_name: product?.supplier_name || "",
@@ -76,6 +77,20 @@ export default function ProductForm({ product, units = [] }: Props) {
                     />
                     <ErrorMessage message={errors.unit_price} />
 
+                </div>
+
+                {/* Costing Price */}
+                <div className="space-y-2">
+                    <FormLabel>Costing Price</FormLabel>
+                    <Input
+                        id="costing_price"
+                        type="number"
+                        step="0.01"
+                        placeholder="0.00"
+                        value={data.costing_price}
+                        onChange={(e) => setData("costing_price", e.target.value)}
+                    />
+                    <ErrorMessage message={errors.costing_price} />
                 </div>
 
                 {/* Stock Quantity */}

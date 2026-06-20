@@ -49,6 +49,9 @@ class SettingController extends Controller
             'footer_contact_info' => ['nullable', 'string'],
             'pdf_sender_office_info' => ['nullable', 'string'],
             'paginated_quantity' => ['required', 'integer', 'min:1'],
+            'default_vat' => ['nullable', 'numeric', 'min:0'],
+            'default_ait' => ['nullable', 'numeric', 'min:0'],
+            'quotation_thanks_text' => ['nullable', 'string', 'max:500'],
         ]);
 
         $this->service->updateSettings($validated);

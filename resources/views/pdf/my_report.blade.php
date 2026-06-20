@@ -545,7 +545,7 @@
                             <td>
                                 <strong>{{ $item->product->name }}</strong>
                                 <br>
-                                {{ $item->description}}
+                                {!! nl2br(e($item->description)) !!}
 
                             </td>
                             <td class="text-center">{{ $item->quantity }}
@@ -760,18 +760,23 @@
                     </li>
                     <li>
                         Payment Terms:
-                        <span class="term-head"> {{ $requirement->advance_payment ?? '______' }}% Advance </span> with
-                        Purchase Order
-
-                        @if ($requirement->before_payment > 0)
-                            <span class="term-head"> {{ $requirement->before_payment }}% Before
-                                Delivery/Installation</span> (Or as mutually agreed).
-                        @elseif($requirement->after_payment > 0)
-                            <span class="term-head"> {{ $requirement->after_payment }}% After Installation / Delivery.
-                            </span>
+                        @if($requirement->advance_payment == 100)
+                            <span class="term-head">100% Advance with purchase order. (Or as mutually agreed)</span>
+                        @elseif($requirement->advance_payment > 0 && $requirement->after_payment > 0)
+                            <span class="term-head">{{ $requirement->advance_payment }}% Advance with purchase order, {{ $requirement->after_payment }}% After delivery/Installation. (Or as mutually agreed)</span>
+                        @elseif($requirement->advance_payment > 0 && $requirement->before_payment > 0)
+                            <span class="term-head">{{ $requirement->advance_payment }}% Advance with purchase order, {{ $requirement->before_payment }}% Before delivery/Installation. (Or as mutually agreed)</span>
                         @else
-                            <span class="term-head"> ______% Before Delivery / After Installation (Or as mutually
-                                agreed). </span>
+                            <span class="term-head"> {{ $requirement->advance_payment ?? '______' }}% Advance with purchase order, 
+                                @if ($requirement->before_payment > 0)
+                                    {{ $requirement->before_payment }}% Before Delivery/Installation
+                                @elseif($requirement->after_payment > 0)
+                                    {{ $requirement->after_payment }}% After Delivery/Installation
+                                @else
+                                    ______% Before Delivery / After Installation
+                                @endif
+                                . (Or as mutually agreed)
+                            </span>
                         @endif
                     </li>
                     <li>Payment Method: Cash / Bank transfer to be made favoring
@@ -832,7 +837,7 @@
                 </ol>
 
                 <div class="thanks-footer">
-                    Thanks for get in touch with {{ setting('app_name', 'Crystal Vision Solutions') }}
+                    {{ setting('quotation_thanks_text', 'Thanks for getting in touch with ' . setting('app_name', 'Crystal Vision Solutions')) }}
                 </div>
             </div>
         </div>
