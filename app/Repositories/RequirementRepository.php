@@ -34,6 +34,17 @@ class RequirementRepository
             ->when($params['customer_id'] ?? null, function ($query, $customer_id) {
                 $query->where('customer_id', $customer_id);
             })
+            ->when($params['status'] ?? null, function ($query, $status) {
+                $query->where('status', $status);
+            })
+            ->when($params['user_id'] ?? null, function ($query, $user_id) {
+                $query->where('user_id', $user_id);
+            })
+            ->when($params['company_id'] ?? null, function ($query, $company_id) {
+                $query->whereHas('customer', function ($q) use ($company_id) {
+                    $q->where('company_id', $company_id);
+                });
+            })
 
             ->when($params['start_date'] ?? null, fn($query, $startDate) => $query->whereDate('created_at', '>=', $startDate))
             ->when($params['end_date'] ?? null, fn($query, $endDate) => $query->whereDate('created_at', '<=', $endDate))

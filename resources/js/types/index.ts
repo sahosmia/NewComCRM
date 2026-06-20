@@ -131,6 +131,7 @@ export interface Product {
     name: string;
 
     unit_price: string;
+    costing_price: string;
     description: string | null;
     category: string | null;
     stock_quantity: number;
@@ -390,4 +391,7 @@ export interface SettingsForm {
     footer_contact_info: string;
     pdf_sender_office_info: string;
     paginated_quantity: number | string;
+    default_vat: string | number;
+    default_ait: string | number;
+    quotation_thanks_text: string;
 }

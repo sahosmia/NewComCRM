@@ -14,6 +14,7 @@ class SaleRepository
         $search = $params['search'] ?? null;
         $customerId = $params['customer_id'] ?? null;
         $userId = $params['user_id'] ?? null;
+        $companyId = $params['company_id'] ?? null;
         $startDate = $params['start_date'] ?? null;
         $endDate = $params['end_date'] ?? null;
         $sort = $params['sort'] ?? 'sale_date';
@@ -28,7 +29,10 @@ class SaleRepository
             })
             ->when($customerId, fn($q) => $q->where('customer_id', $customerId))
             ->when($userId, function ($query, $userId) {
-                $query->whereHas('customer', fn($q) => $q->where('assigned_to', $userId));
+                $query->whereHas('requirement', fn($q) => $q->where('user_id', $userId));
+            })
+            ->when($companyId, function ($query, $companyId) {
+                $query->whereHas('customer', fn($q) => $q->where('company_id', $companyId));
             })
             ->when($startDate, fn($q) => $q->whereDate('sale_date', '>=', $startDate))
             ->when($endDate, fn($q) => $q->whereDate('sale_date', '<=', $endDate))

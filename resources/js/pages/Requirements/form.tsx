@@ -30,7 +30,7 @@ interface Props {
 }
 
 export default function RequirementForm({ requirement, customers: initialCustomers, products: initialProducts, units: initialUnits, users, companies }: Props) {
-    const { auth } = usePage().props as any;
+    const { auth, settings } = usePage().props as any;
     const isSuperAdmin = auth.user.role === 'super_admin';
 
     const { openModal } = useModal();
@@ -47,8 +47,8 @@ export default function RequirementForm({ requirement, customers: initialCustome
         notes: requirement?.notes || "",
         status: requirement?.status || "pending",
 
-        ait_percentage: requirement?.ait_percentage ?? (requirement ? 0 : 5),
-        vat_percentage: requirement?.vat_percentage ?? (requirement ? 0 : 10),
+        ait_percentage: requirement?.ait_percentage ?? (requirement ? 0 : (settings?.default_ait ?? 5)),
+        vat_percentage: requirement?.vat_percentage ?? (requirement ? 0 : (settings?.default_vat ?? 10)),
 
         has_accessories: !!(requirement?.has_accessories ?? false),
         accessories: requirement?.accessories || [
@@ -94,6 +94,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                     ...item,
                     product_id: parseInt(String(value)),
                     unit_price: product ? product.unit_price : (item.unit_price || ""),
+                    costing_price: product ? product.costing_price : (item.costing_price || 0),
                     description: product ? (product.description || "") : (item.description || ""),
                 };
             }
@@ -172,14 +173,17 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                         placeholder="Select Customer"
                                         searchPlaceholder="Search customers..."
                                         onSelect={(id) => {
-                                            setData("customer_id", id as number);
                                             const customer = customers.find(c => c.id === id);
-                                            if (customer && customer.addresses && customer.addresses.length > 0) {
-                                                setData("delivery_location", customer.addresses[0]);
-                                            }
-                                            if(customer && customer.assigned_to){
-                                                setData("user_id", customer.assigned_to);
-                                            }
+                                            setData(prev => ({
+                                                ...prev,
+                                                customer_id: id as number,
+                                                delivery_location: (customer && customer.addresses && customer.addresses.length > 0)
+                                                    ? customer.addresses[0]
+                                                    : prev.delivery_location,
+                                                user_id: (customer && customer.assigned_to)
+                                                    ? Number(customer.assigned_to)
+                                                    : prev.user_id
+                                            }));
                                         }}
                                         error={errors.customer_id}
                                         renderAction={
@@ -301,9 +305,6 @@ export default function RequirementForm({ requirement, customers: initialCustome
                             <h3 className="text-sm font-semibold flex items-center gap-2 text-slate-700">
                                 <Plus className="w-4 h-4 text-primary" /> Requirement Items
                             </h3>
-                            <Button type="button" variant="outline" size="sm" onClick={addItem} className="h-8 gap-1 bg-background border-slate-200 hover:bg-slate-50">
-                                <Plus className="w-3.5 h-3.5" /> Add New Item
-                            </Button>
                         </div>
 
                         <div className="p-6 space-y-4">
@@ -324,6 +325,11 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                     }}
                                 />
                             ))}
+                            <div className="flex justify-center pt-2">
+                                <Button type="button" variant="outline" size="sm" onClick={addItem} className="gap-2 px-6 h-9 bg-background border-slate-200 hover:bg-slate-50 hover:border-primary/50 hover:text-primary transition-all">
+                                    <Plus className="w-4 h-4" /> Add New Item
+                                </Button>
+                            </div>
                             <ErrorMessage message={errors && errors[`items`]} />
                         </div>
                     </div>

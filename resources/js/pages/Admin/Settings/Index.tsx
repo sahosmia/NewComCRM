@@ -46,6 +46,9 @@ export default function Index({ settings }: Props) {
         footer_contact_info: (settings.footer_contact_info as string) || '',
         pdf_sender_office_info: (settings.pdf_sender_office_info as string) || '',
         paginated_quantity: (settings.paginated_quantity as string) || '10',
+        default_vat: settings.default_vat || '0',
+        default_ait: settings.default_ait || '0',
+        quotation_thanks_text: (settings.quotation_thanks_text as string) || '',
     });
 
     const [previews, setPreviews] = useState({
@@ -487,6 +490,49 @@ export default function Index({ settings }: Props) {
                                     Number of records shown per page in tables.
                                 </p>
                                 <InputError message={errors.paginated_quantity} />
+                            </div>
+
+                            <div className="grid gap-6 md:grid-cols-2">
+                                <div className="space-y-2">
+                                    <FormLabel>Default VAT (%)</FormLabel>
+                                    <Input
+                                        type="number"
+                                        value={data.default_vat}
+                                        onChange={(e) => setData('default_vat', e.target.value)}
+                                        placeholder="0"
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        Applied automatically to new requirements.
+                                    </p>
+                                    <InputError message={errors.default_vat} />
+                                </div>
+                                <div className="space-y-2">
+                                    <FormLabel>Default AIT (%)</FormLabel>
+                                    <Input
+                                        type="number"
+                                        value={data.default_ait}
+                                        onChange={(e) => setData('default_ait', e.target.value)}
+                                        placeholder="0"
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        Applied automatically to new requirements.
+                                    </p>
+                                    <InputError message={errors.default_ait} />
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <FormLabel>Quotation Thanks Text</FormLabel>
+                                <Textarea
+                                    value={data.quotation_thanks_text}
+                                    onChange={(e) => setData('quotation_thanks_text', e.target.value)}
+                                    placeholder="Thanks for getting in touch with Crystal Vision Solutions"
+                                    rows={2}
+                                />
+                                <p className="text-xs text-muted-foreground">
+                                    This text appears at the end of Quotation PDFs.
+                                </p>
+                                <InputError message={errors.quotation_thanks_text} />
                             </div>
                         </CardContent>
                     </Card>

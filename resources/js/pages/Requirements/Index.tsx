@@ -5,11 +5,16 @@ import AppLayout from '@/layouts/app-layout';
 import type { FilterOption, PaginationType, Requirement, SortOption } from '@/types';
 import { columns } from './Columns';
 
+import type { Company, CustomerType, User } from '@/types';
+
 interface Props {
     requirements: PaginationType<Requirement>;
+    customers: CustomerType[];
+    users: User[];
+    companies: Company[];
 }
 
-export default function RequirementIndex({ requirements }: Props) {
+export default function RequirementIndex({ requirements, customers, users, companies }: Props) {
     const breadcrumbs = [
         { title: 'Dashboard', href: route('dashboard') },
         { title: 'Requirements', href: route('requirements.index') },
@@ -19,6 +24,36 @@ export default function RequirementIndex({ requirements }: Props) {
 
 
     const filters: FilterOption[] = [
+        {
+            name: 'status',
+            label: 'Status',
+            type: 'select',
+            options: [
+                { label: 'Pending', value: 'pending' },
+                { label: 'Approved', value: 'approved' },
+                { label: 'Processing', value: 'processing' },
+                { label: 'Purchased', value: 'purchased' },
+                { label: 'Cancel', value: 'cancel' },
+            ]
+        },
+        {
+            name: 'customer_id',
+            label: 'Customer',
+            type: 'searchSelect',
+            options: customers.map(c => ({ label: c.name, value: c.id }))
+        },
+        {
+            name: 'company_id',
+            label: 'Company',
+            type: 'searchSelect',
+            options: companies.map(c => ({ label: c.name, value: c.id }))
+        },
+        {
+            name: 'user_id',
+            label: 'Assigned To',
+            type: 'searchSelect',
+            options: users.map(u => ({ label: u.name, value: u.id }))
+        },
         {
             name: 'date_range',
             label: 'Date Range',

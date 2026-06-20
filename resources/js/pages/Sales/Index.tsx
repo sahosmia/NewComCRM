@@ -7,12 +7,13 @@ import AppLayout from '@/layouts/app-layout';
 import type { PaginationType, SortOption } from '@/types';
 import { formatDate } from '@/utils/date-format';
 
+import type { Company, CustomerType, User } from '@/types';
+
 interface Props {
     sales: PaginationType<any>;
-    filters: {
-        users: any[];
-        customers: any[];
-    };
+    customers: CustomerType[];
+    users: User[];
+    companies: Company[];
 }
 
 const columns: any[] = [
@@ -77,7 +78,7 @@ const columns: any[] = [
     },
 ];
 
-export default function SaleIndex({ sales, filters }: Props) {
+export default function SaleIndex({ sales, customers, users, companies }: Props) {
     const breadcrumbs = [
         { title: 'Dashboard', href: route('dashboard') },
         { title: 'Sales', href: route('sales.index') },
@@ -94,14 +95,20 @@ export default function SaleIndex({ sales, filters }: Props) {
         {
             name: 'user_id',
             label: 'Representative',
-            type: 'select' as const,
-            options: filters.users.map(u => ({ label: u.name, value: u.id.toString() }))
+            type: 'searchSelect' as const,
+            options: users.map(u => ({ label: u.name, value: u.id }))
         },
         {
             name: 'customer_id',
             label: 'Customer',
-            type: 'select' as const,
-            options: filters.customers.map(c => ({ label: c.name, value: c.id.toString() }))
+            type: 'searchSelect' as const,
+            options: customers.map(c => ({ label: c.name, value: c.id }))
+        },
+        {
+            name: 'company_id',
+            label: 'Company',
+            type: 'searchSelect' as const,
+            options: companies.map(c => ({ label: c.name, value: c.id }))
         },
         {
             name: 'date_range',
