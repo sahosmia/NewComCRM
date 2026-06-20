@@ -18,6 +18,7 @@ class ProductFactory extends Factory
             'category'       => $this->faker->randomElement(['Electronics', 'Cable', 'Switch', 'Accessories']),
             'stock_quantity' => $this->faker->numberBetween(10, 100),
             'unit_price'     => $this->faker->randomFloat(2, 100, 10000),
+            'costing_price'  => $this->faker->randomFloat(2, 50, 8000),
             'supplier_name'  => $this->faker->company(),
             'source'         => $this->faker->paragraph(),
             'unit_id'        => Unit::inRandomOrder()->first()?->id ?? Unit::factory(),
