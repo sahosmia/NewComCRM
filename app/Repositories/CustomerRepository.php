@@ -78,7 +78,6 @@ class CustomerRepository
     {
         return Customer::query()
             ->with('company')
-            ->select('id', 'name', 'company_id', 'assigned_to')
             ->get();
     }
 
