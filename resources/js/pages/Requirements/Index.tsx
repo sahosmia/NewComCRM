@@ -30,7 +30,6 @@ export default function RequirementIndex({ requirements, customers, users, compa
             type: 'select',
             options: [
                 { label: 'Pending', value: 'pending' },
-                { label: 'Approved', value: 'approved' },
                 { label: 'Processing', value: 'processing' },
                 { label: 'Purchased', value: 'purchased' },
                 { label: 'Cancel', value: 'cancel' },

@@ -47,8 +47,8 @@ export default function RequirementForm({ requirement, customers: initialCustome
         notes: requirement?.notes || "",
         status: requirement?.status || "pending",
 
-        ait_percentage: requirement?.ait_percentage ?? (requirement ? 0 : (settings?.default_ait ?? 5)),
-        vat_percentage: requirement?.vat_percentage ?? (requirement ? 0 : (settings?.default_vat ?? 10)),
+        ait_percentage: requirement?.ait_percentage ?? (requirement ? 0 : (settings?.default_ait ?? 0)),
+        vat_percentage: requirement?.vat_percentage ?? (requirement ? 0 : (settings?.default_vat ?? 0)),
 
         has_accessories: !!(requirement?.has_accessories ?? false),
         accessories: requirement?.accessories || [

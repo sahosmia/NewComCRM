@@ -175,7 +175,7 @@ export interface Requirement {
     title: string | null;
     user_id: number;
     grand_total: string | number;
-    status: 'pending' | 'approved' | 'processing' | 'purchased' | 'cancel';
+    status: 'pending' | 'processing' | 'purchased' | 'cancel';
     notes: string | null;
 
     has_ait: boolean;
