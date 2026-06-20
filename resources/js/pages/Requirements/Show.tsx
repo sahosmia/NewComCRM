@@ -143,6 +143,18 @@ export default function Show({ requirement, customers, requirements, users }: Pr
                                                 {item.description && (
                                                     <p className="text-[10px] text-muted-foreground mt-1 italic whitespace-pre-wrap">{item.description}</p>
                                                 )}
+                                                <div className="flex gap-4 mt-1">
+                                                    {item.product?.supplier_name && (
+                                                        <p className="text-[9px] text-muted-foreground">
+                                                            <span className="font-bold uppercase">Supplier:</span> {item.product.supplier_name}
+                                                        </p>
+                                                    )}
+                                                    {item.product?.source && (
+                                                        <p className="text-[9px] text-muted-foreground">
+                                                            <span className="font-bold uppercase">Source:</span> {item.product.source}
+                                                        </p>
+                                                    )}
+                                                </div>
                                             </td>
                                             <td className="px-6 py-4 font-mono">{item.quantity} {item.product?.unit?.short_form}</td>
                                             <td className="px-6 py-4 text-right font-mono text-xs text-muted-foreground">{formatCurrency(item.unit_price)}</td>
@@ -208,7 +220,7 @@ export default function Show({ requirement, customers, requirements, users }: Pr
                                 </tbody>
 
                                 <tfoot className="bg-primary/2 border-t-2 border-primary/10">
-                                    {(requirement.has_vat || requirement.has_ait || totals.itemsCostingTotal > 0) && (
+                                    {(Number(requirement.vat_percentage) > 0 || Number(requirement.ait_percentage) > 0 || totals.itemsCostingTotal > 0) && (
                                         <>
                                             <tr>
                                                 <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">Sub-Total</td>
@@ -220,12 +232,18 @@ export default function Show({ requirement, customers, requirements, users }: Pr
                                                     <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">{formatCurrency(totals.itemsCostingTotal)}</td>
                                                 </tr>
                                             )}
-                                            {requirement.has_ait && (
-                                                    <tr>
-                                                        <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">AIT Adjustment ({requirement.ait_percentage}%)</td>
-                                                        <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">+ {formatCurrency(totals.aitAmount)}</td>
-                                                    </tr>
-                                                )}
+                                            {Number(requirement.ait_percentage) > 0 && (
+                                                <tr>
+                                                    <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">AIT Adjustment ({requirement.ait_percentage}%)</td>
+                                                    <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">+ {formatCurrency(totals.aitAmount)}</td>
+                                                </tr>
+                                            )}
+                                            {Number(requirement.vat_percentage) > 0 && (
+                                                <tr>
+                                                    <td colSpan={3} className="px-6 py-2 text-right uppercase text-[9px] font-bold text-muted-foreground">VAT ({requirement.vat_percentage}%)</td>
+                                                    <td className="px-6 py-2 text-right font-mono text-sm text-muted-foreground">+ {formatCurrency(totals.vatAmount)}</td>
+                                                </tr>
+                                            )}
                                         </>
                                     )}
                                     <tr>

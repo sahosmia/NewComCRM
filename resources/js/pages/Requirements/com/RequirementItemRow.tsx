@@ -109,15 +109,11 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                     <div className="col-span-1 space-y-2">
                         <FormLabel >Unit</FormLabel>
                         <Input
-                            type="number"
-                            min="1"
+                            type="text"
                             readOnly
-                            value={item.unit_id}
-                            onChange={(e) => onItemChange(index, "unit_id", e.target.value)}
-                            className={`text-center font-bold h-10 transition-colors border-slate-100 focus-visible:ring-primary/10}`}
+                            value={item.unit_short_form || ""}
+                            className="text-center font-bold h-10 transition-colors border-slate-100 bg-slate-50 cursor-not-allowed"
                         />
-                        {/* <ErrorMessage message={quantityError} /> */}
-                        <span>{item.unit_id}</span>
                     </div>
                     {/* Costing Price Input */}
                     <div className="col-span-1 md:col-span-2 lg:col-span-2 space-y-2">
@@ -158,12 +154,9 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                         <Input
                             type="text"
                             readOnly
-                            min="1"
-                            value={item.supplier}
-                            onChange={(e) => onItemChange(index, "supplier", e.target.value)}
-                            className={`text-center font-bold h-10 transition-colors border-slate-200 focus-visible:ring-primary/20}`}
+                            value={item.supplier || ""}
+                            className="text-center font-bold h-10 transition-colors border-slate-200 bg-slate-50 cursor-not-allowed"
                         />
-                        <span>{item.supplier}</span>
                     </div>
 
 
@@ -192,12 +185,8 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                         <Textarea
                             readOnly
                             value={item.source || ""}
-                            onChange={(e) => onItemChange(index, "source", e.target.value)}
-                            className={`text-sm min-h-20 leading-relaxed resize-none transition-colors ${sourceError
-                                ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/[0.02]'
-                                : 'border-slate-200 focus-visible:ring-primary/20'
-                                }`} />
-                        <span>{item.source}</span>
+                            className={`text-sm min-h-20 leading-relaxed resize-none transition-colors border-slate-200 bg-slate-50 cursor-not-allowed`}
+                        />
                     </div>
 
                     {/* Total Calculation Display - Desktop (shown on lg+) */}

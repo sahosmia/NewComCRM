@@ -70,14 +70,19 @@ export default function RequirementForm({ requirement, customers: initialCustome
         send_qutation_to: requirement?.send_qutation_to || "",
         qutation_send_by: requirement?.qutation_send_by || "",
 
-        items: requirement?.items || [
-            { product_id: 0, quantity: 1, unit_price: "", costing_price: 0, description: "" }
+        items: (requirement?.items?.map(item => ({
+            ...item,
+            unit_short_form: item.product?.unit?.short_form,
+            supplier: item.product?.supplier_name,
+            source: item.product?.source
+        })) as RequirementItem[]) || [
+            { product_id: 0, quantity: 1, unit_price: "", costing_price: 0, description: "", unit_short_form: "", supplier: "", source: "" }
         ],
     });
 
 
     const addItem = () => {
-        setData("items", [...data.items, { product_id: 0, quantity: 1, unit_price: "", costing_price: 0, description: "", unit_id: 0, supplier: "", source: "" }]);
+        setData("items", [...data.items, { product_id: 0, quantity: 1, unit_price: "", costing_price: 0, description: "", unit_short_form: "", supplier: "", source: "" }]);
     };
 
     const removeItem = (index: number) => {
@@ -95,6 +100,9 @@ export default function RequirementForm({ requirement, customers: initialCustome
                     unit_price: product ? product.unit_price : (item.unit_price || ""),
                     costing_price: product ? product.costing_price : (item.costing_price || 0),
                     description: product ? (product.description || "") : (item.description || ""),
+                    unit_short_form: product ? product.unit?.short_form : (item.unit_short_form || ""),
+                    supplier: product ? product.supplier_name : (item.supplier || ""),
+                    source: product ? product.source : (item.source || ""),
                 };
             }
 
@@ -176,7 +184,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                             setData(prev => ({
                                                 ...prev,
                                                 customer_id: id as number,
-                                                delivery_location: (customer && customer.addresses && customer.addresses.length > 0)
+                                                delivery_location: (!prev.delivery_location && customer && customer.addresses && customer.addresses.length > 0)
                                                     ? customer.addresses[0]
                                                     : prev.delivery_location,
                                                 user_id: (customer && customer.assigned_to)

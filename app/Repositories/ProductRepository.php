@@ -42,7 +42,7 @@ class ProductRepository
     {
         return Product::query()
             ->with('unit')
-            ->select('id', 'name', 'unit_price', 'costing_price', 'description', 'unit_id')
+            ->select('id', 'name', 'unit_price', 'costing_price', 'description', 'unit_id', 'supplier_name', 'source')
             ->get();
     }
 

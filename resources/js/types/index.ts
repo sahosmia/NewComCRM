@@ -156,6 +156,9 @@ export interface RequirementItem {
     created_at?: string;
     updated_at?: string;
     description?: string;
+    unit_short_form?: string;
+    supplier?: string;
+    source?: string;
 }
 
 export interface RequirementServiceItem {
