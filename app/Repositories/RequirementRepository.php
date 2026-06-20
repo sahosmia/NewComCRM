@@ -23,11 +23,10 @@ class RequirementRepository
 
             ->when($params['search'] ?? null, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
-                    $q->whereHas('customer', function ($sub) use ($search) {
-                        $sub->where('name', 'like', "%{$search}%");
-                    })->orWhereHas('items.product', function ($sub) use ($search) {
-                        $sub->where('name', 'like', "%{$search}%");
-                    });
+                    $q->where('title', 'like', "%{$search}%")
+                        ->orWhereHas('customer', function ($sub) use ($search) {
+                            $sub->where('name', 'like', "%{$search}%");
+                        });
                 });
             })
 
