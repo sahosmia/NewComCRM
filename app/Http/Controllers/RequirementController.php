@@ -97,7 +97,7 @@ class RequirementController extends Controller
     public function edit(Requirement $requirement)
     {
            return Inertia::render('Requirements/Edit', [
-            'requirement' => $requirement->load(['items.product', 'accessories.unit', 'installations.unit']),
+            'requirement' => $requirement->load(['items.product.unit', 'accessories.unit', 'installations.unit']),
             'customers' => $this->lookupService->getCustomersForRequirementForm(),
             'products'  => $this->lookupService->getProductsForSelect(),
             'units'     => $this->lookupService->getUnits(),

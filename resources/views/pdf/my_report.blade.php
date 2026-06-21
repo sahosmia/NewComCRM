@@ -415,6 +415,7 @@
                     {{ $recipient->name }}
 
                     @if (!empty($recipient->designation))
+                    <br>
                         {{ $recipient->designation }}<br>
                     @endif
 
@@ -767,7 +768,7 @@
                         @elseif($requirement->advance_payment > 0 && $requirement->before_payment > 0)
                             <span class="term-head">{{ $requirement->advance_payment }}% Advance with purchase order, {{ $requirement->before_payment }}% Before delivery/Installation. (Or as mutually agreed)</span>
                         @else
-                            <span class="term-head"> {{ $requirement->advance_payment ?? '______' }}% Advance with purchase order, 
+                            <span class="term-head"> {{ $requirement->advance_payment ?? '______' }}% Advance with purchase order,
                                 @if ($requirement->before_payment > 0)
                                     {{ $requirement->before_payment }}% Before Delivery/Installation
                                 @elseif($requirement->after_payment > 0)
