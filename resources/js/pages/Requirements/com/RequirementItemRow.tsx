@@ -132,7 +132,7 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                         <ErrorMessage message={costingPriceError} />
                     </div>
 
-                    {/* Unit Price Input */}
+                    {/* Sale Price Input */}
                     <div className="col-span-1 md:col-span-2 lg:col-span-2 space-y-2">
                         <FormLabel>Sell Price</FormLabel>
                         <div className="relative">
@@ -149,49 +149,16 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                         <ErrorMessage message={unitPriceError} />
                     </div>
 
-                    <div className="col-span-3 space-y-2">
-                        <FormLabel>Supplier</FormLabel>
-                        <Input
-                            type="text"
-                            readOnly
-                            value={item.supplier || ""}
-                            className="font-bold h-10 transition-colors border-slate-200 bg-slate-50 cursor-not-allowed"
-                        />
-                    </div>
-
-
-
-
-
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-end">
-                    {/* Description/Specifications */}
-                    <div className="lg:col-span-5 space-y-2">
-                        <FormLabel>Specifications / Description</FormLabel>
-                        <Textarea
-                            value={item.description || ""}
-                            onChange={(e) => onItemChange(index, "description", e.target.value)}
-                            placeholder="Add detailed product specifications here..."
-                            className={`text-sm min-h-20 leading-relaxed resize-none transition-colors ${descriptionError
-                                ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/[0.02]'
-                                : 'border-slate-200 focus-visible:ring-primary/20'
-                                }`}
-                        />
-                        <ErrorMessage message={descriptionError} />
-                    </div>
-                    <div className="col-span-4 space-y-2">
-                        <FormLabel>Source</FormLabel>
-                        <Textarea
-                            readOnly
-                            value={item.source || ""}
-                            className={`text-sm min-h-20 leading-relaxed resize-none transition-colors border-slate-200 bg-slate-50 cursor-not-allowed`}
-                        />
-                    </div>
 
                     {/* Total Calculation Display - Desktop (shown on lg+) */}
                     <div className="flex lg:col-span-3 flex-col justify-end h-full">
                         <div className="bg-slate-50 rounded-xl p-3 space-y-1.5 border border-slate-100 shadow-inner">
+                            {/* <div className="flex justify-between items-center px-1 border-b border-slate-200/60 pb-1.5">
+                                <span className="text-[10px] uppercase font-semibold text-slate-500">Costing Price:</span>
+                                <span className="text-xs font-mono font-bold text-slate-700">
+                                    ৳{(item.costing_price*item.quantity).toFixed(2)}
+                                </span>
+                            </div> */}
                             <div className="flex justify-between items-center px-1 border-b border-slate-200/60 pb-1.5">
                                 <span className="text-[10px] uppercase font-semibold text-slate-500">Gross Unit:</span>
                                 <span className="text-xs font-mono font-bold text-slate-700">
@@ -208,6 +175,46 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                     </div>
 
                     {/*  */}
+
+
+
+
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-end">
+                    {/* Description/Specifications */}
+                    <div className="lg:col-span-5 space-y-2">
+                        <FormLabel>Specifications / Description</FormLabel>
+                        <Textarea
+                            value={item.description || ""}
+                            onChange={(e) => onItemChange(index, "description", e.target.value)}
+                            placeholder="Add detailed product specifications here..."
+                            className={`text-sm min-h-20 max-h-36 leading-relaxed resize-none transition-colors ${descriptionError
+                                ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/[0.02]'
+                                : 'border-slate-200 focus-visible:ring-primary/20'
+                                }`}
+                        />
+                        <ErrorMessage message={descriptionError} />
+                    </div>
+                    <div className="col-span-4 space-y-2">
+                        <FormLabel>Source</FormLabel>
+                        <Textarea
+                            readOnly
+                            value={item.source || ""}
+                            className={`text-sm min-h-20 max-h-28 overflow-y-auto leading-relaxed resize-none transition-colors border-slate-200 bg-slate-50 cursor-not-allowed`} />
+                    </div>
+
+                    <div className="col-span-3 space-y-2">
+                        <FormLabel>Supplier</FormLabel>
+                        <Input
+                            type="text"
+                            readOnly
+                            value={item.supplier || ""}
+                            className="font-bold h-10 transition-colors border-slate-200 bg-slate-50 cursor-not-allowed"
+                        />
+                    </div>
+
+
                 </div>
             </div>
         </div>

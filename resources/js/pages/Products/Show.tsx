@@ -79,7 +79,7 @@ export default function Show({ product }: { product: Product }) {
                                         <CircleDollarSign className="w-6 h-6 text-emerald-600" />
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-xs font-medium text-muted-foreground uppercase">Unit Price</p>
+                                        <p className="text-xs font-medium text-muted-foreground uppercase">Sale Price</p>
                                         <p className="text-2xl font-bold text-emerald-600">৳ {Number(product.unit_price).toLocaleString()}</p>
                                     </div>
                                 </div>

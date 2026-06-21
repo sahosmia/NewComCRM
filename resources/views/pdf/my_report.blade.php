@@ -534,7 +534,7 @@
                         <th style="width: 5%;">SL</th>
                         <th style="width: 55%;">Description</th>
                         <th style="width: 12%;">Qty</th>
-                        <th style="width: 13%;">Unit Price</th>
+                        <th style="width: 13%;">Sale Price</th>
                         <th style="width: 15%;">Total</th>
                     </tr>
                 </thead>
