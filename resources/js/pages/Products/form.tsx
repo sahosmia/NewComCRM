@@ -64,20 +64,7 @@ export default function ProductForm({ product, units = [] }: Props) {
 
 
 
-                {/* Sale Price */}
-                <div className="space-y-2">
-                    <FormLabel>Sale Price</FormLabel>
-                    <Input
-                        id="unit_price"
-                        type="number"
-                        step="0.01"
-                        placeholder="0.00"
-                        value={data.unit_price}
-                        onChange={(e) => setData("unit_price", e.target.value)}
-                    />
-                    <ErrorMessage message={errors.unit_price} />
 
-                </div>
 
                 {/* Costing Price */}
                 <div className="space-y-2">
@@ -91,6 +78,21 @@ export default function ProductForm({ product, units = [] }: Props) {
                         onChange={(e) => setData("costing_price", e.target.value)}
                     />
                     <ErrorMessage message={errors.costing_price} />
+                </div>
+
+                {/* Sale Price */}
+                <div className="space-y-2">
+                    <FormLabel>Sale Price</FormLabel>
+                    <Input
+                        id="unit_price"
+                        type="number"
+                        step="0.01"
+                        placeholder="0.00"
+                        value={data.unit_price}
+                        onChange={(e) => setData("unit_price", e.target.value)}
+                    />
+                    <ErrorMessage message={errors.unit_price} />
+
                 </div>
 
                 {/* Stock Quantity */}

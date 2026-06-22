@@ -31,7 +31,7 @@ const columns: Column<Product>[] = [
     },
     {
         header: 'Price',
-        accessor: (item) => item.unit_price,
+        accessor: (item) => item.costing_price,
         className: "w-1/10"
     },
 

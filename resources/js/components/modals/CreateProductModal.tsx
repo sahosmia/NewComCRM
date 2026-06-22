@@ -26,6 +26,7 @@ interface CreateProductModalProps {
 export default function CreateProductModal({ isOpen, onClose, onSuccess, units = [] }: CreateProductModalProps) {
     const { data, setData, errors, processing, reset, submit } = useModalForm({
         name: "",
+        costing_price: "",
         unit_price: "",
         category: "",
         stock_quantity: "",
@@ -61,7 +62,13 @@ export default function CreateProductModal({ isOpen, onClose, onSuccess, units =
 
 
                         <div className="space-y-2">
-                            <FormLabel required>Unit Price</FormLabel>
+                            <FormLabel required>Costing Price</FormLabel>
+                            <Input type="number" value={data.costing_price} onChange={e => setData("costing_price", e.target.value)} placeholder="0.00" />
+                            <ErrorMessage message={errors.costing_price} />
+                        </div>
+
+                        <div className="space-y-2">
+                            <FormLabel required>Sale Price</FormLabel>
                             <Input type="number" value={data.unit_price} onChange={e => setData("unit_price", e.target.value)} placeholder="0.00" />
                             <ErrorMessage message={errors.unit_price} />
                         </div>
@@ -80,7 +87,7 @@ export default function CreateProductModal({ isOpen, onClose, onSuccess, units =
                             <Input value={data.category} onChange={e => setData("category", e.target.value)} placeholder="Category" />
                             <ErrorMessage message={errors.category} />
                         </div>
-                        
+
                          <div className="space-y-2">
                             <FormLabel required>Stock Quantity</FormLabel>
                             <Input type="number" value={data.stock_quantity} onChange={e => setData("stock_quantity", e.target.value)} placeholder="0" />
