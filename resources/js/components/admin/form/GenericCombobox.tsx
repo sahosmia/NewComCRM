@@ -23,7 +23,7 @@ interface BaseItem {
 }
 
 interface GenericComboboxProps<T extends BaseItem> {
-    label: string;
+    label?: string;
     items: T[];
     selectedId?: string | number;
     manualValue?: string;
@@ -61,7 +61,7 @@ export function GenericCombobox<T extends BaseItem>({
 
     return (
         <>
-            <FormLabel required={required}>{label}</FormLabel>
+            {label && <FormLabel required={required}>{label}</FormLabel>}
 
             <div className="relative">
                 <Popover open={open} onOpenChange={setOpen}>

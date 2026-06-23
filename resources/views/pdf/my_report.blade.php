@@ -443,7 +443,7 @@
             </div>
 
             <div class="subject-line" style="margin-bottom: 15px;">
-                Subject: Technical & Commercial Proposal for Financial
+                Subject: Technical & Financial Proposal for
                 {{ $requirement->has_installation ? ' and Installation' : '' }}
                 of {{ $requirement->title ?? 'Required Items' }}.
             </div>
@@ -455,25 +455,9 @@
                 requirements.
             </p>
 
-            <p>
-                We, {{ setting('app_name', 'Crystal Vision Solutions') }}, are an experienced and trusted importer,
-                supplier, and system integrator of IT, networking equipment, and server solutions in Bangladesh. We are
-                committed to delivering
-                genuine branded products, ensuring quality, reliability, and comprehensive after-sales service
-                support.
-            </p>
-
-            <p>
-                Please find the enclosed Technical and Financial Proposal for your kind evaluation and necessary
-                action. We assure you of our best cooperation, competitive pricing, and timely delivery for this
-                requirement.
-            </p>
-
-            <p>
-                Should you require any further information or clarification, please feel free to contact us at your
-                convenience.
-            </p>
-
+            <p>We, {{ setting('app_name', 'Crystal Vision Solutions') }}, are an experienced and trusted importer, supplier, and system integrator of IT, networking equipment, and server solutions in Bangladesh. We are committed to delivering genuine branded products, ensuring quality, reliability, and comprehensive after-sales service support.</p>
+            <p>Please find the enclosed Technical and Financial Proposal for your kind evaluation and necessary action. We assure you of our best cooperation, competitive pricing, and timely delivery for this requirement.</p>
+            <p>Should you require any further information or clarification, please feel free to contact us at your convenience.</p>
             <p>Thanking you and assuring you of our best cooperation at all times.</p>
 
             <div class="signature-wrapper">
@@ -733,6 +717,39 @@
                     </tr>
                 </tbody>
             </table>
+
+            <div class="signature-wrapper">
+                <p class="regards-text">With Thanks and Best Regards</p>
+
+                <div class="graphics-container">
+                    @if ($signature)
+                        <img src="{{ $signature }}" class="sig-img" alt="Signature">
+                    @endif
+
+                    @if ($seal)
+                        <img src="{{ $seal }}" class="seal-img" alt="Seal">
+                    @endif
+                </div>
+
+                <div class="info-text">
+                    @php
+                        $sender = $requirement->quotationSender ?? $requirement->user;
+                    @endphp
+                    <span class="sender-name">{{ $sender->name }}</span><br>
+                    @if ($sender->designation)
+                        <span class="sender-designation">{{ $sender->designation }}</span><br>
+                    @endif
+                    <span class="company-name">{{ setting('app_name', 'Crystal Vision Solutions') }}</span><br>
+
+                    M:
+                    {{ $sender->phone ? '+88' . $sender->phone . ' | ' : '' }}+88{{ setting('support_whatsapp', '01911-561554') }}
+                    (WhatsApp)<br>
+
+                    Mail: {{ $sender->email }} | {{ setting('email', 'crystalsolutionsbd@gmail.com') }}<br>
+                    Website: {{ setting('website', 'crystalcomputers.com.bd') }}
+                </div>
+            </div>
+
 
         </div>
 

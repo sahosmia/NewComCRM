@@ -253,6 +253,32 @@ export default function Show({ requirement, customers, requirements, users }: Pr
 
                     <div className="lg:col-span-8">
                         <div className="lg:col-span-2 space-y-6">
+                            <div className="bg-card border rounded-xl p-5 shadow-sm space-y-4">
+                                <h2 className="font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
+                                    <FileText className="w-3 h-3 text-primary" /> Terms & Delivery
+                                </h2>
+                                <div className="grid grid-cols-2 gap-4 text-xs">
+                                    {requirement.quotation_recipient && (
+                                        <div className="col-span-2 border-b pb-2 mb-2">
+                                            <p className="text-muted-foreground mb-1 uppercase text-[9px] font-bold">Sent To</p>
+                                            <p className="font-bold">{requirement.quotation_recipient.name} ({requirement.quotation_recipient.company?.name || 'N/A'})</p>
+                                        </div>
+                                    )}
+                                    {requirement.quotation_sender && (
+                                        <div className="col-span-2 border-b pb-2 mb-2">
+                                            <p className="text-muted-foreground mb-1 uppercase text-[9px] font-bold">Sent By</p>
+                                            <p className="font-bold">{requirement.quotation_sender.name}</p>
+                                        </div>
+                                    )}
+                                    <div><p className="text-muted-foreground mb-1">Price Validity</p><p className="font-bold">{requirement.price_validity_days || 'N/A'} Days</p></div>
+                                    <div><p className="text-muted-foreground mb-1">Delivery Time</p><p className="font-bold">{requirement.delivery_time_days || 'N/A'} Days</p></div>
+                                    {/* {requirement.delivery_date && <div><p className="text-muted-foreground mb-1">Deliver Able Date</p><p className="font-bold">{formatDate(requirement.delivery_date)}</p></div>} */}
+
+                                    <div><p className="text-muted-foreground mb-1">Advance Pay</p><p className="font-bold">{requirement.advance_payment}%</p></div>
+                                    {requirement.before_payment > 0 && <div><p className="text-muted-foreground mb-1">Before Delivery</p><p className="font-bold">{requirement.before_payment}%</p></div>}
+                                    {requirement.after_payment > 0 && <div><p className="text-muted-foreground mb-1">After Delivery</p><p className="font-bold">{requirement.after_payment}%</p></div>}
+                                </div>
+                            </div>
 
                             {/* Activities Placeholder */}
                             <Card>
@@ -312,6 +338,7 @@ export default function Show({ requirement, customers, requirements, users }: Pr
                                                                 className="text-[11px] text-primary hover:underline font-medium"
                                                             >
                                                                 Details →
+
                                                             </Link>
                                                         </div>
                                                     </div>
@@ -410,32 +437,6 @@ export default function Show({ requirement, customers, requirements, users }: Pr
 
                         </div>
 
-                        <div className="bg-card border rounded-xl p-5 shadow-sm space-y-4 mt-6">
-                            <h2 className="font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
-                                <FileText className="w-3 h-3 text-primary" /> Terms & Delivery
-                            </h2>
-                            <div className="grid grid-cols-2 gap-4 text-xs">
-                                {requirement.quotation_recipient && (
-                                    <div className="col-span-2 border-b pb-2 mb-2">
-                                        <p className="text-muted-foreground mb-1 uppercase text-[9px] font-bold">Sent To</p>
-                                        <p className="font-bold">{requirement.quotation_recipient.name} ({requirement.quotation_recipient.company?.name || 'N/A'})</p>
-                                    </div>
-                                )}
-                                {requirement.quotation_sender && (
-                                    <div className="col-span-2 border-b pb-2 mb-2">
-                                        <p className="text-muted-foreground mb-1 uppercase text-[9px] font-bold">Sent By</p>
-                                        <p className="font-bold">{requirement.quotation_sender.name}</p>
-                                    </div>
-                                )}
-                                <div><p className="text-muted-foreground mb-1">Price Validity</p><p className="font-bold">{requirement.price_validity_days || 'N/A'} Days</p></div>
-                                <div><p className="text-muted-foreground mb-1">Delivery Time</p><p className="font-bold">{requirement.delivery_time_days || 'N/A'} Days</p></div>
-                                {/* {requirement.delivery_date && <div><p className="text-muted-foreground mb-1">Deliver Able Date</p><p className="font-bold">{formatDate(requirement.delivery_date)}</p></div>} */}
-
-                                <div><p className="text-muted-foreground mb-1">Advance Pay</p><p className="font-bold">{requirement.advance_payment}%</p></div>
-                                {requirement.before_payment > 0 && <div><p className="text-muted-foreground mb-1">Before Delivery</p><p className="font-bold">{requirement.before_payment}%</p></div>}
-                                {requirement.after_payment > 0 && <div><p className="text-muted-foreground mb-1">After Delivery</p><p className="font-bold">{requirement.after_payment}%</p></div>}
-                            </div>
-                        </div>
                     </div>
 
 
