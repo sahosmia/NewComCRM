@@ -2,6 +2,7 @@ import { Head, router } from "@inertiajs/react";
 import { Users, MessageSquare, Video, TrendingUp, Filter, FileText } from "lucide-react";
 import { useState } from "react";
 import Pagination from "@/components/admin/Pagination";
+import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 import StatusBadge from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,6 +25,7 @@ interface Props {
         total_sales_count: number;
         total_meetings: number;
         total_follow_ups: number;
+        total_requirements: number;
         new_customers: number;
     };
     followUps: FollowUp[];
@@ -123,37 +125,29 @@ export default function ReportIndex({
                             {filters.users.length > 0 && (
                                 <div className="flex flex-col gap-1">
                                     <label className="text-[10px] font-bold uppercase text-muted-foreground">User</label>
-                                    <Select value={userId} onValueChange={setUserId}>
-                                        <SelectTrigger className="w-[160px] h-9">
-                                            <SelectValue placeholder="All Users" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="all">All Users</SelectItem>
-                                            {filters.users.map((u) => (
-                                                <SelectItem key={u.id} value={u.id.toString()}>
-                                                    {u.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    <GenericCombobox
+                                        items={[{ id: "all", name: "All Users" }, ...filters.users.map(u => ({ id: u.id.toString(), name: u.name }))]}
+                                        selectedId={userId}
+                                        onSelect={(id) => setUserId(id.toString())}
+                                        placeholder="All Users"
+                                        searchPlaceholder="Search users..."
+                                        className="w-[160px] h-9 md:h-9"
+                                        allowManualInput={false}
+                                    />
                                 </div>
                             )}
 
                             <div className="flex flex-col gap-1">
                                 <label className="text-[10px] font-bold uppercase text-muted-foreground">Customer</label>
-                                <Select value={customerId} onValueChange={setCustomerId}>
-                                    <SelectTrigger className="w-[180px] h-9">
-                                        <SelectValue placeholder="All Customers" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="all">All Customers</SelectItem>
-                                        {filters.customers.map((c) => (
-                                            <SelectItem key={c.id} value={c.id.toString()}>
-                                                {c.name}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
+                                <GenericCombobox
+                                    items={[{ id: "all", name: "All Customers" }, ...filters.customers.map(c => ({ id: c.id.toString(), name: c.name }))]}
+                                    selectedId={customerId}
+                                    onSelect={(id) => setCustomerId(id.toString())}
+                                    placeholder="All Customers"
+                                    searchPlaceholder="Search customers..."
+                                    className="w-[180px] h-9 md:h-9"
+                                    allowManualInput={false}
+                                />
                             </div>
 
                             <div className="flex flex-col gap-1 self-end">
@@ -166,7 +160,7 @@ export default function ReportIndex({
                 </div>
 
                 {/* Summary Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
                     <Card className="border-l-4 border-l-purple-500">
                         <CardHeader className="pb-2">
                             <CardTitle className="text-xs font-medium text-muted-foreground uppercase">Sales Amount</CardTitle>
@@ -199,6 +193,18 @@ export default function ReportIndex({
                             <div className="text-2xl font-bold">{stats.total_follow_ups}</div>
                             <p className="text-[10px] text-muted-foreground mt-1 flex items-center gap-1">
                                 <MessageSquare className="w-3 h-3 text-amber-500" /> Relationship touchpoints
+                            </p>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="border-l-4 border-l-indigo-500">
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-xs font-medium text-muted-foreground uppercase">Requirements</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{stats.total_requirements}</div>
+                            <p className="text-[10px] text-muted-foreground mt-1 flex items-center gap-1">
+                                <FileText className="w-3 h-3 text-indigo-500" /> New requirements
                             </p>
                         </CardContent>
                     </Card>

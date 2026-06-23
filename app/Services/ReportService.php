@@ -87,7 +87,7 @@ class ReportService
     {
         return match (get_class($model)) {
             Customer::class => 'assigned_to',
-            Meeting::class, FollowUp::class => 'user_id',
+            Meeting::class, FollowUp::class, Requirement::class => 'user_id',
             Sale::class => null, // Sales are linked via customers
             default => null,
         };
@@ -111,6 +111,7 @@ class ReportService
             'total_sales_count' => $salesQuery->count(),
             'total_meetings' => $this->applyFilters(Meeting::query(), $dateRange, $userId, $customerId, 'scheduled_at')->count(),
             'total_follow_ups' => $this->applyFilters(FollowUp::query(), $dateRange, $userId, $customerId, 'follow_up_date')->count(),
+            'total_requirements' => $this->applyFilters(Requirement::query(), $dateRange, $userId, $customerId, 'created_at')->count(),
             'new_customers' => $this->applyFilters(Customer::query(), $dateRange, $userId, null, 'created_at')->count(),
         ];
     }
