@@ -40,7 +40,7 @@ class CustomerPolicy
 
     public function update(User $user, Customer $customer): bool
     {
-        return $user->id === $customer->assigned_to;
+        return $this->view($user, $customer);
     }
 
     public function delete(User $user, Customer $customer): bool
