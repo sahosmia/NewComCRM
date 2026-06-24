@@ -2,10 +2,11 @@
 <html>
 
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style>
         * {
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            font-family: 'DejaVu Sans', sans-serif;
         }
 
         @page {
@@ -24,7 +25,7 @@
             left: 0px;
             right: 0px;
             height: 50px;
-            font-family: Arial, sans-serif;
+            font-family: 'DejaVu Sans', sans-serif;
         }
 
         .header-top {
@@ -85,7 +86,7 @@
         .signature-wrapper {
             margin-top: 30px;
             position: relative;
-            font-family: 'Arial', 'Helvetica', sans-serif;
+            font-family: 'DejaVu Sans', sans-serif;
             font-size: 14px;
             line-height: 1.35;
             color: #000;
@@ -154,7 +155,7 @@
         }
 
         .recipient-info {
-            font-family: Arial, sans-serif;
+            font-family: 'DejaVu Sans', sans-serif;
             font-size: 13px;
             line-height: 1.4;
             margin-top: 20px;
@@ -162,7 +163,7 @@
         }
 
         .subject-line {
-            font-family: Arial, sans-serif;
+            font-family: 'DejaVu Sans', sans-serif;
             font-size: 14px;
             margin-top: 20px;
             font-weight: normal;
@@ -180,7 +181,7 @@
         }
 
         .terms-section {
-            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-family: 'DejaVu Sans', sans-serif;
             font-size: 12px;
             color: #333;
             line-height: 1.5;
@@ -235,7 +236,7 @@
         .product-table {
             width: 100%;
             border-collapse: collapse;
-            font-family: Arial, sans-serif;
+            font-family: 'DejaVu Sans', sans-serif;
             font-size: 11px;
         }
 
@@ -285,7 +286,7 @@
             left: -30px;
             right: -30px;
             height: 125px;
-            font-family: Arial, sans-serif;
+            font-family: 'DejaVu Sans', sans-serif;
             background-color: #8B1A1A;
         }
 
@@ -911,7 +912,7 @@
 
     <script type="text/php">
         if (isset($pdf)) {
-            $font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "normal");
+            $font = $fontMetrics->get_font("DejaVu Sans, sans-serif", "normal");
 
             // DomPDF window size optimization
             $w = $pdf->get_width();
