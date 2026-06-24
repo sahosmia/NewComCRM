@@ -384,7 +384,6 @@ export interface SettingsForm {
     website_url: string;
     branding_slogan: string;
     branding_services_bar: string;
-    support_whatsapp: string;
     office_name_1: string;
     office_name_2: string;
     office_name_3: string;

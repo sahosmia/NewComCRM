@@ -484,8 +484,7 @@
                     <span class="company-name">{{ setting('app_name', 'Crystal Vision Solutions') }}</span><br>
 
                     M:
-                    {{ $sender->phone ? '+88' . $sender->phone . ' | ' : '' }}+88{{ setting('support_whatsapp', '01911-561554') }}
-                    (WhatsApp)<br>
+                    {{ $sender->phone ? '+88' . $sender->phone : '' }}<br>
 
                     Mail: {{ $sender->email }} | {{ setting('email', 'crystalsolutionsbd@gmail.com') }}<br>
                     Website: {{ setting('website', 'crystalcomputers.com.bd') }}
@@ -742,8 +741,8 @@
                     <span class="company-name">{{ setting('app_name', 'Crystal Vision Solutions') }}</span><br>
 
                     M:
-                    {{ $sender->phone ? '+88' . $sender->phone . ' | ' : '' }}+88{{ setting('support_whatsapp', '01911-561554') }}
-                    (WhatsApp)<br>
+                    {{ $sender->phone ? '+88' . $sender->phone : '' }}<br>
+
 
                     Mail: {{ $sender->email }} | {{ setting('email', 'crystalsolutionsbd@gmail.com') }}<br>
                     Website: {{ setting('website', 'crystalcomputers.com.bd') }}
