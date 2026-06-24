@@ -15,7 +15,7 @@ trait ValidatesProductAttributes
             'costing_price'  => 'nullable|numeric|min:0',
             'description'    => 'nullable|string',
             'category'       => 'nullable|string|max:255',
-            'stock_quantity' => 'required|integer|min:0',
+            'stock_quantity' => 'nullable|integer|min:0',
             'supplier_name'  => 'nullable|string|max:255',
             'source'         => 'nullable|string',
             'unit_id'        => 'required|exists:units,id',
@@ -29,7 +29,6 @@ trait ValidatesProductAttributes
     {
         return [
             'name.required' => 'Product name is required',
-            'stock_quantity.required' => 'Stock quantity is required',
         ];
     }
 }

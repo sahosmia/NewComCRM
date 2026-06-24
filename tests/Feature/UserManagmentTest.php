@@ -22,7 +22,7 @@ it('allows_super_admin_to_list_all_users', function () {
 
     $response->assertStatus(200);
     $response->assertInertia(fn ($page) => $page
-        ->component('Users/Index')
+        ->component('users/index')
         ->has('users.data', 2)
     );
 });

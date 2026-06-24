@@ -23,4 +23,12 @@ class UpdateProductRequest extends FormRequest
     {
         return $this->productAttributeMessages();
     }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'stock_quantity' => blank($this->stock_quantity) ? 0 : $this->stock_quantity,
+            'costing_price' => blank($this->costing_price) ? 0 : $this->costing_price,
+        ]);
+    }
 }
