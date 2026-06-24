@@ -12,7 +12,8 @@ class StoreCustomerRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return $this->user()->can('create', Customer::class);
+        // return $this->user()->can('create', Customer::class);
+        return true;
     }
 
     /**

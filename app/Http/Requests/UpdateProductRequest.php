@@ -23,4 +23,11 @@ class UpdateProductRequest extends FormRequest
     {
         return $this->productAttributeMessages();
     }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'stock_quantity' => $this->stock_quantity ?? 0,
+        ]);
+    }
 }

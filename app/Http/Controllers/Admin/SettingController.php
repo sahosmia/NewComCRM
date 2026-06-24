@@ -39,7 +39,7 @@ class SettingController extends Controller
             'website_url' => ['nullable', 'url', 'max:255'],
             'branding_slogan' => ['nullable', 'string', 'max:255'],
             'branding_services_bar' => ['nullable', 'string', 'max:500'],
-            'support_whatsapp' => ['nullable', 'string', 'max:50'],
+            // 'support_whatsapp' => ['nullable', 'string', 'max:50'],
             'office_name_1' => ['nullable', 'string', 'max:255'],
             'office_name_2' => ['nullable', 'string', 'max:255'],
             'office_name_3' => ['nullable', 'string', 'max:255'],

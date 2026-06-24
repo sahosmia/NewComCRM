@@ -36,7 +36,7 @@ export default function Index({ settings }: Props) {
         website_url: (settings.website_url as string) || '',
         branding_slogan: (settings.branding_slogan as string) || '',
         branding_services_bar: (settings.branding_services_bar as string) || '',
-        support_whatsapp: (settings.support_whatsapp as string) || '',
+        // support_whatsapp: (settings.support_whatsapp as string) || '',
         office_name_1: (settings.office_name_1 as string) || '',
         office_name_2: (settings.office_name_2 as string) || '',
         office_name_3: (settings.office_name_3 as string) || '',
@@ -301,7 +301,7 @@ export default function Index({ settings }: Props) {
                                     <InputError message={errors.website_url} />
                                 </div>
 
-                                <div className="space-y-2">
+                                {/* <div className="space-y-2">
                                     <FormLabel>
                                         <div className="flex items-center gap-1">
                                             <MessageSquare className="h-3 w-3" />
@@ -314,7 +314,7 @@ export default function Index({ settings }: Props) {
                                         placeholder="01911-561554"
                                     />
                                     <InputError message={errors.support_whatsapp} />
-                                </div>
+                                </div> */}
                             </div>
 
                             <div className="space-y-2">

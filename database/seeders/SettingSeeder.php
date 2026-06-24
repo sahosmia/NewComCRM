@@ -20,7 +20,7 @@ class SettingSeeder extends Seeder
             'website_url' => 'http://www.crystalcomputers.com.bd',
             'branding_slogan' => 'LEADING ICT AND SECURITY SERVICES PROVIDER',
             'branding_services_bar' => 'Server | Server Spare Parts | Networking Equipment\'s | Security Equipment\'s | Sound Equipment\'s | Smart Device | Interactive Display',
-            'support_whatsapp' => '01911-561554',
+            // 'support_whatsapp' => '01911-561554',
             'office_name_1' => 'Elephant Road Branch',
             'office_address_1' => "Tabas Building (Level-5), 53/2 New Elephant Road\nDhaka-1205, Bangladesh",
             'office_name_2' => 'Corporate Office',

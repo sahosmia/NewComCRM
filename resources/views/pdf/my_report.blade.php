@@ -252,6 +252,7 @@
             padding: 6px;
             vertical-align: middle;
         }
+
         .product-table tr {
             page-break-inside: avoid !important;
         }
@@ -415,7 +416,7 @@
                     {{ $recipient->name }}
 
                     @if (!empty($recipient->designation))
-                    <br>
+                        <br>
                         {{ $recipient->designation }}<br>
                     @endif
 
@@ -423,8 +424,8 @@
                         {{ $recipient->company->name }}<br>
                     @endif
                     @if ($recipient->addresses)
-                            {{ $recipient->addresses[0] }}<br>
-                        @endif
+                        {{ $recipient->addresses[0] }}<br>
+                    @endif
 
                     @if (!empty($recipient->phones) && isset($recipient->phones[0]))
                         Cell: +88{{ $recipient->phones[0] }}
@@ -453,9 +454,15 @@
                 requirements.
             </p>
 
-            <p>We, {{ setting('app_name', 'Crystal Vision Solutions') }}, are an experienced and trusted importer, supplier, and system integrator of IT, networking equipment, and server solutions in Bangladesh. We are committed to delivering genuine branded products, ensuring quality, reliability, and comprehensive after-sales service support.</p>
-            <p>Please find the enclosed Technical and Financial Proposal for your kind evaluation and necessary action. We assure you of our best cooperation, competitive pricing, and timely delivery for this requirement.</p>
-            <p>Should you require any further information or clarification, please feel free to contact us at your convenience.</p>
+            <p>We, {{ setting('app_name', 'Crystal Vision Solutions') }}, are an experienced and trusted importer,
+                supplier, and system integrator of IT, networking equipment, and server solutions in Bangladesh. We are
+                committed to delivering genuine branded products, ensuring quality, reliability, and comprehensive
+                after-sales service support.</p>
+            <p>Please find the enclosed Technical and Financial Proposal for your kind evaluation and necessary action.
+                We assure you of our best cooperation, competitive pricing, and timely delivery for this requirement.
+            </p>
+            <p>Should you require any further information or clarification, please feel free to contact us at your
+                convenience.</p>
             <p>Thanking you and assuring you of our best cooperation at all times.</p>
 
             <div class="signature-wrapper">
@@ -480,10 +487,9 @@
                         <span class="sender-designation">{{ $sender->designation }}</span><br>
                     @endif
                     <span class="company-name">{{ setting('app_name', 'Crystal Vision Solutions') }}</span><br>
-
-                    M:
-                    {{ $sender->phone ? '+88' . $sender->phone . ' | ' : '' }}+88{{ setting('support_whatsapp', '01911-561554') }}
-                    (WhatsApp)<br>
+                    @if (!empty($sender->phone))
+                        M: {{ '+88' . $sender->phone }} (WhatsApp)<br>
+                    @endif
 
                     Mail: {{ $sender->email }} | {{ setting('email', 'crystalsolutionsbd@gmail.com') }}<br>
                     Website: {{ setting('website', 'crystalcomputers.com.bd') }}
@@ -534,7 +540,7 @@
                             <td class="text-center">{{ $item->quantity }}
                                 {{ $item->product->unit?->short_form ?? ($item->product->unit?->title ?? 'Unit') }}
                             </td>
-                            <td class="text-right">{{ number_format($item->total_price/$item->quantity, 2) }}</td>
+                            <td class="text-right">{{ number_format($item->total_price / $item->quantity, 2) }}</td>
                             <td class="text-right">{{ number_format($item->total_price, 0) }}</td>
                         </tr>
                         @php $grandTotal += $item->total_price; @endphp
@@ -658,7 +664,8 @@
                                 <td> {{ $accessory->title }}</td>
                                 <td class="text-center">{{ $accessory->quantity }}
                                     {{ $accessory->unit?->short_form ?? ($accessory->unit?->title ?? 'Unit') }} </td>
-                                <td class="text-right">{{ number_format($accessory->total_price / $accessory->quantity, 2) }}</td>
+                                <td class="text-right">
+                                    {{ number_format($accessory->total_price / $accessory->quantity, 2) }}</td>
                                 <td class="text-right">
                                     {{ number_format($accessory->total_price, 0) }}
                                 </td>
@@ -677,7 +684,7 @@
                                     {{ $installation->unit?->short_form ?? ($installation->unit?->title ?? 'Unit') }}
                                 </td>
 
-                                <td class="text-right">{{ $installation->total_price / $installation->quantity}}</td>
+                                <td class="text-right">{{ $installation->total_price / $installation->quantity }}</td>
                                 <td class="text-right">
                                     {{ number_format($installation->total_price, 0) }}
                                 </td>
@@ -739,9 +746,9 @@
                     @endif
                     <span class="company-name">{{ setting('app_name', 'Crystal Vision Solutions') }}</span><br>
 
-                    M:
-                    {{ $sender->phone ? '+88' . $sender->phone . ' | ' : '' }}+88{{ setting('support_whatsapp', '01911-561554') }}
-                    (WhatsApp)<br>
+                    @if (!empty($sender->phone))
+                        M: {{ '+88' . $sender->phone }} (WhatsApp)<br>
+                    @endif
 
                     Mail: {{ $sender->email }} | {{ setting('email', 'crystalsolutionsbd@gmail.com') }}<br>
                     Website: {{ setting('website', 'crystalcomputers.com.bd') }}
@@ -776,14 +783,19 @@
                     </li>
                     <li>
                         Payment Terms:
-                        @if($requirement->advance_payment == 100)
+                        @if ($requirement->advance_payment == 100)
                             <span class="term-head">100% Advance with purchase order. (Or as mutually agreed)</span>
                         @elseif($requirement->advance_payment > 0 && $requirement->after_payment > 0)
-                            <span class="term-head">{{ $requirement->advance_payment }}% Advance with purchase order, {{ $requirement->after_payment }}% After delivery/Installation. (Or as mutually agreed)</span>
+                            <span class="term-head">{{ $requirement->advance_payment }}% Advance with purchase order,
+                                {{ $requirement->after_payment }}% After delivery/Installation. (Or as mutually
+                                agreed)</span>
                         @elseif($requirement->advance_payment > 0 && $requirement->before_payment > 0)
-                            <span class="term-head">{{ $requirement->advance_payment }}% Advance with purchase order, {{ $requirement->before_payment }}% Before delivery/Installation. (Or as mutually agreed)</span>
+                            <span class="term-head">{{ $requirement->advance_payment }}% Advance with purchase order,
+                                {{ $requirement->before_payment }}% Before delivery/Installation. (Or as mutually
+                                agreed)</span>
                         @else
-                            <span class="term-head"> {{ $requirement->advance_payment ?? '______' }}% Advance with purchase order,
+                            <span class="term-head"> {{ $requirement->advance_payment ?? '______' }}% Advance with
+                                purchase order,
                                 @if ($requirement->before_payment > 0)
                                     {{ $requirement->before_payment }}% Before Delivery/Installation
                                 @elseif($requirement->after_payment > 0)
@@ -897,7 +909,7 @@
         </div>
     </footer>
 
-<script type="text/php">
+    <script type="text/php">
         if (isset($pdf)) {
             $font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "normal");
 
