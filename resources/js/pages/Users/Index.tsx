@@ -3,7 +3,7 @@ import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import AppLayout from '@/layouts/app-layout';
 import type { UserType, FilterOption, PaginationType, SortOption } from '@/types';
-import { columns } from './Columns';
+import { columns } from './columns';
 
 interface Props {
     users: PaginationType<UserType>;

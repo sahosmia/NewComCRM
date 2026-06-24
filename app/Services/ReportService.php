@@ -70,10 +70,7 @@ class ReportService
         }
 
         if ($userId) {
-            $assignedColumn = $this->getAssignedColumn($query->getModel());
-            if ($assignedColumn) {
-                $query->where($assignedColumn, $userId);
-            }
+            $this->applyUserFilter($query, $userId);
         }
 
         if ($customerId && !($query->getModel() instanceof Customer)) {
@@ -93,6 +90,67 @@ class ReportService
         };
     }
 
+    private function applyUserFilter(Builder $query, $userId)
+    {
+        if (!$userId) {
+            return $query;
+        }
+
+        $model = $query->getModel();
+
+        if ($model instanceof Customer) {
+            return $query->where(function ($q) use ($userId) {
+                $q->where('assigned_to', $userId)
+                    ->orWhereHas('requirements', fn($sq) => $sq->where('user_id', $userId))
+                    ->orWhereHas('meetings', fn($sq) => $sq->where('user_id', $userId))
+                    ->orWhereHas('followUps', fn($sq) => $sq->where('user_id', $userId));
+            });
+        }
+
+        if ($model instanceof Requirement) {
+            return $query->where(function ($q) use ($userId) {
+                $q->where('user_id', $userId)
+                    ->orWhereHas('customer', fn($sq) => $sq->where('assigned_to', $userId))
+                    ->orWhereHas('meetings', fn($sq) => $sq->where('user_id', $userId))
+                    ->orWhereHas('followUps', fn($sq) => $sq->where('user_id', $userId));
+            });
+        }
+
+        if ($model instanceof Meeting) {
+            return $query->where(function ($q) use ($userId) {
+                $q->where('user_id', $userId)
+                    ->orWhereHas('customer', fn($sq) => $sq->where('assigned_to', $userId))
+                    ->orWhereHas('requirement', fn($sq) => $sq->where('user_id', $userId))
+                    ->orWhereHas('requirement.followUps', fn($sq) => $sq->where('user_id', $userId));
+            });
+        }
+
+        if ($model instanceof FollowUp) {
+            return $query->where(function ($q) use ($userId) {
+                $q->where('user_id', $userId)
+                    ->orWhereHas('customer', fn($sq) => $sq->where('assigned_to', $userId))
+                    ->orWhereHas('requirement', fn($sq) => $sq->where('user_id', $userId))
+                    ->orWhereHas('requirement.meetings', fn($sq) => $sq->where('user_id', $userId));
+            });
+        }
+
+        if ($model instanceof Sale) {
+            return $query->where(function ($q) use ($userId) {
+                $q->whereHas('requirement', fn($sq) => $sq->where('user_id', $userId))
+                    ->orWhereHas('customer', fn($sq) => $sq->where('assigned_to', $userId))
+                    ->orWhereHas('requirement.meetings', fn($sq) => $sq->where('user_id', $userId))
+                    ->orWhereHas('requirement.followUps', fn($sq) => $sq->where('user_id', $userId));
+            });
+        }
+
+        $assignedColumn = $this->getAssignedColumn($model);
+        if ($assignedColumn) {
+            $query->where($assignedColumn, $userId);
+        }
+
+        return $query;
+    }
+
     private function getStats(array $dateRange, $userId, $customerId): array
     {
         $salesQuery = Sale::query();
@@ -100,7 +158,7 @@ class ReportService
             $salesQuery->where('customer_id', $customerId);
         }
         if ($userId) {
-            $salesQuery->whereHas('customer', fn($q) => $q->where('assigned_to', $userId));
+            $this->applyUserFilter($salesQuery, $userId);
         }
         if ($dateRange['start']) {
             $salesQuery->whereBetween('sale_date', [$dateRange['start'], $dateRange['end']]);
@@ -111,7 +169,7 @@ class ReportService
             'total_sales_count' => $salesQuery->count(),
             'total_meetings' => $this->applyFilters(Meeting::query(), $dateRange, $userId, $customerId, 'scheduled_at')->count(),
             'total_follow_ups' => $this->applyFilters(FollowUp::query(), $dateRange, $userId, $customerId, 'follow_up_date')->count(),
-                        'total_requirements' => $this->applyFilters(Requirement::query(), $dateRange, $userId, $customerId, 'created_at')->count(),
+            'total_requirements' => $this->applyFilters(Requirement::query(), $dateRange, $userId, $customerId, 'created_at')->count(),
 
             'new_customers' => $this->applyFilters(Customer::query(), $dateRange, $userId, null, 'created_at')->count(),
         ];
@@ -138,7 +196,7 @@ class ReportService
             $query->where('customer_id', $customerId);
         }
         if ($userId) {
-            $query->whereHas('customer', fn($q) => $q->where('assigned_to', $userId));
+            $this->applyUserFilter($query, $userId);
         }
         if ($dateRange['start']) {
             $query->whereBetween('sale_date', [$dateRange['start'], $dateRange['end']]);
@@ -162,7 +220,7 @@ class ReportService
         }
 
         if ($userId) {
-            $query->whereHas('customer', fn($q) => $q->where('assigned_to', $userId));
+            $this->applyUserFilter($query, $userId);
         }
 
         if ($dateRange['start']) {

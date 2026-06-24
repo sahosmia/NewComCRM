@@ -110,10 +110,7 @@ class DashboardService
 
     private function getSalesMetrics(User $user): array
 {
-    $baseQuery = Sale::query()
-        ->when(!$user->isSuperAdmin(), function ($query) use ($user) {
-            $query->whereHas('customer', fn($q) => $q->where('company_id', $user->company_id))->orWhereHas('requirement', fn($q) => $q->where('user_id', $user->id));
-        });
+    $baseQuery = Sale::query();
 
     $totalMetrics = (clone $baseQuery)
         ->selectRaw('COUNT(*) as total_count, SUM(amount) as total_amount')
