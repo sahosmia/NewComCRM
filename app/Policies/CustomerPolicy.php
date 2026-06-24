@@ -26,11 +26,12 @@ class CustomerPolicy
 
     public function view(User $user, Customer $customer): bool
     {
+        return true;
         // return $user->id === $customer->assigned_to;
-        return $user->id === $customer->assigned_to
-            || $customer->followUps()->where('user_id', $user->id)->exists()
-            || $customer->meetings()->where('user_id', $user->id)->exists()
-            || $customer->requirements()->where('user_id', $user->id)->exists();
+        // return $user->id === $customer->assigned_to
+        //     || $customer->followUps()->where('user_id', $user->id)->exists()
+        //     || $customer->meetings()->where('user_id', $user->id)->exists()
+        //     || $customer->requirements()->where('user_id', $user->id)->exists();
     }
 
     public function create(User $user): bool

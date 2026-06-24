@@ -100,7 +100,10 @@ class ReportService
             $salesQuery->where('customer_id', $customerId);
         }
         if ($userId) {
-            $salesQuery->whereHas('customer', fn($q) => $q->where('assigned_to', $userId));
+            $salesQuery->where(function ($q) use ($userId) {
+                $q->whereHas('customer', fn($q) => $q->withoutGlobalScopes()->where('assigned_to', $userId))
+                  ->orWhereHas('requirement', fn($q) => $q->withoutGlobalScopes()->where('user_id', $userId));
+            });
         }
         if ($dateRange['start']) {
             $salesQuery->whereBetween('sale_date', [$dateRange['start'], $dateRange['end']]);
@@ -138,7 +141,10 @@ class ReportService
             $query->where('customer_id', $customerId);
         }
         if ($userId) {
-            $query->whereHas('customer', fn($q) => $q->where('assigned_to', $userId));
+            $query->where(function ($q) use ($userId) {
+                $q->whereHas('customer', fn($q) => $q->withoutGlobalScopes()->where('assigned_to', $userId))
+                  ->orWhereHas('requirement', fn($q) => $q->withoutGlobalScopes()->where('user_id', $userId));
+            });
         }
         if ($dateRange['start']) {
             $query->whereBetween('sale_date', [$dateRange['start'], $dateRange['end']]);

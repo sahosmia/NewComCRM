@@ -109,29 +109,26 @@ class DashboardService
     // }
 
     private function getSalesMetrics(User $user): array
-{
-    $baseQuery = Sale::query()
-        ->when(!$user->isSuperAdmin(), function ($query) use ($user) {
-            $query->whereHas('customer', fn($q) => $q->where('company_id', $user->company_id))->orWhereHas('requirement', fn($q) => $q->where('user_id', $user->id));
-        });
+    {
+        // AssignedDataScope on Sale handles non-super-admin filtering automatically
+        $baseQuery = Sale::query();
 
-    $totalMetrics = (clone $baseQuery)
-        ->selectRaw('COUNT(*) as total_count, SUM(amount) as total_amount')
-        ->first();
+        $totalMetrics = (clone $baseQuery)
+            ->selectRaw('COUNT(*) as total_count, SUM(amount) as total_amount')
+            ->first();
 
-    // ৩. আজকের কাউন্ট এবং অ্যামাউন্ট এক কুয়েরিতে নিয়ে আসা
-    $todayMetrics = (clone $baseQuery)
-        ->whereDate('sale_date', today())
-        ->selectRaw('COUNT(*) as today_count, SUM(amount) as today_amount')
-        ->first();
+        $todayMetrics = (clone $baseQuery)
+            ->whereDate('sale_date', today())
+            ->selectRaw('COUNT(*) as today_count, SUM(amount) as today_amount')
+            ->first();
 
-    return [
-        'today_count'  => (int) ($todayMetrics->today_count ?? 0),
-        'today_amount' => (float) ($todayMetrics->today_amount ?? 0),
-        'total_count'  => (int) ($totalMetrics->total_count ?? 0),
-        'total_amount' => (float) ($totalMetrics->total_amount ?? 0),
-    ];
-}
+        return [
+            'today_count'  => (int) ($todayMetrics->today_count ?? 0),
+            'today_amount' => (float) ($todayMetrics->today_amount ?? 0),
+            'total_count'  => (int) ($totalMetrics->total_count ?? 0),
+            'total_amount' => (float) ($totalMetrics->total_amount ?? 0),
+        ];
+    }
 
     private function getCustomerMetrics(User $user): array
     {

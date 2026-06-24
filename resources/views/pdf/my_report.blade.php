@@ -421,10 +421,10 @@
 
                     @if ($recipient->company?->name)
                         {{ $recipient->company->name }}<br>
-                        @if ($recipient->company->address)
-                            {{ $recipient->company->address }}<br>
-                        @endif
                     @endif
+                    @if ($recipient->addresses)
+                            {{ $recipient->addresses[0] }}<br>
+                        @endif
 
                     @if (!empty($recipient->phones) && isset($recipient->phones[0]))
                         Cell: +88{{ $recipient->phones[0] }}
@@ -443,9 +443,7 @@
             </div>
 
             <div class="subject-line" style="margin-bottom: 15px;">
-                Subject: Technical & Financial Proposal for
-                {{ $requirement->has_installation ? ' and Installation' : '' }}
-                of {{ $requirement->title ?? 'Required Items' }}.
+                Subject: Technical & Financial Proposal for {{ $requirement->title ?? 'Required Items' }}.
             </div>
             <p>Dear Sir,</p>
 
