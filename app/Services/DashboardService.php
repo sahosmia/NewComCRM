@@ -112,7 +112,10 @@ class DashboardService
 {
     $baseQuery = Sale::query()
         ->when(!$user->isSuperAdmin(), function ($query) use ($user) {
-            $query->whereHas('customer', fn($q) => $q->where('company_id', $user->company_id))->orWhereHas('requirement', fn($q) => $q->where('user_id', $user->id));
+            $query->where(function ($q) use ($user) {
+                $q->whereHas('customer', fn($cq) => $cq->where('assigned_to', $user->id))
+                    ->orWhereHas('requirement', fn($rq) => $rq->where('user_id', $user->id));
+            });
         });
 
     $totalMetrics = (clone $baseQuery)
