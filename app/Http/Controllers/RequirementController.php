@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateRequirementRequest;
 use App\Models\Requirement;
 use App\Services\RequirementService;
 use Illuminate\Http\Request;
+
 use Inertia\Inertia;
 use App\Services\LookupService;
 use App\Services\ExportService;
@@ -26,12 +27,15 @@ class RequirementController extends Controller
      */
     public function index(Request $request)
     {
+        // return $this->lookupService->getAllUsersForSelect();
         // return $request->all();
         $this->authorize('viewAny', Requirement::class);
         return Inertia::render('Requirements/Index', [
             'requirements' => $this->requirementService->paginateIndex($request->all()),
             'customers' => $this->lookupService->getCustomersForSelect(),
             'users'     => $this->lookupService->getUsersForSelect(),
+                        'all_users' => $this->lookupService->getAllUsersForSelect(),
+
             'companies' => $this->lookupService->getCompanies(),
         ]);
     }
@@ -48,6 +52,8 @@ class RequirementController extends Controller
             'products'  => $this->lookupService->getProductsForSelect(),
             'units'     => $this->lookupService->getUnits(),
             'users'     => $this->lookupService->getUsersForSelect(),
+
+                        'all_users' => $this->lookupService->getAllUsersForSelect(),
             'companies' => $this->lookupService->getCompanies(),
         ]);    }
 
@@ -102,6 +108,8 @@ class RequirementController extends Controller
             'products'  => $this->lookupService->getProductsForSelect(),
             'units'     => $this->lookupService->getUnits(),
             'users'     => $this->lookupService->getUsersForSelect(),
+                                    'all_users' => $this->lookupService->getAllUsersForSelect(),
+
             'companies' => $this->lookupService->getCompanies(),
         ]);
     }

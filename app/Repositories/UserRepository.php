@@ -19,6 +19,13 @@ class UserRepository
             ->get();
     }
 
+       public function allSelectOptions(): Collection
+    {
+        return User::query()
+            ->select('id', 'name')
+            ->get();
+    }
+
     public function paginateForIndex(array $params): LengthAwarePaginator
     {
         $perPage = $params['per_page'] ?? setting('paginated_quantity', 10);

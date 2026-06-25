@@ -97,7 +97,7 @@ export default function ProductForm({ product, units = [] }: Props) {
 
                 {/* Stock Quantity */}
                 <div className="space-y-2">
-                    <FormLabel required>Stock Quantity</FormLabel>
+                    <FormLabel>Stock Quantity</FormLabel>
                     <Input
                         id="stock_quantity"
                         type="number"

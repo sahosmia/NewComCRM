@@ -2,10 +2,13 @@
 <html>
 
 <head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
     <style>
         * {
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            font-family: 'DejaVu Sans', sans-serif;
         }
 
         @page {
@@ -24,7 +27,7 @@
             left: 0px;
             right: 0px;
             height: 50px;
-            font-family: Arial, sans-serif;
+            font-family: 'DejaVu Sans', sans-serif;
         }
 
         .header-top {
@@ -154,7 +157,7 @@
         }
 
         .recipient-info {
-            font-family: Arial, sans-serif;
+            font-family: 'DejaVu Sans', sans-serif;
             font-size: 13px;
             line-height: 1.4;
             margin-top: 20px;
@@ -162,7 +165,7 @@
         }
 
         .subject-line {
-            font-family: Arial, sans-serif;
+            font-family: 'DejaVu Sans', sans-serif;
             font-size: 14px;
             margin-top: 20px;
             font-weight: normal;
@@ -235,7 +238,7 @@
         .product-table {
             width: 100%;
             border-collapse: collapse;
-            font-family: Arial, sans-serif;
+            font-family: 'DejaVu Sans', sans-serif;
             font-size: 11px;
         }
 
@@ -285,7 +288,7 @@
             left: -30px;
             right: -30px;
             height: 125px;
-            font-family: Arial, sans-serif;
+            font-family: 'DejaVu Sans', sans-serif;
             background-color: #8B1A1A;
         }
 

@@ -25,11 +25,14 @@ interface Props {
     products: Product[];
     units: Unit[];
     users: User[];
+    all_users: User[];
     companies: Company[];
 
 }
 
-export default function RequirementForm({ requirement, customers: initialCustomers, products: initialProducts, units: initialUnits, users, companies }: Props) {
+export default function RequirementForm({ requirement, customers: initialCustomers, products: initialProducts, units: initialUnits, users, all_users, companies }: Props) {
+    console.log(all_users);
+
     const { auth, settings } = usePage().props as any;
     const isSuperAdmin = auth.user.role === 'super_admin';
 
@@ -76,8 +79,8 @@ export default function RequirementForm({ requirement, customers: initialCustome
             supplier: item.product?.supplier_name,
             source: item.product?.source
         })) as RequirementItem[]) || [
-            { product_id: 0, quantity: 1, unit_price: "", costing_price: 0, description: "", unit_short_form: "", supplier: "", source: "" }
-        ],
+                { product_id: 0, quantity: 1, unit_price: "", costing_price: 0, description: "", unit_short_form: "", supplier: "", source: "" }
+            ],
     });
 
 
@@ -258,7 +261,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                 <div className="space-y-2">
                                     <GenericCombobox
                                         label="Quotation Sent By"
-                                        items={users.map(u => ({ id: u.id, name: u.name }))}
+                                        items={all_users.map(u => ({ id: u.id, name: u.name }))}
                                         selectedId={data.qutation_send_by}
                                         onSelect={(id) => setData("qutation_send_by", id as number)}
                                         placeholder="Select Sender (Optional)"

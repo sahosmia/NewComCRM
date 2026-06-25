@@ -21,7 +21,20 @@ trait ValidatesCustomerAttributes
             'type'          => 'required|in:corporate,reseller,personal',
             'date_of_birth' => 'nullable|date',
             'phones'        => 'required|array|min:1',
-            'phones.*'      => ['required', 'string', 'regex:/^01[3-9]\d{8}$/',],
+            'phones.*'      => [
+                'required',
+                'string',
+                'regex:/^01[3-9]\d{8}$/',
+                function ($attribute, $value, $fail) use ($customerId) {
+                    $exists = \App\Models\Customer::whereJsonContains('phones', $value)
+                        ->when($customerId, fn($q) => $q->where('id', '!=', $customerId))
+                        ->exists();
+
+                    if ($exists) {
+                        $fail("The phone number {$value} has already been taken.");
+                    }
+                }
+            ],
             'addresses'     => 'nullable|array',
             'addresses.*'   => 'nullable|string',
             'remarks'       => 'nullable|string',

@@ -24,6 +24,10 @@ class LookupService
     {
         return $this->users->selectOptions();
     }
+      public function getAllUsersForSelect(): Collection
+    {
+        return $this->users->allSelectOptions();
+    }
 
     public function getCustomersForSelect(): Collection
     {

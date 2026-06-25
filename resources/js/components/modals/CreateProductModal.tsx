@@ -89,7 +89,7 @@ export default function CreateProductModal({ isOpen, onClose, onSuccess, units =
                         </div>
 
                          <div className="space-y-2">
-                            <FormLabel required>Stock Quantity</FormLabel>
+                            <FormLabel>Stock Quantity</FormLabel>
                             <Input type="number" value={data.stock_quantity} onChange={e => setData("stock_quantity", e.target.value)} placeholder="0" />
                             <ErrorMessage message={errors.stock_quantity} />
                         </div>
