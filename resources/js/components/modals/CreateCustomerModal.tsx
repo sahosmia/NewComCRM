@@ -1,3 +1,4 @@
+import { usePage } from '@inertiajs/react';
 import { Loader2, Plus, X } from 'lucide-react';
 import React from 'react';
 import ErrorMessage from '@/components/admin/form/ErrorMessage';
@@ -27,12 +28,15 @@ interface CreateCustomerModalProps {
 }
 
 export default function CreateCustomerModal({ isOpen, onClose, onSuccess, companies = [], users = [] }: CreateCustomerModalProps) {
+    const { auth } = usePage().props as any;
+    const isSuperAdmin = auth.user.role === 'super_admin';
+
     const { data, setData, errors, processing, reset, submit } = useModalForm({
         name: "",
         designation: "",
         company_id: "",
         email: "",
-        assigned_to: users.length === 1 ? users[0].id : "",
+        assigned_to: isSuperAdmin ? (users.length === 1 ? users[0].id : "") : auth.user.id,
         status: "active",
         type: "corporate",
         phones: [""],
@@ -112,18 +116,19 @@ export default function CreateCustomerModal({ isOpen, onClose, onSuccess, compan
                             <ErrorMessage message={errors.type} />
                         </div>
 
-                        <div className="space-y-2">
-                            <GenericCombobox
-                                required
-                                label="Responsible User"
-                                items={users}
-                                selectedId={data.assigned_to}
-                                onSelect={(id) => setData("assigned_to", id as number)}
-                                placeholder="Select company"
-                                error={errors.assigned_to}
-                            />
-
-                        </div>
+                        {isSuperAdmin && (
+                            <div className="space-y-2">
+                                <GenericCombobox
+                                    required
+                                    label="Responsible User"
+                                    items={users}
+                                    selectedId={data.assigned_to}
+                                    onSelect={(id) => setData("assigned_to", id as number)}
+                                    placeholder="Select User"
+                                    error={errors.assigned_to}
+                                />
+                            </div>
+                        )}
                     </div>
 
                     <div className="space-y-3">
