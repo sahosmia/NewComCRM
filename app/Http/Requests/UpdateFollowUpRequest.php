@@ -13,8 +13,7 @@ class UpdateFollowUpRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return $this->user()->can('update', $this->route('follow_up'));
-        // return true;
+        return true;
     }
 
     public function rules(): array
