@@ -27,10 +27,7 @@ class RequirementService
     public function create(array $data): Requirement
     {
         return DB::transaction(function () use ($data) {
-            $intendedStatus = $data['status'] ?? 'pending';
-
             $requirementData = collect($data)->except(['items', 'accessories', 'installations'])->toArray();
-            $requirementData['status'] = 'pending';
 
             $requirement = $this->requirements->create($requirementData);
 
@@ -49,23 +46,28 @@ class RequirementService
                 }
             }
 
-            $requirement->status = $intendedStatus;
-
             // Explicitly calculate to ensure taxes/accessories/installation are included
-            // This also saves the requirement, triggering 'updated' event if status changed from 'pending'
             $requirement->calculateGrandTotal();
+
+            if ($requirement->status === 'purchased') {
+                $this->decreaseStock($requirement);
+                $this->createSale($requirement);
+            }
 
             return $requirement;
         });
     }
 
-      public function update(Requirement $requirement, array $data): void
+    public function update(Requirement $requirement, array $data): void
     {
         DB::transaction(function () use ($requirement, $data) {
-            $requirementData = collect($data)->except(['items', 'accessories', 'installations'])->toArray();
+            $newStatus = $data['status'] ?? $requirement->status;
+            $requirementData = collect($data)->except(['items', 'accessories', 'installations', 'status'])->toArray();
 
+            // Update basic info except status first
             $this->requirements->update($requirement, $requirementData);
 
+            // Sync items/accessories/installations
             $requirement->items()->delete();
             $requirement->items()->createMany($data['items']);
 
@@ -85,7 +87,11 @@ class RequirementService
                 }
             }
 
-            // Explicitly calculate to ensure taxes/accessories/installation are included
+            // Refresh items to ensure observer uses new ones
+            $requirement->load('items');
+
+            // Update status and trigger calculations (and observer if status changed)
+            $requirement->status = $newStatus;
             $requirement->calculateGrandTotal();
         });
     }
@@ -108,6 +114,41 @@ class RequirementService
     public function selectOptions(): Collection
     {
         return $this->requirements->selectOptions();
+    }
+
+    public function decreaseStock(Requirement $requirement): void
+    {
+        foreach ($requirement->items as $item) {
+            if ($item->product) {
+                $item->product->decrement('stock_quantity', $item->quantity);
+            }
+        }
+    }
+
+    public function increaseStock(Requirement $requirement): void
+    {
+        foreach ($requirement->items as $item) {
+            if ($item->product) {
+                $item->product->increment('stock_quantity', $item->quantity);
+            }
+        }
+    }
+
+    public function createSale(Requirement $requirement): void
+    {
+        \App\Models\Sale::updateOrCreate(
+            ['requirement_id' => $requirement->id],
+            [
+                'customer_id' => $requirement->customer_id,
+                'amount' => $requirement->grand_total,
+                'sale_date' => now(),
+            ]
+        );
+    }
+
+    public function cancelSale(Requirement $requirement): void
+    {
+        \App\Models\Sale::where('requirement_id', $requirement->id)->forceDelete();
     }
 
     /* Generate PDF for a requirement.
