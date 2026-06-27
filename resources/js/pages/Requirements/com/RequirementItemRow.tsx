@@ -35,9 +35,9 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
     const sourceError = errors && errors[`items.${index}.source`];
 
     return (
-        <div className={`group relative bg-white border rounded-xl p-4 md:p-6 transition-all hover:shadow-lg mb-6 ${errors && Object.keys(errors).some(key => key.startsWith(`items.${index}.`))
-            ? 'border-destructive/40 bg-destructive/[0.01] shadow-sm shadow-destructive/5'
-            : 'border-slate-200 hover:border-primary/40'
+        <div className={`group relative bg-card border rounded-xl p-4 md:p-6 transition-all hover:shadow-lg mb-6 ${errors && Object.keys(errors).some(key => key.startsWith(`items.${index}.`))
+            ? 'border-destructive/40 bg-destructive/5 shadow-sm shadow-destructive/5'
+            : 'border-border hover:border-primary/40'
             }`}>
 
             {/* Remove Row Button */}
@@ -99,8 +99,8 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                             value={item.quantity}
                             onChange={(e) => onItemChange(index, "quantity", e.target.value)}
                             className={`text-center font-bold h-10 transition-colors ${quantityError
-                                ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/[0.02]'
-                                : 'border-slate-200 focus-visible:ring-primary/20'
+                                ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/5'
+                                : 'border-border focus-visible:ring-primary/20'
                                 }`}
                         />
                         <ErrorMessage message={quantityError} />
@@ -112,7 +112,7 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                             type="text"
                             readOnly
                             value={item.unit_short_form || ""}
-                            className="text-center font-bold h-10 transition-colors border-slate-100 bg-slate-50 cursor-not-allowed"
+                            className="text-center font-bold h-10 transition-colors border-border/50 bg-muted cursor-not-allowed"
                         />
                     </div>
                     {/* Costing Price Input */}
@@ -124,8 +124,8 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                                 value={item.costing_price}
                                 onChange={(e) => onItemChange(index, "costing_price", e.target.value)}
                                 className={`font-bold h-10 text-sm transition-colors ${costingPriceError
-                                    ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/[0.02]'
-                                    : 'border-slate-200 focus-visible:ring-primary/20'
+                                    ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/5'
+                                    : 'border-border focus-visible:ring-primary/20'
                                     }`}
                             />
                         </div>
@@ -141,8 +141,8 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                                 value={item.unit_price}
                                 onChange={(e) => onItemChange(index, "unit_price", e.target.value)}
                                 className={`font-bold h-10 text-sm transition-colors ${unitPriceError
-                                    ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/[0.02]'
-                                    : 'border-slate-200 focus-visible:ring-primary/20'
+                                    ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/5'
+                                    : 'border-border focus-visible:ring-primary/20'
                                     }`}
                             />
                         </div>
@@ -152,16 +152,16 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
 
                     {/* Total Calculation Display - Desktop (shown on lg+) */}
                     <div className="flex lg:col-span-3 flex-col justify-end h-full">
-                        <div className="bg-slate-50 rounded-xl p-3 space-y-1.5 border border-slate-100 shadow-inner">
-                            {/* <div className="flex justify-between items-center px-1 border-b border-slate-200/60 pb-1.5">
-                                <span className="text-[10px] uppercase font-semibold text-slate-500">Costing Price:</span>
-                                <span className="text-xs font-mono font-bold text-slate-700">
+                        <div className="bg-muted/50 rounded-xl p-3 space-y-1.5 border border-border shadow-inner">
+                            {/* <div className="flex justify-between items-center px-1 border-b border-border/60 pb-1.5">
+                                <span className="text-[10px] uppercase font-semibold text-muted-foreground">Costing Price:</span>
+                                <span className="text-xs font-mono font-bold text-foreground">
                                     ৳{(item.costing_price*item.quantity).toFixed(2)}
                                 </span>
                             </div> */}
-                            <div className="flex justify-between items-center px-1 border-b border-slate-200/60 pb-1.5">
-                                <span className="text-[10px] uppercase font-semibold text-slate-500">Gross Unit:</span>
-                                <span className="text-xs font-mono font-bold text-slate-700">
+                            <div className="flex justify-between items-center px-1 border-b border-border/60 pb-1.5">
+                                <span className="text-[10px] uppercase font-semibold text-muted-foreground">Gross Unit:</span>
+                                <span className="text-xs font-mono font-bold text-foreground">
                                     ৳{calculateGross().toLocaleString(undefined, { minimumFractionDigits: 2 })}
                                 </span>
                             </div>
@@ -190,8 +190,8 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                             onChange={(e) => onItemChange(index, "description", e.target.value)}
                             placeholder="Add detailed product specifications here..."
                             className={`text-sm min-h-20 max-h-36 leading-relaxed resize-none transition-colors ${descriptionError
-                                ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/[0.02]'
-                                : 'border-slate-200 focus-visible:ring-primary/20'
+                                ? 'border-destructive focus-visible:ring-destructive/20 bg-destructive/5'
+                                : 'border-border focus-visible:ring-primary/20'
                                 }`}
                         />
                         <ErrorMessage message={descriptionError} />
@@ -201,7 +201,7 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                         <Textarea
                             readOnly
                             value={item.source || ""}
-                            className={`text-sm min-h-20 max-h-28 overflow-y-auto leading-relaxed resize-none transition-colors border-slate-200 bg-slate-50 cursor-not-allowed`} />
+                            className={`text-sm min-h-20 max-h-28 overflow-y-auto leading-relaxed resize-none transition-colors border-border bg-muted cursor-not-allowed`} />
                     </div>
 
                     <div className="col-span-3 space-y-2">
@@ -210,7 +210,7 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                             type="text"
                             readOnly
                             value={item.supplier || ""}
-                            className="font-bold h-10 transition-colors border-slate-200 bg-slate-50 cursor-not-allowed"
+                            className="font-bold h-10 transition-colors border-border bg-muted cursor-not-allowed"
                         />
                     </div>
 

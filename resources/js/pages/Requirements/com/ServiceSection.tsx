@@ -41,15 +41,15 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
     };
 
     return (
-        <div className={`bg-white border rounded-xl shadow-sm overflow-hidden mb-6 transition-all ${hasService ? 'ring-1 ring-primary/20 shadow-md' : 'border-slate-200'}`}>
-            <div className={`p-4 flex justify-between items-center border-b transition-colors ${hasService ? 'bg-primary/5 border-primary/10' : 'bg-slate-50/50 border-slate-200'}`}>
-                <h3 className={`font-semibold flex items-center gap-2 text-sm transition-colors ${hasService ? 'text-primary' : 'text-slate-700'}`}>
+        <div className={`bg-card border rounded-xl shadow-sm overflow-hidden mb-6 transition-all ${hasService ? 'ring-1 ring-primary/20 shadow-md' : 'border-border'}`}>
+            <div className={`p-4 flex justify-between items-center border-b transition-colors ${hasService ? 'bg-primary/5 border-primary/10' : 'bg-muted/50 border-border'}`}>
+                <h3 className={`font-semibold flex items-center gap-2 text-sm transition-colors ${hasService ? 'text-primary' : 'text-foreground'}`}>
                     {icon} {title}
                 </h3>
                 <div className="flex items-center gap-4">
-                    <div className="flex items-center space-x-3 bg-white/50 px-3 py-1.5 rounded-full border border-slate-200/60 shadow-sm">
+                    <div className="flex items-center space-x-3 bg-card/50 px-3 py-1.5 rounded-full border border-border/60 shadow-sm">
                         <Checkbox id={`has_${prefix}`} checked={hasService} onCheckedChange={onServiceToggle} className="data-[state=checked]:bg-primary data-[state=checked]:border-primary" />
-                        <Label htmlFor={`has_${prefix}`} className="text-xs font-bold cursor-pointer text-slate-600">Include {title}</Label>
+                        <Label htmlFor={`has_${prefix}`} className="text-xs font-bold cursor-pointer text-muted-foreground">Include {title}</Label>
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                                     placeholder={`Enter ${title.toLowerCase()} details...`}
                                     value={item.title}
                                     onChange={(e) => handleItemChange(index, 'title', e.target.value)}
-                                    className="h-10 border-slate-200 focus:border-primary/50"
+                                    className="h-10 border-border focus:border-primary/50"
                                 />
                                 <ErrorMessage message={errors[`${prefix}.${index}.title`]} />
                             </div>
@@ -72,7 +72,7 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                                     <FormLabel required>QTY</FormLabel>
                                     <Input
                                         type="number"
-                                        className="text-center h-10 font-bold border-slate-200 focus:border-primary/50"
+                                        className="text-center h-10 font-bold border-border focus:border-primary/50"
                                         value={item.quantity}
                                         onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
                                     />
@@ -117,13 +117,13 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                                     type="number"
                                     value={item.price}
                                     onChange={(e) => handleItemChange(index, 'price', e.target.value)}
-                                    className="h-10 font-bold border-slate-200 focus:border-primary/50"
+                                    className="h-10 font-bold border-border focus:border-primary/50"
                                 />
                                 <ErrorMessage message={errors[`${prefix}.${index}.price`]} />
                             </div>
                             <div className="md:col-span-2 lg:col-span-2 space-y-2">
                                 <FormLabel>Total (Incl. AIT)</FormLabel>
-                                <div className="h-10 flex items-center px-4 bg-primary/5 rounded-lg border border-primary/20 font-mono font-black text-sm text-primary shadow-inner">
+                                <div className="h-10 flex items-center px-4 bg-primary/10 rounded-lg border border-primary/30 font-mono font-black text-sm text-primary shadow-inner">
                                     ৳{(Number(item.quantity || 0) * Number(item.price || 0) * aitFactor).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                                 </div>
                             </div>
@@ -132,7 +132,7 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                                     type="button"
                                     variant="ghost"
                                     size="icon"
-                                    className="text-slate-400 hover:text-red-500 hover:bg-red-50"
+                                    className="text-muted-foreground hover:text-red-500 hover:bg-red-500/10"
                                     onClick={() => removeItem(index)}
                                     disabled={items.length === 1}
                                 >
@@ -142,7 +142,7 @@ export const ServiceSection = ({ title, icon, hasService, onServiceToggle, prefi
                         </div>
                     ))}
                     <div className="flex justify-center pt-2">
-                        <Button type="button" variant="outline" size="sm" onClick={addItem} className="gap-2 px-6 h-9 bg-background border-slate-200 hover:bg-slate-50 hover:border-primary/50 hover:text-primary transition-all">
+                        <Button type="button" variant="outline" size="sm" onClick={addItem} className="gap-2 px-6 h-9 bg-background border-border hover:bg-muted hover:border-primary/50 hover:text-primary transition-all">
                             <Plus className="w-4 h-4" /> Add New
                         </Button>
                     </div>
