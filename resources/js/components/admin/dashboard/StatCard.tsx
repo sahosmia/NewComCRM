@@ -79,7 +79,7 @@ export default function StatCard({ title, value, icon, color, link, description,
       </div>
 
       {/* Subtle Bottom Glow Line on Hover */}
-      <div className={`absolute bottom-0 left-0 right-0 h-[2px] w-full scale-x-0 transition-transform duration-300 group-hover:scale-x-100 ${colors.text.replace('text', 'bg')}`} />
+      <div className={`absolute bottom-0 left-0 right-0 h-[2px] w-full scale-x-0 transition-transform duration-300 group-hover:scale-x-100 ${colors.text.replaceAll('text-', 'bg-')}`} />
     </div>
   );
 

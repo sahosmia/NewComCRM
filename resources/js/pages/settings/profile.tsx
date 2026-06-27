@@ -135,7 +135,7 @@ export default function Profile({
                                             <img
                                                 src={auth.user.signature_url}
                                                 alt="Current signature"
-                                                className="h-20 w-auto rounded border bg-white object-contain"
+                                                className="h-20 w-auto rounded border bg-card object-contain"
                                             />
                                         </div>
                                     )}

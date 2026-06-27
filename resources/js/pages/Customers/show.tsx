@@ -188,9 +188,9 @@ export default function Show({ customer }: ShowProps) {
                                                         </td>
                                                         <td className="px-4 py-3">
                                                             <Badge variant="secondary" className={` capitalize font-normal
-                                                                ${req.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : ''}
-                                                                ${req.status === 'completed' ? 'bg-green-100 text-green-700' : ''}
-                                                                ${req.status === 'cancelled' ? 'bg-red-100 text-red-700' : ''}
+                                                                ${req.status === 'pending' ? 'bg-amber-500/10 text-amber-600 border-amber-500/20' : ''}
+                                                                ${req.status === 'completed' ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' : ''}
+                                                                ${req.status === 'cancelled' ? 'bg-red-500/10 text-red-600 border-red-500/20' : ''}
                                                             `}>
                                                                 {req.status}
                                                             </Badge>

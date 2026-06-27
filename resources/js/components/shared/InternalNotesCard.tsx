@@ -19,15 +19,15 @@ export default function InternalNotesCard({
 }: InternalNotesCardProps) {
 
     const variants = {
-        amber: "bg-amber-50/50 border-amber-200 text-amber-900",
-        blue: "bg-blue-50/50 border-blue-200 text-blue-900",
-        slate: "bg-slate-50/50 border-slate-200 text-slate-900",
+        amber: "bg-amber-50/50 border-amber-200 text-amber-900 dark:bg-amber-950/20 dark:border-amber-900/50 dark:text-amber-200",
+        blue: "bg-blue-50/50 border-blue-200 text-blue-900 dark:bg-blue-950/20 dark:border-blue-900/50 dark:text-blue-200",
+        slate: "bg-slate-50/50 border-slate-200 text-slate-900 dark:bg-slate-950/20 dark:border-slate-900/50 dark:text-slate-200",
     };
 
     const iconColor = {
-        amber: "text-amber-600",
-        blue: "text-blue-600",
-        slate: "text-slate-600",
+        amber: "text-amber-600 dark:text-amber-400",
+        blue: "text-blue-600 dark:text-blue-400",
+        slate: "text-slate-600 dark:text-slate-400",
     };
 
     if (!notes) return null;

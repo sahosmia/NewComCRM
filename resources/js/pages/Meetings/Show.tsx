@@ -84,13 +84,13 @@ export default function Show({ meeting }: { meeting: Meeting }) {
                         {meeting.requirement && (
                             <Card className="border-l-4 border-l-blue-500">
                                 <CardHeader>
-                                    <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 text-blue-600">
+                                    <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 text-blue-500">
                                         <Briefcase className="w-4 h-4" />
                                         Linked Requirement
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
-                                    <div className="flex justify-between items-center bg-blue-50/30 p-4 rounded-lg border border-blue-100/50">
+                                    <div className="flex justify-between items-center bg-blue-500/5 p-4 rounded-lg border border-blue-500/20">
                                         <div>
                                             <p className="text-sm font-bold text-foreground">
                                                 {meeting.requirement.title || `Requirement #${meeting.requirement.id}`}
@@ -154,13 +154,13 @@ export default function Show({ meeting }: { meeting: Meeting }) {
                         {/* Agenda Card */}
                         <Card className="border-l-4 border-l-amber-500">
                             <CardHeader>
-                                <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 text-amber-600">
+                                <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 text-amber-500">
                                     <ClipboardList className="w-4 h-4" />
                                     Meeting Agenda
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="bg-amber-50/30 p-4 rounded-lg border border-amber-100/50 min-h-25">
+                                <div className="bg-amber-500/5 p-4 rounded-lg border border-amber-500/20 min-h-25">
                                     <p className="text-sm leading-relaxed text-foreground/80 whitespace-pre-wrap">
                                         {meeting.agenda || "No agenda specified for this meeting."}
                                     </p>

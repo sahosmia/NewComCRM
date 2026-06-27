@@ -54,7 +54,7 @@ export default function Show({ product }: { product: Product }) {
                                 <h4 className="text-sm font-semibold flex items-center gap-2 text-muted-foreground">
                                     <FileText className="w-4 h-4" /> Description
                                 </h4>
-                                <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap bg-slate-50 p-4 rounded-md border border-slate-100 italic">
+                                <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap bg-muted/50 p-4 rounded-md border border-border italic">
                                     {product.description || "No specific description provided for this product."}
                                 </p>
                             </div>
@@ -62,7 +62,7 @@ export default function Show({ product }: { product: Product }) {
                                 <h4 className="text-sm font-semibold flex items-center gap-2 text-muted-foreground">
                                     <ExternalLink className="w-4 h-4" /> Purchase Source
                                 </h4>
-                                <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap bg-slate-50 p-4 rounded-md border border-slate-100 italic">
+                                <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap bg-muted/50 p-4 rounded-md border border-border italic">
                                     {product.source || "No source info added."}
                                 </p>
                             </div>
@@ -75,21 +75,21 @@ export default function Show({ product }: { product: Product }) {
                         <Card className="border-l-4 border-l-emerald-500 shadow-md">
                             <CardContent className="pt-6 space-y-6">
                                 <div className="flex items-center justify-between">
-                                    <div className="p-2 bg-emerald-50 rounded-lg">
-                                        <CircleDollarSign className="w-6 h-6 text-emerald-600" />
+                                    <div className="p-2 bg-emerald-500/10 rounded-lg">
+                                        <CircleDollarSign className="w-6 h-6 text-emerald-500" />
                                     </div>
                                     <div className="text-right">
                                         <p className="text-xs font-medium text-muted-foreground uppercase">Sale Price</p>
-                                        <p className="text-2xl font-bold text-emerald-600">৳ {Number(product.unit_price).toLocaleString()}</p>
+                                        <p className="text-2xl font-bold text-emerald-500">৳ {Number(product.unit_price).toLocaleString()}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between border-t pt-4">
-                                    <div className="p-2 bg-amber-50 rounded-lg">
-                                        <Box className="w-6 h-6 text-amber-600" />
+                                    <div className="p-2 bg-amber-500/10 rounded-lg">
+                                        <Box className="w-6 h-6 text-amber-500" />
                                     </div>
                                     <div className="text-right">
                                         <p className="text-xs font-medium text-muted-foreground uppercase">Stock Level</p>
-                                        <p className={`text-2xl font-bold ${product.stock_quantity < 10 ? 'text-red-600' : 'text-slate-800'}`}>
+                                        <p className={`text-2xl font-bold ${product.stock_quantity < 10 ? 'text-red-600' : 'text-foreground'}`}>
                                             {product.stock_quantity} <span className="text-sm font-normal text-muted-foreground italic">{product.unit?.short_form || 'units'}</span>
                                         </p>
                                     </div>

@@ -100,13 +100,13 @@ export default function Show({ followUp }: { followUp: FollowUp }) {
                         {followUp.requirement && (
                             <Card className="border-l-4 border-l-blue-500">
                                 <CardHeader>
-                                    <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 text-blue-600">
+                                    <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 text-blue-500">
                                         <Briefcase className="w-4 h-4" />
                                         Linked Requirement
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
-                                    <div className="flex justify-between items-center bg-blue-50/30 p-4 rounded-lg border border-blue-100/50">
+                                    <div className="flex justify-between items-center bg-blue-500/5 p-4 rounded-lg border border-blue-500/20">
                                         <div>
                                             <p className="text-sm font-bold text-foreground">
                                                 {followUp.requirement.title || `Requirement #${followUp.requirement.id}`}
@@ -191,8 +191,8 @@ export default function Show({ followUp }: { followUp: FollowUp }) {
                                         className={cn(
                                             "h-7 px-3 flex items-center gap-1.5 border-none shadow-sm transition-all",
                                             followUp.status === 'purchase'
-                                                ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100/80"
-                                                : "bg-amber-100 text-amber-700 hover:bg-amber-100/80"
+                                                ? "bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20"
+                                                : "bg-amber-500/10 text-amber-600 hover:bg-amber-500/20"
                                         )}
                                     >
                                         {followUp.status === 'purchase' ? (
@@ -220,15 +220,15 @@ export default function Show({ followUp }: { followUp: FollowUp }) {
 
                                 {/* Completion Info */}
                                 {followUp.completed_at && (
-                                    <div className="flex flex-col gap-2 p-3 bg-emerald-50/50 rounded-xl border border-emerald-100 group">
+                                    <div className="flex flex-col gap-2 p-3 bg-emerald-500/5 rounded-xl border border-emerald-500/20 group">
                                         <div className="flex items-center gap-2">
                                             <div className="bg-emerald-500 rounded-full p-0.5">
                                                 <CheckCircle2 className="w-3 h-3 text-white" />
                                             </div>
-                                            <p className="text-[11px] font-bold text-emerald-800 uppercase tracking-tight">Execution Time</p>
+                                            <p className="text-[11px] font-bold text-emerald-600 uppercase tracking-tight">Execution Time</p>
                                         </div>
-                                        <p className="text-xs font-medium text-emerald-700/80 ml-5">
-                                            Completed on <span className="text-emerald-900 font-bold">{formatDateTime(followUp.completed_at)}</span>
+                                        <p className="text-xs font-medium text-emerald-600/80 ml-5">
+                                            Completed on <span className="text-foreground font-bold">{formatDateTime(followUp.completed_at)}</span>
                                         </p>
                                     </div>
                                 )}
