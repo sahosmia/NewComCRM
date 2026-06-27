@@ -100,8 +100,8 @@ export default function RequirementForm({ requirement, customers: initialCustome
                 return {
                     ...item,
                     product_id: parseInt(String(value)),
-                    unit_price: product ? product.unit_price : (item.unit_price || ""),
-                    costing_price: product ? product.costing_price : (item.costing_price || 0),
+                    unit_price: product ? (product.unit_price || 0) : (item.unit_price || ""),
+                    costing_price: product ? (product.costing_price || 0) : (item.costing_price || 0),
                     description: product ? (product.description || "") : (item.description || ""),
                     unit_short_form: product ? product.unit?.short_form : (item.unit_short_form || ""),
                     supplier: product ? product.supplier_name : (item.supplier || ""),
