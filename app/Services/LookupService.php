@@ -34,6 +34,11 @@ class LookupService
         return $this->customers->selectOptions();
     }
 
+    public function getAllCustomersForSelect(): Collection
+    {
+        return $this->customers->allSelectOptions();
+    }
+
     public function getCustomersForRequirementForm(): Collection
     {
         return $this->customers->forRequirementForm();

@@ -59,6 +59,15 @@ class CustomerRepository
         return $this->query()->with('company')->select('id', 'name', 'company_id', 'assigned_to', 'addresses')->get();
     }
 
+    public function allSelectOptions(): Collection
+    {
+        return Customer::query()
+            ->withoutGlobalScope(\App\Models\Scopes\AssignedDataScope::class)
+            ->with('company')
+            ->select('id', 'name', 'company_id', 'assigned_to', 'addresses')
+            ->get();
+    }
+
     public function create(array $data): Customer
     {
         return Customer::create($data);

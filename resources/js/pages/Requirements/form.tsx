@@ -22,6 +22,7 @@ import { ServiceSection } from "./com/ServiceSection";
 interface Props {
     requirement?: Requirement;
     customers: CustomerType[];
+    all_customers: CustomerType[];
     products: Product[];
     units: Unit[];
     users: User[];
@@ -30,7 +31,7 @@ interface Props {
 
 }
 
-export default function RequirementForm({ requirement, customers: initialCustomers, products: initialProducts, units: initialUnits, users, all_users, companies }: Props) {
+export default function RequirementForm({ requirement, customers: initialCustomers, all_customers: initialAllCustomers, products: initialProducts, units: initialUnits, users, all_users, companies }: Props) {
     console.log(all_users);
 
     const { auth, settings } = usePage().props as any;
@@ -38,6 +39,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
 
     const { openModal } = useModal();
     const [customers, setCustomers] = useState<CustomerType[]>(initialCustomers);
+    const [allCustomers, setAllCustomers] = useState<CustomerType[]>(initialAllCustomers);
     const [products, setProducts] = useState<Product[]>(initialProducts);
     const [units, setUnits] = useState<Unit[]>(initialUnits);
     const urlParams = new URLSearchParams(window.location.search);
@@ -211,6 +213,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                                         companies: companies,
                                                         onSuccess: (newCustomer: CustomerType) => {
                                                             setCustomers(prev => [...prev, newCustomer]);
+                                                            setAllCustomers(prev => [...prev, newCustomer]);
                                                             setData('customer_id', newCustomer.id);
                                                             setData("delivery_location", newCustomer.addresses[0]);
 
@@ -229,7 +232,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                 <div className="space-y-2">
                                     <GenericCombobox
                                         label="Send Quotation To"
-                                        items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company?.name || ''}` }))}
+                                        items={allCustomers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company?.name || ''}` }))}
                                         selectedId={data.send_qutation_to}
                                         onSelect={(id) => setData("send_qutation_to", id as number)}
                                         placeholder="Select Recipient (Optional)"
@@ -248,6 +251,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                                         companies: companies,
                                                         onSuccess: (newCustomer: CustomerType) => {
                                                             setCustomers(prev => [...prev, newCustomer]);
+                                                            setAllCustomers(prev => [...prev, newCustomer]);
                                                             setData('send_qutation_to', newCustomer.id);
                                                         }
                                                     });

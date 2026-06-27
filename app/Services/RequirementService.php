@@ -50,6 +50,7 @@ class RequirementService
             $requirement->calculateGrandTotal();
 
             if ($requirement->status === 'purchased') {
+                $requirement->load('items');
                 $this->decreaseStock($requirement);
                 $this->createSale($requirement);
             }
