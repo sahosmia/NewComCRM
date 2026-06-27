@@ -27,6 +27,8 @@ class RequirementService
     public function create(array $data): Requirement
     {
         return DB::transaction(function () use ($data) {
+            $intendedStatus = $data['status'] ?? 'pending';
+
             $requirementData = collect($data)->except(['items', 'accessories', 'installations'])->toArray();
             $requirementData['status'] = 'pending';
 
@@ -47,7 +49,10 @@ class RequirementService
                 }
             }
 
+            $requirement->status = $intendedStatus;
+
             // Explicitly calculate to ensure taxes/accessories/installation are included
+            // This also saves the requirement, triggering 'updated' event if status changed from 'pending'
             $requirement->calculateGrandTotal();
 
             return $requirement;
