@@ -27,6 +27,7 @@ class AssignedDataScope implements Scope
             $builder->where(function ($query) use ($userId, $currentScope) {
                 $query->where('assigned_to', $userId)
                     ->orWhereHas('requirements', fn($q) => $q->withoutGlobalScope($currentScope)->where('user_id', $userId))
+                    ->orWhereHas('quotationRequirements', fn($q) => $q->withoutGlobalScope($currentScope)->where('user_id', $userId))
                     ->orWhereHas('meetings', fn($q) => $q->withoutGlobalScope($currentScope)->where('user_id', $userId))
                     ->orWhereHas('followUps', fn($q) => $q->withoutGlobalScope($currentScope)->where('user_id', $userId));
             });
@@ -36,6 +37,7 @@ class AssignedDataScope implements Scope
             $builder->where(function ($query) use ($userId, $currentScope) {
                 $query->where('user_id', $userId)
                     ->orWhereHas('customer', fn($q) => $q->withoutGlobalScope($currentScope)->where('assigned_to', $userId))
+                    ->orWhereHas('quotationRecipient', fn($q) => $q->withoutGlobalScope($currentScope)->where('assigned_to', $userId))
                     ->orWhereHas('meetings', fn($q) => $q->withoutGlobalScope($currentScope)->where('user_id', $userId))
                     ->orWhereHas('followUps', fn($q) => $q->withoutGlobalScope($currentScope)->where('user_id', $userId));
             });

@@ -66,6 +66,11 @@ class Customer extends Model
         return $this->hasMany(Requirement::class);
     }
 
+    public function quotationRequirements()
+    {
+        return $this->hasMany(Requirement::class, 'send_qutation_to');
+    }
+
     public function followUps()
     {
         return $this->hasMany(FollowUp::class);

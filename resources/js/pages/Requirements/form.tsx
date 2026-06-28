@@ -42,6 +42,12 @@ export default function RequirementForm({ requirement, customers: initialCustome
     const [allCustomers, setAllCustomers] = useState<CustomerType[]>(initialAllCustomers);
     const [products, setProducts] = useState<Product[]>(initialProducts);
     const [units, setUnits] = useState<Unit[]>(initialUnits);
+
+    const selectedCustomer = allCustomers.find(c => c.id === data.customer_id);
+    const filteredAllCustomers = (selectedCustomer && selectedCustomer.company_id)
+        ? allCustomers.filter(c => c.company_id === selectedCustomer.company_id)
+        : allCustomers;
+
     const urlParams = new URLSearchParams(window.location.search);
     const preSelectedCustomerId = urlParams.get('customer_id');
 
@@ -232,7 +238,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                 <div className="space-y-2">
                                     <GenericCombobox
                                         label="Send Quotation To"
-                                        items={allCustomers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company?.name || ''}` }))}
+                                        items={filteredAllCustomers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company?.name || ''}` }))}
                                         selectedId={data.send_qutation_to}
                                         onSelect={(id) => setData("send_qutation_to", id as number)}
                                         placeholder="Select Recipient (Optional)"
