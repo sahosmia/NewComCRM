@@ -22,6 +22,8 @@ import { ServiceSection } from "./com/ServiceSection";
 interface Props {
     requirement?: Requirement;
     customers: CustomerType[];
+        all_customers: CustomerType[];
+
     products: Product[];
     units: Unit[];
     users: User[];
@@ -30,8 +32,7 @@ interface Props {
 
 }
 
-export default function RequirementForm({ requirement, customers: initialCustomers, products: initialProducts, units: initialUnits, users, all_users, companies }: Props) {
-    console.log(all_users);
+export default function RequirementForm({ requirement, customers: initialCustomers, all_customers, products: initialProducts, units: initialUnits, users, all_users, companies }: Props) {
 
     const { auth, settings } = usePage().props as any;
     const isSuperAdmin = auth.user.role === 'super_admin';
@@ -79,13 +80,13 @@ export default function RequirementForm({ requirement, customers: initialCustome
             supplier: item.product?.supplier_name,
             source: item.product?.source
         })) as RequirementItem[]) || [
-                { product_id: 0, quantity: 1, unit_price: "", costing_price: 0, description: "", unit_short_form: "", supplier: "", source: "" }
+                { product_id: 0, quantity: 1, unit_price: "", costing_price: "", description: "", unit_short_form: "", supplier: "", source: "" }
             ],
     });
 
 
     const addItem = () => {
-        setData("items", [...data.items, { product_id: 0, quantity: 1, unit_price: "", costing_price: 0, description: "", unit_short_form: "", supplier: "", source: "" }]);
+        setData("items", [...data.items, { product_id: 0, quantity: 1, unit_price: "", costing_price: "", description: "", unit_short_form: "", supplier: "", source: "" }]);
     };
 
     const removeItem = (index: number) => {
@@ -100,8 +101,10 @@ export default function RequirementForm({ requirement, customers: initialCustome
                 return {
                     ...item,
                     product_id: parseInt(String(value)),
-                    unit_price: product ? product.unit_price : (item.unit_price || ""),
-                    costing_price: product ? product.costing_price : (item.costing_price || 0),
+                    // unit_price: product ? product.unit_price : (item.unit_price || ""),
+                    // costing_price: product ? product.costing_price : (item.costing_price || ""),
+                    unit_price: product ? (product.unit_price || "") : (item.unit_price || ""),
+                    costing_price: product ? (product.costing_price || "") : (item.costing_price || ""),
                     description: product ? (product.description || "") : (item.description || ""),
                     unit_short_form: product ? product.unit?.short_form : (item.unit_short_form || ""),
                     supplier: product ? product.supplier_name : (item.supplier || ""),
@@ -156,9 +159,9 @@ export default function RequirementForm({ requirement, customers: initialCustome
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Left Column: Main Details */}
                 <div className="lg:col-span-2 space-y-6">
-                    <div className="bg-card border-none shadow-sm ring-1 ring-slate-200 rounded-xl overflow-hidden">
-                        <div className="p-4 bg-slate-50/50 border-b border-slate-200">
-                            <h3 className="text-sm font-semibold flex items-center gap-2 text-slate-700">
+                    <div className="bg-card border-none shadow-sm ring-1 ring-border rounded-xl overflow-hidden">
+                        <div className="p-4 bg-muted/50 border-b border-border">
+                            <h3 className="text-sm font-semibold flex items-center gap-2 text-foreground">
                                 <LayoutList className="w-4 h-4 text-primary" /> Basic Information
                             </h3>
                         </div>
@@ -229,7 +232,8 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                 <div className="space-y-2">
                                     <GenericCombobox
                                         label="Send Quotation To"
-                                        items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company?.name || ''}` }))}
+                                        // items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company?.name || ''}` }))}
+                                        items={all_customers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company?.name || ''}` }))}
                                         selectedId={data.send_qutation_to}
                                         onSelect={(id) => setData("send_qutation_to", id as number)}
                                         placeholder="Select Recipient (Optional)"
@@ -311,9 +315,9 @@ export default function RequirementForm({ requirement, customers: initialCustome
                         </div>
                     </div>
 
-                    <div className="bg-card border-none shadow-sm ring-1 ring-slate-200 rounded-xl overflow-hidden">
-                        <div className="p-4 bg-slate-50/50 border-b border-slate-200">
-                            <h3 className="text-sm font-semibold flex items-center gap-2 text-slate-700">
+                    <div className="bg-card border-none shadow-sm ring-1 ring-border rounded-xl overflow-hidden">
+                        <div className="p-4 bg-muted/50 border-b border-border">
+                            <h3 className="text-sm font-semibold flex items-center gap-2 text-foreground">
                                 <Percent className="w-4 h-4 text-primary" /> Taxes & Payments
                             </h3>
                         </div>
@@ -328,7 +332,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                             value={data.vat_percentage}
                                             onChange={(e) => setData("vat_percentage", e.target.value)}
                                         />
-                                        <Percent className="w-3.5 h-3.5 absolute right-3 top-3.5 text-slate-400" />
+                                        <Percent className="w-3.5 h-3.5 absolute right-3 top-3.5 text-muted-foreground" />
                                     </div>
                                     <ErrorMessage message={errors.vat_percentage} />
                                 </div>
@@ -341,7 +345,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                             value={data.ait_percentage}
                                             onChange={(e) => setData("ait_percentage", e.target.value)}
                                         />
-                                        <Percent className="w-3.5 h-3.5 absolute right-3 top-3.5 text-slate-400" />
+                                        <Percent className="w-3.5 h-3.5 absolute right-3 top-3.5 text-muted-foreground" />
                                     </div>
                                     <ErrorMessage message={errors.ait_percentage} />
                                 </div>
@@ -362,7 +366,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                             onChange={(e) => setData("advance_payment", e.target.value === "" ? 0 : Number(e.target.value))}
                                             className="h-10"
                                         />
-                                        <Percent className="w-3.5 h-3.5 absolute right-3 top-3.5 text-slate-400" />
+                                        <Percent className="w-3.5 h-3.5 absolute right-3 top-3.5 text-muted-foreground" />
 
                                     </div>
                                     <ErrorMessage message={errors.advance_payment} />
@@ -386,7 +390,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                             disabled={Number(data.after_payment) > 0}
                                             className="h-10"
                                         />
-                                        <Percent className="w-3.5 h-3.5 absolute right-3 top-3.5 text-slate-400" />
+                                        <Percent className="w-3.5 h-3.5 absolute right-3 top-3.5 text-muted-foreground" />
                                     </div>
                                     <ErrorMessage message={errors.before_payment} />
                                 </div>
@@ -409,7 +413,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                             disabled={Number(data.before_payment) > 0}
                                             className="h-10"
                                         />
-                                        <Percent className="w-3.5 h-3.5 absolute right-3 top-3.5 text-slate-400" />
+                                        <Percent className="w-3.5 h-3.5 absolute right-3 top-3.5 text-muted-foreground" />
                                     </div>
                                     <ErrorMessage message={errors.after_payment} />
                                 </div>
@@ -420,9 +424,9 @@ export default function RequirementForm({ requirement, customers: initialCustome
 
                 {/* Right Column: Sidebar Info */}
                 <div className="space-y-6">
-                    <div className="bg-card border-none shadow-sm ring-1 ring-slate-200 rounded-xl overflow-hidden">
-                        <div className="p-4 bg-slate-50/50 border-b border-slate-200">
-                            <h3 className="text-sm font-semibold flex items-center gap-2 text-slate-700">
+                    <div className="bg-card border-none shadow-sm ring-1 ring-border rounded-xl overflow-hidden">
+                        <div className="p-4 bg-muted/50 border-b border-border">
+                            <h3 className="text-sm font-semibold flex items-center gap-2 text-foreground">
                                 <Settings className="w-4 h-4 text-primary" /> Delivery & Status
                             </h3>
                         </div>
@@ -489,9 +493,9 @@ export default function RequirementForm({ requirement, customers: initialCustome
 
 
 
-                    <div className="bg-card border-none shadow-sm ring-1 ring-slate-200 rounded-xl overflow-hidden">
-                        <div className="p-4 bg-slate-50/50 border-b border-slate-200">
-                            <h3 className="text-sm font-semibold flex items-center gap-2 text-slate-700">
+                    <div className="bg-card border-none shadow-sm ring-1 ring-border rounded-xl overflow-hidden">
+                        <div className="p-4 bg-muted/50 border-b border-border">
+                            <h3 className="text-sm font-semibold flex items-center gap-2 text-foreground">
                                 <LayoutList className="w-4 h-4 text-primary" /> Internal Remarks
                             </h3>
                         </div>
@@ -499,7 +503,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                             <FormLabel>Internal Remarks</FormLabel>
 
                             <Textarea
-                                className="bg-background resize-none text-sm border-slate-200 focus:border-primary/50 min-h-32"
+                                className="bg-background resize-none text-sm border-border focus:border-primary/50 min-h-32"
                                 rows={5}
                                 placeholder="Add special instructions for team..."
                                 value={data.notes}
@@ -512,9 +516,9 @@ export default function RequirementForm({ requirement, customers: initialCustome
             </div>
 
             {/* Items Section moved inside main column */}
-            <div className="bg-card border-none shadow-sm ring-1 ring-slate-200 rounded-xl overflow-hidden">
-                <div className="p-4 bg-slate-50/50 flex justify-between items-center border-b border-slate-200">
-                    <h3 className="text-sm font-semibold flex items-center gap-2 text-slate-700">
+            <div className="bg-card border-none shadow-sm ring-1 ring-border rounded-xl overflow-hidden">
+                <div className="p-4 bg-muted/50 flex justify-between items-center border-b border-border">
+                    <h3 className="text-sm font-semibold flex items-center gap-2 text-foreground">
                         <Plus className="w-4 h-4 text-primary" /> Requirement Items
                     </h3>
                 </div>
@@ -538,7 +542,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                         />
                     ))}
                     <div className="flex justify-center pt-2">
-                        <Button type="button" variant="outline" size="sm" onClick={addItem} className="gap-2 px-6 h-9 bg-background border-slate-200 hover:bg-slate-50 hover:border-primary/50 hover:text-primary transition-all">
+                        <Button type="button" variant="outline" size="sm" onClick={addItem} className="gap-2 px-6 h-9 bg-background border-border hover:bg-muted hover:border-primary/50 hover:text-primary transition-all">
                             <Plus className="w-4 h-4" /> Add New Item
                         </Button>
                     </div>

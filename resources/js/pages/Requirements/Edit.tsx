@@ -6,15 +6,15 @@ import RequirementForm from "./form";
 interface Props {
     requirement: Requirement;
     customers: CustomerType[];
+    all_customers: CustomerType[];
     products: Product[];
     units: Unit[];
     users: User[];
-        all_users: User[];
-
+    all_users: User[];
     companies: Company[];
 }
 
-export default function Edit({ requirement, customers, products, units, users, all_users, companies }: Props) {
+export default function Edit({ requirement, customers, all_customers, products, units, users, all_users, companies }: Props) {
     console.log(all_users);
 
     return (
@@ -24,7 +24,7 @@ export default function Edit({ requirement, customers, products, units, users, a
             <div className="p-6">
                 <h1 className="text-xl font-bold mb-4">Edit Requirement</h1>
                 <div className="bg-card p-6 border rounded-lg shadow-sm">
-                    <RequirementForm requirement={requirement} customers={customers} products={products} units={units} users={users} all_users={all_users} companies={companies} />
+                    <RequirementForm requirement={requirement} customers={customers} all_customers={all_customers} products={products} units={units} users={users} all_users={all_users} companies={companies} />
                 </div>
             </div>
         </AppLayout>

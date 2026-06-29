@@ -31,7 +31,7 @@ export default function CustomerIndex({ customers, users, companies }: Props) {
         },
         {
             name: 'assigned_to',
-            label: 'Assigned To',
+            label: 'Representative',
             type: 'searchSelect',
             options: users.map((user) => ({
                 label: user.name,

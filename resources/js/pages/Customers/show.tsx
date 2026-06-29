@@ -152,7 +152,7 @@ export default function Show({ customer }: ShowProps) {
 
                         {/* Requirements Section */}
                         <Card className="overflow-hidden">
-                            <CardHeader className="bg-muted/20 flex flex-row justify-between items-center py-4">
+                            <CardHeader className="bg-muted/20 flex flex-row justify-between items-center py-4 -mt-6">
                                 <CardTitle className="flex items-center gap-2 text-lg">
                                     <LayoutList className="w-5 h-5 text-primary" />
                                     Requirement History
@@ -188,9 +188,9 @@ export default function Show({ customer }: ShowProps) {
                                                         </td>
                                                         <td className="px-4 py-3">
                                                             <Badge variant="secondary" className={` capitalize font-normal
-                                                                ${req.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : ''}
-                                                                ${req.status === 'completed' ? 'bg-green-100 text-green-700' : ''}
-                                                                ${req.status === 'cancelled' ? 'bg-red-100 text-red-700' : ''}
+                                                                ${req.status === 'pending' ? 'bg-amber-500/10 text-amber-600 border-amber-500/20' : ''}
+                                                                ${req.status === 'completed' ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' : ''}
+                                                                ${req.status === 'cancelled' ? 'bg-red-500/10 text-red-600 border-red-500/20' : ''}
                                                             `}>
                                                                 {req.status}
                                                             </Badge>
@@ -213,12 +213,9 @@ export default function Show({ customer }: ShowProps) {
                             </CardContent>
                         </Card>
 
-
-
-
                         {/* Activities Placeholder */}
                         <Card>
-                            <CardHeader className="flex flex-row justify-between items-center py-4">
+                            <CardHeader className="flex flex-row justify-between items-center py-4 -mt-4">
                                 <CardTitle className="text-lg flex items-center gap-2">
                                     <Calendar className="w-5 h-5 text-primary" />
                                     Follow-up History
@@ -286,7 +283,7 @@ export default function Show({ customer }: ShowProps) {
 
                         {/* Meetings Section */}
                         <Card>
-                            <CardHeader className="flex flex-row justify-between items-center py-4">
+                            <CardHeader className="flex flex-row justify-between items-center py-4 -mt-4">
                                 <CardTitle className="text-lg flex items-center gap-2">
                                     <Video className="w-5 h-5 text-primary" />
                                     Meeting History

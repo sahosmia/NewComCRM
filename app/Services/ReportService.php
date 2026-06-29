@@ -114,8 +114,7 @@ class ReportService
             'total_sales_count' => $salesQuery->count(),
             'total_meetings' => $this->applyFilters(Meeting::query(), $dateRange, $userId, $customerId, 'scheduled_at')->count(),
             'total_follow_ups' => $this->applyFilters(FollowUp::query(), $dateRange, $userId, $customerId, 'follow_up_date')->count(),
-                        'total_requirements' => $this->applyFilters(Requirement::query(), $dateRange, $userId, $customerId, 'created_at')->count(),
-
+            'total_requirements' => $this->applyFilters(Requirement::query(), $dateRange, $userId, $customerId, 'created_at')->count(),
             'new_customers' => $this->applyFilters(Customer::query(), $dateRange, $userId, null, 'created_at')->count(),
         ];
     }
@@ -124,6 +123,7 @@ class ReportService
     {
         return $this->applyFilters(FollowUp::with(['customer.company', 'user']), $dateRange, $userId, $customerId, 'follow_up_date')
             ->latest('follow_up_date')
+            ->limit(10)
             ->get();
     }
 
@@ -131,6 +131,7 @@ class ReportService
     {
         return $this->applyFilters(Meeting::with(['customer.company', 'user']), $dateRange, $userId, $customerId, 'scheduled_at')
             ->latest('scheduled_at')
+            ->limit(10)
             ->get();
     }
 
@@ -149,13 +150,14 @@ class ReportService
         if ($dateRange['start']) {
             $query->whereBetween('sale_date', [$dateRange['start'], $dateRange['end']]);
         }
-        return $query->latest('sale_date')->get();
+        return $query->latest('sale_date')->limit(10)->get();
     }
 
     private function getCustomers(array $dateRange, $userId)
     {
         return $this->applyFilters(Customer::with(['assignedUser', 'company']), $dateRange, $userId, null, 'created_at')
             ->latest()
+            ->limit(10)
             ->get();
     }
 
@@ -175,6 +177,6 @@ class ReportService
             $query->whereBetween('created_at', [$dateRange['start'], $dateRange['end']]);
         }
 
-        return $query->latest()->paginate(10)->withQueryString();
+        return $query->latest()->limit(10)->get();
     }
 }

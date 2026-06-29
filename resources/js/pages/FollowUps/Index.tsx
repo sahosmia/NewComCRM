@@ -2,23 +2,31 @@ import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import AppLayout from '@/layouts/app-layout';
-import type { CustomerType, FilterOption, FollowUp, PaginationType, Requirement, SortOption } from '@/types';
+import type { CustomerType, FilterOption, FollowUp, PaginationType, Requirement, SortOption, User } from '@/types';
 import { columns } from './Columns';
 
 interface Props {
     followUps: PaginationType<FollowUp>;
     customers: CustomerType[];
     requirements: Requirement[];
+    users:User[];
 }
 
-export default function FollowUpIndex({ followUps, customers, requirements }: Props) {
+export default function FollowUpIndex({ followUps, customers, requirements, users }: Props) {
     const breadcrumbs = [
         { title: 'Dashboard', href: route('dashboard') },
         { title: 'Follow Ups', href: route('follow-ups.index') },
     ];
 
     const filters: FilterOption[] = [
-               {
+
+        {
+            name: 'user_id',
+            label: 'Representative',
+            type: 'searchSelect',
+            options: users.map(u => ({ label: u.name, value: u.id.toString() }))
+        },
+        {
             name: 'customer_id',
             label: 'Customer',
             type: 'searchSelect',

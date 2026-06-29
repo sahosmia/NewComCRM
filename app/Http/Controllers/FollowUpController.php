@@ -21,8 +21,7 @@ class FollowUpController extends Controller
         private FollowUpService $followUpService,
         private LookupService $lookupService,
         private ExportService $exportService,
-    ) {
-    }
+    ) {}
 
     public function index(Request $request)
     {
@@ -37,6 +36,7 @@ class FollowUpController extends Controller
             'followUps' => $this->followUpService->paginateIndex($request->all(), $user),
             'customers' => $this->lookupService->getCustomersForSelect(),
             'requirements' => $this->lookupService->getRequirementsForSelect(),
+            'users' => $this->lookupService->getUsersForSelect(),
         ]);
     }
 
@@ -163,7 +163,5 @@ class FollowUpController extends Controller
             ],
             'Follow Up List'
         );
-
-
     }
 }

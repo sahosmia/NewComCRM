@@ -116,12 +116,13 @@ class ProductController extends Controller
 
         return Excel::download(new GeneralExport(
             $products,
-            ['Name', 'Category', 'Stock', 'Price', 'Supplier'],
+            ['Name', 'Category', 'Stock', 'Costing Price', 'Sell Price', 'Supplier'],
             function ($product) {
                 return [
                     $product->name,
                     $product->category,
                     $product->stock_quantity,
+                    $product->costing_price,
                     $product->unit_price,
                     $product->supplier_name,
                 ];
@@ -138,6 +139,7 @@ class ProductController extends Controller
                 $product->name,
                 $product->category,
                 $product->stock_quantity,
+                $product->costing_price,
                 $product->unit_price,
                 $product->supplier_name,
             ];
@@ -145,7 +147,7 @@ class ProductController extends Controller
 
         return view('print.general', [
             'title' => 'Product List',
-            'headings' => ['Name', 'Category', 'Stock', 'Price', 'Supplier'],
+            'headings' => ['Name', 'Category', 'Stock', 'Costing Price', 'Sell Price', 'Supplier'],
             'data' => $data
         ]);
     }

@@ -13,7 +13,7 @@ class StoreRequirementRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return $this->user()->can('create', Requirement::class);
+        return true;
     }
 
     public function rules(): array

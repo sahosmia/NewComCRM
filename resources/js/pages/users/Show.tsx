@@ -109,7 +109,7 @@ export default function Show({ user }: { user: UserType }) {
                             <CardContent>
                                 <div className="bg-muted/30 p-4 rounded-lg border flex flex-col items-center justify-center min-h-[200px]">
                                     {user.signature_url ? (
-                                        <img src={user.signature_url} alt="Signature" className="max-h-40 object-contain bg-white p-4 rounded shadow-sm border" />
+                                        <img src={user.signature_url} alt="Signature" className="max-h-40 object-contain bg-card p-4 rounded shadow-sm border" />
                                     ) : (
                                         <p className="text-sm text-muted-foreground italic">No signature uploaded yet.</p>
                                     )}

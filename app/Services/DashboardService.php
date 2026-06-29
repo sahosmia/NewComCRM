@@ -68,28 +68,41 @@ class DashboardService
     private function getMeetingMetrics(User $user): array
     {
         $baseQuery = Meeting::query()
-            ->with(['customer.company', 'requirement'])
-            ->when(!$user->isSuperAdmin(), fn($q) => $q->where('user_id', $user->id));
+            ->with(['customer.company', 'requirement']);
+            // ->when(!$user->isSuperAdmin(), fn($q) => $q->where('user_id', $user->id));
+
+        // return [
+        //     'today' => (clone $baseQuery)->whereDate('scheduled_at', today())->orderBy('scheduled_at')->get(),
+        //     'upcoming' => (clone $baseQuery)->whereDate('scheduled_at', '>', today())->orderBy('scheduled_at')->limit(5)->get(),
+        //     'today_count' => (clone $baseQuery)->whereDate('scheduled_at', today())->count(),
+        //     'upcoming_count' => (clone $baseQuery)->whereDate('scheduled_at', '>', today())->count(),
+        // ];
 
         return [
-            'today' => (clone $baseQuery)->whereDate('scheduled_at', today())->orderBy('scheduled_at')->get(),
-            'upcoming' => (clone $baseQuery)->whereDate('scheduled_at', '>', today())->orderBy('scheduled_at')->limit(5)->get(),
-            'today_count' => (clone $baseQuery)->whereDate('scheduled_at', today())->count(),
-            'upcoming_count' => (clone $baseQuery)->whereDate('scheduled_at', '>', today())->count(),
+            'today' => (clone $baseQuery)->whereDate('scheduled_at', '<=', today())->where('status', 'scheduled')->orderBy('scheduled_at')->get(),
+            'upcoming' => (clone $baseQuery)->whereDate('scheduled_at', '>', today())->where('status', 'scheduled')->orderBy('scheduled_at')->limit(5)->get(),
+            'today_count' => (clone $baseQuery)->whereDate('scheduled_at', '<=', today())->where('status', 'scheduled')->count(),
+            'upcoming_count' => (clone $baseQuery)->whereDate('scheduled_at', '>', today())->where('status', 'scheduled')->count(),
         ];
     }
 
     private function getFollowUpMetrics(User $user): array
     {
         $baseQuery = FollowUp::query()
-            ->with(['customer.company', 'requirement'])
-            ->when(!$user->isSuperAdmin(), fn($q) => $q->where('user_id', $user->id));
+            ->with(['customer.company', 'requirement']);
+            // ->when(!$user->isSuperAdmin(), fn($q) => $q->where('user_id', $user->id));
 
+        // return [
+        //     'today' => (clone $baseQuery)->whereDate('follow_up_date', today())->pending()->orderBy('follow_up_date')->get(),
+        //     'upcoming' => (clone $baseQuery)->whereDate('follow_up_date', '>', today())->pending()->orderBy('follow_up_date')->limit(5)->get(),
+        //     'today_count' => (clone $baseQuery)->whereDate('follow_up_date', today())->count(),
+        //     'upcoming_count' => (clone $baseQuery)->whereDate('follow_up_date', '>', today())->count(),
+        // ];
         return [
-            'today' => (clone $baseQuery)->whereDate('follow_up_date', today())->pending()->orderBy('follow_up_date')->get(),
-            'upcoming' => (clone $baseQuery)->whereDate('follow_up_date', '>', today())->pending()->orderBy('follow_up_date')->limit(5)->get(),
-            'today_count' => (clone $baseQuery)->whereDate('follow_up_date', today())->count(),
-            'upcoming_count' => (clone $baseQuery)->whereDate('follow_up_date', '>', today())->count(),
+            'today' => (clone $baseQuery)->whereDate('follow_up_date', '<=', today())->where('status', 'pending')->orderBy('follow_up_date')->get(),
+            'upcoming' => (clone $baseQuery)->whereDate('follow_up_date', '>', today())->where('status', 'pending')->orderBy('follow_up_date')->limit(5)->get(),
+            'today_count' => (clone $baseQuery)->whereDate('follow_up_date', '<=', today())->where('status', 'pending')->count(),
+            'upcoming_count' => (clone $baseQuery)->whereDate('follow_up_date', '>', today())->where('status', 'pending')->count(),
         ];
     }
 

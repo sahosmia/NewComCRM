@@ -49,7 +49,7 @@ export default function RequirementIndex({ requirements, customers, users, compa
         },
         {
             name: 'user_id',
-            label: 'Assigned To',
+            label: 'Representative',
             type: 'searchSelect',
             options: users.map(u => ({ label: u.name, value: u.id }))
         },

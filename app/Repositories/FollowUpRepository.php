@@ -19,12 +19,13 @@ class FollowUpRepository
                     $q->where('name', 'like', "%{$search}%");
                 });
             })
-            ->when($params['status'] ?? null, fn ($query, $status) => $query->where('status', $status))
-            ->when($params['priority'] ?? null, fn ($query, $priority) => $query->where('priority', $priority))
-             ->when($params['start_date'] ?? null, fn ($query, $startDate) => $query->whereDate('follow_up_date', '>=', $startDate))
-            ->when($params['end_date'] ?? null, fn ($query, $endDate) => $query->whereDate('follow_up_date', '<=', $endDate))
-           ->when($params['customer_id'] ?? null, fn ($query, $id) => $query->where('customer_id', $id))
-            ->when($params['requirement_id'] ?? null, fn ($query, $id) => $query->where('requirement_id', $id))
+            ->when($params['status'] ?? null, fn($query, $status) => $query->where('status', $status))
+            ->when($params['user_id'] ?? null, fn($query, $user_id) => $query->where('user_id', $user_id))
+            ->when($params['priority'] ?? null, fn($query, $priority) => $query->where('priority', $priority))
+            ->when($params['start_date'] ?? null, fn($query, $startDate) => $query->whereDate('follow_up_date', '>=', $startDate))
+            ->when($params['end_date'] ?? null, fn($query, $endDate) => $query->whereDate('follow_up_date', '<=', $endDate))
+            ->when($params['customer_id'] ?? null, fn($query, $id) => $query->where('customer_id', $id))
+            ->when($params['requirement_id'] ?? null, fn($query, $id) => $query->where('requirement_id', $id))
             ->when($params['period'] ?? null, function ($query, $period) {
                 match ($period) {
                     'today' => $query->whereDate('follow_up_date', today()),

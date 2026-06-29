@@ -17,9 +17,9 @@ function FollowUpList({ followups }: { followups: FollowUp[] }) {
     };
 
     const priorityColors: Record<string, string> = {
-        high: "bg-red-100 text-red-700 hover:bg-red-100",
-        medium: "bg-yellow-100 text-yellow-700 hover:bg-yellow-100",
-        low: "bg-green-100 text-green-700 hover:bg-green-100",
+        high: "bg-red-100 text-red-700 hover:bg-red-100 dark:bg-red-950/30 dark:text-red-400",
+        medium: "bg-yellow-100 text-yellow-700 hover:bg-yellow-100 dark:bg-amber-950/30 dark:text-amber-400",
+        low: "bg-green-100 text-green-700 hover:bg-green-100 dark:bg-emerald-950/30 dark:text-emerald-400",
     };
 
     return (

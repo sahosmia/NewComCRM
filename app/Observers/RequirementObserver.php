@@ -3,10 +3,14 @@
 namespace App\Observers;
 
 use App\Models\Requirement;
-use App\Models\Sale;
+use App\Services\RequirementService;
 
 class RequirementObserver
 {
+    public function __construct(
+        protected RequirementService $requirementService
+    ) {}
+
     /**
      * Handle the Requirement "updated" event.
      */
@@ -17,47 +21,14 @@ class RequirementObserver
             $newStatus = $requirement->status;
 
             if ($newStatus === 'purchased' && $oldStatus !== 'purchased') {
-                $this->decreaseStock($requirement);
-                $this->createSale($requirement);
+                $this->requirementService->decreaseStock($requirement);
+                $this->requirementService->createSale($requirement);
             }
 
             if ($oldStatus === 'purchased' && $newStatus !== 'purchased') {
-                $this->increaseStock($requirement);
-                $this->cancelSale($requirement);
+                $this->requirementService->increaseStock($requirement);
+                $this->requirementService->cancelSale($requirement);
             }
         }
-    }
-
-    protected function decreaseStock(Requirement $requirement): void
-    {
-        foreach ($requirement->items as $item) {
-            if ($item->product) {
-                $item->product->decrement('stock_quantity', $item->quantity);
-            }
-        }
-    }
-
-    protected function increaseStock(Requirement $requirement): void
-    {
-        foreach ($requirement->items as $item) {
-            if ($item->product) {
-                $item->product->increment('stock_quantity', $item->quantity);
-            }
-        }
-    }
-
-    protected function createSale(Requirement $requirement): void
-    {
-        Sale::create([
-            'requirement_id' => $requirement->id,
-            'customer_id' => $requirement->customer_id,
-            'amount' => $requirement->grand_total,
-            'sale_date' => now(),
-        ]);
-    }
-
-    protected function cancelSale(Requirement $requirement): void
-    {
-        Sale::where('requirement_id', $requirement->id)->forceDelete();
     }
 }

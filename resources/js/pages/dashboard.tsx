@@ -66,10 +66,10 @@ export default function Dashboard({ meetings, followUps, sales, customers, birth
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     <StatCard title="Today Requirements" value={requirements.today_count} icon="file-text" color="cyan" link="/requirements?period=today" />
                     <StatCard title="Total Pending Requirements" value={requirements.total_count} icon="calendar" color="rose" link="/requirements?period=total&status=pending" />
-                    <StatCard title="Today Follow up" value={followUps.today_count} icon="clock" color="yellow" link="/follow-ups?period=today" />
-                    <StatCard title="Upcoming Follow up" value={followUps.upcoming_count} icon="bell" color="orange" link="/follow-ups?period=upcoming" />
-                    <StatCard title="Today Meetings" value={meetings.today_count} icon="shopping-cart" color="blue" link="/meetings?period=today" />
-                    <StatCard title="Upcoming Meetings" value={meetings.upcoming_count} icon="calendar" color="indigo" link="/meetings?period=upcoming" />
+                    <StatCard title="Today Pending Follow up" value={followUps.today_count} icon="clock" color="yellow" link="/follow-ups?period=today&status=pending" />
+                    <StatCard title="Upcoming Follow up" value={followUps.upcoming_count} icon="bell" color="orange" link="/follow-ups?period=upcoming&status=pending" />
+                    <StatCard title="Today Scheduled Meetings" value={meetings.today_count} icon="shopping-cart" color="blue" link="/meetings?period=today&status=scheduled" />
+                    <StatCard title="Upcoming Meetings" value={meetings.upcoming_count} icon="calendar" color="indigo" link="/meetings?period=upcoming&status=scheduled" />
                 </div>
 
                 {/* Financial & Customer Core Metrics */}
@@ -86,7 +86,7 @@ export default function Dashboard({ meetings, followUps, sales, customers, birth
                     <div className="flex flex-col gap-8 lg:col-span-2">
                         {/* Activity Chart */}
                         <Card className="rounded-xl overflow-hidden shadow-sm">
-                            <CardHeader className="py-4 px-6 border-b bg-muted/20">
+                            <CardHeader className="py-4 px-6 border-b bg-muted/20 -mt-6">
                                 <CardTitle className="text-base font-semibold">Engagement Performance</CardTitle>
                             </CardHeader>
                             <CardContent className="pt-6">
@@ -97,7 +97,7 @@ export default function Dashboard({ meetings, followUps, sales, customers, birth
                         {/* Follow-up Section */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <Card className="rounded-xl shadow-sm">
-                                <CardHeader className="py-4 px-5 border-b flex flex-row items-center justify-between bg-muted/10">
+                                <CardHeader className="py-4 px-5 border-b flex flex-row items-center justify-between bg-muted/10 -mt-6">
                                     <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Today's Follow-ups</CardTitle>
                                     <Badge variant="secondary" className="font-mono px-2 py-0.5 text-xs rounded-md">{followUps.today_count}</Badge>
                                 </CardHeader>
@@ -107,7 +107,7 @@ export default function Dashboard({ meetings, followUps, sales, customers, birth
                             </Card>
 
                             <Card className="rounded-xl shadow-sm">
-                                <CardHeader className="py-4 px-5 border-b flex flex-row items-center justify-between bg-muted/10">
+                                <CardHeader className="py-4 px-5 border-b flex flex-row items-center justify-between bg-muted/10 -mt-6">
                                     <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Upcoming Follow-ups</CardTitle>
                                     <Badge variant="outline" className="font-mono px-2 py-0.5 text-xs rounded-md">{followUps.upcoming_count}</Badge>
                                 </CardHeader>
@@ -122,7 +122,7 @@ export default function Dashboard({ meetings, followUps, sales, customers, birth
                     <div className="flex flex-col gap-8">
                         {/* Meetings Wrapper */}
                         <Card className="rounded-xl shadow-sm">
-                            <CardHeader className="py-4 px-5 border-b flex flex-row items-center justify-between bg-muted/10">
+                            <CardHeader className="py-4 px-5 border-b flex flex-row items-center justify-between bg-muted/10 -mt-6">
                                 <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Today's Meetings</CardTitle>
                                 <Badge className="bg-blue-600 hover:bg-blue-600 text-white rounded-md px-2">{meetings.today_count}</Badge>
                             </CardHeader>
@@ -140,7 +140,7 @@ export default function Dashboard({ meetings, followUps, sales, customers, birth
                         </Card>
 
                         <Card className="rounded-xl shadow-sm">
-                            <CardHeader className="py-4 px-5 border-b flex flex-row items-center justify-between bg-muted/10">
+                            <CardHeader className="py-4 px-5 border-b flex flex-row items-center justify-between bg-muted/10 -mt-6">
                                 <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Next 5 Meetings</CardTitle>
                                 <Badge variant="outline" className="rounded-md px-2">{meetings.upcoming_count} Total</Badge>
                             </CardHeader>
@@ -164,8 +164,8 @@ export default function Dashboard({ meetings, followUps, sales, customers, birth
                             </Card>
 
                             <Card className="bg-muted/20 border-dashed rounded-xl shadow-none">
-                                <CardHeader className="py-4 px-5 border-b flex flex-row items-center justify-between bg-transparent">
-                                    <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                                <CardHeader className="py-4 px-5 border-b flex flex-row items-center justify-between bg-transparent -mt-6">
+                                    <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2 ">
                                         <Cake className="h-4 w-4 opacity-70" /> This Month
                                     </CardTitle>
                                     <Badge variant="outline" className="rounded-md px-2">{birthdays.month_count}</Badge>

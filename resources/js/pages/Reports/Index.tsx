@@ -1,7 +1,6 @@
 import { Head, router } from "@inertiajs/react";
 import { Users, MessageSquare, Video, TrendingUp, Filter, FileText } from "lucide-react";
 import { useState } from "react";
-import Pagination from "@/components/admin/Pagination";
 import { GenericCombobox } from "@/components/admin/form/GenericCombobox";
 import StatusBadge from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
@@ -15,7 +14,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import AppLayout from "@/layouts/app-layout";
-import type { CustomerType, FollowUp, Meeting, Sale, User, Requirement, PaginationType } from "@/types";
+import type { CustomerType, FollowUp, Meeting, Sale, User, Requirement, PaginationType, RequirementItem } from "@/types";
 import { formatDate } from "@/utils/date-format";
 import { formatCurrency } from "@/utils/number-format";
 
@@ -32,7 +31,7 @@ interface Props {
     meetings: Meeting[];
     sales: Sale[];
     customers: CustomerType[];
-    requirements: PaginationType<Requirement>;
+    requirements: RequirementItem[];
     filters: {
         users: User[];
         customers: { id: number; name: string }[];
@@ -239,9 +238,9 @@ export default function ReportIndex({
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Sales Section */}
                     <Card>
-                        <CardHeader className="bg-muted/10">
-                            <CardTitle className="text-lg flex items-center gap-2">
-                                <TrendingUp className="w-5 h-5 text-purple-600" /> Sales Transactions
+                        <CardHeader className="bg-muted/10 -mt-6">
+                            <CardTitle className="text-lg flex items-center gap-2 py-4 ">
+                                <TrendingUp className="w-5 h-5 text-purple-600 " /> Sales Transactions
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="p-0">
@@ -275,8 +274,8 @@ export default function ReportIndex({
 
                     {/* Meetings Section */}
                     <Card>
-                        <CardHeader className="bg-muted/10">
-                            <CardTitle className="text-lg flex items-center gap-2">
+                        <CardHeader className="bg-muted/10 -mt-6">
+                            <CardTitle className="text-lg flex items-center gap-2 py-4">
                                 <Video className="w-5 h-5 text-blue-600" /> Meetings Log
                             </CardTitle>
                         </CardHeader>
@@ -313,8 +312,8 @@ export default function ReportIndex({
 
                     {/* Follow-ups Section */}
                     <Card>
-                        <CardHeader className="bg-muted/10">
-                            <CardTitle className="text-lg flex items-center gap-2">
+                        <CardHeader className="bg-muted/10 -mt-6">
+                            <CardTitle className="text-lg flex items-center gap-2 py-4">
                                 <MessageSquare className="w-5 h-5 text-amber-600" /> Follow-ups History
                             </CardTitle>
                         </CardHeader>
@@ -346,8 +345,8 @@ export default function ReportIndex({
 
                     {/* Customers Section */}
                     <Card>
-                        <CardHeader className="bg-muted/10">
-                            <CardTitle className="text-lg flex items-center gap-2">
+                        <CardHeader className="bg-muted/10 -mt-6">
+                            <CardTitle className="text-lg flex items-center gap-2 py-4">
                                 <Users className="w-5 h-5 text-emerald-600" /> New Customer Acquisition
                             </CardTitle>
                         </CardHeader>
@@ -379,8 +378,8 @@ export default function ReportIndex({
 
                     {/* Requirements Section */}
                     <Card className="lg:col-span-2">
-                        <CardHeader className="bg-muted/10">
-                            <CardTitle className="text-lg flex items-center gap-2">
+                        <CardHeader className="bg-muted/10 -mt-6">
+                            <CardTitle className="text-lg flex items-center gap-2 py-4">
                                 <FileText className="w-5 h-5 text-indigo-600" /> Requirements History
                             </CardTitle>
                         </CardHeader>
@@ -397,7 +396,7 @@ export default function ReportIndex({
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y">
-                                        {requirements && requirements.data.length > 0 ? requirements.data.map((req) => (
+                                        {requirements && requirements.length > 0 ? requirements.map((req) => (
                                             <tr key={req.id} className="hover:bg-muted/50 transition-colors">
                                                 <td className="px-4 py-3 text-xs whitespace-nowrap">{formatDate(req.created_at)}</td>
                                                 <td className="px-4 py-3 font-medium text-xs truncate max-w-xs">{req.title || `REQ-${req.id}`}</td>
@@ -416,9 +415,9 @@ export default function ReportIndex({
                                     </tbody>
                                 </table>
                             </div>
-                            <div className="p-4 border-t">
+                            {/* <div className="p-4 border-t">
                                 <Pagination data={requirements} routeName="reports.index" />
-                            </div>
+                            </div> */}
                         </CardContent>
                     </Card>
                 </div>

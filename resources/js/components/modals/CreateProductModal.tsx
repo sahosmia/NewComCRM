@@ -62,13 +62,13 @@ export default function CreateProductModal({ isOpen, onClose, onSuccess, units =
 
 
                         <div className="space-y-2">
-                            <FormLabel required>Costing Price</FormLabel>
+                            <FormLabel>Costing Price</FormLabel>
                             <Input type="number" value={data.costing_price} onChange={e => setData("costing_price", e.target.value)} placeholder="0.00" />
                             <ErrorMessage message={errors.costing_price} />
                         </div>
 
                         <div className="space-y-2">
-                            <FormLabel required>Sale Price</FormLabel>
+                            <FormLabel>Sale Price</FormLabel>
                             <Input type="number" value={data.unit_price} onChange={e => setData("unit_price", e.target.value)} placeholder="0.00" />
                             <ErrorMessage message={errors.unit_price} />
                         </div>

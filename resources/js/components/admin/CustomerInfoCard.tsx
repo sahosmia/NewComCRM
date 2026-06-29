@@ -8,7 +8,7 @@ import type { CustomerType } from "@/types";
 export default function CustomerInfoCard({ customer }: {customer: CustomerType}) {
     return (
         <Card className="shadow-sm border-muted/60">
-            <CardHeader className="bg-muted/10 border-b py-3">
+            <CardHeader className="bg-muted/10 border-b py-3 -mt-6">
                 <CardTitle className="text-xs font-bold uppercase text-muted-foreground tracking-widest flex items-center gap-2">
                     <User className="w-3.5 h-3.5" />
                     Contact Information
@@ -56,7 +56,7 @@ export default function CustomerInfoCard({ customer }: {customer: CustomerType})
                         <p className="text-[10px] uppercase font-bold text-muted-foreground/70 tracking-tighter mb-1">Phone & WhatsApp</p>
                         <div className="grid gap-1.5">
                             {customer.phones?.length ? customer.phones.map((p, i) => (
-                                <div key={i} className="flex items-center justify-between group bg-muted/20 p-1.5 rounded-md border border-transparent hover:border-emerald-200 hover:bg-emerald-50/30 transition-all">
+                                <div key={i} className="flex items-center justify-between group bg-muted/20 p-1.5 rounded-md border border-transparent hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all">
                                     <span className="text-sm font-semibold text-foreground/80">{p}</span>
                                     <a
                                         href={`https://wa.me/88${p.replace(/\D/g, '')}`}

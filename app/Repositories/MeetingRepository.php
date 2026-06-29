@@ -27,6 +27,9 @@ class MeetingRepository
             ->when($params['status'] ?? null, function ($query, $status) {
                 $query->where('status', $status);
             })
+             ->when($params['user_id'] ?? null, function ($query, $user_id) {
+                $query->where('user_id', $user_id);
+            })
             ->when($params['meeting_type'] ?? null, function ($query, $type) {
                 $query->where('meeting_type', $type);
             })

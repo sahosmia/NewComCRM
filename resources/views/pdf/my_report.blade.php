@@ -8,7 +8,7 @@
     <style>
         * {
             box-sizing: border-box;
-            font-family: 'DejaVu Sans', sans-serif;
+            /* font-family: 'DejaVu Sans', sans-serif; */
         }
 
         @page {
@@ -27,7 +27,9 @@
             left: 0px;
             right: 0px;
             height: 50px;
-            font-family: 'DejaVu Sans', sans-serif;
+            /* font-family: 'DejaVu Sans', sans-serif; */
+                        font-family: 'Helvetica', 'Arial', sans-serif;
+
         }
 
         .header-top {
@@ -88,7 +90,9 @@
         .signature-wrapper {
             margin-top: 30px;
             position: relative;
-            font-family: 'Arial', 'Helvetica', sans-serif;
+            /* font-family: 'Arial', 'Helvetica', sans-serif; */
+                        font-family: 'Helvetica', 'Arial', sans-serif;
+
             font-size: 14px;
             line-height: 1.35;
             color: #000;
@@ -121,11 +125,8 @@
         .seal-img {
             position: absolute;
             left: 80px;
-            /* Aligned precisely near the designation text start shift */
             top: -15px;
-            /* Raised slightly upward to bleed behind 'With Thanks' and the name */
             width: 100px;
-            /* Expanded scaling size to correctly bleed edge to edge across elements */
             z-index: 2;
             opacity: 0.85;
         }
@@ -133,7 +134,6 @@
         .info-text {
             position: relative;
             z-index: 5;
-            /* Forces text to explicitly render dynamically above image layers */
             margin-top: 40px;
         }
 
@@ -157,7 +157,9 @@
         }
 
         .recipient-info {
-            font-family: 'DejaVu Sans', sans-serif;
+            /* font-family: 'DejaVu Sans', sans-serif; */
+                        font-family: 'Helvetica', 'Arial', sans-serif;
+
             font-size: 13px;
             line-height: 1.4;
             margin-top: 20px;
@@ -165,7 +167,9 @@
         }
 
         .subject-line {
-            font-family: 'DejaVu Sans', sans-serif;
+            /* font-family: 'DejaVu Sans', sans-serif; */
+                        font-family: 'Helvetica', 'Arial', sans-serif;
+
             font-size: 14px;
             margin-top: 20px;
             font-weight: normal;
@@ -288,7 +292,9 @@
             left: -30px;
             right: -30px;
             height: 125px;
-            font-family: 'DejaVu Sans', sans-serif;
+            /* font-family: 'DejaVu Sans', sans-serif; */
+                        font-family: 'Helvetica', 'Arial', sans-serif;
+
             background-color: #8B1A1A;
         }
 
