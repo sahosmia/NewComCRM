@@ -19,14 +19,14 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        return Inertia::render('Users/Index', [
+        return Inertia::render('users/index', [
             'users' => $this->userService->paginateIndex($request->all()),
         ]);
     }
 
     public function create()
     {
-        return Inertia::render('Users/Create', [
+        return Inertia::render('users/create', [
             'users' => $this->lookupService->getUsersForSelect(),
         ]);
     }
@@ -48,7 +48,7 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        return Inertia::render('Users/Edit', [
+        return Inertia::render('users/edit', [
             'user' => $user,
             'users' => $this->lookupService->getUsersForSelect(),
         ]);
