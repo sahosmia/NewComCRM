@@ -1,3 +1,4 @@
+import { Link } from "@inertiajs/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { FollowUp } from "@/types";
@@ -25,13 +26,14 @@ function FollowUpList({ followups }: { followups: FollowUp[] }) {
     return (
         <div className="space-y-3">
             {followups.map((item) => (
-                <div
+                <Link
                     key={item.id}
-                    className="group flex items-center justify-between p-4 border rounded-xl hover:bg-muted/40 transition-all duration-200"
+                    href={route('follow-ups.show', item.id)}
+                    className="group flex items-center justify-between p-4 border rounded-xl hover:bg-muted/40 transition-all duration-200 border border-transparent hover:border-border"
                 >
                     <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2">
-                            <span className="font-semibold text-sm text-foreground">
+                            <span className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">
                                 {item.customer?.name || "Unknown Customer"}
                             </span>
                             <Badge className={`text-[10px] px-1.5 py-0 capitalize border-none ${priorityColors[item.priority]}`}>
@@ -55,11 +57,11 @@ function FollowUpList({ followups }: { followups: FollowUp[] }) {
                     </div>
 
                     <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm" className="h-8 text-xs">
+                        <Button variant="ghost" size="sm" className="h-8 text-xs group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                             Details
                         </Button>
                     </div>
-                </div>
+                </Link>
             ))}
         </div>
     );

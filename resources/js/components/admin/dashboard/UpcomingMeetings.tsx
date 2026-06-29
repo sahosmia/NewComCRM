@@ -1,4 +1,5 @@
-import { Calendar, Clock, MapPin } from 'lucide-react';
+import { Link } from '@inertiajs/react';
+import { Calendar, Clock, MapPin, ChevronRight } from 'lucide-react';
 import type { Meeting } from '@/types';
 
 function MeetingList({ meetings }: { meetings: Meeting[] }) {
@@ -28,9 +29,9 @@ function MeetingList({ meetings }: { meetings: Meeting[] }) {
     return (
         <div className="space-y-6">
             {meetings.map((meeting) => (
-                <div key={meeting.id} className="group flex gap-4">
+                <Link key={meeting.id} href={route('meetings.show', meeting.id)} className="group flex gap-4 p-2 rounded-xl hover:bg-muted/40 transition-all duration-200 border border-transparent hover:border-border">
                     {/* Date Box */}
-                    <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-primary/5 text-primary border border-primary/10 transition-colors group-hover:bg-primary group-hover:text-white">
+                    <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-primary/5 text-primary border border-primary/10 transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                         <span className="text-[10px] font-bold uppercase leading-none">
                             {new Date(meeting.scheduled_at).toLocaleDateString('en-GB', { month: 'short' })}
                         </span>
@@ -40,7 +41,7 @@ function MeetingList({ meetings }: { meetings: Meeting[] }) {
                     </div>
 
                     {/* Meeting Info */}
-                    <div className="flex flex-col gap-1 overflow-hidden">
+                    <div className="flex flex-col gap-1 overflow-hidden flex-1">
                         <h4 className="truncate text-sm font-semibold text-foreground">
                             {meeting.title}
                         </h4>
@@ -60,7 +61,10 @@ function MeetingList({ meetings }: { meetings: Meeting[] }) {
                             )}
                         </div>
                     </div>
-                </div>
+                    <div className="flex items-center self-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                </Link>
             ))}
         </div>
     );

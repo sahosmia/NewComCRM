@@ -128,14 +128,6 @@ export default function Dashboard({ meetings, followUps, sales, customers, birth
                             </CardHeader>
                             <CardContent className="p-4">
                                 <MeetingList meetings={meetings.today} />
-                                {meetings.today.length === 0 && (
-                                    <div className="flex flex-col items-center justify-center py-8 text-center bg-muted/30 rounded-lg border border-dashed mt-2">
-                                        <div className="h-9 w-9 rounded-full bg-background flex items-center justify-center mb-2 shadow-sm">
-                                            <Video className="h-4 w-4 text-muted-foreground/70" />
-                                        </div>
-                                        <p className="text-xs text-muted-foreground italic">No meetings scheduled for today.</p>
-                                    </div>
-                                )}
                             </CardContent>
                         </Card>
 
