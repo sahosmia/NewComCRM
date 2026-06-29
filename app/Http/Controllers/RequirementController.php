@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRequirementRequest;
 use App\Http\Requests\UpdateRequirementRequest;
 use App\Models\Requirement;
+use App\Models\Supplier;
 use App\Services\RequirementService;
 use Illuminate\Http\Request;
 
@@ -55,6 +56,7 @@ class RequirementController extends Controller
             'users'     => $this->lookupService->getUsersForSelect(),
             'all_users' => $this->lookupService->getAllUsersForSelect(),
             'companies' => $this->lookupService->getCompanies(),
+            'suppliers' => Supplier::all(),
         ]);    }
 
     /**
@@ -105,7 +107,7 @@ class RequirementController extends Controller
     public function edit(Requirement $requirement)
     {
            return Inertia::render('Requirements/Edit', [
-            'requirement' => $requirement->load(['items.product.unit', 'accessories.unit', 'installations.unit']),
+            'requirement' => $requirement->load(['items.product.unit', 'items.product.supplier', 'accessories.unit', 'installations.unit']),
             'customers' => $this->lookupService->getCustomersForRequirementForm(),
                         'all_customers' => $this->lookupService->getAllCustomersSelectOptions(),
 
@@ -114,6 +116,7 @@ class RequirementController extends Controller
             'users'     => $this->lookupService->getUsersForSelect(),
             'all_users' => $this->lookupService->getAllUsersForSelect(),
             'companies' => $this->lookupService->getCompanies(),
+            'suppliers' => Supplier::all(),
         ]);
     }
 

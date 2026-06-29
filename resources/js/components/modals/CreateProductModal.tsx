@@ -14,23 +14,30 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useModalForm } from '@/hooks/use-modal-form';
-import type { Unit, Product } from '@/types';
+import type { Unit, Product, Supplier } from '@/types';
+import { GenericCombobox } from '../admin/form/GenericCombobox';
+import { useModal } from '@/contexts/ModalContext';
+import { Plus } from 'lucide-react';
 
 interface CreateProductModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSuccess?: (product: Product) => void;
     units?: Unit[];
+    suppliers?: Supplier[];
 }
 
-export default function CreateProductModal({ isOpen, onClose, onSuccess, units = [] }: CreateProductModalProps) {
+export default function CreateProductModal({ isOpen, onClose, onSuccess, units = [], suppliers = [] }: CreateProductModalProps) {
+    const { openModal } = useModal();
+    const [localSuppliers, setLocalSuppliers] = React.useState<Supplier[]>(suppliers);
+
     const { data, setData, errors, processing, reset, submit } = useModalForm({
         name: "",
         costing_price: "",
         unit_price: "",
         category: "",
         stock_quantity: "",
-        supplier_name: "",
+        supplier_id: "",
         source: "",
         description: "",
         unit_id: "",
@@ -94,11 +101,36 @@ export default function CreateProductModal({ isOpen, onClose, onSuccess, units =
                             <ErrorMessage message={errors.stock_quantity} />
                         </div>
 
-                        {/* Supplier name  */}
+                        {/* Supplier */}
                         <div className="space-y-2">
-                            <FormLabel>Supplier Name</FormLabel>
-                            <Input value={data.supplier_name} onChange={e => setData("supplier_name", e.target.value)} placeholder="Supplier Name" />
-                            <ErrorMessage message={errors.supplier_name} />
+                            <GenericCombobox
+                                label="Supplier"
+                                items={localSuppliers.map(s => ({ id: s.id, name: s.name }))}
+                                selectedId={data.supplier_id}
+                                onSelect={(id) => setData("supplier_id", id as number)}
+                                placeholder="Select Supplier"
+                                searchPlaceholder="Search suppliers..."
+                                error={errors.supplier_id}
+                                renderAction={
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-6 w-6"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            openModal('CREATE_SUPPLIER', {
+                                                onSuccess: (newSupplier: Supplier) => {
+                                                    setLocalSuppliers(prev => [...prev, newSupplier]);
+                                                    setData("supplier_id", newSupplier.id);
+                                                }
+                                            });
+                                        }}
+                                    >
+                                        <Plus className="h-4 w-4" />
+                                    </Button>
+                                }
+                            />
                         </div>
 
                         {/* Source */}

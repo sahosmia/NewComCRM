@@ -16,7 +16,7 @@ trait ValidatesProductAttributes
             'description'    => 'nullable|string',
             'category'       => 'nullable|string|max:255',
             'stock_quantity' => 'nullable|integer|min:0',
-            'supplier_name'  => 'nullable|string|max:255',
+            'supplier_id'    => 'nullable|exists:suppliers,id',
             'source'         => 'nullable|string',
             'unit_id'        => 'required|exists:units,id',
         ];

@@ -5,6 +5,7 @@ import CreateCustomerModal from './CreateCustomerModal';
 import CreateFollowUpModal from './CreateFollowUpModal';
 import CreateMeetingModal from './CreateMeetingModal';
 import CreateProductModal from './CreateProductModal';
+import CreateSupplierModal from './CreateSupplierModal';
 import CreateUnitModal from './CreateUnitModal';
 
 const MODAL_COMPONENTS: Record<string, React.ComponentType<any>> = {
@@ -14,6 +15,7 @@ const MODAL_COMPONENTS: Record<string, React.ComponentType<any>> = {
     CREATE_COMPANY: CreateCompanyModal,
     CREATE_MEETING: CreateMeetingModal,
     CREATE_FOLLOW_UP: CreateFollowUpModal,
+    CREATE_SUPPLIER: CreateSupplierModal,
 };
 
 export function ModalRegistry() {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
+use App\Models\Supplier;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -39,6 +40,7 @@ class ProductController extends Controller
     {
         return Inertia::render('Products/Create', [
             'units' => Unit::all(),
+            'suppliers' => Supplier::all(),
         ]);
     }
 
@@ -48,7 +50,7 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         $product = $this->productService->create($request->validated());
-        $product->load('unit');
+        $product->load(['unit', 'supplier']);
 
         return $this->handleResponse(
             $request,
@@ -64,7 +66,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         return Inertia::render('Products/Show', [
-            'product' => $product->load('unit'),
+            'product' => $product->load(['unit', 'supplier']),
         ]);
     }
 
@@ -76,7 +78,7 @@ class ProductController extends Controller
         return Inertia::render('Products/Edit', [
             'product' => $product,
             'units' => Unit::all(),
-
+            'suppliers' => Supplier::all(),
         ]);
     }
 
@@ -124,7 +126,7 @@ class ProductController extends Controller
                     $product->stock_quantity,
                     $product->costing_price,
                     $product->unit_price,
-                    $product->supplier_name,
+                    $product->supplier?->name,
                 ];
             }
         ), 'products.xlsx');
@@ -141,7 +143,7 @@ class ProductController extends Controller
                 $product->stock_quantity,
                 $product->costing_price,
                 $product->unit_price,
-                $product->supplier_name,
+                $product->supplier?->name,
             ];
         });
 

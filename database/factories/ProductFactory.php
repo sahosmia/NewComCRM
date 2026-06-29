@@ -19,7 +19,7 @@ class ProductFactory extends Factory
             'stock_quantity' => $this->faker->numberBetween(10, 100),
             'costing_price'  => $this->faker->randomFloat(2, 50, 8000),
             'unit_price'     => $this->faker->randomFloat(2, 100, 10000),
-            'supplier_name'  => $this->faker->company(),
+            'supplier_id'    => \App\Models\Supplier::inRandomOrder()->first()?->id ?? \App\Models\Supplier::factory(),
             'source'         => $this->faker->paragraph(),
             'unit_id'        => Unit::inRandomOrder()->first()?->id ?? Unit::factory(),
 
