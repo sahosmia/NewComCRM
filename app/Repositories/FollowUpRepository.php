@@ -28,7 +28,7 @@ class FollowUpRepository
             ->when($params['requirement_id'] ?? null, fn($query, $id) => $query->where('requirement_id', $id))
             ->when($params['period'] ?? null, function ($query, $period) {
                 match ($period) {
-                    'today' => $query->whereDate('follow_up_date', today()),
+                    'today' => $query->whereDate('follow_up_date', '<=', today())->where('status', 'pending'),
                     'upcoming' => $query->whereDate('follow_up_date', '>', today()),
                     'overdue' => $query->whereDate('follow_up_date', '<', today())->where('status', 'pending'),
                     default => null,
