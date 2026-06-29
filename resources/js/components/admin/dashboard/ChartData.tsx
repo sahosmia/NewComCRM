@@ -6,11 +6,13 @@ interface ChartDataItem {
 }
 
 export default function SalesChart({ data }: { data: ChartDataItem[] }) {
+    const isDark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
+
     return (
         <div className="h-75 w-full">
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? "#374151" : "#f0f0f0"} />
                     <XAxis
                         dataKey="name"
                         fontSize={12}

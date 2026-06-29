@@ -46,7 +46,7 @@ function FollowUpList({ followups }: { followups: FollowUp[] }) {
                                 🕒 {formatTime(item.follow_up_date)}
                             </span>
                             {item.requirement && (
-                                <span className="font-medium text-blue-600">
+                                <span className="font-medium text-blue-600 dark:text-blue-400">
                                     📋 {item.requirement.title || `Req #${item.requirement.id}`}
                                 </span>
                             )}
@@ -57,9 +57,9 @@ function FollowUpList({ followups }: { followups: FollowUp[] }) {
                     </div>
 
                     <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm" className="h-8 text-xs group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                        <div className="h-8 px-3 inline-flex items-center justify-center rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground group-hover:bg-primary group-hover:text-primary-foreground">
                             Details
-                        </Button>
+                        </div>
                     </div>
                 </Link>
             ))}

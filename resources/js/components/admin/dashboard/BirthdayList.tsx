@@ -28,8 +28,8 @@ export default function BirthdayList({ customers, emptyMessage = "No birthdays t
                     className="flex items-center justify-between group p-2 rounded-lg hover:bg-muted/50 transition-colors border border-transparent hover:border-border"
                 >
                     <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full bg-pink-100 flex items-center justify-center">
-                            <Cake className="h-4 w-4 text-pink-600" />
+                        <div className="h-8 w-8 rounded-full bg-pink-100 dark:bg-pink-950/30 flex items-center justify-center">
+                            <Cake className="h-4 w-4 text-pink-600 dark:text-pink-400" />
                         </div>
                         <div className="flex flex-col">
                             <span className="text-sm font-bold group-hover:text-primary transition-colors">
@@ -42,7 +42,7 @@ export default function BirthdayList({ customers, emptyMessage = "No birthdays t
                                 {customer.date_of_birth && (
                                     <>
                                         <span className="text-[10px] text-muted-foreground">•</span>
-                                        <span className="text-[10px] text-pink-600 font-bold">
+                                        <span className="text-[10px] text-pink-600 dark:text-pink-400 font-bold">
                                             {new Date(customer.date_of_birth).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}
                                         </span>
                                     </>
