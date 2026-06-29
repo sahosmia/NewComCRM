@@ -2,22 +2,29 @@ import { Head } from '@inertiajs/react';
 import CommonTable from '@/components/admin/CommonTable';
 import Heading from '@/components/admin/heading';
 import AppLayout from '@/layouts/app-layout';
-import type { CustomerType, FilterOption, Meeting, PaginationType, Requirement, SortOption } from '@/types';
 import { columns } from './Columns';
+import type { CustomerType, FilterOption, Meeting, PaginationType, Requirement, SortOption, User } from '@/types';
 
 interface Props {
     meetings: PaginationType<Meeting>;
     customers: CustomerType[];
     requirements: Requirement[];
+    users: User[];
 }
 
-export default function MeetingIndex({ meetings, customers, requirements }: Props) {
+export default function MeetingIndex({ meetings, customers, requirements, users }: Props) {
     const breadcrumbs = [
         { title: 'Dashboard', href: route('dashboard') },
         { title: 'Meetings', href: route('meetings.index') },
     ];
 
     const filters: FilterOption[] = [
+        {
+            name: 'user_id',
+            label: 'Representative',
+            type: 'searchSelect',
+            options: users.map(u => ({ label: u.name, value: u.id.toString() }))
+        },
         {
             name: 'customer_id',
             label: 'Customer',

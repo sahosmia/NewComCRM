@@ -27,6 +27,9 @@ class MeetingRepository
             ->when($params['status'] ?? null, function ($query, $status) {
                 $query->where('status', $status);
             })
+            ->when($params['user_id'] ?? null, function ($query, $user_id) {
+                $query->where('user_id', $user_id);
+            })
             ->when($params['meeting_type'] ?? null, function ($query, $type) {
                 $query->where('meeting_type', $type);
             })
@@ -36,7 +39,7 @@ class MeetingRepository
             ->when($params['customer_id'] ?? null, fn ($query, $id) => $query->where('customer_id', $id))
             ->when($params['period'] ?? null, function ($query, $period) {
                 match ($period) {
-                    'today' => $query->whereDate('scheduled_at', today()),
+                    'today' => $query->whereDate('scheduled_at', '<=', today()),
                     'upcoming' => $query->whereDate('scheduled_at', '>', today()),
                     'overdue' => $query->whereDate('scheduled_at', '<', today())->where('status', 'scheduled'),
                     default => null,

@@ -27,11 +27,12 @@ import { formatDate } from "@/utils/date-format";
 interface Props {
     requirement: Requirement;
     customers: CustomerType[];
+    all_customers: CustomerType[];
     requirements: Requirement[];
     users: User[];
 }
 
-export default function Show({ requirement, customers, requirements, users }: Props) {
+export default function Show({ requirement, customers, all_customers, requirements, users }: Props) {
     const { openModal } = useModal();
 
     const breadcrumbs = [

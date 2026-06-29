@@ -29,6 +29,6 @@ class DashboardController extends Controller
         $data['requirements'] = array_merge($data['requirements'], ['list' => $this->lookupService->getRequirementsForSelect()]);
         $data['users'] = $this->lookupService->getUsersForSelect();
 
-        return Inertia::render('dashboard', $data);
+        return Inertia::render('Dashboard', $data);
     }
 }

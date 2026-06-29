@@ -22,6 +22,7 @@ import { ServiceSection } from "./com/ServiceSection";
 interface Props {
     requirement?: Requirement;
     customers: CustomerType[];
+    all_customers: CustomerType[];
     products: Product[];
     units: Unit[];
     users: User[];
@@ -30,7 +31,7 @@ interface Props {
 
 }
 
-export default function RequirementForm({ requirement, customers: initialCustomers, products: initialProducts, units: initialUnits, users, all_users, companies }: Props) {
+export default function RequirementForm({ requirement, customers: initialCustomers, all_customers, products: initialProducts, units: initialUnits, users, all_users, companies }: Props) {
     console.log(all_users);
 
     const { auth, settings } = usePage().props as any;
@@ -229,7 +230,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                                 <div className="space-y-2">
                                     <GenericCombobox
                                         label="Send Quotation To"
-                                        items={customers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company?.name || ''}` }))}
+                                        items={all_customers.map(c => ({ id: c.id, name: c.full_name_with_company || `${c.name} - ${c.company?.name || ''}` }))}
                                         selectedId={data.send_qutation_to}
                                         onSelect={(id) => setData("send_qutation_to", id as number)}
                                         placeholder="Select Recipient (Optional)"

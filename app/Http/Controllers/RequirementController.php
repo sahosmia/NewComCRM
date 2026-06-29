@@ -49,6 +49,7 @@ class RequirementController extends Controller
 
    return Inertia::render('Requirements/Create', [
             'customers' => $this->lookupService->getCustomersForRequirementForm(),
+            'all_customers' => $this->lookupService->getAllCustomersSelectOptions(),
             'products'  => $this->lookupService->getProductsForSelect(),
             'units'     => $this->lookupService->getUnits(),
             'users'     => $this->lookupService->getUsersForSelect(),
@@ -91,6 +92,7 @@ class RequirementController extends Controller
                 'quotationSender'
             ]),
             'customers' => $this->lookupService->getCustomersForRequirementForm(),
+            'all_customers' => $this->lookupService->getAllCustomersSelectOptions(),
             'requirements' => $this->lookupService->getRequirementsForSelect(),
             'users'     => $this->lookupService->getUsersForSelect(),
 
@@ -105,6 +107,7 @@ class RequirementController extends Controller
            return Inertia::render('Requirements/Edit', [
             'requirement' => $requirement->load(['items.product.unit', 'accessories.unit', 'installations.unit']),
             'customers' => $this->lookupService->getCustomersForRequirementForm(),
+            'all_customers' => $this->lookupService->getAllCustomersSelectOptions(),
             'products'  => $this->lookupService->getProductsForSelect(),
             'units'     => $this->lookupService->getUnits(),
             'users'     => $this->lookupService->getUsersForSelect(),
