@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRequirementRequest;
 use App\Http\Requests\UpdateRequirementRequest;
 use App\Models\Requirement;
-use App\Models\Supplier;
 use App\Services\RequirementService;
 use Illuminate\Http\Request;
 
@@ -56,7 +55,7 @@ class RequirementController extends Controller
             'users'     => $this->lookupService->getUsersForSelect(),
             'all_users' => $this->lookupService->getAllUsersForSelect(),
             'companies' => $this->lookupService->getCompanies(),
-            'suppliers' => Supplier::all(),
+            'suppliers' => $this->lookupService->getSuppliers(),
         ]);    }
 
     /**
@@ -116,7 +115,7 @@ class RequirementController extends Controller
             'users'     => $this->lookupService->getUsersForSelect(),
             'all_users' => $this->lookupService->getAllUsersForSelect(),
             'companies' => $this->lookupService->getCompanies(),
-            'suppliers' => Supplier::all(),
+            'suppliers' => $this->lookupService->getSuppliers(),
         ]);
     }
 

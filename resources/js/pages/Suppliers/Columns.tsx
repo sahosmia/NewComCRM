@@ -1,6 +1,4 @@
-import { Link } from "@inertiajs/react";
-import { Edit } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { TableRowActions } from "@/components/table/TableRowActions";
 import type { Column, Supplier } from "@/types";
 
 export const columns: Column<Supplier>[] = [
@@ -19,14 +17,12 @@ export const columns: Column<Supplier>[] = [
     },
     {
         header: "Actions",
-        accessor: (supplier: Supplier) => (
-            <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon" asChild>
-                    <Link href={route("suppliers.edit", supplier.id)}>
-                        <Edit className="h-4 w-4" />
-                    </Link>
-                </Button>
-            </div>
+        accessor: (item: Supplier) => (
+            <TableRowActions
+                item={item}
+                resource="suppliers"
+                label="Supplier"
+            />
         ),
     },
 ];

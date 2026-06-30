@@ -192,6 +192,9 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                                 <DropdownMenuItem onClick={() => openModal('CREATE_PRODUCT')}>
                                     New Product
                                 </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => openModal('CREATE_SUPPLIER')}>
+                                    New Supplier
+                                </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => openModal('CREATE_CUSTOMER')}>
                                     New Customer
                                 </DropdownMenuItem>

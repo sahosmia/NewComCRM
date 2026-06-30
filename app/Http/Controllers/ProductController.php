@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
-use App\Models\Supplier;
 use App\Services\ProductService;
+use App\Services\LookupService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Exports\GeneralExport;
@@ -20,6 +20,7 @@ class ProductController extends Controller
 
     public function __construct(
         private ProductService $productService,
+        private LookupService $lookupService,
     ) {
     }
 
@@ -39,8 +40,8 @@ class ProductController extends Controller
     public function create()
     {
         return Inertia::render('Products/Create', [
-            'units' => Unit::all(),
-            'suppliers' => Supplier::all(),
+            'units' => $this->lookupService->getUnits(),
+            'suppliers' => $this->lookupService->getSuppliers(),
         ]);
     }
 
@@ -77,8 +78,8 @@ class ProductController extends Controller
     {
         return Inertia::render('Products/Edit', [
             'product' => $product,
-            'units' => Unit::all(),
-            'suppliers' => Supplier::all(),
+            'units' => $this->lookupService->getUnits(),
+            'suppliers' => $this->lookupService->getSuppliers(),
         ]);
     }
 
@@ -154,27 +155,4 @@ class ProductController extends Controller
         ]);
     }
 
-    public function import(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv',
-        ]);
-
-        try {
-            $result = $this->productService->import($request->file('file'));
-
-            if (is_array($result) && isset($result['errors'])) {
-                $errors = [];
-                foreach ($result['errors'] as $failure) {
-                    $errors[] = "Row {$failure->row()}: " . implode(', ', $failure->errors());
-                }
-                return back()->withErrors(['import_errors' => $errors]);
-            }
-
-            return back()->with('success', 'Products imported successfully');
-
-        } catch (\Exception $e) {
-            return back()->withErrors(['error' => 'An error occurred during import: ' . $e->getMessage()]);
-        }
-    }
 }
