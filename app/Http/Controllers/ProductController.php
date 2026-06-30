@@ -31,6 +31,8 @@ class ProductController extends Controller
     {
         return Inertia::render('Products/Index', [
             'products' => $this->productService->paginateIndex($request->all()),
+            'units' => $this->lookupService->getUnits(),
+            'suppliers' => $this->lookupService->getSuppliers(),
         ]);
     }
 
@@ -155,4 +157,27 @@ class ProductController extends Controller
         ]);
     }
 
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        try {
+            $result = $this->productService->import($request->file('file'));
+
+            if (is_array($result) && isset($result['errors'])) {
+                $errors = [];
+                foreach ($result['errors'] as $failure) {
+                    $errors[] = "Row {$failure->row()}: " . implode(', ', $failure->errors());
+                }
+                return back()->withErrors(['import_errors' => $errors]);
+            }
+
+            return back()->with('success', 'Products imported successfully');
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'An error occurred during import: ' . $e->getMessage()]);
+        }
+    }
 }

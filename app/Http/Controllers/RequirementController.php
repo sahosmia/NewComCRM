@@ -37,6 +37,8 @@ class RequirementController extends Controller
             'users'     => $this->lookupService->getUsersForSelect(),
             'all_users' => $this->lookupService->getAllUsersForSelect(),
             'companies' => $this->lookupService->getCompanies(),
+            'units' => $this->lookupService->getUnits(),
+            'suppliers' => $this->lookupService->getSuppliers(),
         ]);
     }
 
@@ -84,6 +86,7 @@ class RequirementController extends Controller
             'requirement' => $requirement->load([
                 'customer.company',
                 'items.product.unit',
+                'items.product.supplier',
                 'accessories.unit',
                 'installations.unit',
                 'meetings',

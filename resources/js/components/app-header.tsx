@@ -62,7 +62,7 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
     const { openModal } = useModal();
 
     const page = usePage();
-    const { auth } = page.props;
+    const { auth, units, suppliers, companies, users } = page.props as any;
     const getInitials = useInitials();
     const { isCurrentUrl, whenCurrentUrl } = useCurrentUrl();
     return (
@@ -189,13 +189,13 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                                 <DropdownMenuItem onClick={() => openModal('CREATE_COMPANY')}>
                                     New Company
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => openModal('CREATE_PRODUCT')}>
+                                <DropdownMenuItem onClick={() => openModal('CREATE_PRODUCT', { units, suppliers })}>
                                     New Product
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => openModal('CREATE_SUPPLIER')}>
                                     New Supplier
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => openModal('CREATE_CUSTOMER')}>
+                                <DropdownMenuItem onClick={() => openModal('CREATE_CUSTOMER', { users, companies })}>
                                     New Customer
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />

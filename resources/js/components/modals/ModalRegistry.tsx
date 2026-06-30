@@ -19,16 +19,30 @@ const MODAL_COMPONENTS: Record<string, React.ComponentType<any>> = {
 };
 
 export function ModalRegistry() {
-    const { modal, closeModal } = useModal();
+    const { modals, closeModal } = useModal();
 
-    if (!modal.type) return null;
+    if (modals.length === 0) return null;
 
-    const Component = MODAL_COMPONENTS[modal.type];
+    return (
+        <>
+            {modals.map((modalState, index) => {
+                const Component = MODAL_COMPONENTS[modalState.type];
+                if (!Component) {
+                    console.warn(`No component found for modal type: ${modalState.type}`);
+                    return null;
+                }
 
-    if (!Component) {
-        console.warn(`No component found for modal type: ${modal.type}`);
-        return null;
-    }
+                const isLast = index === modals.length - 1;
 
-    return <Component {...modal.props} isOpen={!!modal.type} onClose={closeModal} />;
+                return (
+                    <Component
+                        key={modalState.id}
+                        {...modalState.props}
+                        isOpen={true}
+                        onClose={isLast ? closeModal : () => { }} // Only top modal can be closed via its own onClose if triggered by overlay
+                    />
+                );
+            })}
+        </>
+    );
 }

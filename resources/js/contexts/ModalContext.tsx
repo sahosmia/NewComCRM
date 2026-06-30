@@ -4,34 +4,44 @@ import React, { createContext, useContext, useState, useCallback } from 'react';
 export type ModalType = 'CREATE_UNIT' | 'CREATE_COMPANY' | 'CREATE_CUSTOMER' | 'CREATE_PRODUCT' | 'CREATE_MEETING' | 'CREATE_FOLLOW_UP' | 'CREATE_SUPPLIER';
 
 interface ModalState {
-    type: ModalType | null;
+    type: ModalType;
     props: Record<string, any>;
+    id: string;
 }
 
 interface ModalContextType {
     openModal: (type: ModalType, props?: Record<string, any>) => void;
     closeModal: () => void;
-    modal: ModalState;
+    modals: ModalState[];
+    modal: { type: ModalType | null; props: Record<string, any> };
 }
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
 export function ModalProvider({ children }: { children: ReactNode }) {
-    const [modal, setModal] = useState<ModalState>({
-        type: null,
-        props: {},
-    });
+    const [modals, setModals] = useState<ModalState[]>([]);
 
     const openModal = useCallback((type: ModalType, props: Record<string, any> = {}) => {
-        setModal({ type, props });
+        setModals(prev => [...prev, {
+            type,
+            props,
+            id: Math.random().toString(36).substring(2, 9)
+        }]);
     }, []);
 
     const closeModal = useCallback(() => {
-        setModal({ type: null, props: {} });
+        setModals(prev => prev.slice(0, -1));
     }, []);
 
+    const topModal = modals.length > 0 ? modals[modals.length - 1] : { type: null, props: {} };
+
     return (
-        <ModalContext.Provider value={{ openModal, closeModal, modal }}>
+        <ModalContext.Provider value={{
+            openModal,
+            closeModal,
+            modals,
+            modal: topModal as any
+        }}>
             {children}
         </ModalContext.Provider>
     );
