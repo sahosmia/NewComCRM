@@ -150,9 +150,9 @@ export default function Show({ requirement, customers, requirements, users }: Pr
                                                     <p className="text-[12px] text-muted-foreground mt-1 italic whitespace-pre-wrap">{item.description}</p>
                                                 )}
                                                 <div className="flex flex-col gap-4 mt-1">
-                                                    {item.product?.supplier_name && (
+                                                    {item.product?.supplier?.name && (
                                                         <p className="text-[12px] text-muted-foreground">
-                                                            <span className="font-bold uppercase">Supplier:</span> {item.product.supplier_name}
+                                                            <span className="font-bold uppercase">Supplier:</span> {item.product.supplier.name}
                                                         </p>
                                                     )}
                                                     {item.product?.source && (

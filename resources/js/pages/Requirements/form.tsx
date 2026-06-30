@@ -19,20 +19,21 @@ import { RequirementItemRow } from "./com/RequirementItemRow";
 import { ServiceSection } from "./com/ServiceSection";
 
 
+import type { Supplier } from "@/types";
+
 interface Props {
     requirement?: Requirement;
     customers: CustomerType[];
-        all_customers: CustomerType[];
-
+    all_customers: CustomerType[];
     products: Product[];
     units: Unit[];
     users: User[];
     all_users: User[];
     companies: Company[];
-
+    suppliers: Supplier[];
 }
 
-export default function RequirementForm({ requirement, customers: initialCustomers, all_customers, products: initialProducts, units: initialUnits, users, all_users, companies }: Props) {
+export default function RequirementForm({ requirement, customers: initialCustomers, all_customers, products: initialProducts, units: initialUnits, users, all_users, companies, suppliers }: Props) {
 
     const { auth, settings } = usePage().props as any;
     const isSuperAdmin = auth.user.role === 'super_admin';
@@ -77,7 +78,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
         items: (requirement?.items?.map(item => ({
             ...item,
             unit_short_form: item.product?.unit?.short_form,
-            supplier: item.product?.supplier_name,
+            supplier: item.product?.supplier?.name,
             source: item.product?.source
         })) as RequirementItem[]) || [
                 { product_id: 0, quantity: 1, unit_price: "", costing_price: "", description: "", unit_short_form: "", supplier: "", source: "" }
@@ -107,7 +108,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                     costing_price: product ? (product.costing_price || "") : (item.costing_price || ""),
                     description: product ? (product.description || "") : (item.description || ""),
                     unit_short_form: product ? product.unit?.short_form : (item.unit_short_form || ""),
-                    supplier: product ? product.supplier_name : (item.supplier || ""),
+                    supplier: product ? product.supplier?.name : (item.supplier || ""),
                     source: product ? product.source : (item.source || ""),
                 };
             }
@@ -539,6 +540,7 @@ export default function RequirementForm({ requirement, customers: initialCustome
                             onProductCreated={(newProduct: Product) => {
                                 setProducts(prev => [...prev, newProduct]);
                             }}
+                            suppliers={suppliers}
                         />
                     ))}
                     <div className="flex justify-center pt-2">

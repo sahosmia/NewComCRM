@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useModal } from "@/contexts/ModalContext";
-import type { Product, Unit } from "@/types";
+import type { Product, Unit, Supplier } from "@/types";
 
 interface ItemRowProps {
     index: number;
@@ -19,9 +19,10 @@ interface ItemRowProps {
     errors: any;
     units: Unit[];
     onProductCreated?: (product: Product) => void;
+    suppliers?: Supplier[];
 }
 
-export const RequirementItemRow = ({ index, item, products, aitFactor, onItemChange, onRemove, isRemoveDisabled, errors, units, onProductCreated }: ItemRowProps) => {
+export const RequirementItemRow = ({ index, item, products, aitFactor, onItemChange, onRemove, isRemoveDisabled, errors, units, onProductCreated, suppliers = [] }: ItemRowProps) => {
     const { openModal } = useModal();
     const calculateGross = () => (parseFloat(item.unit_price) || 0) * aitFactor;
     const calculateTotal = () => ((parseFloat(item.unit_price) || 0) * (item.quantity || 0) * aitFactor);
@@ -77,6 +78,7 @@ export const RequirementItemRow = ({ index, item, products, aitFactor, onItemCha
                                         e.stopPropagation();
                                         openModal('CREATE_PRODUCT', {
                                             units: units,
+                                            suppliers: suppliers,
                                             onSuccess: (newProduct: Product) => {
                                                 if (onProductCreated) onProductCreated(newProduct);
                                                 onItemChange(index, "product_id", newProduct.id, newProduct);

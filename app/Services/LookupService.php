@@ -7,6 +7,7 @@ use App\Repositories\CustomerRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\UnitRepository;
 use App\Repositories\RequirementRepository;
+use App\Repositories\SupplierRepository;
 use Illuminate\Support\Collection;
 
 class LookupService
@@ -17,6 +18,7 @@ class LookupService
         private ProductRepository $products,
         private UnitRepository $units,
         private RequirementRepository $requirements,
+        private SupplierRepository $suppliers,
         private CompanyService $companies,
     ) {}
 
@@ -62,6 +64,11 @@ class LookupService
     public function getRequirementsForSelect(): Collection
     {
         return $this->requirements->selectOptions();
+    }
+
+    public function getSuppliers(): Collection
+    {
+        return $this->suppliers->all();
     }
 
 

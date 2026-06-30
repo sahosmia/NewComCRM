@@ -1,6 +1,6 @@
 import { Head } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
-import type { Company, CustomerType, Product, Requirement, Unit, User } from "@/types";
+import type { Company, CustomerType, Product, Requirement, Unit, User, Supplier } from "@/types";
 import RequirementForm from "./form";
 
 interface Props {
@@ -12,9 +12,10 @@ interface Props {
     users: User[];
     all_users: User[];
     companies: Company[];
+    suppliers: Supplier[];
 }
 
-export default function Edit({ requirement, customers, all_customers, products, units, users, all_users, companies }: Props) {
+export default function Edit({ requirement, customers, all_customers, products, units, users, all_users, companies, suppliers }: Props) {
     console.log(all_users);
 
     return (
@@ -24,7 +25,7 @@ export default function Edit({ requirement, customers, all_customers, products, 
             <div className="p-6">
                 <h1 className="text-xl font-bold mb-4">Edit Requirement</h1>
                 <div className="bg-card p-6 border rounded-lg shadow-sm">
-                    <RequirementForm requirement={requirement} customers={customers} all_customers={all_customers} products={products} units={units} users={users} all_users={all_users} companies={companies} />
+                    <RequirementForm requirement={requirement} customers={customers} all_customers={all_customers} products={products} units={units} users={users} all_users={all_users} companies={companies} suppliers={suppliers} />
                 </div>
             </div>
         </AppLayout>

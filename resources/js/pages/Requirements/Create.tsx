@@ -1,6 +1,6 @@
 import { Head } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
-import type { Unit, Company, CustomerType, Product, User } from "@/types";
+import type { Unit, Company, CustomerType, Product, User, Supplier } from "@/types";
 import RequirementForm from "./form";
 
 interface Props {
@@ -13,9 +13,10 @@ interface Props {
     all_users: User[];
 
     companies: Company[];
+    suppliers: Supplier[];
 }
 
-export default function Create({ customers, all_customers, products, units, users, all_users, companies }: Props) {
+export default function Create({ customers, all_customers, products, units, users, all_users, companies, suppliers }: Props) {
     return (
         <AppLayout breadcrumbs={[{ title: "Requirements", href: route('requirements.index') }, { title: "Create", href: route('requirements.create') }]}>
             <Head title="Create Requirement" />
@@ -23,7 +24,7 @@ export default function Create({ customers, all_customers, products, units, user
             <div className="p-6">
                 <h1 className="text-xl font-bold mb-4">Create Requirement</h1>
                 <div className="bg-card p-6 border rounded-lg shadow-sm">
-                    <RequirementForm customers={customers} all_customers={all_customers} products={products} units={units} users={users} all_users={all_users} companies={companies} />
+                    <RequirementForm customers={customers} all_customers={all_customers} products={products} units={units} users={users} all_users={all_users} companies={companies} suppliers={suppliers} />
                 </div>
             </div>
         </AppLayout>

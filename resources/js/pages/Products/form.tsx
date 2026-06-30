@@ -9,17 +9,19 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 import { useModal } from "@/contexts/ModalContext";
-import type { Product, Unit } from "@/types";
+import type { Product, Unit, Supplier } from "@/types";
 
 
 interface Props {
     product?: Product;
     units?: Unit[];
+    suppliers?: Supplier[];
 }
 
-export default function ProductForm({ product, units = [] }: Props) {
+export default function ProductForm({ product, units = [], suppliers = [] }: Props) {
     const { openModal } = useModal();
-        const [localUnits, setLocalUnits] = useState<Unit[]>(units);
+    const [localUnits, setLocalUnits] = useState<Unit[]>(units);
+    const [localSuppliers, setLocalSuppliers] = useState<Supplier[]>(suppliers);
 
 
     const { data, setData, post, put, processing, errors } = useForm({
@@ -28,7 +30,7 @@ export default function ProductForm({ product, units = [] }: Props) {
         costing_price: product?.costing_price || "",
         category: product?.category || "",
         stock_quantity: product?.stock_quantity || "",
-        supplier_name: product?.supplier_name || "",
+        supplier_id: product?.supplier_id || "",
         source: product?.source || "",
         description: product?.description || "",
         unit_id: product?.unit_id || "",
@@ -122,17 +124,40 @@ export default function ProductForm({ product, units = [] }: Props) {
 
                 </div>
 
-                {/* Supplier Name */}
+                {/* Supplier */}
                 <div className="space-y-2">
-                    <FormLabel>Supplier Name</FormLabel>
-                    <Input
-                        id="supplier_name"
-                        placeholder="Main Supplier"
-                        value={data.supplier_name}
-                        onChange={(e) => setData("supplier_name", e.target.value)}
+                    <GenericCombobox
+                        label="Supplier"
+                        items={localSuppliers.map(s => ({
+                            id: s.id,
+                            name: s.name
+                        }))}
+                        selectedId={data.supplier_id}
+                        onSelect={(id) => setData("supplier_id", id as number)}
+                        placeholder="Select a supplier"
+                        searchPlaceholder="Search suppliers..."
+                        allowManualInput={false}
+                        error={errors.supplier_id}
+                        renderAction={
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    openModal('CREATE_SUPPLIER', {
+                                        onSuccess: (newSupplier: Supplier) => {
+                                            setLocalSuppliers(prev => [...prev, newSupplier]);
+                                            setData("supplier_id", newSupplier.id);
+                                        }
+                                    });
+                                }}
+                            >
+                                <Plus className="h-4 w-4" />
+                            </Button>
+                        }
                     />
-                    <ErrorMessage message={errors.supplier_name} />
-
                 </div>
 
 

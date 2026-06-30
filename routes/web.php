@@ -123,6 +123,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::resource('units', UnitController::class)->except(['show']);
 
+    Route::prefix('suppliers')->name('suppliers.')->group(function () {
+        Route::controller(\App\Http\Controllers\SupplierController::class)->group(function () {
+            Route::delete('bulk-destroy', 'bulkDestroy')->name('bulkDestroy');
+        });
+    });
+    Route::resource('suppliers', \App\Http\Controllers\SupplierController::class);
+
     // --- Administration ---
     Route::middleware(['role:super_admin'])->group(function () {
         Route::prefix('users')->name('users.')->group(function () {
