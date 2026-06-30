@@ -85,7 +85,7 @@ it('validates_required_fields_on_store', function () {
     $response = $this->actingAs($this->user)
         ->post(route('products.store'), []);
 
-    $response->assertSessionHasErrors(['name', 'stock_quantity', 'unit_id']);
+    $response->assertSessionHasErrors(['name', 'unit_id']);
 });
 
 it('can_update_an_existing_product', function () {

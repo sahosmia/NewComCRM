@@ -18,7 +18,7 @@ class Product extends Model
         'stock_quantity',
         'unit_price',
         'costing_price',
-        'supplier_name',
+        'supplier_id',
         'source',
         'unit_id'
     ];
@@ -33,6 +33,11 @@ class Product extends Model
     public function unit()
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
     }
 
     public function requirements()

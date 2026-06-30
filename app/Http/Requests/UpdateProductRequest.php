@@ -28,6 +28,8 @@ class UpdateProductRequest extends FormRequest
     {
         $this->merge([
             'stock_quantity' => $this->stock_quantity ?? 0,
+                        'costing_price' => $this->costing_price ?? 0,
+
         ]);
     }
 }

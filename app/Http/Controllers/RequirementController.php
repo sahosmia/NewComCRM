@@ -37,6 +37,8 @@ class RequirementController extends Controller
             'users'     => $this->lookupService->getUsersForSelect(),
             'all_users' => $this->lookupService->getAllUsersForSelect(),
             'companies' => $this->lookupService->getCompanies(),
+            'units' => $this->lookupService->getUnits(),
+            'suppliers' => $this->lookupService->getSuppliers(),
         ]);
     }
 
@@ -55,6 +57,7 @@ class RequirementController extends Controller
             'users'     => $this->lookupService->getUsersForSelect(),
             'all_users' => $this->lookupService->getAllUsersForSelect(),
             'companies' => $this->lookupService->getCompanies(),
+            'suppliers' => $this->lookupService->getSuppliers(),
         ]);    }
 
     /**
@@ -83,6 +86,7 @@ class RequirementController extends Controller
             'requirement' => $requirement->load([
                 'customer.company',
                 'items.product.unit',
+                'items.product.supplier',
                 'accessories.unit',
                 'installations.unit',
                 'meetings',
@@ -105,7 +109,7 @@ class RequirementController extends Controller
     public function edit(Requirement $requirement)
     {
            return Inertia::render('Requirements/Edit', [
-            'requirement' => $requirement->load(['items.product.unit', 'accessories.unit', 'installations.unit']),
+            'requirement' => $requirement->load(['items.product.unit', 'items.product.supplier', 'accessories.unit', 'installations.unit']),
             'customers' => $this->lookupService->getCustomersForRequirementForm(),
                         'all_customers' => $this->lookupService->getAllCustomersSelectOptions(),
 
@@ -114,6 +118,7 @@ class RequirementController extends Controller
             'users'     => $this->lookupService->getUsersForSelect(),
             'all_users' => $this->lookupService->getAllUsersForSelect(),
             'companies' => $this->lookupService->getCompanies(),
+            'suppliers' => $this->lookupService->getSuppliers(),
         ]);
     }
 

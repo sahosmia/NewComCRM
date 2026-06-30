@@ -23,7 +23,7 @@ class ProductImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnF
             'category'       => $row['category'],
             'stock_quantity' => $row['stock_quantity'] ?? 0,
             'unit_price'     => $row['unit_price'],
-            'supplier_name'  => $row['supplier_name'],
+            'supplier_id'    => $row['supplier_id'],
             'unit_id'        => $row['unit_id'],
             'source'         => $row['source'],
         ]);
@@ -33,6 +33,7 @@ class ProductImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnF
     {
         $rules = $this->productAttributeRules();
         $rules['unit_id'] = 'nullable|exists:units,id';
+        $rules['supplier_id'] = 'nullable|exists:suppliers,id';
         return $rules;
     }
 }

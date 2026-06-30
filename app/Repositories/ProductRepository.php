@@ -13,11 +13,13 @@ class ProductRepository
         $perPage = $params['per_page'] ?? setting('paginated_quantity', 10);
 
         return Product::query()
-            ->with('unit')
+            ->with(['unit', 'supplier'])
             ->when($params['search'] ?? null, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('supplier_name', 'like', "%{$search}%")
+                        ->orWhereHas('supplier', function ($sq) use ($search) {
+                            $sq->where('name', 'like', "%{$search}%");
+                        })
                         ->orWhere('category', 'like', "%{$search}%");
                 });
             })
@@ -41,8 +43,8 @@ class ProductRepository
     public function forRequirementForm(): Collection
     {
         return Product::query()
-            ->with('unit')
-            ->select('id', 'name', 'unit_price', 'costing_price', 'description', 'unit_id', 'supplier_name', 'source')
+            ->with(['unit', 'supplier'])
+            ->select('id', 'name', 'unit_price', 'costing_price', 'description', 'unit_id', 'supplier_id', 'source')
             ->get();
     }
 

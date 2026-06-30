@@ -45,6 +45,7 @@ export function AppSidebar() {
         { title: 'Reports', href: route('reports.index'), icon: ChartBar },
         { title: 'Products', href: route('products.index'), icon: Package },
         { title: 'Units', href: route('units.index'), icon: Ruler },
+        { title: 'Suppliers', href: route('suppliers.index'), icon: Package },
         { title: 'Customers', href: route('customers.index'), icon: Users },
         { title: 'Companies', href: route('companies.index'), icon: Building2 },
         {

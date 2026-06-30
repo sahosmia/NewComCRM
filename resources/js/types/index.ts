@@ -126,6 +126,17 @@ export interface Meeting {
 
 
 
+export interface Supplier {
+    id: number;
+    name: string;
+    email?: string | null;
+    phone?: string | null;
+    address?: string | null;
+    description?: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
 export interface Product {
     id: number;
     name: string;
@@ -135,13 +146,14 @@ export interface Product {
     description: string | null;
     category: string | null;
     stock_quantity: number;
-    supplier_name: string | null;
+    supplier_id: number | null;
     source: string | null;
     created_at: string;
     updated_at: string;
     deleted_at?: string | null;
     unit: Unit;
     unit_id: number;
+    supplier?: Supplier | null;
 }
 
 export interface RequirementItem {

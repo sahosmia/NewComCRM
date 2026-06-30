@@ -50,7 +50,7 @@ const columns: Column<Product>[] = [
         accessor: (item) => (
             <div className="flex flex-col min-w-0 max-w-50">
                 <span className="font-medium text-foreground truncate">
-                    {item.supplier_name}
+                    {item.supplier?.name}
                 </span>
                 {item.source && (
                     <span className="text-xs text-muted-foreground truncate block">
